@@ -1,0 +1,10 @@
+==== DOWNLOAD ===
+git pull
+(ako ne prođe, zovi ivana)
+
+
+=== UPLOAD ====
+git add *path*
+git commit -m"PATH TO FILE - CHANGE THIS"
+git push origin master
+
