@@ -12,7 +12,7 @@ class SQLiteCursor:
         self.conn.row_factory = sqlite3.Row
         return self.conn.cursor()
 
-    def __exit__(self, type, value, traceback):
+    def __exit__(self, _type, value, traceback):
         self.conn.commit()
         self.conn.close()
 
@@ -76,7 +76,7 @@ def print_info():
             f'{i["cid"]:10}, '
             f'{i["name"]:20}, {i["type"]:10}, {i["notnull"]:10}, '
             f'{i["dflt_value"]}, {i["pk"]:10}')
-         for i in cur.fetchall()]
+            for i in cur.fetchall()]
         print()
 
         cur.execute("PRAGMA foreign_key_list(Device)")
