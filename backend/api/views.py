@@ -14,3 +14,16 @@ class MessageViewSet(viewsets.ModelViewSet):
     """
     queryset = Message.objects.all()
     serializer_class = MessageSerializer
+
+
+from .models import Person
+
+class TmpViewSet(viewsets.ModelViewSet):
+
+    queryset = Person.objects.all()
+
+    print("tmp view called")
+    # print(queryset)
+    serializer_class = MessageSerializer
+
+

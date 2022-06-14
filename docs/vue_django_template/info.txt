@@ -1,0 +1,37 @@
+some things are changed due to incompatibility
+
+source
+https://github.com/gtalarico/django-vue-template
+
+changes made in
+/backend/api/apps.py
+/Pipfile
+
+Prerequisites
+    node version 16 (tested on 16.15.1)
+    if node 17 is installed:
+        nvm install 16.15.1
+        nvm use 16.15.1
+        // check with node --version that now using 16
+        // ako je node 17 onda nece radit yarn
+    python 3.6 najbolje, ako je neki drugi nema veze
+setup
+yarn install
+//open venv, tu se nudi ovaj pipenv al to vjerojatno ti nece radit
+(venv) pipenv install --dev && pipenv shell
+// ovo gore vjerojatno nece radit, otvori venv i njemu radi pip install xxx
+// sta treba s pipom instalirat ?
+// treba instalirat ovo
+// ovaj whitenoise radi probleme, meni je radio na kraju s verzijom 5.0.1, verzija 4.0 nije
+django = "*"
+djangorestframework = "*"
+gunicorn = "*"
+whitenoise = "==4.0"
+dj-database-url = "*"
+psycopg2-binary = "*"
+pip install django
+// bitno je da je ova verzija
+pip install whitenoise==5.0.1
+pip install djangorestframework
+python3 manage.py migrate
+python3 manage.py runserver

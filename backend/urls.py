@@ -8,12 +8,24 @@ from django.contrib import admin
 from django.urls import path, include
 from rest_framework import routers
 
-from .api.views import index_view, MessageViewSet
+from .api.views import index_view, MessageViewSet, TmpViewSet
 
 router = routers.DefaultRouter()
 router.register('messages', MessageViewSet)
 
+router.register('tmp', TmpViewSet)
+
+
+from django.http import HttpResponse
+
+
+def pureDjangoView(request):
+    return HttpResponse("home page")
+
+
 urlpatterns = [
+
+    path('puredjango', pureDjangoView, name='home'),
 
     # http://localhost:8000/
     path('', index_view, name='index'),
@@ -23,4 +35,7 @@ urlpatterns = [
 
     # http://localhost:8000/api/admin/
     path('api/admin/', admin.site.urls),
+
 ]
+
+
