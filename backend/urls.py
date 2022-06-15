@@ -8,12 +8,13 @@ from django.contrib import admin
 from django.urls import path, include
 from rest_framework import routers
 
-from .api.views import index_view, MessageViewSet, TmpViewSet
+from .api.views import index_view, MessageViewSet, SnippetDetail
 
 router = routers.DefaultRouter()
 router.register('messages', MessageViewSet)
 
-router.register('tmp', TmpViewSet)
+# router.register('tmp', TmpViewSet)
+# router.register('snippets/<int:pk>', SnippetDetail)
 
 
 from django.http import HttpResponse
@@ -26,6 +27,9 @@ def pureDjangoView(request):
 urlpatterns = [
 
     path('puredjango', pureDjangoView, name='home'),
+
+    # path('snippets/<int:pk>', views.snippet_detail),
+    path('snippets/<int:pk>/', SnippetDetail.as_view()),
 
     # http://localhost:8000/
     path('', index_view, name='index'),

@@ -7,11 +7,6 @@ class Message(models.Model):
     body = models.TextField()
 
 
-class Person(models.Model):
-    username = models.CharField(max_length=255)
-    bio = models.CharField(max_length=200)
-
-
 class MessageSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Message
