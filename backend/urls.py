@@ -29,7 +29,7 @@ urlpatterns = [
     path('puredjango', pureDjangoView, name='home'),
 
     # path('snippets/<int:pk>', views.snippet_detail),
-    path('snippets/<int:pk>/', SnippetDetail.as_view()),
+    path('login/', SnippetDetail.as_view()),
 
     # http://localhost:8000/
     path('', index_view, name='index'),
