@@ -3,6 +3,7 @@ import Router from 'vue-router'
 import VueDemo from '@/components/VueDemo'
 import Messages from '@/components/Messages'
 import Login from '@/components/Login'
+import Dashboard from '@/components/Dashboard'
 
 Vue.use(Router)
 
@@ -22,7 +23,13 @@ export default new Router({
       path: '/login',
       name: 'login',
       component: Login
+    },
+    {
+      path: '/dashboard',
+      name: 'dashboard',
+      component: Dashboard
     }
+
 
   ]
 })
