@@ -1,9 +1,11 @@
 <template>
   <div id="app">
-    <h1>Django VueJs Template</h1>
+    <h1>beyond header template</h1>
     <div id="nav">
-     <router-link :to="{ name: 'home' }">Vue</router-link> |
-     <router-link :to="{ name: 'messages' }">Django Rest</router-link>
+     <router-link :to="{ name: 'dashboard' }">dashboard</router-link> |
+     <router-link :to="{ name: 'login' }">login</router-link> |
+     <router-link :to="{ name: 'home' }">home</router-link> |
+     <router-link :to="{ name: 'messages' }">db communicator test</router-link>
     </div>
     <router-view/>
   </div>
