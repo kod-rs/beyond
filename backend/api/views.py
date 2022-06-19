@@ -1,7 +1,7 @@
 import json
 import random
 
-from django.http import Http404
+from django.http import Http404, HttpRequest
 from django.views.generic import TemplateView
 from django.views.decorators.cache import never_cache
 from rest_framework import viewsets
@@ -10,6 +10,10 @@ from .models import Message, MessageSerializer
 from rest_framework.views import APIView
 from rest_framework import serializers
 from django.db import models
+
+# todo write custom auth
+# https://docs.djangoproject.com/en/4.0/topics/auth/customizing/
+from django.contrib.auth import authenticate, login
 
 
 # Serve Vue Application
@@ -24,12 +28,15 @@ class MessageViewSet(viewsets.ModelViewSet):
     serializer_class = MessageSerializer
 
 
+# model
 class Person(models.Model):
 
     username = models.CharField(max_length=200)
     password = models.CharField(max_length=200)
 
 
+
+# for data representation
 class PersonSerializer(serializers.Serializer):
     username = serializers.CharField(max_length=200)
     password = serializers.CharField(max_length=200)
@@ -51,23 +58,47 @@ class PersonSerializer(serializers.Serializer):
         instance.save()
         return instance
 
+
+# view?
 from django.http import JsonResponse
 class SnippetDetail(APIView):
 
-    def post(self, request, pk):
+    # used when passing args coded in url, not as args, ie pagination
+    # def post(self, request, pk):
+    def post(self, request):
+
         print(f"{request.user=}")
         print(f"{request.auth=}")
 
+        # t = HttpRequest.read(request)
+        # print("t je  ", t)
+
         username = request.data["username"]
         password = request.data["password"]
-        role = request.data["role"]
+        print(f"{username=}")
+        print(f"{password=}")
 
-        print(username)
+        user = authenticate(request, username=username, password=password)
+        if user is not None:
+            return JsonResponse({'is_auth_correct': 'yes'})
 
-        from random import randint
-        is_auth_correct = randint(0,1)
-
-        if is_auth_correct:
-            return JsonResponse({'foo': 'bar'})
+            # login(request, user)
+            # Redirect to a success page.
+            ...
         else:
-            return JsonResponse({'foo': 'no'})
+            return JsonResponse({'is_auth_correct': 'no'})
+            # Return an 'invalid login' error message.
+            # ...
+
+        # print(request.data)
+        #
+        #
+        # from random import randint
+        # is_auth_correct = randint(0,1)
+        #
+        # # return JsonResponse({'is_auth_correct': is_auth_correct} + request.data)
+        #
+        # if is_auth_correct:
+        #     return JsonResponse({'is_auth_correct': 'yes'})
+        # else:
+        #     return JsonResponse({'is_auth_correct': 'no'})
