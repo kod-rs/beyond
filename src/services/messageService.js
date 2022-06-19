@@ -12,5 +12,9 @@ export default {
   deleteMessage(msgId) {
     return api.delete(`messages/${msgId}`)
               .then(response => response.data)
+  },
+  postLogin(username, password) {
+    return api.post(`login?username=${encodeURIComponent(username)}&password=${encodeURIComponent(password)}`)
+    .then(response => response.data)
   }
 }
