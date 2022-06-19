@@ -1,6 +1,9 @@
 <template>
   <div class="hello">
-    <img src='@/assets/logo-vue.png'>
+    <!-- <img src='@/assets/logo-vue.png'> -->
+
+
+
     <p>
       For guide and recipes on how to configure / customize this project,<br>
       check out the
