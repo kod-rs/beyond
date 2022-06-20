@@ -134,6 +134,8 @@ AUTHENTICATION_BACKENDS = [
     "backend.api.customAuth.ModelBackend"
 ]
 
+# AUTH_USER_MODEL = 'backend.api.customUser.User'
+
 # Database
 # https://docs.djangoproject.com/en/2.1/ref/settings/#databases
 
