@@ -1,10 +1,13 @@
 import json
 import random
 import string
+import time
 
 import psycopg2
 import requests
 from decouple import config
+
+import datetime
 
 
 class PostgresCursor:
@@ -20,7 +23,7 @@ class PostgresCursor:
         self.conn.close()
 
 
-def seed_users(config, users):
+def seed_api_user(config, users):
     with PostgresCursor(config) as cur:
         letters = string.ascii_lowercase
 
@@ -33,10 +36,43 @@ def seed_users(config, users):
                 (
                     f'{p.first_name}_{p.last_name}',
                     ''.join(random.choice(letters) for _ in range(10)),
-                    random.randint(1, 2),
+                    random.randint(1, 3),
                 )
             )
 
+
+def seed_auth_user(config, users):
+    with PostgresCursor(config) as cur:
+        letters = string.ascii_lowercase
+
+        for i, p in enumerate(users):
+            cur.execute(
+                """
+                insert into auth_user (
+                username, password, is_superuser, first_name,
+                last_name,
+                email,
+                is_staff,
+                is_active,
+                date_joined
+                
+                )
+                values (%s,%s, %s, %s, %s, %s, %s, %s, %s)
+                """,
+                (
+                    f'{p.first_name}_{p.last_name}',
+                    ''.join(random.choice(letters) for _ in range(10)),
+                    False,
+                    p.first_name,
+                    p.last_name,
+                    f'{p.first_name}_{p.last_name}@tmp.com',
+                    False,
+                    True,
+                    datetime.datetime.now()
+
+                    # random.randint(1, 3),
+                )
+            )
 
 class User:
 
@@ -73,7 +109,8 @@ def main():
     }
 
     users = load_users()
-    seed_users(db_config, users)
+    # seed_api_user(db_config, users)
+    seed_auth_user(db_config, users)
 
 
 if __name__ == '__main__':
