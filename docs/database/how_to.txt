@@ -1,0 +1,14 @@
+kad se dodaje veza onda je npr
+    mjesto || - roden_u O< osoba
+
+cita se
+    jedna osoba je rodena u tocno jednom mjestu
+    u jednom mjestu moze biti rodeno 0 ili vise osoba
+
+mjesto
+    optional
+    many
+
+student
+    mandatory
+    one
