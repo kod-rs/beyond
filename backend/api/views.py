@@ -66,6 +66,7 @@ class SnippetDetail(APIView):
     # used when passing args coded in url, not as args, ie pagination
     # def post(self, request, pk):
     def post(self, request):
+        print("post login")
 
         print(f"{request.user=}")
         print(f"{request.auth=}")
@@ -73,22 +74,29 @@ class SnippetDetail(APIView):
         # t = HttpRequest.read(request)
         # print("t je  ", t)
 
+        print(request.data)
+
         username = request.data["username"]
         password = request.data["password"]
         print(f"{username=}")
         print(f"{password=}")
 
         user = authenticate(request, username=username, password=password)
-        if user is not None:
-            return JsonResponse({'is_auth_correct': 'yes'})
 
-            # login(request, user)
-            # Redirect to a success page.
-            ...
-        else:
-            return JsonResponse({'is_auth_correct': 'no'})
-            # Return an 'invalid login' error message.
-            # ...
+        return JsonResponse({'is_auth_correct': 'yes',
+                             "username": username,
+                             "p": password})
+
+        # if user is not None:
+        #     return JsonResponse({'is_auth_correct': 'yes'})
+        #
+        #     # login(request, user)
+        #     # Redirect to a success page.
+        #     # ...
+        # else:
+        #     return JsonResponse({'is_auth_correct': 'no'})
+        #     # Return an 'invalid login' error message.
+        #     # ...
 
         # print(request.data)
         #
