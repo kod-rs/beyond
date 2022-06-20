@@ -1,28 +1,10 @@
-import pathlib
-import random
-import sqlite3
 import json
-import time
-
-import requests
+import random
+import string
 
 import psycopg2
+import requests
 from decouple import config
-
-
-class SQLiteCursor:
-
-    def __init__(self, db_path=pathlib.Path().resolve() / ".." / "db.sqlite3"):
-        self.db_path = db_path
-
-    def __enter__(self):
-        self.conn = sqlite3.connect(self.db_path)
-        self.conn.row_factory = sqlite3.Row
-        return self.conn.cursor()
-
-    def __exit__(self, _type, value, traceback):
-        self.conn.commit()
-        self.conn.close()
 
 
 class PostgresCursor:
@@ -31,7 +13,6 @@ class PostgresCursor:
         self.conn = psycopg2.connect(**config)
 
     def __enter__(self):
-        # self.conn = psycopg2.connect(**config)
         # self.conn.row_factory = sqlite3.Row
         return self.conn.cursor()
 
@@ -40,20 +21,28 @@ class PostgresCursor:
         self.conn.close()
 
 
-def seed_users(users):
+def seed_users(config, users):
+    with PostgresCursor(config) as cur:
+        letters = string.ascii_lowercase
 
-    with SQLiteCursor() as cur:
-        for p in users:
-
-            cur.execute(f"""insert into api_person (username, password) values
-            (?, ?)
-                        """, (p.first_name, str(random.randint(100, 200))))
+        for i, p in enumerate(users):
+            cur.execute(
+                """
+                insert into api_user (username, password, role_id)
+                values (%s, %s, %s)
+                """,
+                (
+                    f'{p.first_name}_{p.last_name}',
+                    ''.join(random.choice(letters) for _ in range(10)),
+                    str(random.randint(1, 2)),
+                )
+            )
 
 
 class User:
 
-    def __init__(self, id_, email, first_name, last_name, avatar):
-        self.id = id_
+    def __init__(self, id, email, first_name, last_name, avatar):
+        self.id = id
         self.email = email
         self.first_name = first_name
         self.last_name = last_name
@@ -61,25 +50,21 @@ class User:
 
 
 def load_users():
-    url = "https://reqres.in/api/users?page=2"
+    r = []
 
-    headers = {'Content-type': 'application/json'}
-    res = requests.get(url, headers=headers)
-    parsed_res = json.loads(res.text)
+    for page in [1, 2]:
+        url = f"https://reqres.in/api/users?page={page}"
 
-    return [User(**p) for p in parsed_res["data"]]
+        headers = {'Content-type': 'application/json'}
+        res = requests.get(url, headers=headers)
+        parsed_res = json.loads(res.text)
+
+        r += [User(**p) for p in parsed_res["data"]]
+
+    return r
 
 
 def main():
-    users = load_users()
-    seed_users(users)
-
-
-if __name__ == '__main__':
-    # main()
-
-    # cur.execute("insert into api_user (id, username, password, role_id) values (%s, %s, %s, %s)", (1, "user 1", "pass 1", 1))
-
     db_config = {
         "database": config("DB_NAME"),
         "user": config("DB_USER"),
@@ -88,8 +73,9 @@ if __name__ == '__main__':
         "port": config("DB_PORT")
     }
 
+    users = load_users()
+    seed_users(db_config, users)
 
-    with PostgresCursor(db_config) as cur:
-        cur.execute("select * from api_user")
-        rows = cur.fetchall()
-        print(rows)
+
+if __name__ == '__main__':
+    main()
