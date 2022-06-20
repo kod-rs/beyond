@@ -13,7 +13,6 @@ class PostgresCursor:
         self.conn = psycopg2.connect(**config)
 
     def __enter__(self):
-        # self.conn.row_factory = sqlite3.Row
         return self.conn.cursor()
 
     def __exit__(self, _type, value, traceback):
@@ -34,7 +33,7 @@ def seed_users(config, users):
                 (
                     f'{p.first_name}_{p.last_name}',
                     ''.join(random.choice(letters) for _ in range(10)),
-                    str(random.randint(1, 2)),
+                    random.randint(1, 2),
                 )
             )
 
