@@ -1,0 +1,43 @@
+keycloak 18.0.1
+
+create new realm
+name it:
+    beyond
+
+create new user
+-users
+-add user
+
+fill:
+    username
+check:
+    email verified
+
+-credentials
+uncheck temporary
+
+check user
+http://localhost:8080/realms/beyond/account
+
+clients
+
+client id
+    beyond_cli
+
+edit
+
+name
+    beyond cli
+
+check implicit flow enabled
+
+valid redirect uris
+    http://localhost:8000/*
+
+web origins
+    *
+
+-------------------------
+
+enpoints
+http://localhost:8080/realms/beyond/.well-known/openid-configuration
