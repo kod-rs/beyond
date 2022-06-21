@@ -1,36 +1,30 @@
 from django.contrib.auth.backends import BaseBackend
+from django.contrib.auth.models import User
 
-from .models import User
 
 class ModelBackend(BaseBackend):
     def authenticate(self, request, username=None, password=None):
-        # Check the username/password and return a user.
-        # ...
 
         if not request:
             return None
 
         print("custom auth", username, password)
 
-        print(f"{User.objects=}")
-        for i in User.objects.all():
-            if i.username == username:
-                print("-------------------------------")
-            print(i.username, i.id)
-
-        print(20 * " -")
-
         try:
-            user = User.objects.all().get(username=username)
-            # print(f"{User.objects=}")
-            # print(user)
-            print(80 * "-")
-            print("found user")
-            print(user)
+            user = User.objects.get(username=username)
+            print(user.password)
 
-            return user
+            if user.password == password:
+                print("------------ password ok")
+
+                return user
+
+            else:
+                print("------------ password mismatch")
+                return None
 
         except User.DoesNotExist:
+            print("------------------not found")
             return None
 
         # # return User()
