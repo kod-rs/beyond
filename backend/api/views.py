@@ -71,42 +71,15 @@ class SnippetDetail(APIView):
         print(f"{request.user=}")
         print(f"{request.auth=}")
 
-        # t = HttpRequest.read(request)
-        # print("t je  ", t)
-
         print(request.data)
 
         username = request.data["username"]
         password = request.data["password"]
-        print(f"{username=}")
-        print(f"{password=}")
 
         user = authenticate(request, username=username, password=password)
 
-        return JsonResponse({'is_auth_correct': 'yes',
-                             "username": username,
-                             "p": password})
+        if not user:
+            return JsonResponse({'is_auth_correct': False})
 
-        # if user is not None:
-        #     return JsonResponse({'is_auth_correct': 'yes'})
-        #
-        #     # login(request, user)
-        #     # Redirect to a success page.
-        #     # ...
-        # else:
-        #     return JsonResponse({'is_auth_correct': 'no'})
-        #     # Return an 'invalid login' error message.
-        #     # ...
-
-        # print(request.data)
-        #
-        #
-        # from random import randint
-        # is_auth_correct = randint(0,1)
-        #
-        # # return JsonResponse({'is_auth_correct': is_auth_correct} + request.data)
-        #
-        # if is_auth_correct:
-        #     return JsonResponse({'is_auth_correct': 'yes'})
-        # else:
-        #     return JsonResponse({'is_auth_correct': 'no'})
+        else:
+            return JsonResponse({'is_auth_correct': True})
