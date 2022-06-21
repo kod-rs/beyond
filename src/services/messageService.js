@@ -14,7 +14,10 @@ export default {
               .then(response => response.data)
   },
   postLogin(username, password) {
-    return api.post(`login?username=${encodeURIComponent(username)}&password=${encodeURIComponent(password)}`)
+    return api.post(`login/?username=${encodeURIComponent(username)}&password=${encodeURIComponent(password)}`)
     .then(response => response.data)
+  },
+  customFunction() {
+    return "hello";
   }
 }
