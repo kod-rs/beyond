@@ -23,7 +23,7 @@
                 Hello {{ username }}
             </p>
             
-            <input  v-model="username" placeholder="Username" />
+            <input type="text" v-model="username" placeholder="Username" />
 
         </p>
 
