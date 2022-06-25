@@ -41,3 +41,15 @@ web origins
 
 enpoints
 http://localhost:8080/realms/beyond/.well-known/openid-configuration
+
+realm
+    konfiguracija
+
+    clients
+        korisnici iste konfig
+        - sve app koje koriste tu konf
+
+roles
+    role unutar realma
+
+    ovo je drugacije od clients > roles

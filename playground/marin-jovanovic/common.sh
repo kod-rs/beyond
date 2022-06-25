@@ -30,3 +30,7 @@ npm run serve
 
 #
 http://localhost:8080/realms/beyond_realm/
+
+# todo for prod
+https://www.keycloak.org/docs/latest/server_installation/
+ssl
