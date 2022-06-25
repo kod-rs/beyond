@@ -1,0 +1,5 @@
+send email on login
+send email on signup
+forgot password
+2fa
+check password strength
