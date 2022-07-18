@@ -78,8 +78,20 @@ class SnippetDetail(APIView):
 
         user = authenticate(request, username=username, password=password)
 
-        if not user:
-            return JsonResponse({'is_auth_correct': False})
+        responseJson = {
+            "ok": True,
+            "id": "user.id",
+            "username": "user.username",
+            "firstName": "user.firstName",
+            "lastName": "user.lastName"
+        }
 
-        else:
-            return JsonResponse({'is_auth_correct': True})
+        return JsonResponse(responseJson)
+
+        # if not user:
+        #
+
+        #     return JsonResponse({'is_auth_correct': False})
+        #
+        # else:
+        #     return JsonResponse({'is_auth_correct': True})
