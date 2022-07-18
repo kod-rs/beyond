@@ -92,7 +92,8 @@ def keycloak_nekiget():
 def main():
     # keycloak_list_users()
     # keycloak_obtain_token()
-    keycloak_nekiget()
+    # keycloak_nekiget()
+    login()
 
 if __name__ == '__main__':
     main()
