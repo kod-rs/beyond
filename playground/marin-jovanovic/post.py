@@ -87,13 +87,23 @@ def keycloak_nekiget():
 
     print(json.dumps(json.loads(t.text), indent=4, sort_keys=True))
 
+def keycloak_api_login():
+    url = "http://127.0.0.1:8000/auth/login/usr1/"
+    data = {
+        "name": "begin"
+    }
 
+    t = requests.post(url, data=data, verify=False)
+    print(t)
+    print(json.dumps(json.loads(t.text), indent=4, sort_keys=True))
 
 def main():
     # keycloak_list_users()
     # keycloak_obtain_token()
     # keycloak_nekiget()
-    login()
+    # login()
+    keycloak_api_login()
+
 
 if __name__ == '__main__':
     main()
