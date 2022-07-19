@@ -5,3 +5,4 @@ psycopg2-binary==2.9.3
 psycopg2==2.9.3
 python-decouple==3.6
 requests==2.25.1
+pip install django-cors-headers
