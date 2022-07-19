@@ -26,6 +26,8 @@ def pureDjangoView(request):
 
 urlpatterns = [
 
+    path('auth/', include('social_django.urls', namespace='social')),
+
     path('puredjango', pureDjangoView, name='home'),
 
     # path('snippets/<int:pk>', views.snippet_detail),
