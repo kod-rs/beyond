@@ -1,4 +1,4 @@
-# BEYOND / IZNAD
+# BEYOND
 
 #### how to run
 
