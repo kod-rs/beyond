@@ -1,20 +1,5 @@
-some things are changed due to incompatibility
+node v16
 
-source
-https://github.com/gtalarico/django-vue-template
-
-changes made in
-/backend/api/apps.py
-/Pipfile
-
-Prerequisites
-    node version 16 (tested on 16.15.1)
-    if node 17 is installed:
-        nvm install 16.15.1
-        nvm use 16.15.1
-        // check with node --version that now using 16
-        // ako je node 17 onda nece radit yarn
-    python 3.6 najbolje, ako je neki drugi nema veze
 setup
 yarn install
 //open venv, tu se nudi ovaj pipenv al to vjerojatno ti nece radit
