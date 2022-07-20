@@ -27,8 +27,35 @@ DEBUG = True
 ALLOWED_HOSTS = ['*']
 
 # Application definition
+SITE_ID = 1
+
+# fe6e954735ab
+
+# Set your keycloak url and realm
+SOCIALACCOUNT_PROVIDERS = {
+    'keycloak': {
+        'KEYCLOAK_URL': 'http://localhost:8080/auth',
+        'KEYCLOAK_REALM': 'beyond'
+        # 'KEYCLOAK_REALM': 'beyond'
+    }
+}
+
+
+KEYCLOAK_CONFIG = {
+    'KEYCLOAK_SERVER_URL': 'http://localhost:8080/auth',
+    'KEYCLOAK_REALM': 'beyond_realm',
+    'KEYCLOAK_CLIENT_ID': 'Myclient',
+    'KEYCLOAK_CLIENT_SECRET_KEY': 'yMd5cnrqljbDwkBFlPNETyvhZPuNNf2e'
+}
+
 
 INSTALLED_APPS = [
+    'django.contrib.sites',
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    'allauth.socialaccount.providers.keycloak',
+
     'corsheaders',
     'social_django',
     # 'social_django_mongoengine',
@@ -48,8 +75,10 @@ SOCIAL_AUTH_JSONFIELD_ENABLED = True
 
 MIDDLEWARE = [
     "corsheaders.middleware.CorsMiddleware",
-    "django.middleware.common.CommonMiddleware",
-    'django.middleware.security.SecurityMiddleware',
+    'django-keycloak-auth.middleware.KeycloakMiddleware',
+
+    # "django.middleware.common.CommonMiddleware",
+    # 'django.middleware.security.SecurityMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -61,6 +90,11 @@ MIDDLEWARE = [
 
 CORS_ORIGIN_ALLOW_ALL = True
 CORS_ALLOW_CREDENTIALS = True
+
+
+# Exempt URIS
+# For example: ['core/banks', 'swagger']
+KEYCLOAK_EXEMPT_URIS = []
 
 
 # CORS_ALLOWED_ORIGINS = [
@@ -162,8 +196,14 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 # custom config
 
 AUTHENTICATION_BACKENDS = [
+    # Needed to login by username in Django admin, regardless of allauth
+    'django.contrib.auth.backends.ModelBackend',
+
+    # allauth specific authentication methods, such as login by e-mail
+    'allauth.account.auth_backends.AuthenticationBackend',
+
     # 'django.contrib.auth.backends.ModelBackend',
-    "backend.api.customAuth.ModelBackend",
+    # "backend.api.customAuth.ModelBackend",
     'social_core.backends.keycloak.KeycloakOAuth2',
     'django.contrib.auth.backends.ModelBackend'
 ]
