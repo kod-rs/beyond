@@ -27,13 +27,13 @@ def pureDjangoView(request):
 
 urlpatterns = [
 
-    path('accounts/', include('allauth.urls')),
+    # path('accounts/', include('allauth.urls')),
 
-    path('bank', BankViewSet.as_view, name='bank'),
-    path('car', CarViewSet.as_view, name='car'),
-    path('jud', JudgementView.as_view(), name='jud'),
+    # path('bank', BankViewSet.as_view, name='bank'),
+    # path('car', CarViewSet.as_view, name='car'),
+    # path('jud', JudgementView.as_view(), name='jud'),
 
-    path('auth/', include('social_django.urls', namespace='social')),
+    # path('auth/', include('social_django.urls', namespace='social')),
 
     path('puredjango', pureDjangoView, name='home'),
 
