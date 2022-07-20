@@ -5,9 +5,11 @@ from decouple import config
 def pretty_print_json(payload):
     print(json.dumps(payload, indent=4, sort_keys=True))
 
+realm = "beyond"
+
 
 def get_links():
-    baselink = "http://localhost:8080/realms/beyond/protocol/openid-connect"
+    baselink = f"http://localhost:8080/realms/{realm}/protocol/openid-connect"
     links = {
         "authorization-uri": baselink + "/auth",
         "user-info-uri": baselink + "/userinfo",
@@ -24,12 +26,12 @@ def get_con():
         "client id": "beyond_cli",
         "authorization grant type": "password",
 
-        # todo ovo ide u dotenv
         "client secret": config("client_secret"),
         "scope": "openid, profile"
     }
 
-def keycloak_obtain_token(username="mirko", password="mirko"):
+# def keycloak_obtain_token(username="mirko", password="mirko"):
+def keycloak_obtain_token(username="user1", password="p"):
 
     url = "http://localhost:8080/realms/beyond/protocol/openid-connect/token"
     data = {
@@ -118,7 +120,6 @@ def is_valid(token):
 
 
 
-
 def main():
     print("login")
     res = keycloak_obtain_token()
@@ -129,7 +130,17 @@ def main():
 
     print("check valid")
     print(f"{is_valid(access_token)=}")
+
+    print(80 * "_")
+
+    res = get_user_info(access_token)
+    print(res)
+
+    return
+
+
     print(f"{is_valid('fake token')=}")
+
 
     print("logout")
     res = logout(refresh_token)
