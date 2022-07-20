@@ -43,6 +43,16 @@ def keycloak_obtain_token():
         # "password": "user1"
     }
 
+    # url = "http://localhost:8080/realms/beyond_realm/protocol/openid-connect/token"
+    # data = {
+    #     "grant_type": "password",
+    #     "client_id": "beyond_cli",
+    #     "username": "Myuser",
+    #     "password": "p"
+    #     # "username": "user1",
+    #     # "password": "user1"
+    # }
+
     t = requests.post(url, data=data, verify=False)
 
     print(json.dumps(json.loads(t.text), indent=4, sort_keys=True))
@@ -87,22 +97,65 @@ def keycloak_nekiget():
 
     print(json.dumps(json.loads(t.text), indent=4, sort_keys=True))
 
-def keycloak_api_login():
-    url = "http://127.0.0.1:8000/auth/login/usr1/"
+# def keycloak_api_login():
+#     url = "http://127.0.0.1:8000/auth/login/usr1/"
+#     data = {
+#         "name": "begin"
+#     }
+#
+#     t = requests.post(url, data=data, verify=False)
+#     print(t)
+#     print(json.dumps(json.loads(t.text), indent=4, sort_keys=True))
+
+
+def kc():
+    url = "http://127.0.0.1:8000/judgements/"
+
     data = {
-        "name": "begin"
+        # "grant_type": "password",
+        # "client_id": "beyond_cli",
+        # "username": "mirko",
+        # "password": "mirko"
+        # "sub": "d0a45bca-edf3-4334-a195-db827349a52d",
+        # "email_verified": False,
+        # "preferred_username": "test-api"
+        "realm_access": {
+            "roles": [
+                "director",
+            ]
+        },
+
     }
 
-    t = requests.post(url, data=data, verify=False)
+    t = requests.get(url, headers={
+        "Accept": "application/json",
+        "Authorization": "123"
+    }, data=data, verify=False)
     print(t)
     print(json.dumps(json.loads(t.text), indent=4, sort_keys=True))
 
+def kc_admin():
+
+    url = "http://localhost:8082/login"
+    data = {
+        "username": "edwin",
+        "password": "p"
+    }
+
+    t = requests.post(url, data=data, verify=False)
+
+    print(json.dumps(json.loads(t.text), indent=4, sort_keys=True))
+
+
 def main():
+    """"""
+    # kc_admin()
     # keycloak_list_users()
-    # keycloak_obtain_token()
+    keycloak_obtain_token()
     # keycloak_nekiget()
     # login()
-    keycloak_api_login()
+    # keycloak_api_login()
+    # kc()
 
 
 if __name__ == '__main__':
