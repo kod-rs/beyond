@@ -7,11 +7,9 @@ import jwt
 def pretty_print_json(payload):
     print(json.dumps(payload, indent=4, sort_keys=True))
 
-realm = "beyond"
-
 
 def get_links():
-    baselink = f"http://localhost:8080/realms/{realm}/protocol/openid-connect"
+    baselink = f"http://localhost:8080/realms/{get_con()['realm']}/protocol/openid-connect"
     links = {
         "authorization-uri": baselink + "/auth",
         "user-info-uri": baselink + "/userinfo",
@@ -25,6 +23,7 @@ def get_links():
 def get_con():
 
     return {
+        "realm": "beyond",
         "client id": "beyond_cli",
         "authorization grant type": "password",
 
@@ -33,14 +32,12 @@ def get_con():
     }
 
 def get_roles(access_token):
-    print(80 * "#")
     t = jwt.decode(access_token, options={"verify_signature": False})
     t = t["resource_access"]
-    # print(t)
     t = t["beyond_cli"]
-    # print(t)
     t = t["roles"]
     return t
+
 # def keycloak_obtain_token(username="mirko", password="mirko"):
 def keycloak_obtain_token(username="user1", password="p"):
 
@@ -59,29 +56,7 @@ def keycloak_obtain_token(username="user1", password="p"):
 
     res_text = json.loads(res.text)
 
-    pretty_print_json(res_text)
-
-    # access_token = res_text["access_token"]
-    # print(access_token)
-    # header = jwt.get_unverified_header(access_token)
-    # print(header)
-    # [print(type(i)) for i in header]
-    # print(header["alg"])
-    # print(jwt.decode(access_token, options={"verify_signature": False}))
-    # print(jwt.decode(access_token, algorithms=header["alg"]))
-    # return
-    # print(jwt.decode(access_token, header["kid"], algorithms=header["alg"]))
-
-    # access_token = str(access_token).split(".", 1)
-    # print(f"{access_token=}")
-    # print(len(access_token))
-    # print(access_token[1])
-
-    # decoded = jwt.decode(str(access_token).split(".",1)[1], algorithms=decoded["alg"])
-    # print(decoded)
-
-    # decoded = jwt.decode(access_token, options={
-    #     "verify_signature": True}, algorithms="RS256")  # works in PyJWT >= v2.0
+    # pretty_print_json(res_text)
 
     return res_text
 
@@ -90,19 +65,17 @@ def logout(refresh_token):
     url = get_links()["logout"]
 
     data = {
-        # "username": username,
-        # "password": password,
+
         "client_id": get_con()["client id"],
-        # "grant_type": get_con()["authorization grant type"],
         "client_secret": get_con()["client secret"],
         "refresh_token": refresh_token
 
     }
 
     res = requests.post(url, data=data, verify=False)
-    print(res)
-    print(res.text)
-    print(type(res))
+    # print(res)
+    # print(res.text)
+    # print(type(res))
     if res.status_code == 204:
         print("ok")
         return True
@@ -110,12 +83,7 @@ def logout(refresh_token):
         print("err")
         return False
 
-    # if res ==
-    # res_text = json.loads(res.text)
 
-    # pretty_print_json(res_text)
-
-    # return res_text
 
 def get_user_info(token):
 
@@ -133,12 +101,6 @@ def get_user_info(token):
 
     return res_text
 
-# def get_roles(token):
-#     response = get_user_info(token)
-#
-#     print("todo iscupaj roles")
-#     return response["roles"]
-
 def is_valid(token):
     res = get_user_info(token)
     if all((i in res) for i in ["email_verified", "preferred_username", "sub"]):
@@ -153,13 +115,13 @@ def is_valid(token):
 
 
 def main():
-    print("login")
+    # print("login")
     res = keycloak_obtain_token()
-    # return
+    print("login res", res)
 
     roles = get_roles(res["access_token"])
     print(f"{roles=}")
-    return
+
     access_token = res["access_token"]
     refresh_token = res["refresh_token"]
     # print(access_token)
@@ -172,7 +134,6 @@ def main():
     res = get_user_info(access_token)
     print(res)
 
-    return
 
 
     print(f"{is_valid('fake token')=}")
