@@ -8,7 +8,8 @@ from django.contrib import admin
 from django.urls import path, include
 from rest_framework import routers
 
-from .api.views import index_view, MessageViewSet, SnippetDetail
+from .api.views import index_view, MessageViewSet, SnippetDetail,\
+    BankViewSet, CarViewSet, JudgementView
 
 router = routers.DefaultRouter()
 router.register('messages', MessageViewSet)
@@ -25,6 +26,12 @@ def pureDjangoView(request):
 
 
 urlpatterns = [
+
+    path('accounts/', include('allauth.urls')),
+
+    path('bank', BankViewSet.as_view, name='bank'),
+    path('car', CarViewSet.as_view, name='car'),
+    path('jud', JudgementView.as_view(), name='jud'),
 
     path('auth/', include('social_django.urls', namespace='social')),
 
