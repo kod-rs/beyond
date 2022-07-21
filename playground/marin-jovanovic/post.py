@@ -147,15 +147,28 @@ def kc_admin():
     print(json.dumps(json.loads(t.text), indent=4, sort_keys=True))
 
 
+def kc_login():
+    url = "http://localhost:8000/login/"
+    data = {
+        "username": "user1",
+        "password": "p"
+    }
+
+    t = requests.post(url, data=data, verify=False)
+
+    print(json.dumps(json.loads(t.text), indent=4, sort_keys=True))
+
+
 def main():
     """"""
     # kc_admin()
     # keycloak_list_users()
-    keycloak_obtain_token()
+    # keycloak_obtain_token()
     # keycloak_nekiget()
     # login()
     # keycloak_api_login()
     # kc()
+    kc_login()
 
 
 if __name__ == '__main__':
