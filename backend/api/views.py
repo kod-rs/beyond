@@ -1,7 +1,3 @@
-import json
-import random
-
-from django.http import Http404, HttpRequest
 from django.views.generic import TemplateView
 from django.views.decorators.cache import never_cache
 from rest_framework import viewsets
@@ -14,7 +10,6 @@ from django.http import JsonResponse
 
 # todo write custom auth
 # https://docs.djangoproject.com/en/4.0/topics/auth/customizing/
-from django.contrib.auth import authenticate, login
 
 
 # Serve Vue Application
@@ -29,15 +24,12 @@ class MessageViewSet(viewsets.ModelViewSet):
     serializer_class = MessageSerializer
 
 
-# model
 class Person(models.Model):
 
     username = models.CharField(max_length=200)
     password = models.CharField(max_length=200)
 
 
-
-# for data representation
 class PersonSerializer(serializers.Serializer):
     username = serializers.CharField(max_length=200)
     password = serializers.CharField(max_length=200)
@@ -75,7 +67,7 @@ class SnippetDetail(APIView):
         username = request.data["username"]
         password = request.data["password"]
 
-        from .keycloak_manager import keycloak_obtain_token
+        from backend.api.keycloak.keycloak_manager import keycloak_obtain_token
         res = keycloak_obtain_token(username, password)
         # access_token = res["access_token"]
 
@@ -97,18 +89,8 @@ class SnippetDetail(APIView):
                 "firstName": "user.firstName",
                 "lastName": "user.lastName"
             }
-        # print("res", res)
 
         # user = authenticate(request, username=username, password=password)
 
 
         return JsonResponse(responseJson)
-
-        # if not user:
-        #
-
-        #     return JsonResponse({'is_auth_correct': False})
-        #
-        # else:
-        #     return JsonResponse({'is_auth_correct': True})
-
