@@ -32,12 +32,9 @@ module.exports = {
             "Access-Control-Allow-Headers": "X-Requested-With, content-type, Authorization",
             "X-Powered-By": 'Beyond'
           },
-        //   ,
 
         proxy: {
             '/api*': {
-            // '/login*': {
-                    // Forward frontend dev server request for /api to django dev server
               target: 'http://localhost:8000/',
             }
         }
@@ -46,7 +43,7 @@ module.exports = {
     externals: {
         // global app config object
         config: JSON.stringify({
-            apiUrl: 'http://localhost:4000',
+            // apiUrl: 'http://localhost:4000',
             djangoApi: 'http://localhost:8000'
         })
     }
