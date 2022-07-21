@@ -6,38 +6,32 @@ export const userService = {
     login,
     logout,
     getAll,
-    apiLogin
+    // apiLogin
 };
 
-function apiLogin(username, password) {
+// function apiLogin(username, password) {
 
-    const requestOptions = {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username, password })
-    };
+//     const requestOptions = {
+//         method: 'POST',
+//         headers: { 'Content-Type': 'application/json' },
+//         body: JSON.stringify({ username, password })
+//     };
 
-    return fetch(`${config.djangoApi}/login`, requestOptions)
-        .then(handleResponse)
-        .then(user => {
-            // login successful if there's a user in the response
-            if (user) {
-                // store user details and basic auth credentials in local storage 
-                // to keep user logged in between page refreshes
-                user.authdata = window.btoa(username + ':' + password);
-                localStorage.setItem('user', JSON.stringify(user));
-            }
+//     return fetch(`${config.djangoApi}/login`, requestOptions)
+//         .then(handleResponse)
+//         .then(user => {
+//             // login successful if there's a user in the response
+//             if (user) {
+//                 // store user details and basic auth credentials in local storage 
+//                 // to keep user logged in between page refreshes
+//                 user.authdata = window.btoa(username + ':' + password);
+//                 localStorage.setItem('user', JSON.stringify(user));
+//             }
 
-            return user;
-        });
+//             return user;
+//         });
 
-}
-
-
-// async function   fetchMessages(payload) {
-//     return api.post(`login/`, payload)
-//               .then(response => response.data)
-//   }
+// }
 
 function login(username, password) {
 
@@ -52,33 +46,6 @@ function login(username, password) {
             return user;
         });
 
-
-    // const requestOptions = {
-    //     method: 'POST',
-    //     headers: { 
-    //         'Content-Type': 'application/json',
-
-    //         "Access-Control-Allow-Origin": "*",
-    //         "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, PATCH, OPTIONS",
-    //         "Access-Control-Allow-Headers": "X-Requested-With, content-type, Authorization"
-
-    //     },
-    //     body: JSON.stringify({ username, password })
-    // };
-
-    // return fetch(`${config.apiUrl}/users/authenticate`, requestOptions)
-    //     .then(handleResponse)
-    //     .then(user => {
-    //         // login successful if there's a user in the response
-    //         if (user) {
-    //             // store user details and basic auth credentials in local storage 
-    //             // to keep user logged in between page refreshes
-    //             user.authdata = window.btoa(username + ':' + password);
-    //             localStorage.setItem('user', JSON.stringify(user));
-    //         }
-
-    //         return user;
-    //     });
 }
 
 function logout() {
@@ -97,13 +64,13 @@ function getAll() {
 
 function handleNewResponse(response) {
     response = response.data
-            
+
     if (!response.ok) {
         if (response.status === 401) {
             logout();
             location.reload(true);
         }
-    
+
         const error = "err"
         return Promise.reject(error);
     }
@@ -120,7 +87,7 @@ function handleResponse(response) {
                 logout();
                 location.reload(true);
             }
-        
+
             const error = (data && data.message) || response.statusText;
             return Promise.reject(error);
         }
