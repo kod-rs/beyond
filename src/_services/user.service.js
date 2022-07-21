@@ -1,5 +1,6 @@
 import config from 'config';
 import { authHeader } from '../_helpers';
+import api from './api'
 
 export const userService = {
     login,
@@ -30,81 +31,54 @@ function apiLogin(username, password) {
             return user;
         });
 
-
-        // ,
-        // "Access-Control-Allow-Origin": "*",
-        // "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, PATCH, OPTIONS",
-        // "Access-Control-Allow-Headers": "X-Requested-With, content-type, Authorization"
-
 }
 
-import api from './api'
 
-async function   fetchMessages(payload) {
-    return api.post(`login/`, payload)
-              .then(response => response.data)
-  }
+// async function   fetchMessages(payload) {
+//     return api.post(`login/`, payload)
+//               .then(response => response.data)
+//   }
 
 function login(username, password) {
-    (async () => {
-    
-        let t = await fetchMessages(
-            JSON.stringify({ username, password })
-        );
-        console.log(t)
-   
 
-    })();
-
-
-
-    // fetch(`${config.djangoApi}/login`, {
-    //     method: 'POST',
-    //     headers: { 
-    //         'Content-Type': 'application/json', 
-    //         "Access-Control-Allow-Origin": "*",
-    //         "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, PATCH, OPTIONS",
-    //         "Access-Control-Allow-Headers": "X-Requested-With, content-type, Authorization"
-
-    //     },
-    //     body: JSON.stringify({ username, password })
-    //     }
-    // ).then(r => {
-    //     console.log("r u json");
-    //     r.json()}).then(r => {
-    //     console.log(r)
-    // })
-
-
-
-
-
-    const requestOptions = {
-        method: 'POST',
-        headers: { 
-            'Content-Type': 'application/json',
-
-            "Access-Control-Allow-Origin": "*",
-            "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, PATCH, OPTIONS",
-            "Access-Control-Allow-Headers": "X-Requested-With, content-type, Authorization"
-
-        },
-        body: JSON.stringify({ username, password })
-    };
-
-    return fetch(`${config.apiUrl}/users/authenticate`, requestOptions)
-        .then(handleResponse)
+    return api.post(`login/`, JSON.stringify({ username, password }))
+        .then(handleNewResponse)
         .then(user => {
-            // login successful if there's a user in the response
             if (user) {
-                // store user details and basic auth credentials in local storage 
-                // to keep user logged in between page refreshes
                 user.authdata = window.btoa(username + ':' + password);
                 localStorage.setItem('user', JSON.stringify(user));
             }
 
             return user;
         });
+
+
+    // const requestOptions = {
+    //     method: 'POST',
+    //     headers: { 
+    //         'Content-Type': 'application/json',
+
+    //         "Access-Control-Allow-Origin": "*",
+    //         "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, PATCH, OPTIONS",
+    //         "Access-Control-Allow-Headers": "X-Requested-With, content-type, Authorization"
+
+    //     },
+    //     body: JSON.stringify({ username, password })
+    // };
+
+    // return fetch(`${config.apiUrl}/users/authenticate`, requestOptions)
+    //     .then(handleResponse)
+    //     .then(user => {
+    //         // login successful if there's a user in the response
+    //         if (user) {
+    //             // store user details and basic auth credentials in local storage 
+    //             // to keep user logged in between page refreshes
+    //             user.authdata = window.btoa(username + ':' + password);
+    //             localStorage.setItem('user', JSON.stringify(user));
+    //         }
+
+    //         return user;
+    //     });
 }
 
 function logout() {
@@ -119,6 +93,21 @@ function getAll() {
     };
 
     return fetch(`${config.apiUrl}/users`, requestOptions).then(handleResponse);
+}
+
+function handleNewResponse(response) {
+    response = response.data
+            
+    if (!response.ok) {
+        if (response.status === 401) {
+            logout();
+            location.reload(true);
+        }
+    
+        const error = "err"
+        return Promise.reject(error);
+    }
+    return response
 }
 
 function handleResponse(response) {
