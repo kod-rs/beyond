@@ -26,12 +26,12 @@ module.exports = {
     devServer: {
         historyApiFallback: true,
         
-        headers: {
-            "Access-Control-Allow-Origin": "*",
-            "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, PATCH, OPTIONS",
-            "Access-Control-Allow-Headers": "X-Requested-With, content-type, Authorization",
-            "X-Powered-By": 'Beyond'
-          },
+        // headers: {
+        //     "Access-Control-Allow-Origin": "*",
+        //     "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, PATCH, OPTIONS",
+        //     "Access-Control-Allow-Headers": "X-Requested-With, content-type, Authorization",
+        //     "X-Powered-By": 'Beyond'
+        //   },
 
         proxy: {
             '/api*': {
@@ -43,7 +43,6 @@ module.exports = {
     externals: {
         // global app config object
         config: JSON.stringify({
-            // apiUrl: 'http://localhost:4000',
             djangoApi: 'http://localhost:8000'
         })
     }
