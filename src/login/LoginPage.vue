@@ -1,8 +1,7 @@
 <template>
     <div>
         <div class="alert alert-info">
-            Username: test<br />
-            Password: test
+            alert
         </div>
         <h2>Login</h2>
         <form @submit.prevent="handleSubmit">
@@ -57,24 +56,6 @@ export default {
             if (!(username && password)) {
                 return;
             }
-
-            // console.log("ovo je nesto na FE");
-            // userService.apiLogin(username, password)
-            // .then(
-            //     user => {console.log("user", user)},
-            //     error => {
-            //         this.error = error;
-            //         this.loading = false;
-            //     }
-            // );
-    
-            // (async () => {
-
-            //     let r = await fetch(`${config.djangoApi}/login`, requestOptions)
-
-
-            // })();
-
 
             this.loading = true;
             userService.login(username, password)
