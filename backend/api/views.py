@@ -76,15 +76,32 @@ class SnippetDetail(APIView):
         username = request.data["username"]
         password = request.data["password"]
 
-        user = authenticate(request, username=username, password=password)
+        from .keycloak_manager import keycloak_obtain_token
+        res = keycloak_obtain_token(username, password)
+        # access_token = res["access_token"]
 
-        responseJson = {
-            "ok": True,
-            "id": "user.id",
-            "username": "user.username",
-            "firstName": "user.firstName",
-            "lastName": "user.lastName"
-        }
+        # todo move to authenticate, enable in settings
+
+        if all((i in res) for i in ["access_token", "expires_in", "refresh_expires_in", "refresh_token", "token_type", "id_token"]):
+            responseJson = {
+                "ok": True,
+                "id": "user.id",
+                "username": username,
+                "firstName": "user.firstName",
+                "lastName": "user.lastName"
+            }
+        else:
+            responseJson = {
+                "ok": False,
+                "id": "user.id",
+                "username": username,
+                "firstName": "user.firstName",
+                "lastName": "user.lastName"
+            }
+        # print("res", res)
+
+        # user = authenticate(request, username=username, password=password)
+
 
         return JsonResponse(responseJson)
 
@@ -97,79 +114,79 @@ class SnippetDetail(APIView):
         #     return JsonResponse({'is_auth_correct': True})
 
 
-from rest_framework import viewsets, views
-from . import models
-    # , serializers
-from rest_framework import status
-from django.http.response import JsonResponse
-from rest_framework.exceptions import PermissionDenied
+# from rest_framework import viewsets, views
+# from . import models
+#     # , serializers
+# from rest_framework import status
+# from django.http.response import JsonResponse
+# from rest_framework.exceptions import PermissionDenied
 
-class BankViewSet(viewsets.ModelViewSet):
-    """
-    Bank endpoint
-    This endpoint has all configured keycloak roles
-    """
-    # serializer_class = serializers.BankSerializer
-    # queryset = models.Bank.objects.all()
-    keycloak_roles = {
-        'GET': ['director', 'judge', 'employee'],
-        'POST': ['director', 'judge', ],
-        'UPDATE': ['director', 'judge', ],
-        'DELETE': ['director', 'judge', ],
-        'PATCH': ['director', 'judge', 'employee'],
-    }
+# class BankViewSet(viewsets.ModelViewSet):
+#     """
+#     Bank endpoint
+#     This endpoint has all configured keycloak roles
+#     """
+#     # serializer_class = serializers.BankSerializer
+#     # queryset = models.Bank.objects.all()
+#     keycloak_roles = {
+#         'GET': ['director', 'judge', 'employee'],
+#         'POST': ['director', 'judge', ],
+#         'UPDATE': ['director', 'judge', ],
+#         'DELETE': ['director', 'judge', ],
+#         'PATCH': ['director', 'judge', 'employee'],
+#     }
+#
+#     def list(self, request):
+#         """
+#         Overwrite method
+#         You can especify your rules inside each method
+#         using the variable 'request.roles' that means a
+#         list of roles that came from authenticated token.
+#         See the following example bellow:
+#         """
+#         # list of token roles
+#         print(request.roles)
+#
+#         # Optional: get userinfo (SUB attribute from JWT)
+#         print(request.userinfo)
+#
+#         return super().list(self, request)
+#
+#
+# class CarViewSet(viewsets.ViewSet):
+#     """
+#     Car endpoint
+#     This endpoint has not configured keycloak roles.
+#     That means all methods will be allowed to access.
+#     """
+#     def list(self, request):
+#         return JsonResponse({"detail": "success"}, status=status.HTTP_200_OK)
 
-    def list(self, request):
-        """
-        Overwrite method
-        You can especify your rules inside each method
-        using the variable 'request.roles' that means a
-        list of roles that came from authenticated token.
-        See the following example bellow:
-        """
-        # list of token roles
-        print(request.roles)
-
-        # Optional: get userinfo (SUB attribute from JWT)
-        print(request.userinfo)
-
-        return super().list(self, request)
-
-
-class CarViewSet(viewsets.ViewSet):
-    """
-    Car endpoint
-    This endpoint has not configured keycloak roles.
-    That means all methods will be allowed to access.
-    """
-    def list(self, request):
-        return JsonResponse({"detail": "success"}, status=status.HTTP_200_OK)
-
-
-class JudgementView(views.APIView):
-    """
-    Judgement endpoint
-    This endpoint has configured keycloak roles only GET method.
-    Other HTTP methods will be allowed.
-    """
-    keycloak_roles = {
-        'GET': ['judge'],
-    }
-
-    def get(self, request, format=None):
-        """
-        Overwrite method
-        You can especify your rules inside each method
-        using the variable 'request.roles' that means a
-        list of roles that came from authenticated token.
-        See the following example bellow:
-        """
-        # list of token roles
-        print(request.roles)
-
-        # Optional: get userinfo (SUB attribute from JWT)
-        print(request.userinfo)
-
-        return super().get(self, request)
+#
+# class JudgementView(views.APIView):
+#     """
+#     Judgement endpoint
+#     This endpoint has configured keycloak roles only GET method.
+#     Other HTTP methods will be allowed.
+#     """
+#     keycloak_roles = {
+#         'GET': ['judge'],
+#     }
+#
+#     def get(self, request, format=None):
+#         """
+#         Overwrite method
+#         You can especify your rules inside each method
+#         using the variable 'request.roles' that means a
+#         list of roles that came from authenticated token.
+#         See the following example bellow:
+#         """
+#         # list of token roles
+#         print(request.roles)
+#
+#         # Optional: get userinfo (SUB attribute from JWT)
+#         print(request.userinfo)
+#
+#         return super().get(self, request)
 
 # http://127.0.0.1:8000/api/callback
