@@ -1,4 +1,7 @@
 import json
+import os
+import sys
+
 import requests
 from decouple import config
 import jwt
@@ -32,10 +35,39 @@ def get_con():
     }
 
 def get_roles(access_token):
+    url = "http://localhost:8080/realms/beyond/protocol/openid-connect/certs"
+    res = requests.get(url, verify=False)
+    res_text = json.loads(res.text)
+    print(res_text)
+
+    public_key = None
+    for k in res_text["keys"]:
+        if k["alg"] == "RS256":
+            # print("alg")
+            public_key = k["n"]
+            print(public_key)
+
+    import jwt
+    from cryptography.hazmat.primitives import serialization
+
+
+    with open("/home/marin/Documents/git/kod-rs/beyond/backend/api/keycloak/pem.key") as f:
+        l = f.read()
+        print(l)
+
+        t = jwt.decode(access_token, key=l,algorithms=["RS256"])
+        print(t)
+
+
+    sys.exit(-1)
+
+    # header = jwt.get_unverified_header(access_token)
     t = jwt.decode(access_token, options={"verify_signature": False})
     t = t["resource_access"]
     t = t["beyond_cli"]
     t = t["roles"]
+    # sys.exit(-1)
+
     return t
 
 # def keycloak_obtain_token(username="mirko", password="mirko"):
