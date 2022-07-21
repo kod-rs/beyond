@@ -1,9 +1,8 @@
 <template>
     <div>
-        <p>zivio, ovo je beyond</p>
+        <p>map placeholder</p>
         <h1>Hi {{user.firstName}}!</h1>
-        <p>You're logged in with Vue.js & Basic HTTP Authentication!!</p>
-        <h3>Users from secure api end point:</h3>
+
         <em v-if="users.loading">Loading users...</em>
         <ul v-if="users.length">
             <li v-for="user in users" :key="user.id">
