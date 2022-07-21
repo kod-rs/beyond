@@ -44,3 +44,9 @@ sudo apt install pgadmin4
 #create user T with superuser password 'T';
 #\q
 #\du
+
+## check tables postgresql
+#select * from information_schema.tables where table_name like 'api%'
+#
+## clear table 'x' postgresql
+#DELETE FROM x
