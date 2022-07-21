@@ -1,13 +1,12 @@
-# from django.test import TestCase, Client, RequestFactory
-# from rest_framework import status
-# from django.conf import settings
-# from .middleware import KeycloakMiddleware, KeycloakConnect
-# from core import views
-# from unittest.mock import Mock
-#
-#
-# class KeycloakMiddlewareTestCase(TestCase):
-#
+from django.test import TestCase, Client, RequestFactory
+from rest_framework import status
+from django.conf import settings
+from core import views
+from unittest.mock import Mock
+
+
+class KeycloakMiddlewareTestCase(TestCase):
+
 #     # Fixture prerequisites to run the tests
 #     # fixtures = ['banks']
 #
