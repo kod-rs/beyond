@@ -9,13 +9,13 @@ def pretty_print_json(payload):
 
 
 def get_links():
-    baselink = f"http://localhost:8080/realms/{get_con()['realm']}/protocol/openid-connect"
+    baselink = f"http://localhost:8080/realms/{get_con()['realm']}/protocol/openid-connect/"
     links = {
-        "authorization-uri": baselink + "/auth",
-        "user-info-uri": baselink + "/userinfo",
-        "token-uri": baselink + "/token",
-        "logout": baselink + "/logout",
-        "jwk-set-uri": baselink + "/certs"
+        "authorization-uri": baselink + "auth",
+        "user-info-uri": baselink + "userinfo",
+        "token-uri": baselink + "token",
+        "logout": baselink + "logout",
+        "jwk-set-uri": baselink + "certs"
     }
 
     return links
@@ -56,8 +56,6 @@ def keycloak_obtain_token(username="user1", password="p"):
 
     res_text = json.loads(res.text)
 
-    # pretty_print_json(res_text)
-
     return res_text
 
 
@@ -73,17 +71,13 @@ def logout(refresh_token):
     }
 
     res = requests.post(url, data=data, verify=False)
-    # print(res)
-    # print(res.text)
-    # print(type(res))
+
     if res.status_code == 204:
         print("ok")
         return True
     else:
         print("err")
         return False
-
-
 
 def get_user_info(token):
 
@@ -134,10 +128,7 @@ def main():
     res = get_user_info(access_token)
     print(res)
 
-
-
     print(f"{is_valid('fake token')=}")
-
 
     print("logout")
     res = logout(refresh_token)
