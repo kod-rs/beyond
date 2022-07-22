@@ -5,20 +5,20 @@ import sys
 import requests
 from decouple import config
 import jwt
-
+import pem
 
 def pretty_print_json(payload):
     print(json.dumps(payload, indent=4, sort_keys=True))
 
 
 def get_links():
-    baselink = f"http://localhost:8080/realms/{get_con()['realm']}/protocol/openid-connect/"
+    base = f"http://localhost:8080/realms/{get_con()['realm']}/protocol/openid-connect/"
     links = {
-        "authorization-uri": baselink + "auth",
-        "user-info-uri": baselink + "userinfo",
-        "token-uri": baselink + "token",
-        "logout": baselink + "logout",
-        "jwk-set-uri": baselink + "certs"
+        "authorization-uri": base + "auth",
+        "user-info-uri": base + "userinfo",
+        "token-uri": base + "token",
+        "logout": base + "logout",
+        "jwk-set-uri": base + "certs"
     }
 
     return links
@@ -34,29 +34,35 @@ def get_con():
         "scope": "openid profile"
     }
 
+
+
 def get_roles(access_token):
-    url = "http://localhost:8080/realms/beyond/protocol/openid-connect/certs"
-    res = requests.get(url, verify=False)
-    res_text = json.loads(res.text)
-    print(res_text)
+    # url = "http://localhost:8080/realms/beyond/protocol/openid-connect/certs"
+    # res = requests.get(url, verify=False)
+    # res_text = json.loads(res.text)
+    # # print(res_text)
+    #
+    # public_key = None
+    # for k in res_text["keys"]:
+    #     if k["alg"] == "RS256":
+    #         public_key = k["n"]
+    #         print(public_key)
+    #
 
-    public_key = None
-    for k in res_text["keys"]:
-        if k["alg"] == "RS256":
-            # print("alg")
-            public_key = k["n"]
-            print(public_key)
+    # pem.generate_keys()
 
-    import jwt
-    from cryptography.hazmat.primitives import serialization
+    current_folder = pathlib.Path(__file__).parent.resolve()
+
+    keys = ["RS256", "RSA-OAEP"]
 
 
-    with open("/home/marin/Documents/git/kod-rs/beyond/backend/api/keycloak/pem.key") as f:
-        l = f.read()
-        print(l)
+    for k in keys:
 
-        t = jwt.decode(access_token, key=l,algorithms=["RS256"])
-        print(t)
+        with open(current_folder / f"{k}.key") as f:
+            l = f.read()
+
+            t = jwt.decode(access_token, key=l,algorithms=["RS256"])
+            # print(t)
 
 
     sys.exit(-1)
