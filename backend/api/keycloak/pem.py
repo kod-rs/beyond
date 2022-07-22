@@ -17,12 +17,19 @@ def base64_to_long(data):
     arr = struct.unpack('%sB' % len(_d), _d)
     return int(''.join(["%02x" % byte for byte in arr]), 16)
 
+
 def generate_keys():
+
     url = config("KEYCLOAK_URL") + "certs"
     jwks = requests.get(url).json()
     pem_keys = {}
 
+    current_folder = pathlib.Path(__file__).parent.resolve()
+
     for jwk in jwks['keys']:
+        key_type = jwk["alg"]
+        if (current_folder / f"{key_type}.key").exists():
+            continue
 
         exponent = base64_to_long(jwk['e'])
         modulus = base64_to_long(jwk['n'])
@@ -35,13 +42,13 @@ def generate_keys():
 
         pem_keys[jwk["alg"]] = pem
 
-    write_keys(pem_keys)
+    write_keys(pem_keys, current_folder)
 
 
-def write_keys(pem_keys):
+def write_keys(pem_keys, current_folder):
     for key_type, key in pem_keys.items():
-        current_folder = pathlib.Path(__file__).parent.resolve()
-        with open(current_folder / f"{key_type}.key") as f:
+        with open(current_folder / f"{key_type}.key", "wb+") as f:
+            print(key)
             f.write(key)
 
 
