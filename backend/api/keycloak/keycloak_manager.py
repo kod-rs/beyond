@@ -1,18 +1,19 @@
 import json
-import os
-import sys
 
 import requests
 from decouple import config
 import jwt
-import pem
+from .keys_manager import get_all_keys, remove_key
+# from .pem import generate_keys
+
 
 def pretty_print_json(payload):
     print(json.dumps(payload, indent=4, sort_keys=True))
 
 
 def get_links():
-    base = f"http://localhost:8080/realms/{get_con()['realm']}/protocol/openid-connect/"
+    base = config("KEYCLOAK_URL")
+
     links = {
         "authorization-uri": base + "auth",
         "user-info-uri": base + "userinfo",
@@ -23,63 +24,45 @@ def get_links():
 
     return links
 
+
 def get_con():
 
     return {
-        "realm": "beyond",
-        "client id": "beyond_cli",
+        "realm": config("KEYCLOAK_REALM"),
+        "client id": config("KEYCLOAK_CLIENT_ID"),
         "authorization grant type": "password",
-
-        "client secret": config("client_secret"),
+        "client secret": config("KEYCLOAK_CLIENT_SECRET"),
         "scope": "openid profile"
     }
 
 
 
 def get_roles(access_token):
-    # url = "http://localhost:8080/realms/beyond/protocol/openid-connect/certs"
-    # res = requests.get(url, verify=False)
-    # res_text = json.loads(res.text)
-    # # print(res_text)
-    #
-    # public_key = None
-    # for k in res_text["keys"]:
-    #     if k["alg"] == "RS256":
-    #         public_key = k["n"]
-    #         print(public_key)
-    #
 
-    # pem.generate_keys()
+    keys = get_all_keys()
+    if keys["status"]:
 
-    current_folder = pathlib.Path(__file__).parent.resolve()
+        for k_type, k in keys["payload"]:
+            try:
+                jwt_ = jwt.decode(
+                    access_token,
+                    key=k,
+                    algorithms=[k_type]
+                )
+            except jwt.exceptions.InvalidAlgorithmError:
+                print("removing", k_type)
+                remove_key(k_type)
+                continue
 
-    keys = ["RS256", "RSA-OAEP"]
+            return jwt_["resource_access"][get_con()["client id"]]["roles"]
 
-
-    for k in keys:
-
-        with open(current_folder / f"{k}.key") as f:
-            l = f.read()
-
-            t = jwt.decode(access_token, key=l,algorithms=["RS256"])
-            # print(t)
+    else:
+        print("no keys")
 
 
-    sys.exit(-1)
+def keycloak_obtain_token(username, password):
 
-    # header = jwt.get_unverified_header(access_token)
-    t = jwt.decode(access_token, options={"verify_signature": False})
-    t = t["resource_access"]
-    t = t["beyond_cli"]
-    t = t["roles"]
-    # sys.exit(-1)
-
-    return t
-
-# def keycloak_obtain_token(username="mirko", password="mirko"):
-def keycloak_obtain_token(username="user1", password="p"):
-
-    url = "http://localhost:8080/realms/beyond/protocol/openid-connect/token"
+    url = get_links()["token-uri"]
 
     data = {
         "username": username,
@@ -129,39 +112,26 @@ def get_user_info(token):
 
     res_text = json.loads(res.text)
 
-    pretty_print_json(res_text)
-
     return res_text
 
 def is_valid(token):
     res = get_user_info(token)
     if all((i in res) for i in ["email_verified", "preferred_username", "sub"]):
-        print("login true")
         return True
     elif all((i in res) for i in ["error", "error_description"]):
-        print("login false")
         return False
     else:
-        print("other err")
+        return False
 
-
-
-def main():
-    # print("login")
-    res = keycloak_obtain_token()
-    print("login res", res)
+def test():
+    res = keycloak_obtain_token("mirko", "mirko")
+    access_token = res["access_token"]
+    refresh_token = res["refresh_token"]
 
     roles = get_roles(res["access_token"])
     print(f"{roles=}")
 
-    access_token = res["access_token"]
-    refresh_token = res["refresh_token"]
-    # print(access_token)
-
-    print("check valid")
     print(f"{is_valid(access_token)=}")
-
-    print(80 * "_")
 
     res = get_user_info(access_token)
     print(res)
@@ -169,12 +139,14 @@ def main():
     print(f"{is_valid('fake token')=}")
 
     print("logout")
-    res = logout(refresh_token)
+    print(f"{logout(refresh_token)=}")
 
     print(f"{is_valid(access_token)=}")
+    print(f"{is_valid('fake token')=}")
 
-    # res = check_validity(access_token)
-    # res = check_validity("access_token")
+
+def main():
+    test()
 
 if __name__ == '__main__':
     main()
