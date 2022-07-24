@@ -8,7 +8,7 @@ from django.contrib import admin
 from django.urls import path, include
 from rest_framework import routers
 
-from .api.views import index_view, MessageViewSet, SnippetDetail
+from .api.views import index_view, MessageViewSet, LoginView
     # BankViewSet, CarViewSet, JudgementView
 
 from .api.startup import run_startup
@@ -42,7 +42,7 @@ urlpatterns = [
     path('puredjango', pureDjangoView, name='home'),
 
     # path('snippets/<int:pk>', views.snippet_detail),
-    path('login/', SnippetDetail.as_view()),
+    path('login/', LoginView.as_view()),
 
     # http://localhost:8000/
     path('', index_view, name='index'),
