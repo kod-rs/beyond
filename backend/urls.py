@@ -11,8 +11,9 @@ from rest_framework import routers
 from .api.views import index_view, MessageViewSet, SnippetDetail
     # BankViewSet, CarViewSet, JudgementView
 
-from .api.keycloak.pem import generate_keys
-generate_keys()
+from .api.startup import run_startup
+run_startup()
+
 
 router = routers.DefaultRouter()
 router.register('messages', MessageViewSet)
