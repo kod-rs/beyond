@@ -2,10 +2,13 @@
 
     <div>
         <div>
-            <router-link :to="{ name: 'dashboard' }">dashboard</router-link> |
+            <router-link :to="{ name: 'page1' }">page 1</router-link> |
+            <router-link :to="{ name: 'page2' }">page 2</router-link> |
+
+    <!-- <router-link :to="{ name: 'dashboard' }">dashboard</router-link> |
             <router-link :to="{ name: 'login' }">login</router-link> |
             <router-link :to="{ name: 'home' }">home</router-link> |
-            <router-link :to="{ name: 'messages' }">db communicator test</router-link>
+            <router-link :to="{ name: 'messages' }">db communicator test</router-link> -->
         </div>
 
 
