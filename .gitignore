@@ -1,6 +1,7 @@
 #
 #
 #
+keys_db
 
 keycloak-18.0.1
 # copied from https://github.com/gtalarico/django-vue-template
