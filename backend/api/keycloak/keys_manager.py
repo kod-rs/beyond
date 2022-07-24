@@ -33,11 +33,13 @@ def add_keys(key_type, key):
             INSERT OR REPLACE INTO k (key_type, key) VALUES (?, ?)
         """, (key_type, key))
 
+
 def remove_key(key_type):
     with SQLiteCursor() as cur:
         cur.execute("""
             DELETE FROM k where key_type = ?
         """, (key_type,))
+
 
 def get_all_keys():
     with SQLiteCursor() as cur:
