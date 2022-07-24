@@ -44,6 +44,9 @@ export default {
         // reset login status
         userService.logout();
 
+// fixme fix return, not redirecting properly
+// todo error message log
+
         // get return url from route parameters or default to '/'
         this.returnUrl = this.$route.query.returnUrl || '/';
     },
