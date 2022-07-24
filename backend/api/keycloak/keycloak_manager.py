@@ -1,10 +1,10 @@
 import json
 
+import jwt
 import requests
 from decouple import config
-import jwt
+
 from .keys_manager import get_all_keys, remove_key
-# from .pem import generate_keys
 
 
 def pretty_print_json(payload):
@@ -26,7 +26,6 @@ def get_links():
 
 
 def get_con():
-
     return {
         "realm": config("KEYCLOAK_REALM"),
         "client id": config("KEYCLOAK_CLIENT_ID"),
@@ -36,9 +35,7 @@ def get_con():
     }
 
 
-
 def get_roles(access_token):
-
     keys = get_all_keys()
     if keys["status"]:
 
@@ -61,7 +58,6 @@ def get_roles(access_token):
 
 
 def keycloak_obtain_token(username, password):
-
     url = get_links()["token-uri"]
 
     data = {
@@ -100,8 +96,8 @@ def logout(refresh_token):
         print("err")
         return False
 
-def get_user_info(token):
 
+def get_user_info(token):
     url = get_links()["user-info-uri"]
 
     headers = {
@@ -114,6 +110,7 @@ def get_user_info(token):
 
     return res_text
 
+
 def is_valid(token):
     res = get_user_info(token)
     if all((i in res) for i in ["email_verified", "preferred_username", "sub"]):
@@ -123,7 +120,8 @@ def is_valid(token):
     else:
         return False
 
-def test():
+
+def main():
     res = keycloak_obtain_token("mirko", "mirko")
     access_token = res["access_token"]
     refresh_token = res["refresh_token"]
@@ -144,9 +142,6 @@ def test():
     print(f"{is_valid(access_token)=}")
     print(f"{is_valid('fake token')=}")
 
-
-def main():
-    test()
 
 if __name__ == '__main__':
     main()
