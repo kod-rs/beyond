@@ -39,7 +39,7 @@ function login(username, password) {
         .then(handleNewResponse)
         .then(user => {
             if (user) {
-                user.authdata = window.btoa(username + ':' + password);
+                // user.authdata = window.btoa(username + ':' + password);
                 localStorage.setItem('user', JSON.stringify(user));
             }
 
