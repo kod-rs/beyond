@@ -1,7 +1,9 @@
 <template>
     <div>
         <p>map placeholder</p>
-        <h1>Hi {{user.firstName}}!</h1>
+        <!-- <h1>Hi {{user.firstName}}!</h1> -->
+
+        <p>this is  index</p>
 
         <em v-if="users.loading">Loading users...</em>
         <ul v-if="users.length">
