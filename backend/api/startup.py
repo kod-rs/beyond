@@ -13,9 +13,6 @@ def run_startup():
     generate_keys()
     print(" 2 keycloak keys generated")
 
-    from .keycloak.keycloak_manager import test
-    test()
-
 def main():
     run_startup()
 
