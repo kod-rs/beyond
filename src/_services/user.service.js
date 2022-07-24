@@ -1,37 +1,12 @@
 import config from 'config';
-import { authHeader } from '../_helpers';
 import api from './api'
 
 export const userService = {
     login,
     logout,
-    getAll,
-    // apiLogin
+
 };
 
-// function apiLogin(username, password) {
-
-//     const requestOptions = {
-//         method: 'POST',
-//         headers: { 'Content-Type': 'application/json' },
-//         body: JSON.stringify({ username, password })
-//     };
-
-//     return fetch(`${config.djangoApi}/login`, requestOptions)
-//         .then(handleResponse)
-//         .then(user => {
-//             // login successful if there's a user in the response
-//             if (user) {
-//                 // store user details and basic auth credentials in local storage 
-//                 // to keep user logged in between page refreshes
-//                 user.authdata = window.btoa(username + ':' + password);
-//                 localStorage.setItem('user', JSON.stringify(user));
-//             }
-
-//             return user;
-//         });
-
-// }
 
 function login(username, password) {
 
@@ -53,14 +28,25 @@ function logout() {
     localStorage.removeItem('user');
 }
 
-function getAll() {
-    const requestOptions = {
-        method: 'GET',
-        headers: authHeader()
-    };
+// function getAll() {
+//     const requestOptions = {
+//         method: 'GET',
+//         headers: authHeader()
+//     };
 
-    return fetch(`${config.apiUrl}/users`, requestOptions).then(handleResponse);
-}
+// export function authHeader() {
+//     // return authorization header with basic auth credentials
+//     let user = JSON.parse(localStorage.getItem('user'));
+
+//     if (user && user.authdata) {
+//         return { 'Authorization': 'Basic ' + user.authdata };
+//     } else {
+//         return {};
+//     }
+// }
+
+//     return fetch(`${config.apiUrl}/users`, requestOptions).then(handleResponse);
+// }
 
 function handleNewResponse(response) {
     response = response.data
