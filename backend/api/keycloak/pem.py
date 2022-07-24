@@ -1,14 +1,13 @@
 import base64
-import json
-
-import six
 import struct
 
-from cryptography.hazmat.primitives.asymmetric.rsa import RSAPublicNumbers
-from cryptography.hazmat.primitives import serialization
 import requests
-from decouple import config
-import pathlib
+import six
+from cryptography.hazmat.primitives import serialization
+from cryptography.hazmat.primitives.asymmetric.rsa import RSAPublicNumbers
+
+from .keycloak_manager import get_links
+from .keys_manager import add_keys
 
 
 def base64_to_long(data):
@@ -19,69 +18,30 @@ def base64_to_long(data):
     b = struct.unpack('%sB' % len(decoded), decoded)
     return int(''.join(["%02x" % byte for byte in b]), 16)
 
-def read_present_keys():
-    current_folder = pathlib.Path(__file__).parent.resolve()
-
-    key_types_path = current_folder / "key_types.json"
-
-    present_keys = None
-    if key_types_path.exists():
-        with open(key_types_path, "r") as f:
-            present_keys = json.loads(f.read())
-            # print(present_keys)
-
-    return present_keys
-
-
-
 
 def generate_keys():
-
-    url = config("KEYCLOAK_URL") + "certs"
+    url = get_links()["jwk-set-uri"]
     jwks = requests.get(url).json()
     pem_keys = {}
 
-    current_folder = pathlib.Path(__file__).parent.resolve()
+    for jwk in jwks['keys']:
+        exponent = base64_to_long(jwk['e'])
+        modulus = base64_to_long(jwk['n'])
+        numbers = RSAPublicNumbers(exponent, modulus)
+        public_key = numbers.public_key()
+        pem = public_key.public_bytes(
+            encoding=serialization.Encoding.PEM,
+            format=serialization.PublicFormat.SubjectPublicKeyInfo
+        )
 
-    key_types_path = current_folder / "key_types.txt"
+        pem_keys[jwk["alg"]] = pem
 
-
-
-    with open("key_types.txt", "w+") as f:
-
-        for jwk in jwks['keys']:
-            key_type = jwk["alg"]
-            if (current_folder / f"{key_type}.key").exists():
-                continue
-
-
-
-            exponent = base64_to_long(jwk['e'])
-            modulus = base64_to_long(jwk['n'])
-            numbers = RSAPublicNumbers(exponent, modulus)
-            public_key = numbers.public_key()
-            pem = public_key.public_bytes(
-                encoding=serialization.Encoding.PEM,
-                format=serialization.PublicFormat.SubjectPublicKeyInfo
-            )
-
-            pem_keys[jwk["alg"]] = pem
-
-        write_keys(pem_keys, current_folder)
+    write_keys(pem_keys)
 
 
-def write_keys(pem_keys, current_folder):
-    # current_folder = pathlib.Path(__file__).parent.resolve()
-
-    key_types_path = current_folder / "key_types.json"
-
-    with open(key_types_path, "w+") as f1:
-        f1.write(json.dumps(pem_keys))
-
-        for key_type, key in pem_keys.items():
-            with open(current_folder / f"{key_type}.key", "wb+") as f:
-                print(key)
-                f.write(key)
+def write_keys(pem_keys):
+    for k_type, k in pem_keys.items():
+        add_keys(k_type, k)
 
 
 def main():
@@ -90,4 +50,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-    # read_present_keys()
