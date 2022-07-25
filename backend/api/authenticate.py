@@ -1,4 +1,4 @@
-from backend.api.keycloak.keycloak_manager import keycloak_obtain_token, get_roles, get_user_info
+from backend.api.keycloak.keycloak_manager import keycloak_obtain_token, get_roles, get_user_info, is_valid
 
 
 def login(username, password):
@@ -24,6 +24,15 @@ def login(username, password):
         }
 
     return responseJson
+
+def check_tokens(access_token, refresh_token):
+    return is_valid(access_token)
+
+    # responseJson = {
+    #     "ok": is_valid(access_token),
+    # }
+    #
+    # return responseJson
 
 def main():
     pass
