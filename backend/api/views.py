@@ -8,6 +8,7 @@ from rest_framework import serializers
 from django.db import models
 from django.http import JsonResponse
 from backend.api.keycloak.keycloak_manager import keycloak_obtain_token, get_roles, get_user_info
+from backend.api.authenticate import login
 
 # todo write custom auth
 # https://docs.djangoproject.com/en/4.0/topics/auth/customizing/
@@ -106,27 +107,29 @@ class LoginView(APIView):
         username = request.data["username"]
         password = request.data["password"]
 
-        res = keycloak_obtain_token(username, password)
+        responseJson = login(username, password)
 
-        # todo move to authenticate, enable in settings
-
-        if all((i in res) for i in ["access_token", "expires_in", "refresh_expires_in", "refresh_token", "token_type", "id_token"]):
-            access_token = res["access_token"]
-            refresh_token = res["refresh_token"]
-
-            responseJson = {
-                "ok": True,
-                "id": "user.id",
-                "username": username,
-
-                "access_token": access_token,
-                "refresh_token": refresh_token
-            }
-        else:
-            responseJson = {
-                "ok": False,
-
-            }
+        # res = keycloak_obtain_token(username, password)
+        #
+        # # todo move to authenticate, enable in settings
+        #
+        # if all((i in res) for i in ["access_token", "expires_in", "refresh_expires_in", "refresh_token", "token_type", "id_token"]):
+        #     access_token = res["access_token"]
+        #     refresh_token = res["refresh_token"]
+        #
+        #     responseJson = {
+        #         "ok": True,
+        #         "id": "user.id",
+        #         "username": username,
+        #
+        #         "access_token": access_token,
+        #         "refresh_token": refresh_token
+        #     }
+        # else:
+        #     responseJson = {
+        #         "ok": False,
+        #
+        #     }
 
         # user = authenticate(request, username=username, password=password)
 
