@@ -17,6 +17,7 @@ run_startup()
 
 router = routers.DefaultRouter()
 router.register('messages', MessageViewSet)
+from django.http import JsonResponse
 
 # router.register('tmp', TmpViewSet)
 # router.register('snippets/<int:pk>', SnippetDetail)
@@ -25,8 +26,7 @@ router.register('messages', MessageViewSet)
 from django.http import HttpResponse
 
 
-def pureDjangoView(request):
-    return HttpResponse("home page")
+from backend.api.view.dbView import pureDjangoView
 
 
 urlpatterns = [
