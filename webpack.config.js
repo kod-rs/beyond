@@ -25,12 +25,9 @@ module.exports = {
     devServer: {
         historyApiFallback: true,
         headers: {
-
-     //     "Access-Control-Allow-Origin": "*",
-     //     "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, PATCH, OPTIONS",
-     //     "Access-Control-Allow-Headers": "X-Requested-With, content-type, Authorization",
             "X-Powered-By": 'Beyond',
-            "Cache-Control": "max-age=300, must-revalidate"
+            "Cache-Control": "max-age=300, must-revalidate",
+            "Strict-Transport-Security": "max-age=31536000; includeSubDomains"
         },
         proxy: {
             '/api*': {
