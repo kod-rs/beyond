@@ -29,28 +29,28 @@ ALLOWED_HOSTS = ['*']
 SITE_ID = 1
 
 # Set your keycloak url and realm
-SOCIALACCOUNT_PROVIDERS = {
-    'keycloak': {
-        'KEYCLOAK_URL': 'http://localhost:8080/auth',
-        'KEYCLOAK_REALM': 'beyond'
-    }
-}
+# SOCIALACCOUNT_PROVIDERS = {
+#     'keycloak': {
+#         'KEYCLOAK_URL': 'http://localhost:8080/auth',
+#         'KEYCLOAK_REALM': 'beyond'
+#     }
+# }
 
 
-KEYCLOAK_CONFIG = {
-    'KEYCLOAK_SERVER_URL': 'http://localhost:8080/auth',
-    'KEYCLOAK_REALM': 'beyond_realm',
-    'KEYCLOAK_CLIENT_ID': 'Myclient',
-    'KEYCLOAK_CLIENT_SECRET_KEY': 'yMd5cnrqljbDwkBFlPNETyvhZPuNNf2e'
-}
+# KEYCLOAK_CONFIG = {
+#     'KEYCLOAK_SERVER_URL': 'http://localhost:8080/auth',
+#     'KEYCLOAK_REALM': 'beyond_realm',
+#     'KEYCLOAK_CLIENT_ID': 'Myclient',
+#     'KEYCLOAK_CLIENT_SECRET_KEY': 'yMd5cnrqljbDwkBFlPNETyvhZPuNNf2e'
+# }
 
 
 INSTALLED_APPS = [
     'django.contrib.sites',
-    'allauth',
-    'allauth.account',
-    'allauth.socialaccount',
-    'allauth.socialaccount.providers.keycloak',
+    # 'allauth',
+    # 'allauth.account',
+    # 'allauth.socialaccount',
+    # 'allauth.socialaccount.providers.keycloak',
 
     'corsheaders',
     'social_django',
@@ -67,11 +67,15 @@ INSTALLED_APPS = [
 ]
 
 # SOCIAL_AUTH_STORAGE = 'social_django_mongoengine.models.DjangoStorage'
-SOCIAL_AUTH_JSONFIELD_ENABLED = True
+# SOCIAL_AUTH_JSONFIELD_ENABLED = True
+
+PWD = os.path.dirname(os.path.realpath(__file__ ))
 
 MIDDLEWARE = [
     "corsheaders.middleware.CorsMiddleware",
-    'django-keycloak-auth.middleware.KeycloakMiddleware',
+    "backend.api.middleware.ipCheckMiddleware.IpCheckMiddleware",
+    # "api.ipCheckMiddleware.IpCheckMiddleware",
+    # 'django-keycloak-auth.middleware.KeycloakMiddleware',
 
     # "django.middleware.common.CommonMiddleware",
     # 'django.middleware.security.SecurityMiddleware',
