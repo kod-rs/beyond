@@ -1,4 +1,5 @@
-from backend.api.keycloak.keycloak_manager import keycloak_obtain_token, get_roles, get_user_info, is_valid
+from backend.api.keycloak.keycloak_manager import keycloak_obtain_token, \
+    is_valid
 
 
 def login(username, password):
