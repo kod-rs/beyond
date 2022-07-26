@@ -11,14 +11,14 @@ from backend.api.keycloak.pem import generate_keys
 from django.core import serializers
 
 def get_roles(access_token):
-    # todo fix
     keys = get_all_keys()
-    print("printing keys")
+    # print("printing keys")
     # for k in keys.iterator():
     #     print(k)
     # keys = serializers.serialize("python", keys)
 
-    print(30 * "-", "get roles", 30 * "-")
+    # print(30 * "-", "get roles", 30 * "-")
+    # print(f"{access_token=}")
     # print(keys)
 
     # if not keys.exists():
@@ -28,9 +28,9 @@ def get_roles(access_token):
     else:
         print("keys exist")
 
-    print("printing keys")
-    for k in keys.iterator():
-        print(k, k.key_type, k.key_value[:10])
+    # print("printing keys")
+    # for k in keys.iterator():
+    #     print(k, k.key_type, k.key_value[:10])
 
     # keys = serializers.serialize("python", keys)
     keys = get_all_keys()
@@ -44,8 +44,6 @@ def get_roles(access_token):
             print(f"{k=}")
             # k = str.encode(k)
             print(f"{access_token[:10]=}")
-
-
 
             # k = bytes(k, "utf-8")
             # print(type(k), k[:-1])
@@ -139,6 +137,7 @@ def is_valid(access_token, refresh_token):
         }
     else:
         print(2)
+        print("")
         roles = get_roles(access_token)
         print(f"{roles=}")
 
@@ -146,7 +145,6 @@ def is_valid(access_token, refresh_token):
         print("res after refresh", res)
 
         if all((i in res) for i in ["access_token", "refresh_token"]):
-
 
             return {
                 "is_valid": True,
