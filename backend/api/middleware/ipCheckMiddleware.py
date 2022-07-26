@@ -1,6 +1,6 @@
 from django.http import JsonResponse
 from ipware import get_client_ip
-from backend.api.cqrs_c.ip import log_user_auth_atempt, auth_user
+from backend.api.cqrs_c.ip import log_user_auth_attempt, auth_user
 from backend.api.cqrs_q.ip import check_max_count
 from backend.api.authenticate import login, check_tokens
 
@@ -18,7 +18,6 @@ class IpCheckMiddleware:
 
     def check_tokens(self, access_token, refresh_token):
         """"""
-        print("todo other check ")
         return check_tokens(access_token, refresh_token)["is_valid"]
 
     def __call__(self, request):
@@ -31,7 +30,7 @@ class IpCheckMiddleware:
         else:
             print("todo using http")
 
-        print(request.headers)
+        # print(request.headers)
         ip, is_routable = get_client_ip(request)
 
         if is_routable:
@@ -51,13 +50,14 @@ class IpCheckMiddleware:
             print("max try exceeded")
             return JsonResponse(rejection)
 
-        log_user_auth_atempt(ip)
+        log_user_auth_attempt(ip)
 
         is_validated = None
-
+        print("ipc 1")
         if request.headers:
 
             if all((i in request.headers) for i in ["username", "password"]):
+                print("ipc 2")
 
                 is_validated = self.check_username_password(
                     request.headers["username"],
@@ -66,15 +66,19 @@ class IpCheckMiddleware:
 
             elif all((i in request.headers) for i in
                      ["access-token", "refresh-token"]):
+                print("using tokens")
+                print("ipc 3")
 
                 is_validated = self.check_tokens(
                     request.headers["access_token"],
                     request.headers["refresh_token"]
                 )
+            print("ipc 4")
+
 
         if not is_validated:
             return JsonResponse(rejection)
 
         else:
-            auth_user(ip, 0)
+            auth_user(ip)
             return self.get_response(request)
