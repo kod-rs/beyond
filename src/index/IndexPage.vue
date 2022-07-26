@@ -14,7 +14,6 @@
 </template>
 
 <script>
-// import { userService } from '../_services';
 
 export default {
     data() {
@@ -26,7 +25,6 @@ export default {
     created() {
         this.user = JSON.parse(localStorage.getItem('user'));
         this.users.loading = true;
-        // userService.getAll().then(users => this.users = users);
     }
 };
 </script>

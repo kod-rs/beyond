@@ -1,5 +1,4 @@
-import config from 'config';
-import api from './api'
+import api from './api';
 
 export const userService = {
     login,
@@ -14,7 +13,6 @@ function login(username, password) {
         .then(handleNewResponse)
         .then(user => {
             if (user) {
-                // user.authdata = window.btoa(username + ':' + password);
                 localStorage.setItem('user', JSON.stringify(user));
             }
 
@@ -24,29 +22,8 @@ function login(username, password) {
 }
 
 function logout() {
-    // remove user from local storage to log user out
     localStorage.removeItem('user');
 }
-
-// function getAll() {
-//     const requestOptions = {
-//         method: 'GET',
-//         headers: authHeader()
-//     };
-
-// export function authHeader() {
-//     // return authorization header with basic auth credentials
-//     let user = JSON.parse(localStorage.getItem('user'));
-
-//     if (user && user.authdata) {
-//         return { 'Authorization': 'Basic ' + user.authdata };
-//     } else {
-//         return {};
-//     }
-// }
-
-//     return fetch(`${config.apiUrl}/users`, requestOptions).then(handleResponse);
-// }
 
 function handleNewResponse(response) {
     response = response.data
@@ -69,7 +46,6 @@ function handleResponse(response) {
         const data = text && JSON.parse(text);
         if (!response.ok) {
             if (response.status === 401) {
-                // auto logout if 401 response returned from api
                 logout();
                 location.reload(true);
             }

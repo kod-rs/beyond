@@ -1,10 +1,6 @@
 {
-  "name": "vue-basic-authentication-example",
+  "name": "beyond",
   "version": "1.0.0",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/cornflourblue/vue-basic-authentication-example.git"
-  },
   "license": "MIT",
   "scripts": {
     "start": "webpack-dev-server --open --port 3000",

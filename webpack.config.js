@@ -1,6 +1,8 @@
 var HtmlWebpackPlugin = require('html-webpack-plugin');
+const { VueLoaderPlugin } = require('vue-loader')
 
 module.exports = {
+    //entry: '/src/main.js',
     mode: 'development',
     resolve: {
         extensions: ['.js', '.vue']
@@ -19,9 +21,9 @@ module.exports = {
             }
         ]
     },
-    plugins: [new HtmlWebpackPlugin({
-        template: './src/index.html'
-    })],
+    plugins: [
+        new VueLoaderPlugin(),
+        new HtmlWebpackPlugin({template: './src/index.html'})],
     devServer: {
         historyApiFallback: true,
         headers: {
