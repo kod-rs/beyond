@@ -1,4 +1,4 @@
-# collection of commands
+# collection of cqrs_c
 # not intended to be run as a script
 
 
