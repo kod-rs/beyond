@@ -1,10 +1,8 @@
-from django.db import models
-from rest_framework import serializers
-
 from django.contrib.auth.models import AbstractUser
+from django.db import models
+
 
 class User(AbstractUser):
-
     class Role(models.IntegerChoices):
         AGGREGATOR = 1
         BUILDING_MANAGER = 2
