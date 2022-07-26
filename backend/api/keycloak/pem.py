@@ -6,8 +6,8 @@ import six
 from cryptography.hazmat.primitives import serialization
 from cryptography.hazmat.primitives.asymmetric.rsa import RSAPublicNumbers
 
-from .keycloak_manager import get_links
-from .keys_manager import add_keys
+from backend.api.keycloak.keycloak_manager import get_links
+from backend.api.keycloak.keys_manager import add_keys
 
 
 def base64_to_long(data):
