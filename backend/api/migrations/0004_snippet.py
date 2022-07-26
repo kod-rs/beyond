@@ -4,7 +4,6 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ('api', '0003_rename_bio_person_password_alter_person_username'),
     ]
@@ -13,9 +12,11 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Snippet',
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('id', models.AutoField(auto_created=True, primary_key=True,
+                                        serialize=False, verbose_name='ID')),
                 ('created', models.DateTimeField(auto_now_add=True)),
-                ('title', models.CharField(blank=True, default='', max_length=100)),
+                ('title',
+                 models.CharField(blank=True, default='', max_length=100)),
                 ('code', models.TextField()),
                 ('linenos', models.BooleanField(default=False)),
             ],
