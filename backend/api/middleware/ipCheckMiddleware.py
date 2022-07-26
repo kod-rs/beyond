@@ -1,15 +1,17 @@
+from decouple import config
 from django.http import JsonResponse
 from ipware import get_client_ip
+
+from backend.api.authenticate import login, check_tokens
 from backend.api.cqrs_c.ip import log_user_auth_attempt, auth_user
 from backend.api.cqrs_q.ip import check_max_count
-from backend.api.authenticate import login, check_tokens
 
 
 class IpCheckMiddleware:
     def __init__(self, get_response):
         self.get_response = get_response
 
-        self.max_brute_force_count = 5
+        self.max_brute_force_count = int(config("MAX_BRUTE_ATTEMPTS"))
 
     def __call__(self, request):
 
@@ -24,7 +26,8 @@ class IpCheckMiddleware:
         ip, is_routable = get_client_ip(request)
 
         if is_routable:
-            print("The client's IP address is publicly routable on the Internet")
+            print(
+                "The client's IP address is publicly routable on the Internet")
         else:
             print("The client's IP address is private")
 
