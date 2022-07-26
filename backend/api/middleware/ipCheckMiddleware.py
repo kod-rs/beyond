@@ -9,16 +9,7 @@ class IpCheckMiddleware:
     def __init__(self, get_response):
         self.get_response = get_response
 
-        self.max_brute_force_count = 500
-
-    def check_username_password(self, username, password):
-        print("username password")
-
-        return login(username, password)["ok"]
-
-    def check_tokens(self, access_token, refresh_token):
-        """"""
-        return check_tokens(access_token, refresh_token)["is_valid"]
+        self.max_brute_force_count = 5
 
     def __call__(self, request):
 
@@ -30,7 +21,6 @@ class IpCheckMiddleware:
         else:
             print("todo using http")
 
-        # print(request.headers)
         ip, is_routable = get_client_ip(request)
 
         if is_routable:
@@ -44,6 +34,7 @@ class IpCheckMiddleware:
 
         if not ip:
             print("unable to get clients ip")
+
             return JsonResponse(rejection)
 
         if check_max_count(ip, self.max_brute_force_count):
@@ -53,28 +44,24 @@ class IpCheckMiddleware:
         log_user_auth_attempt(ip)
 
         is_validated = None
-        print("ipc 1")
         if request.headers:
 
             if all((i in request.headers) for i in ["username", "password"]):
-                print("ipc 2")
+                print("using user pass")
 
-                is_validated = self.check_username_password(
+                is_validated = login(
                     request.headers["username"],
                     request.headers["password"]
-                )
+                )["ok"]
 
             elif all((i in request.headers) for i in
                      ["access-token", "refresh-token"]):
                 print("using tokens")
-                print("ipc 3")
 
-                is_validated = self.check_tokens(
-                    request.headers["access_token"],
-                    request.headers["refresh_token"]
-                )
-            print("ipc 4")
-
+                is_validated = check_tokens(
+                    request.headers["access-token"],
+                    request.headers["refresh-token"]
+                )["is_valid"]
 
         if not is_validated:
             return JsonResponse(rejection)
