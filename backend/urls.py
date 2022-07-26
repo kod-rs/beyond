@@ -1,23 +1,14 @@
-"""project URL Configuration
-
-The `urlpatterns` list routes URLs to views. For more information please see:
-    https://docs.djangoproject.com/en/2.1/topics/http/urls/
-"""
-
 from django.contrib import admin
 from django.urls import path, include
 from rest_framework import routers
+from backend.api.views import MessageViewSet, LoginView, IndexView
+from backend.api.startup import run_startup
 
-from .api.views import  MessageViewSet, LoginView, IndexView
-    # BankViewSet, CarViewSet, JudgementView
-
-from .api.startup import run_startup
 run_startup()
 
 
 router = routers.DefaultRouter()
 router.register('messages', MessageViewSet)
-from django.http import JsonResponse
 
 # router.register('tmp', TmpViewSet)
 # router.register('snippets/<int:pk>', SnippetDetail)
@@ -34,8 +25,6 @@ urlpatterns = [
     # path('accounts/', include('allauth.urls')),
 
     # path('bank', BankViewSet.as_view, name='bank'),
-    # path('car', CarViewSet.as_view, name='car'),
-    # path('jud', JudgementView.as_view(), name='jud'),
 
     # path('auth/', include('social_django.urls', namespace='social')),
 
