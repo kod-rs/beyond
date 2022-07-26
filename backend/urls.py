@@ -3,8 +3,8 @@ from django.urls import path, include
 from rest_framework import routers
 from backend.api.views import MessageViewSet, LoginView, IndexView
 from backend.api.startup import run_startup
-
 run_startup()
+
 
 
 router = routers.DefaultRouter()
