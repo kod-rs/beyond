@@ -8,4 +8,3 @@ def check_max_count(ip, max_count):
 
     except IpCounter.DoesNotExist:
         return False
-
