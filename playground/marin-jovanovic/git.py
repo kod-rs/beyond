@@ -2,6 +2,9 @@ import os
 import pathlib
 import subprocess
 
+# git config --global user.name "Your Name"
+# git config --global user.email "youremail@yourdomain.com"
+
 
 def main():
     base_dir = pathlib.Path(os.getcwd()).parent.parent
