@@ -111,22 +111,36 @@ def get_user_info(token):
     return res_text
 
 
-def is_valid(token):
-    res = get_user_info(token)
+def is_valid(access_token, refresh_token):
+    res = get_user_info(access_token)
     if all((i in res) for i in ["email_verified", "preferred_username", "sub"]):
-        return True
-    elif all((i in res) for i in ["error", "error_description"]):
-        return False
+        return {
+            "is_valid": True,
+            "access_token": access_token,
+            "refresh_token": refresh_token,
+            "test is_current_valid": True
+        }
     else:
-        return False
+        res = try_refresh_token(refresh_token)
+
+        if all((i in res) for i in ["access_token", "refresh_token"]):
+
+            return {
+                "is_valid": True,
+                "access_token": res["access_token"],
+                "refresh_token": res["refresh_token"],
+                "test is_current_valid": False
+            }
+
+        else:
+
+            return {
+                "is_valid": False,
+            }
+
 
 def try_refresh_token(token):
     url = get_links()["token-uri"]
-    # print("url", url)
-
-    headers = {
-        "Authorization": "bearer " + token
-    }
 
     body = {
         "client_id": config("KEYCLOAK_CLIENT_ID"),
@@ -144,25 +158,24 @@ def try_refresh_token(token):
 
 def main():
 
-    access_token = config["access_token"]
-    refresh_token = config["refresh_token"]
 
-    print(f"{is_valid(access_token)=}")
+    res = keycloak_obtain_token("mirko", "mirko")
+    pretty_print_json(res)
+    print()
+    access_token = res["access_token"]
+    refresh_token = res["refresh_token"]
 
-    t = try_refresh_token(refresh_token)
-    print(t)
-
-
-
-    # res = keycloak_obtain_token("mirko", "mirko")
-    # pretty_print_json(res)
-    # access_token = res["access_token"]
-    # refresh_token = res["refresh_token"]
-    #
     # roles = get_roles(res["access_token"])
     # print(f"{roles=}")
-    #
-    # print(f"{is_valid(access_token)=}")
+
+    print("is valid")
+    res = is_valid(access_token, refresh_token)
+    pretty_print_json(res)
+    print()
+    access_token = res["access_token"]
+    refresh_token = res["refresh_token"]
+
+    # print(f"{is_valid(access_token, refresh_token)=}")
 
     #
     # res = get_user_info(access_token)
