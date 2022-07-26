@@ -4,7 +4,7 @@ import jwt
 import requests
 from decouple import config
 
-from .keys_manager import get_all_keys, remove_key
+from backend.api.keycloak.keys_manager import get_all_keys, remove_key
 
 
 def pretty_print_json(payload):
@@ -120,27 +120,61 @@ def is_valid(token):
     else:
         return False
 
+def try_refresh_token(token):
+    url = get_links()["token-uri"]
+    # print("url", url)
+
+    headers = {
+        "Authorization": "bearer " + token
+    }
+
+    body = {
+        "client_id": config("KEYCLOAK_CLIENT_ID"),
+        "grant_type": "refresh_token",
+        "refresh_token": token,
+        "client_secret": get_con()["client secret"],
+
+    }
+
+    res = requests.post(url, data=body, verify=False)
+
+    res_text = json.loads(res.text)
+
+    return res_text
 
 def main():
-    res = keycloak_obtain_token("mirko", "mirko")
-    access_token = res["access_token"]
-    refresh_token = res["refresh_token"]
 
-    roles = get_roles(res["access_token"])
-    print(f"{roles=}")
+    access_token = config["access_token"]
+    refresh_token = config["refresh_token"]
 
     print(f"{is_valid(access_token)=}")
 
-    res = get_user_info(access_token)
-    print(res)
+    t = try_refresh_token(refresh_token)
+    print(t)
 
-    print(f"{is_valid('fake token')=}")
 
-    print("logout")
-    print(f"{logout(refresh_token)=}")
 
-    print(f"{is_valid(access_token)=}")
-    print(f"{is_valid('fake token')=}")
+    # res = keycloak_obtain_token("mirko", "mirko")
+    # pretty_print_json(res)
+    # access_token = res["access_token"]
+    # refresh_token = res["refresh_token"]
+    #
+    # roles = get_roles(res["access_token"])
+    # print(f"{roles=}")
+    #
+    # print(f"{is_valid(access_token)=}")
+
+    #
+    # res = get_user_info(access_token)
+    # print(res)
+    #
+    # print(f"{is_valid('fake token')=}")
+    #
+    # print("logout")
+    # print(f"{logout(refresh_token)=}")
+    #
+    # print(f"{is_valid(access_token)=}")
+    # print(f"{is_valid('fake token')=}")
 
 
 if __name__ == '__main__':
