@@ -23,6 +23,17 @@ function login(username, password) {
 
 function logout() {
     localStorage.removeItem('user');
+    /*
+        return api.post(`logout/`, JSON.string   ify({ username, password }))
+            .then(handleNewResponse)
+            .then(user => {
+                if (user) {
+                    localStorage.setItem('user', JSON.stringify(user));
+                }
+    
+                return user;
+            });
+    */
 }
 
 function handleNewResponse(response) {
