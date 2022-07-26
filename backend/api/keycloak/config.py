@@ -1,7 +1,7 @@
 from decouple import config
 
 
-def get_links():
+def get_urls():
     base = config("KEYCLOAK_URL")
 
     return {
@@ -13,8 +13,7 @@ def get_links():
     }
 
 
-
-def get_con():
+def get_config():
     return {
         "realm": config("KEYCLOAK_REALM"),
         "client id": config("KEYCLOAK_CLIENT_ID"),
