@@ -1,218 +1,84 @@
-import json
-
 from django.http import JsonResponse
 from ipware import get_client_ip
-from rest_framework import status
-
-# from backend.api.view.error import ErrorView
-from rest_framework.renderers import JSONRenderer
-from rest_framework.response import Response
+from backend.api.cqrs_c.ip import log_user_auth_attempt, auth_user
+from backend.api.cqrs_q.ip import check_max_count
 from backend.api.authenticate import login, check_tokens
-from backend.api.model.ip import IpCounter
-
-# from django.db import models
-#
-# class Ip(models.Model):
-#
-#     ip = models.CharField(max_length=200)
-#     counter = models.IntegerField()
 
 
 class IpCheckMiddleware:
     def __init__(self, get_response):
         self.get_response = get_response
-        # self.blocked_response = ErrorView
 
-    def handle_post(self, request, ip, routable):
-        """
-        assumption user password post from login
+        self.max_brute_force_count = 500
 
-        """
+    def check_username_password(self, username, password):
+        print("username password")
 
-        print("post type")
-        # print(type(request))
-        # print(ip, type(ip))
+        return login(username, password)["ok"]
 
-        counter = 6
-        if IpCounter.objects.filter(ip=ip):
-            # if in db increment
-            ip_entry = IpCounter.objects.get(ip=ip)
-            print("in db", ip_entry, ip_entry.counter)
-            ip_entry.counter += 1
-            ip_entry.save()
-        else:
-            # else add with def val 1
-            counter = 1
-            ip_entry = IpCounter(ip=ip, counter=counter)
-            print("not in db", ip_entry, ip_entry.counter)
-            ip_entry.save()
-
-        print("counter", counter, type(counter))
-        if counter > 50:
-            print("max brute f")
-            return False
-
-        # todo if body exist then this is login
-        body = request.body.decode('utf-8')
-        body = json.loads(body)
-        print(body)
-
-        responseJson = login(**body)
-        # print("----")
-        # print(responseJson)
-
-        if responseJson["ok"]:
-            """all ok"""
-
-            if IpCounter.objects.filter(ip=ip):
-                # if in db increment
-                ip_entry = IpCounter.objects.get(ip=ip)
-                print("in db", ip_entry, ip_entry.counter)
-                ip_entry.counter = 1
-                ip_entry.save()
-            else:
-                # else add with def val 1
-                counter = 1
-                ip_entry = IpCounter(ip=ip, counter=counter)
-                print("not in db", ip_entry, ip_entry.counter)
-                ip_entry.save()
-
-            # login can be made, user is logged in
-            return True
-        else:
-            """fcc++"""
-            counter = None
-
-            if IpCounter.objects.filter(ip=ip):
-                # if in db increment
-                ip_entry = IpCounter.objects.get(ip=ip)
-                print("in db", ip_entry, ip_entry.counter)
-                ip_entry.counter += 1
-                ip_entry.save()
-                counter = ip_entry.counter
-            else:
-                # else add with def val 1
-                counter = 1
-                ip_entry = IpCounter(ip=ip, counter=counter)
-                print("not in db", ip_entry, ip_entry.counter)
-                ip_entry.save()
-
-            #
-            return counter > 5
-            # if counter > 5:
-            #     return False
-
-            # print(Ip.objects.filter(ip=ip))
-
-                # todo else this is check for tokens
-
-                # FCC = false combination counter
-
-                # if user password combination not present -> FCC++ for this ip
-
-                # if access token or refresh token is not correct -> FCC++ for this ip
-
-                # if FCC == 5: deny
-                # else continue
-            #
-            #     if ip == "127.0.0.1":
-            #         print("ip blocked", ip)
-            #         return JsonResponse({"ip blocked": True})
-            #
-            #     # We got the client's IP address
-            #     if is_routable:
-            #         print("public ip")
-            #         # The client's IP address is publicly routable on the Internet
-            #     else:
-            #         print("private ip")
-            # # The client's IP address is private
-
-    def handle_other(self, request, ip, routable):
+    def check_tokens(self, access_token, refresh_token):
         """"""
-        print("todo other check ")
-        return check_tokens("access token", "refresh token")
-
+        return check_tokens(access_token, refresh_token)["is_valid"]
 
     def __call__(self, request):
-        # response = self.get_response(request)
-        #
-        # # Code to be executed for each request/response after
-        # # the view is called.
-        #
-        # return response
-        # return JsonResponse({"no ip": True})
 
-        print("ip check")
+        print(80 * "-")
+        print("ip & https check")
+
+        if request.is_secure() == "https":
+            print("using https")
+        else:
+            print("todo using http")
+
+        # print(request.headers)
         ip, is_routable = get_client_ip(request)
 
-        # if is_routable:
-        #     print("public ip")
-        #     # The client's IP address is publicly routable on the Internet
-        # else:
-        #     # The client's IP address is private
-        #     print("private ip")
+        if is_routable:
+            print("The client's IP address is publicly routable on the Internet")
+        else:
+            print("The client's IP address is private")
+
+        rejection = {
+            "rejected": True
+        }
 
         if not ip:
             print("unable to get clients ip")
-            return JsonResponse({"no ip": True})
+            return JsonResponse(rejection)
 
-        # return JsonResponse({"a": True})
+        if check_max_count(ip, self.max_brute_force_count):
+            print("max try exceeded")
+            return JsonResponse(rejection)
+
+        log_user_auth_attempt(ip)
+
+        is_validated = None
+        print("ipc 1")
+        if request.headers:
+
+            if all((i in request.headers) for i in ["username", "password"]):
+                print("ipc 2")
+
+                is_validated = self.check_username_password(
+                    request.headers["username"],
+                    request.headers["password"]
+                )
+
+            elif all((i in request.headers) for i in
+                     ["access-token", "refresh-token"]):
+                print("using tokens")
+                print("ipc 3")
+
+                is_validated = self.check_tokens(
+                    request.headers["access_token"],
+                    request.headers["refresh_token"]
+                )
+            print("ipc 4")
 
 
-        # todo if ip blocklisted return
-
-        is_blocked = None
-
-        if hasattr(request, "body"):
-            body = request.body.decode('utf-8')
-            body = json.loads(body)
-            # print(body, type(body))
-            # print(body["username"])
-            # print("username" in body)
-            # # print(body[0])
-            # print(body ==  True)
-            # print(hasattr(body, "username"))
-            # print(hasattr(body, "passsword"))
-
-            if body and ("username" in body) and ("password" in body):
-                print("check user pass")
-                is_blocked = not self.handle_post(request, ip, is_routable)
-
-        if not is_blocked:
-
-            # handle if body does not contains required params for user - pass login
-            is_blocked = self.handle_other(request, ip, is_routable)
-
-        if is_blocked:
-            return JsonResponse({"no ip": False, "brute force": True})
+        if not is_validated:
+            return JsonResponse(rejection)
 
         else:
-            response = self.get_response(request)
-
-            # Code to be executed for each request/response after
-            # the view is called.
-
-            return response
-
-        # if hasattr(request, "body"):
-        #     print(f"{body=}")
-        #     if not body:
-        #         print("no user pass")
-        #     body = json.loads(body)
-        #     print(body)
-        #
-        #     print("this is post")
-        #     return self.handle_post(request, ip, is_routable)
-
-        # else:
-        #     print("this is nto post")
-        #     return self.handle_other(request, ip, is_routable)
-
-        # # Order of precedence is (Public, Private, Loopback, None)
-        #
-        # response = self.get_response(request)
-        #
-        # # Code to be executed for each request/response after
-        # # the view is called.
-        #
-        # return response
+            auth_user(ip)
+            return self.get_response(request)
