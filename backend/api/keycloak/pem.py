@@ -1,11 +1,13 @@
 import base64
 import struct
+
 import requests
 import six
 from cryptography.hazmat.primitives import serialization
 from cryptography.hazmat.primitives.asymmetric.rsa import RSAPublicNumbers
-from backend.api.keycloak.config import get_links
-from backend.api.cqrs_c.pem_keys import add_keys
+
+from backend.api.cqrs_c.pem_keys import add_jwt_public_key
+from backend.api.keycloak.config import get_urls
 
 
 def base64_to_long(data):
@@ -18,7 +20,7 @@ def base64_to_long(data):
 
 
 def generate_keys():
-    url = get_links()["jwk-set-uri"]
+    url = get_urls()["jwk-set-uri"]
     jwks = requests.get(url).json()
     pem_keys = {}
 
@@ -39,7 +41,7 @@ def generate_keys():
 
 def write_keys(pem_keys):
     for k_type, k in pem_keys.items():
-        add_keys(k_type, k)
+        add_jwt_public_key(k_type, k)
 
 
 def main():
