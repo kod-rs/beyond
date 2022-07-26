@@ -11,25 +11,26 @@ class KeycloakMiddlewareTestCase(TestCase):
         #     # Animal.objects.create(name="cat", sound="meow")
 
     def test_if_api_calling_is_ok(self):
-        res = keycloak_manager.keycloak_obtain_token("mirko", "mirko")
-        access_token = res["access_token"]
-        refresh_token = res["refresh_token"]
-
-        roles = keycloak_manager.get_roles(res["access_token"])
-        print(f"{roles=}")
-
-        print(f"{keycloak_manager.is_valid(access_token)=}")
-
-        res = keycloak_manager.get_user_info(access_token)
-        print(res)
-
-        print(f"{keycloak_manager.is_valid('fake token')=}")
-
-        print("logout")
-        print(f"{keycloak_manager.logout(refresh_token)=}")
-
-        print(f"{keycloak_manager.is_valid(access_token)=}")
-        print(f"{keycloak_manager.is_valid('fake token')=}")
+        """"""
+        # res = keycloak_manager.keycloak_obtain_token("mirko", "mirko")
+        # access_token = res["access_token"]
+        # refresh_token = res["refresh_token"]
+        #
+        # roles = keycloak_manager.get_roles(res["access_token"])
+        # print(f"{roles=}")
+        #
+        # print(f"{keycloak_manager.is_valid(access_token)=}")
+        #
+        # res = keycloak_manager.get_user_info(access_token)
+        # print(res)
+        #
+        # print(f"{keycloak_manager.is_valid('fake token')=}")
+        #
+        # print("logout")
+        # print(f"{keycloak_manager.logout(refresh_token)=}")
+        #
+        # print(f"{keycloak_manager.is_valid(access_token)=}")
+        # print(f"{keycloak_manager.is_valid('fake token')=}")
 
 # class KeycloakMiddlewareTestCase(TestCase):
 #
