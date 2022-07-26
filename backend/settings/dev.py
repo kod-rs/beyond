@@ -1,5 +1,7 @@
 """
 https://docs.djangoproject.com/en/2.1/ref/settings/
+http://whitenoise.evans.io/en/stable/django.html?highlight=django
+
 """
 
 import os
@@ -8,7 +10,7 @@ from decouple import config
 SETTINGS_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 BASE_DIR = os.path.dirname(SETTINGS_DIR)
 
-SECRET_KEY = 'verybadsecret!!!'
+SECRET_KEY = config("SECRET_KEY")
 
 DEBUG = True
 ALLOWED_HOSTS = ['*']
@@ -19,7 +21,6 @@ SITE_ID = 1
 INSTALLED_APPS = [
     'django.contrib.sites',
     'corsheaders',
-    'social_django',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -61,10 +62,6 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-
-                'social_django.context_processors.backends',
-                'social_django.context_processors.login_redirect',
-
             ],
         },
     },
@@ -93,7 +90,6 @@ USE_I18N = True
 USE_L10N = True
 USE_TZ = True
 
-# http://whitenoise.evans.io/en/stable/django.html?highlight=django
 
 MIDDLEWARE_CLASSES = (
     'whitenoise.middleware.WhiteNoiseMiddleware',
