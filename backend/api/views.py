@@ -15,7 +15,18 @@ from backend.api.authenticate import login
 
 
 # Serve Vue Application
-index_view = never_cache(TemplateView.as_view(template_name='index.html'))
+# index_view = never_cache(TemplateView.as_view(template_name='index.html'))
+
+
+class IndexView(APIView):
+
+    def get(self, request):
+        response = {
+            "ok": "index",
+
+        }
+
+        return JsonResponse(response)
 
 
 class MessageViewSet(viewsets.ModelViewSet):
