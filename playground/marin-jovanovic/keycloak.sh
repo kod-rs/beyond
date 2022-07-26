@@ -14,3 +14,4 @@ https://www.keycloak.org/docs/latest/server_installation/
 ssl
 
 curl -L -X GET 'http://localhost:8080/realms/beyond/protocol/openid-connect/certs'
+
