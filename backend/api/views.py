@@ -1,21 +1,14 @@
-from django.views.generic import TemplateView
-from django.views.decorators.cache import never_cache
-from rest_framework import viewsets
-
-from .models import Message, MessageSerializer
-from rest_framework.views import APIView
-from rest_framework import serializers
 from django.db import models
 from django.http import JsonResponse
-from backend.api.keycloak.keycloak_manager import keycloak_obtain_token, get_roles, get_user_info
+from rest_framework import serializers
+from rest_framework.views import APIView
+
 from backend.api.authenticate import login
+from backend.api.keycloak.keycloak_manager import keycloak_obtain_token
+
 
 # todo write custom auth
 # https://docs.djangoproject.com/en/4.0/topics/auth/customizing/
-
-
-# Serve Vue Application
-# index_view = never_cache(TemplateView.as_view(template_name='index.html'))
 
 
 class IndexView(APIView):
@@ -29,16 +22,7 @@ class IndexView(APIView):
         return JsonResponse(response)
 
 
-class MessageViewSet(viewsets.ModelViewSet):
-    """
-    API endpoint that allows messages to be viewed or edited.
-    """
-    queryset = Message.objects.all()
-    serializer_class = MessageSerializer
-
-
 class Person(models.Model):
-
     username = models.CharField(max_length=200)
     password = models.CharField(max_length=200)
 
@@ -46,7 +30,6 @@ class Person(models.Model):
 class PersonSerializer(serializers.Serializer):
     username = serializers.CharField(max_length=200)
     password = serializers.CharField(max_length=200)
-
 
     def create(self, validated_data):
         """
@@ -81,7 +64,8 @@ class MapView(APIView):
         # todo move to authenticate, enable in settings
 
         if all((i in res) for i in
-               ["access_token", "expires_in", "refresh_expires_in", "refresh_token", "token_type", "id_token"]):
+               ["access_token", "expires_in", "refresh_expires_in",
+                "refresh_token", "token_type", "id_token"]):
             access_token = res["access_token"]
             refresh_token = res["refresh_token"]
 
@@ -118,31 +102,6 @@ class LoginView(APIView):
         username = request.data["username"]
         password = request.data["password"]
 
-        responseJson = login(username, password)
+        response = login(username, password)
 
-        # res = keycloak_obtain_token(username, password)
-        #
-        # # todo move to authenticate, enable in settings
-        #
-        # if all((i in res) for i in ["access_token", "expires_in", "refresh_expires_in", "refresh_token", "token_type", "id_token"]):
-        #     access_token = res["access_token"]
-        #     refresh_token = res["refresh_token"]
-        #
-        #     responseJson = {
-        #         "ok": True,
-        #         "id": "user.id",
-        #         "username": username,
-        #
-        #         "access_token": access_token,
-        #         "refresh_token": refresh_token
-        #     }
-        # else:
-        #     responseJson = {
-        #         "ok": False,
-        #
-        #     }
-
-        # user = authenticate(request, username=username, password=password)
-
-
-        return JsonResponse(responseJson)
+        return JsonResponse(response)
