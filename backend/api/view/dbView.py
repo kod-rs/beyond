@@ -1,7 +1,7 @@
 from django.http import JsonResponse
 
 from backend.api.model.ip import IpCounter
-import json
+
 
 def pureDjangoView(request):
     # return HttpResponse("home page")
