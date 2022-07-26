@@ -1,14 +1,14 @@
 from django.contrib import admin
 from django.urls import path, include
 from rest_framework import routers
-from backend.api.views import MessageViewSet, LoginView, IndexView
+from backend.api.views import LoginView, IndexView
 from backend.api.startup import run_startup
 run_startup()
 
 
 
 router = routers.DefaultRouter()
-router.register('messages', MessageViewSet)
+# router.register('messages', MessageViewSet)
 
 # router.register('tmp', TmpViewSet)
 # router.register('snippets/<int:pk>', SnippetDetail)
