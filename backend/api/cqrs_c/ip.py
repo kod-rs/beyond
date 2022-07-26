@@ -7,13 +7,11 @@ def log_user_auth_attempt(ip):
 
     """
 
-    if IpCounter.objects.filter(ip=ip):
-        ip_entry = IpCounter.objects.get(ip=ip)
-        ip_entry.counter += 1
-        ip_entry.save()
-    else:
-        ip_entry = IpCounter(ip=ip, counter=1)
-        ip_entry.save()
+    i, _ = IpCounter.objects.get_or_create(
+            ip=ip, defaults={"counter": 0}
+    )
+    i.counter += 1
+    i.save()
 
 
 def auth_user(ip):
@@ -22,10 +20,7 @@ def auth_user(ip):
 
     """
 
-    if IpCounter.objects.filter(ip=ip):
-        ip_entry = IpCounter.objects.get(ip=ip)
-        ip_entry.counter = 0
-        ip_entry.save()
-    else:
-        ip_entry = IpCounter(ip=ip, counter=0)
-        ip_entry.save()
+    i, _ = IpCounter.objects.get_or_create(
+            ip=ip, defaults={"counter": 0}
+    )
+    i.save()
