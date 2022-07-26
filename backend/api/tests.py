@@ -1,14 +1,13 @@
 from django.test import TestCase
 
-from keycloak import keycloak_manager
 
 class KeycloakMiddlewareTestCase(TestCase):
     # fixtures = ['banks']
 
-        # def setUp(self):
-        #     """"""
-        #     # Animal.objects.create(name="lion", sound="roar")
-        #     # Animal.objects.create(name="cat", sound="meow")
+    # def setUp(self):
+    #     """"""
+    #     # Animal.objects.create(name="lion", sound="roar")
+    #     # Animal.objects.create(name="cat", sound="meow")
 
     def test_if_api_calling_is_ok(self):
         """"""
@@ -36,25 +35,25 @@ class KeycloakMiddlewareTestCase(TestCase):
 #
 #     def test_if_api_calling_is_ok(self):
 #         self.assertEqual(1, 1)
-        # res = keycloak_obtain_token("mirko", "mirko")
-        # access_token = res["access_token"]
-        # refresh_token = res["refresh_token"]
-        #
-        # roles = get_roles(res["access_token"])
-        # print(f"{roles=}")
-        #
-        # print(f"{is_valid(access_token)=}")
-        #
-        # res = get_user_info(access_token)
-        # print(res)
-        #
-        # print(f"{is_valid('fake token')=}")
-        #
-        # print("logout")
-        # print(f"{logout(refresh_token)=}")
-        #
-        # print(f"{is_valid(access_token)=}")
-        # print(f"{is_valid('fake token')=}")
+# res = keycloak_obtain_token("mirko", "mirko")
+# access_token = res["access_token"]
+# refresh_token = res["refresh_token"]
+#
+# roles = get_roles(res["access_token"])
+# print(f"{roles=}")
+#
+# print(f"{is_valid(access_token)=}")
+#
+# res = get_user_info(access_token)
+# print(res)
+#
+# print(f"{is_valid('fake token')=}")
+#
+# print("logout")
+# print(f"{logout(refresh_token)=}")
+#
+# print(f"{is_valid(access_token)=}")
+# print(f"{is_valid('fake token')=}")
 
 #     # Fixture prerequisites to run the tests
 #     # fixtures = ['banks']
