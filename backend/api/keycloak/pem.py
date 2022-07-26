@@ -1,13 +1,11 @@
 import base64
 import struct
-
 import requests
 import six
 from cryptography.hazmat.primitives import serialization
 from cryptography.hazmat.primitives.asymmetric.rsa import RSAPublicNumbers
-
-from backend.api.keycloak.keycloak_manager import get_links
-from backend.api.keycloak.keys_manager import add_keys
+from backend.api.keycloak.config import get_links
+from backend.api.cqrs_c.pem_keys import add_keys
 
 
 def base64_to_long(data):
