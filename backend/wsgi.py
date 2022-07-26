@@ -15,4 +15,12 @@ from django.core.wsgi import get_wsgi_application
 # ENV on heroku to ensure that the migrate command runs agains the correct DB
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'backend.settings.prod')
 
+# from backend.api.keycloak.pem import generate_keys
+# from backend.api.assets.printer import print_logo
+#
+# print_logo()
+# generate_keys()
+
 application = get_wsgi_application()
+
+
