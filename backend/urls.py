@@ -1,7 +1,9 @@
 from django.contrib import admin
 from django.urls import path, include
 from rest_framework import routers
-from backend.api.views import LoginView, IndexView
+from backend.api.views import IndexView
+from backend.api.view.loginView import LoginView
+from backend.api.view.logoutView import LogoutView
 from backend.api.startup import run_startup
 run_startup()
 
@@ -32,6 +34,7 @@ urlpatterns = [
 
     # path('snippets/<int:pk>', views.snippet_detail),
     path('login/', LoginView.as_view()),
+    path('logout/', LogoutView.as_view()),
     path('', IndexView.as_view()),
 
     # http://localhost:8000/
