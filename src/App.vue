@@ -1,9 +1,10 @@
 <style>
-  @import "https://stackpath.bootstrapcdn.com/bootstrap/4.1.2/css/bootstrap.min.css";
+@import "https://stackpath.bootstrapcdn.com/bootstrap/4.1.2/css/bootstrap.min.css";
 </style>
 
 <template>
-
+    <!-- fff -->
+    <!-- <NavHeader /> -->
     <div>
         <div>
             <router-link :to="{ name: 'page1' }">page 1</router-link> |
@@ -31,6 +32,8 @@
 </template>
 
 <script>
+// import Header from "./components/NavHeader";
+
 export default {
     name: 'app'
 };
