@@ -3,13 +3,11 @@ from django.http import JsonResponse
 from rest_framework import serializers
 from rest_framework.views import APIView
 
-from backend.api.authenticate import login
 from backend.api.keycloak.keycloak_manager import keycloak_obtain_token
 
 
 # todo write custom auth
 # https://docs.djangoproject.com/en/4.0/topics/auth/customizing/
-
 
 class IndexView(APIView):
 
@@ -94,35 +92,4 @@ class MapView(APIView):
         return JsonResponse(response)
 
 
-class LoginView(APIView):
 
-    # used when passing args coded in url, not as args, ie pagination
-    # def post(self, request, pk):
-    def post(self, request):
-
-        response = {
-            "auth": {
-                "status": True,
-                "access-token": request.access_token,
-                "refresh-token": request.refresh_token
-            },
-            "payload": {
-                "page": "index"
-            }
-        }
-
-        return JsonResponse(response)
-
-        # print("post login")
-        #
-        # print(f"{request.user=}")
-        # print(f"{request.auth=}")
-        #
-        # print(request.data)
-        #
-        # username = request.data["username"]
-        # password = request.data["password"]
-        #
-        # response = login(username, password)
-        #
-        # return JsonResponse(response)
