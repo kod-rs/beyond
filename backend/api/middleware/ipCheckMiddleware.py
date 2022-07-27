@@ -55,9 +55,6 @@ class IpCheckMiddleware:
 
         log_user_auth_attempt(ip)
 
-        # print("has headers", request.headers)
-        print("has body", request.body,  type(request.body))
-
         username = None
         password = None
         access_token = None
@@ -77,7 +74,6 @@ class IpCheckMiddleware:
         if request.body:
             body_content = json.loads(request.body.decode("utf-8"))
 
-
             if all((i in body_content) for i in ["username", "password"]):
                 username = body_content["username"]
                 password = body_content["password"]
@@ -87,10 +83,16 @@ class IpCheckMiddleware:
                 access_token = body_content["access-token"]
                 refresh_token = body_content["refresh-token"]
 
+            if all((i in body_content) for i in
+                     ["access_token", "refresh_token"]):
+
+                access_token = body_content["access_token"]
+                refresh_token = body_content["refresh_token"]
+
         print(f"{username=}")
         print(f"{password=}")
-        print(f"{access_token=}")
-        print(f"{refresh_token=}")
+        print(f"{str(access_token)[:15]=}")
+        print(f"{str(refresh_token)[:15]=}")
 
 
         is_validated = None
