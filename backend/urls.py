@@ -32,6 +32,7 @@ urlpatterns = [
 
     # path('snippets/<int:pk>', views.snippet_detail),
     path('login/', LoginView.as_view()),
+    path('', IndexView.as_view()),
 
     # http://localhost:8000/
     # path('', IndexView, name='index'),
