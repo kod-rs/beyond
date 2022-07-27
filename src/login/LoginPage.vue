@@ -59,7 +59,8 @@ export default {
             userService.login(username, password).then(
                 user => router.push(this.returnUrl),
                 error => {
-                    this.error = error;
+                    this.error = "username password combination mismatch"
+                    // this.error = error;
                     this.loading = false;
                 }
             );
