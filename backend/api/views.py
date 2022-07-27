@@ -14,9 +14,16 @@ from backend.api.keycloak.keycloak_manager import keycloak_obtain_token
 class IndexView(APIView):
 
     def get(self, request):
-        response = {
-            "ok": "index",
 
+        response = {
+            "auth": {
+                "status": True,
+                "access-token": request.access_token,
+                "refresh-token": request.refresh_token
+            },
+            "payload": {
+                "page": "index"
+            }
         }
 
         return JsonResponse(response)
@@ -92,16 +99,30 @@ class LoginView(APIView):
     # used when passing args coded in url, not as args, ie pagination
     # def post(self, request, pk):
     def post(self, request):
-        print("post login")
 
-        print(f"{request.user=}")
-        print(f"{request.auth=}")
-
-        print(request.data)
-
-        username = request.data["username"]
-        password = request.data["password"]
-
-        response = login(username, password)
+        response = {
+            "auth": {
+                "status": True,
+                "access-token": request.access_token,
+                "refresh-token": request.refresh_token
+            },
+            "payload": {
+                "page": "index"
+            }
+        }
 
         return JsonResponse(response)
+
+        # print("post login")
+        #
+        # print(f"{request.user=}")
+        # print(f"{request.auth=}")
+        #
+        # print(request.data)
+        #
+        # username = request.data["username"]
+        # password = request.data["password"]
+        #
+        # response = login(username, password)
+        #
+        # return JsonResponse(response)
