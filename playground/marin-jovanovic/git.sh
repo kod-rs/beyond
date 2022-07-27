@@ -1,26 +1,16 @@
-git add /home/kim/Documents/github/kod-rs/beyond/backend/api/keycloak/pem.py
-git commit -m "backend api keycloak pem.py - ref"
+git add /home/kim/Documents/github/kod-rs/beyond/backend/api/views.py
+git commit -m "backend api views.py - fix login"
 git add /home/kim/Documents/github/kod-rs/beyond/playground/marin-jovanovic/git.sh
 git commit -m "playground marin-jovanovic git.sh - "
-git add /home/kim/Documents/github/kod-rs/beyond/backend/api/keycloak/config.py
-git commit -m "backend api keycloak config.py - ref"
+git add /home/kim/Documents/github/kod-rs/beyond/playground/marin-jovanovic/vue-django-interface.txt
+git commit -m "playground marin-jovanovic vue-django-interface.txt - add comm interface"
+git add /home/kim/Documents/github/kod-rs/beyond/src/login/LoginPage.vue
+git commit -m "src login LoginPage.vue - fix login interface"
+git add /home/kim/Documents/github/kod-rs/beyond/backend/urls.py
+git commit -m "backend urls.py - fix login path"
 git add /home/kim/Documents/github/kod-rs/beyond/backend/api/middleware/ipCheckMiddleware.py
-git commit -m "backend api middleware ipCheckMiddleware.py - fix"
-git add /home/kim/Documents/github/kod-rs/beyond/backend/api/middleware/__init__.py
-git commit -m "backend api middleware __init__.py - cleanup"
-git add /home/kim/Documents/github/kod-rs/beyond/backend/api/cqrs_q/ip.py
-git commit -m "backend api cqrs_q ip.py - ref"
-git add /home/kim/Documents/github/kod-rs/beyond/backend/api/model/pem_keys.py
-git commit -m "backend api model pem_keys.py - ref"
+git commit -m "backend api middleware ipCheckMiddleware.py - add support for data and headers credentials"
 git add /home/kim/Documents/github/kod-rs/beyond/test/django.py
-git commit -m "test django.py - test"
-git add /home/kim/Documents/github/kod-rs/beyond/backend/api/model/ip.py
-git commit -m "backend api model ip.py - ref"
-git add /home/kim/Documents/github/kod-rs/beyond/backend/api/assets/beyond_logo.txt
-git commit -m "backend api assets beyond_logo.txt - update"
-git add /home/kim/Documents/github/kod-rs/beyond/backend/api/cqrs_c/ip.py
-git commit -m "backend api cqrs_c ip.py - cleanup"
-git add /home/kim/Documents/github/kod-rs/beyond/backend/api/cqrs_c/pem_keys.py
-git commit -m "backend api cqrs_c pem_keys.py - leanup"
-git add /home/kim/Documents/github/kod-rs/beyond/backend/api/keycloak/keycloak_manager.py
-git commit -m "backend api keycloak keycloak_manager.py - fix"
+git commit -m "test django.py - wip"
+git add /home/kim/Documents/github/kod-rs/beyond/src/_services/user.service.js
+git commit -m "src _services user.service.js - fix login"
