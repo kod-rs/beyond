@@ -3,7 +3,7 @@ import api from './api';
 export const userService = {
     login,
     logout,
-    testCRUD
+    createOrUpdate
 };
 
 
@@ -43,11 +43,57 @@ function logout() {
 
 }
 
-async function testCRUD(id, newValue) {
-    if (localStorage.getItem("user") !== null) {
+function checkTokens() {
+    if ((localStorage.getItem("user") !== null) &&
+        ("auth" in user) &&
+        ("access-token" in user["auth"]) &&
+        ("refresh-token" in user["auth"])
+    ) {
         let user = JSON.parse(window.localStorage.getItem('user'));
         let access_token = user["auth"]["access-token"]
         const refresh_token = user["auth"]["refresh-token"]
+
+        return {
+            "status": true,
+            "access_token": access_token,
+            "refresh_token": refresh_token
+        }
+    } else {
+        return {
+            "status": true
+        }
+    }
+}
+
+async function getAllTest() {
+    const r = checkTokens()
+    if (r["status"]) {
+        let access_token = r["access-token"]
+        const refresh_token = r["refresh-token"]
+
+        const response = await api.put(`getAll/`, JSON.stringify({ access_token, refresh_token }));
+        let r2 = await handleNewResponse(response);
+        return r2;
+
+    }
+}
+
+async function createOrUpdate(id, newValue) {
+    const r = checkTokens()
+    if (r["status"]) {
+        let access_token = r["access-token"]
+        const refresh_token = r["refresh-token"]
+
+
+        // if ((localStorage.getItem("user") !== null) &&
+        //     ("auth" in user) &&
+        //     ("access-token" in user["auth"]) && 
+        //     ("refresh-token" in user["auth"])
+        // ) {
+        //     let user = JSON.parse(window.localStorage.getItem('user'));
+        //     let access_token = user["auth"]["access-token"]
+        //     const refresh_token = user["auth"]["refresh-token"]
+
 
 
         const response = await api.put(`testcrud/`, JSON.stringify({ access_token, refresh_token, id, newValue }));
