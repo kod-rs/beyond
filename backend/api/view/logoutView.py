@@ -16,12 +16,11 @@ class LogoutView(APIView):
         response = {
             "auth": {
                 "status": True,
-                "access-token": "dont need it",
-                "refresh-token": "dont need it"
+                "access-token": None,
+                "refresh-token": None
             },
             "payload": {
                 "page": "logout",
-                "msg": "byeeeee"
             }
         }
 
