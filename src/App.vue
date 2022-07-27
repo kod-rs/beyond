@@ -1,3 +1,7 @@
+<style>
+  @import "https://stackpath.bootstrapcdn.com/bootstrap/4.1.2/css/bootstrap.min.css";
+</style>
+
 <template>
 
     <div>
