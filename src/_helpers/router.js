@@ -4,6 +4,7 @@ import IndexPage from '../index/IndexPage';
 import LoginPage from '../login/LoginPage';
 import Page1 from "../page1/Page1";
 import Page2 from "../page2/Page2";
+import Debug from "../debug/Debug";
 
 export const router = createRouter({
   history: createWebHistory(),
@@ -29,6 +30,10 @@ export const router = createRouter({
     {
       path: '/:pathMatch(.*)*',
       redirect: '/'
+    },
+    {
+      path: "/debug",
+      component: Debug
     }
   ]
 });
