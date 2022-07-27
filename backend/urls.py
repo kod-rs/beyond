@@ -21,6 +21,7 @@ from django.http import HttpResponse
 
 from backend.api.view.dbView import pureDjangoView
 
+from backend.api.model.testCRUD import TestCrudView
 
 urlpatterns = [
 
@@ -36,6 +37,8 @@ urlpatterns = [
     path('login/', LoginView.as_view()),
     path('logout/', LogoutView.as_view()),
     path('', IndexView.as_view()),
+
+    path("testcrud/", TestCrudView.as_view()),
 
     # http://localhost:8000/
     # path('', IndexView, name='index'),
