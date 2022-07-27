@@ -7,7 +7,7 @@ from ipware import get_client_ip
 from backend.api.authenticate import login, check_tokens
 from backend.api.cqrs_c.ip import log_user_auth_attempt, auth_user
 from backend.api.cqrs_q.ip import check_max_count
-
+from backend.api.comm.comm import decode_data
 
 class IpCheckMiddleware:
     def __init__(self, get_response):
@@ -72,7 +72,15 @@ class IpCheckMiddleware:
                 refresh_token = request.headers["refresh-token"]
 
         if request.body:
-            body_content = json.loads(request.body.decode("utf-8"))
+            print("decoding", request.body)
+            body_content = decode_data(request.body)
+            # try:
+            #     body_content = json.loads(request.body.decode("utf-8"))
+            # except json.decoder.JSONDecodeError:
+            #     from urllib.parse import unquote
+            #
+            #     body_content = unquote(request.body)
+
 
             if all((i in body_content) for i in ["username", "password"]):
                 username = body_content["username"]
