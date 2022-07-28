@@ -1,8 +1,9 @@
 from django.db import models
 
 
-class Building(models.Model):
-    building_id = models.AutoField()
+# changed from building to location
+class Location(models.Model):
+    # building_id = models.AutoField()
     # todo check if enum
     building_type =models.CharField(max_length=200)
     # todo check if enum

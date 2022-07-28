@@ -22,14 +22,14 @@ module.exports = {
                 test: /\.css$/i,
                 loader: "css-loader",
                 options: {
-                  esModule: false,
+                    esModule: false,
                 },
-              },
+            },
         ]
     },
     plugins: [
         new VueLoaderPlugin(),
-        new HtmlWebpackPlugin({template: './src/index.html'})],
+        new HtmlWebpackPlugin({ template: './src/index.html' })],
     devServer: {
         historyApiFallback: true,
         headers: {
