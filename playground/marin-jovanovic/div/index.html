@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div id="app">
+        <div class="cell cell-map">
+          Map
+        </div>
+        <div class="cell cell-edit">
+          Edit
+        </div>
+        <div class="cell cell-inspect">
+          Inspect
+        </div>
+      </div>
+
+      <style>
+        html, body {
+          height: 100%;
+          margin: 0;
+        }
+      
+        #app {
+          font-family: Avenir, Helvetica, Arial, sans-serif;
+          height: 100%;
+          display: grid;
+          grid-template-columns: 100vh;
+          grid-auto-rows: 1fr;
+          grid-gap: 1rem;
+          padding: 1rem;
+          box-sizing: border-box;
+        }
+      
+        .cell {
+          border-radius: 4px;
+          background-color: lightgrey;
+        }
+      
+        .cell-map {
+          grid-column: 1;
+          grid-row-start: 1;
+          grid-row-end: 3;
+        }
+      
+        .cell-edit {
+          grid-column: 2;
+          grid-row: 1;
+        }
+      
+        .cell-inspect {
+          grid-column: 2;
+          grid-row: 2;
+        }
+      </style>
+      
+    </body>
+</html>
+
+  
+  
