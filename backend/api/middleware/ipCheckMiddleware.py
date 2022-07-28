@@ -8,6 +8,7 @@ from backend.api.authenticate import login, check_tokens
 from backend.api.cqrs_c.ip import log_user_auth_attempt, auth_user
 from backend.api.cqrs_q.ip import check_max_count
 from backend.api.comm.comm import decode_data
+from backend.api.keycloak.keycloak_manager import get_roles
 
 class IpCheckMiddleware:
     def __init__(self, get_response):
@@ -144,7 +145,10 @@ class IpCheckMiddleware:
             access_token = res["access_token"]
             refresh_token = res["refresh_token"]
 
+
+
             auth_user(ip)
+            request.roles = get_roles(access_token)
             request.access_token = access_token
             request.refresh_token = refresh_token
             return self.get_response(request)
