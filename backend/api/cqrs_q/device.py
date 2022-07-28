@@ -5,6 +5,6 @@ def get_all():
     return Device.objects.all().iterator()
 
 
-def get_by_id(device_id):
-    return Device.objects.filter(device_id=device_id)
+def get_by_id(id):
+    return Device.objects.filter(id=id)
 
