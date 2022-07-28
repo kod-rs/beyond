@@ -1,10 +1,5 @@
-<style>
-@import "https://stackpath.bootstrapcdn.com/bootstrap/4.1.2/css/bootstrap.min.css";
-</style>
-
 <template>
-    <!-- fff -->
-    <!-- <NavHeader /> -->
+
     <div>
         <div>
             <router-link :to="{ name: 'page1' }">page 1</router-link> |
@@ -12,16 +7,16 @@
         </div>
 
 
-        <div class="jumbotron">
+        <!-- <div class="jumbotron">
             <div class="container">
                 <div class="row">
-                    <div class="col-sm-6 offset-sm-3">
-                        <router-view>
-                        </router-view>
-                    </div>
+                    <div class="col-sm-6 offset-sm-3"> -->
+        <router-view>
+        </router-view>
+        <!-- </div>
                 </div>
             </div>
-        </div>
+        </div> -->
 
         <p>
             <router-link to="/login">Logout</router-link>
@@ -29,10 +24,10 @@
 
 
     </div>
+
 </template>
 
 <script>
-// import Header from "./components/NavHeader";
 
 export default {
     name: 'app'
