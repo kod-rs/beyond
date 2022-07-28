@@ -14,25 +14,9 @@ class IpCheckMiddleware:
         self.get_response = get_response
 
         self.max_brute_force_count = int(config("MAX_BRUTE_ATTEMPTS"))
+        self.debug = config("DEBUG") != "0"
 
     def __call__(self, request):
-
-        print(80 * "-")
-        print("ip & https check")
-
-        if request.is_secure() == "https":
-            print("using https")
-        else:
-            print("todo using http")
-
-        ip, is_routable = get_client_ip(request)
-
-        if is_routable:
-            print(
-                "The client's IP address is publicly routable on the Internet")
-        else:
-            print("The client's IP address is private")
-
         rejection = {
             "auth": {
                 "status": False,
@@ -43,13 +27,44 @@ class IpCheckMiddleware:
             "debug": ""
         }
 
+        print(80 * "-")
+
+        print("todo check role")
+
+        if self.debug:
+            print("ip & https check")
+
+
+        if request.is_secure() == "https":
+            if self.debug:
+                print("using https")
+        else:
+            if self.debug:
+                print("using http")
+
+            if config("HTTPS_ONLY") != 0:
+                return JsonResponse(rejection)
+
+        ip, is_routable = get_client_ip(request)
+
+        if is_routable:
+            if self.debug:
+                print(
+                    "The client's IP address is publicly routable on the Internet")
+        else:
+            if self.debug:
+                print("The client's IP address is private")
+
+
         if not ip:
-            print("unable to get clients ip")
+            if self.debug:
+                print("unable to get clients ip")
             rejection["debug"] = "unable to get clients ip"
             return JsonResponse(rejection)
 
         if check_max_count(ip, self.max_brute_force_count):
-            print("max try exceeded")
+            if self.debug:
+                print("max try exceeded")
             rejection["debug"] = "max try exceeded"
             return JsonResponse(rejection)
 
@@ -74,13 +89,6 @@ class IpCheckMiddleware:
         if request.body:
             print("decoding", request.body)
             body_content = decode_data(request.body)
-            # try:
-            #     body_content = json.loads(request.body.decode("utf-8"))
-            # except json.decoder.JSONDecodeError:
-            #     from urllib.parse import unquote
-            #
-            #     body_content = unquote(request.body)
-
 
             if all((i in body_content) for i in ["username", "password"]):
                 username = body_content["username"]
@@ -97,17 +105,19 @@ class IpCheckMiddleware:
                 access_token = body_content["access_token"]
                 refresh_token = body_content["refresh_token"]
 
-        print(f"{username=}")
-        print(f"{password=}")
-        print(f"{str(access_token)[:15]=}")
-        print(f"{str(refresh_token)[:15]=}")
+        if self.debug:
+            print(f"{username=}")
+            print(f"{password=}")
+            print(f"{str(access_token)[:15]=}")
+            print(f"{str(refresh_token)[:15]=}")
 
 
         is_validated = None
         # if request.headers:
 
         if username and password:
-            print("using user pass")
+            if self.debug:
+                print("using user pass")
 
             res = login(username, password)
 
@@ -115,7 +125,8 @@ class IpCheckMiddleware:
 
         elif access_token and refresh_token:
 
-            print("using tokens")
+            if self.debug:
+                print("using tokens")
 
             res = check_tokens(
                 access_token,
