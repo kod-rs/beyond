@@ -4,8 +4,8 @@ from rest_framework import routers
 from backend.api.views import IndexView
 from backend.api.view.loginView import LoginView
 from backend.api.view.logoutView import LogoutView
-from backend.api.startup import run_startup
 from backend.api.view.deviceView import DeviceView
+from backend.api.startup import run_startup
 run_startup()
 
 api_router = routers.DefaultRouter()
@@ -19,7 +19,6 @@ from django.http import HttpResponse
 
 
 from backend.api.view.dbView import pureDjangoView
-
 from backend.api.model.testCRUD import TestCrudView
 
 urlpatterns = [
