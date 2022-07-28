@@ -1,0 +1,54 @@
+data
+	id
+		auto
+	timestamp
+		timestamp
+	value
+		float [W]
+	is_predicted
+		bool
+	location_id
+		int, foreign
+
+device
+	id
+		auto
+	data_id
+		int, foreign
+	type_id
+		int
+	consumption	
+		float [W]
+
+device_type
+	id
+		auto
+	value
+		str
+
+location
+	id
+		auto
+	location_type_id
+		int
+	section
+		str
+	geo
+		geo
+
+location_type
+	id
+		auto
+	value
+		str
+
+temperature
+	id
+		auto
+	timestamp
+		timestamp
+	value
+		float
+	geo
+		# x,y ili podrucje
+		geo
