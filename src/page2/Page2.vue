@@ -1,4 +1,4 @@
-<template>
+<!-- <template>
     <div>
         <p>page 2</p>
     </div>
@@ -6,7 +6,6 @@
     <nav class="navbar navbar-light bg-light">
         <form class="form-inline">
             <input class="form-control mr-sm-2" type="search" placeholder="type location" aria-label="Search">
-            <!-- <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button> -->
         </form>
     </nav>
 
@@ -22,63 +21,71 @@
 
 
 </template>
-
-<script>
-
-
-// export default {
-//     data: () => ({
-//     }),
-//     mounted() {
-//         let recaptchaScript = document.createElement('script')
-//         recaptchaScript.setAttribute('src', 'https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js')
-//         document.head.appendChild(recaptchaScript)
-//     },
-//     methods: {
-//     }
-// }
+ -->
 
 
 
-</script>
+
+
+<template>
+    <div id="wrap">
+        <div id="tf">
+            <div class="cell cell-map">
+                Map
+            </div>
+            <div class="cell cell-edit">
+                Edit
+            </div>
+            <div class="cell cell-inspect">
+                Inspect
+            </div>
+        </div>
+
+    </div>
+</template>
 
 <style>
-/* .row {
-    margin-top: 40px;
-    padding: 0 10px;
+#wrap {
+    height: 100%;
+    margin: 0;
+    border: 2px solid black;
+
 }
 
-.clickable {
-    cursor: pointer;
+
+
+#tf {
+
+
+    font-family: Avenir, Helvetica, Arial, sans-serif;
+    height: 100%;
+    display: grid;
+    grid-template-columns: 100vh;
+    grid-auto-rows: 1fr;
+    grid-gap: 1rem;
+    padding: 1rem;
+    box-sizing: border-box;
 }
 
-.panel-heading span {
-    margin-top: -20px;
-    font-size: 15px;
+.cell {
+    border: 1mm solid black;
+    border-radius: 4px;
+    background-color: lightgrey;
 }
 
-.table>thead>tr>th {
-    border-right: 1px solid #ddd;
-    border-bottom: 0;
+.cell-map {
+    grid-column: 1;
+    grid-row-start: 1;
+    grid-row-end: 3;
 }
 
-.table>tbody>tr>td {
-    border-right: 1px solid #ddd;
+.cell-edit {
+    grid-column: 2;
+    grid-row: 1;
 }
 
-.table>thead>tr>th:last-of-type {
-    border-right: 0px;
+.cell-inspect {
+    grid-column: 2;
+    grid-row: 2;
 }
-
-.table>tbody>tr>td:last-of-type {
-    border-right: 0px;
-}
-
-.panel-body {
-    padding: 0;
-}
-
-.panel-body>.table {
-    margin-bottom: 0px;
-} */
 </style>
