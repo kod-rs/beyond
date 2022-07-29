@@ -47,12 +47,13 @@ export default {
             }),
         })
 
-        this.olMap.on('pointermove', (event) => {
-            const hovered = this.olMap.forEachFeatureAtPixel(event.pixel, (feature) => feature)
-            if (hovered !== this.selectedFeature) {
-                this.$set(this, 'selectedFeature', hovered);
-            }
-        })
+        // this.olMap.on('pointermove', (event) => {
+        //     const hovered = this.olMap.forEachFeatureAtPixel(event.pixel, (feature) => feature)
+        //     if (hovered !== this.selectedFeature) {
+        //         Vue.set(this, 'selectedFeature', hovered);
+        //         // this.$set(this, 'selectedFeature', hovered);
+        //     }
+        // })
 
         this.updateSource(this.geojson)
     },
