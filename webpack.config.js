@@ -1,5 +1,6 @@
 var HtmlWebpackPlugin = require('html-webpack-plugin');
 const { VueLoaderPlugin } = require('vue-loader')
+const path = require('path');
 
 module.exports = {
     mode: 'development',
@@ -30,8 +31,14 @@ module.exports = {
     },
     plugins: [
         new VueLoaderPlugin(),
-        new HtmlWebpackPlugin({ template: './src/index.html' })],
+        new HtmlWebpackPlugin({
+            template: 'src/template/index.html',
+            title: 'Beyond',
+        })],
     devServer: {
+        static: {
+            directory: path.join(__dirname, 'src', 'template'),
+        },
         historyApiFallback: true,
         headers: {
             "X-Powered-By": 'Beyond',
