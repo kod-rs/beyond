@@ -30,9 +30,9 @@ class IpCheckMiddleware:
 
         print(80 * "-")
 
-        print("todo check role")
 
         if self.debug:
+            print("todo check role")
             print("ip & https check")
 
 
@@ -43,7 +43,10 @@ class IpCheckMiddleware:
             if self.debug:
                 print("using http")
 
-            if config("HTTPS_ONLY") != 0:
+            if config("HTTPS_ONLY") != "0":
+                if self.debug:
+                    print("rejecting")
+
                 return JsonResponse(rejection)
 
         ip, is_routable = get_client_ip(request)
