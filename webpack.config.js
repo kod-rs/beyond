@@ -4,32 +4,33 @@ const { VueLoaderPlugin } = require('vue-loader')
 module.exports = {
     mode: 'development',
     resolve: {
-        extensions: ['.js', '.vue']
+        extensions: ['.js', '.vue', '.css']
     },
+
     module: {
         rules: [
             {
-                test: /\.vue?$/,
-                exclude: /(node_modules)/,
-                use: 'vue-loader'
+                test: /\.vue$/,
+                exclude: /node_modules/,
+                loader: 'vue-loader'
             },
             {
                 test: /\.js?$/,
-                exclude: /(node_modules)/,
-                use: 'babel-loader'
+                exclude: /node_modules/,
+                loader: 'babel-loader'
             },
             {
-                test: /\.css$/i,
-                loader: "css-loader",
-                options: {
-                  esModule: false,
-                },
-              },
+                test: /\.css$/,
+                use: [
+                    { loader: "style-loader" },
+                    { loader: "css-loader" },
+                ],
+            }
         ]
     },
     plugins: [
         new VueLoaderPlugin(),
-        new HtmlWebpackPlugin({template: './src/index.html'})],
+        new HtmlWebpackPlugin({ template: './src/index.html' })],
     devServer: {
         historyApiFallback: true,
         headers: {
