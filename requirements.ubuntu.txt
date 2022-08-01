@@ -1,2 +1,1 @@
-libpq-dev
-python3.8-dev
+python3.10-dev
