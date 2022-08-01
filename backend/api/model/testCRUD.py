@@ -80,7 +80,7 @@ class TestCrudView(APIView):
             },
             "payload": {
                 "page": "logout",
-                "result": get_one(body_content["id"]).val_val
+                "result": get_one(data_id).val_val
             }
         }
 
