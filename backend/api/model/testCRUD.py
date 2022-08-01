@@ -47,7 +47,7 @@ def get_all():
 def get_one(id_val):
     return TestCRUD.objects.get(id_val=id_val)
 
-
+from backend.api.comm.comm import decode_data
 
 
 class TestCrudView(APIView):
@@ -57,24 +57,20 @@ class TestCrudView(APIView):
 
         # if request.role = "a"
 
-        body_content = json.loads(request.body.decode("utf-8"))
-        # print(body_content["id"], body_content["newValue"])
+        print(request.body)
 
-        try:
+        body_content = decode_data(request.body)
+        data_id = body_content["id"][0]
+        new_value = body_content["newValue"][0]
 
-            add_or_update(
-                body_content["id"], body_content["newValue"]
-            )
+        # body_content = json.loads(request.body.decode("utf-8"))
+        # print("adding", body_content["id"], body_content["newValue"])
 
-        except SQLwrongtype:
-            "payload": {
-                "success": False
-            }
-
-            "payload": {
-                "success": False
-            }
-
+        add_or_update(
+            data_id,
+            new_value
+            # body_content["id"], body_content["newValue"]
+        )
 
         response = {
             "auth": {
@@ -92,6 +88,10 @@ class TestCrudView(APIView):
 
     def get(self):
         """read"""
+
+        print("get test curd")
+
+        r  = get_all()
 
         response = {
             "auth": {
