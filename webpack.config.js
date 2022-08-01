@@ -32,12 +32,13 @@ module.exports = {
     plugins: [
         new VueLoaderPlugin(),
         new HtmlWebpackPlugin({
-            template: 'src_vue/template/index.html',
+            template: 'src/template/index.html',
             title: 'Beyond',
-        })],
+        })
+    ],
     devServer: {
         static: {
-            directory: path.join(__dirname, 'src_vue', 'template'),
+            directory: path.join(__dirname, 'src', 'template'),
         },
         historyApiFallback: true,
         headers: {
