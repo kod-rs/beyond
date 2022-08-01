@@ -55,11 +55,26 @@ class TestCrudView(APIView):
     def put(self, request):
         print("put")
 
+        # if request.role = "a"
+
         body_content = json.loads(request.body.decode("utf-8"))
         # print(body_content["id"], body_content["newValue"])
-        add_or_update(
-            body_content["id"], body_content["newValue"]
-        )
+
+        try:
+
+            add_or_update(
+                body_content["id"], body_content["newValue"]
+            )
+
+        except SQLwrongtype:
+            "payload": {
+                "success": False
+            }
+
+            "payload": {
+                "success": False
+            }
+
 
         response = {
             "auth": {
