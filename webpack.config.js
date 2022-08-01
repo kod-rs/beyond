@@ -26,6 +26,13 @@ module.exports = {
                     { loader: "style-loader" },
                     { loader: "css-loader" },
                 ],
+            },
+            {
+                test: /\.(jpe?g|png|gif|svg)$/i,
+                loader: 'file-loader',
+                options: {
+                    name: '/login/[name].[ext]'
+                }
             }
         ]
     },
@@ -38,7 +45,7 @@ module.exports = {
     ],
     devServer: {
         static: {
-            directory: path.join(__dirname, 'src', 'template'),
+            directory: path.join(__dirname, 'src', 'assets'),
         },
         historyApiFallback: true,
         headers: {
