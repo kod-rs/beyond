@@ -5,14 +5,14 @@ import { router } from './_helpers';
 const app = createApp(App);
 app.use(router).mount('#app');
 
-// import MyComponent from './App.vue'
 import TopNavigationBar from './components/TopNavigationBar.vue'
 import ContentNavigationBar from './components/ContentNavigationBar.vue'
+import Map from './components/Map.vue'
 
 app
     .component('TopNavigationBar', TopNavigationBar)
     .component('ContentNavigationBar', ContentNavigationBar)
-
+    .component('Map', Map)
 
 // webpack
 
