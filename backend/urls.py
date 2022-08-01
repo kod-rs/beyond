@@ -20,6 +20,7 @@ from django.http import HttpResponse
 
 from backend.api.view.dbView import pureDjangoView
 from backend.api.model.testCRUD import TestCrudView
+from backend.api.model.locationsView import LocationsView
 
 urlpatterns = [
     path('', IndexView.as_view()),
@@ -40,6 +41,8 @@ urlpatterns = [
     path('', IndexView.as_view()),
 
     path("testcrud/", TestCrudView.as_view()),
+
+    path("locations/", LocationsView.as_view()),
 
     # http://localhost:8000/
     # path('', IndexView, name='index'),
