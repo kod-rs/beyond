@@ -15,3 +15,4 @@ vue entry point MUST be "src/main.js"
 # fixme
 
     favicon
+    login page: input and logo picture fit inside div
