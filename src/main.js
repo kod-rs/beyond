@@ -5,4 +5,4 @@ import { router } from './_helpers';
 const app = createApp(App);
 app.use(router).mount('#app');
 
-console.log("main ")
+console.log("src main ")
