@@ -32,12 +32,12 @@ module.exports = {
     plugins: [
         new VueLoaderPlugin(),
         new HtmlWebpackPlugin({
-            template: 'src/template/index.html',
+            template: 'src_vue/template/index.html',
             title: 'Beyond',
         })],
     devServer: {
         static: {
-            directory: path.join(__dirname, 'src', 'template'),
+            directory: path.join(__dirname, 'src_vue', 'template'),
         },
         historyApiFallback: true,
         headers: {
@@ -56,5 +56,13 @@ module.exports = {
         config: JSON.stringify({
             djangoApi: 'http://localhost:8000'
         })
-    }
+    },
+    // chainWebpack: config => {
+    //     config
+    //       .plugin('html')
+    //       .tap(args => {
+    //         args[0].template = 'src_vue/template/start.html'
+    //         return args
+    //       })
+    //   }
 }
