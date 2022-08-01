@@ -2,5 +2,5 @@
 
 #python3 ../../manage.py migrate
 #python3 ../../manage.py makemigrations
-export DJANGO_SETTINGS_MODULE=backend.settings.prod
+# export DJANGO_SETTINGS_MODULE=backend.settings.prod
 python3 ../../manage.py runserver
