@@ -11,6 +11,16 @@
             <div class="container-fluid">
 
                 <div class="row">
+                    add new
+                    <LocationForm></LocationForm>
+
+                </div>
+                <hr>
+                <hr>
+                <hr>
+
+                <div class="row">
+
 
 
 
@@ -31,7 +41,7 @@
 
                         <div class="card">
                             <div class="card-header">
-                                <span><i class="bi bi-table me-2"></i></span> Data Table
+                                <span><i class="bi bi-table me-2"></i></span> Locations
 
                             </div>
                             <div class="card-body">
@@ -44,24 +54,28 @@
                                                 <th>type</th>
                                                 <th>latitude</th>
                                                 <th>longitude</th>
+                                                <th>delete</th>
                                             </tr>
                                         </thead>
                                         <tbody>
 
                                             <tr v-for="(item, i) in modelContent" :key="item.id">
-                                                <td>{{ i }}</td>
+                                                <!-- <td>{{ i }}</td> -->
                                                 <td v-for="(jitem, j) in item">{{ jitem }}</td>
-
+                                                <td><button @click="deleteElement(modelContent[i]['pk'])">delete
+                                                        id = {{ modelContent[i]["pk"] }}</button>
+                                                </td>
                                             </tr>
 
                                         </tbody>
                                         <tfoot>
                                             <tr>
-                                                <th>sum</th>
-                                                <th>avg</th>
-                                                <th>Office</th>
-                                                <th>Age</th>
-                                                <th>Start date</th>
+                                                <th></th>
+                                                <th></th>
+                                                <th></th>
+                                                <th></th>
+                                                <th></th>
+                                                <th></th>
                                             </tr>
                                         </tfoot>
                                     </table>
@@ -83,54 +97,77 @@
 <script>
 import { router } from '../_helpers';
 import { userService } from '../_services';
+import LocationForm from '../components/LocationForm.vue';
 
 export default {
     name: "f",
     data() {
         return {
-            searchInput: '',
+            searchInput: "",
             modelFields: ["section", "type", "longitude", "latitude"],
-            modelContent: [["a", 'b', "c", "d"], ['f', 'f', "g", 'i']],
-            error: '',
+            modelContent: [],
+            // modelContent: [["a", "b", "c", "d"], ["f", "f", "g", "i"]],
+            error: "",
             loading: false
-        }
+        };
     },
-    // created: {
-    //     this.modelContent = 
-    // },
-    // created: {
-    //     // searchInput = "fff"
-    //     // console.log("index page created");
-    // },
+    mounted() {
+        // refreshLocations()
+
+        userService.getAllLocations().then(res => {
+            console.log("new locations");
+            console.log(res);
+            this.modelContent = res["payload"]["content"];
+            console.log(this.modelContent);
+        }, error => {
+            console.log("err", error);
+            this.error = "invalid credentials";
+            // this.error = error;
+            this.loading = false;
+        });
+    },
     methods: {
         refreshLocations() {
-            console.log("refreshing locations")
-
-
-            userService.getAllLocations('username', "password").then(
-                user => { console.log("new locations") },
-                error => {
-                    console.log("err")
-                    this.error = "invalid credentials"
-                    // this.error = error;
-                    this.loading = false;
-                }
-            );
-
+            console.log("refreshing locations");
+            userService.getAllLocations().then(res => {
+                console.log("new locations");
+                console.log(res);
+                this.modelContent = res["payload"]["content"];
+                console.log(this.modelContent);
+            }, error => {
+                console.log("err", error);
+                this.error = "invalid credentials";
+                // this.error = error;
+                this.loading = false;
+            });
         },
-
         search() {
-            this.fetchData()
+            this.fetchData();
         },
         async fetchData() {
-            const apiKey = import.meta.env.tTT
-            const url = ``
-            this.searchInput = ''
-            const res = await fetch(url)
-            const jsonResponse = await res.json()
+            const apiKey = import.meta.env.tTT;
+            const url = ``;
+            this.searchInput = "";
+            const res = await fetch(url);
+            const jsonResponse = await res.json();
+        },
+        async deleteElement(i) {
+            console.log("delete i", i)
+
+            userService.deleteLocation(i).then(res => {
+                console.log("location deleted");
+                this.refreshLocations()
+
+            }, error => {
+                console.log("err", error);
+                this.error = "invalid credentials";
+                // this.error = error;
+                this.loading = false;
+            });
 
         }
-    }
+    },
+    components: { LocationForm }
 }
 
 </script>
