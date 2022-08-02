@@ -38,23 +38,20 @@ def create():
 
 
 def delete():
-    url = "http://localhost:8000/locations/"
+    # url = "http://localhost:8000/locations/"
+    url = "http://localhost:8000/locations/2"
     headers = get_valid_credentials()
 
     t = requests.delete(url, headers=headers, data={
-        "section": str(random.randint(1,10)),
-        "type": str(random.randint(1,10)),
-        "latitude": str(random.randint(1,10)),
-        "longitude": str(random.randint(1,10))
 
     }, verify=False)
 
     print(json.dumps(json.loads(t.text), indent=4, sort_keys=True))
 
 def main():
-    get_all_locations()
+    # get_all_locations()
     # create()
-    # delete()
+    delete()
 
 if __name__ == '__main__':
     main()
