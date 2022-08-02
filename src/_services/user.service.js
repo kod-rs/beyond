@@ -3,8 +3,62 @@ import api from './api';
 export const userService = {
     login,
     logout,
-    createOrUpdate
+    createOrUpdate,
+    getAllLocations
 };
+
+async function getAllLocations(aT, rT) {
+
+    const r = checkTokens()
+    console.log(2)
+    if (r["status"]) {
+        console.log(3)
+
+        let access_token = r["access_token"]
+        let refresh_token = r["refresh_token"]
+
+        console.log(1)
+        // if ((localStorage.getItem("user") !== null) &&
+        //     ("auth" in user) &&
+        //     ("access-token" in user["auth"]) && 
+        //     ("refresh-token" in user["auth"])
+        // ) {
+        //     let user = JSON.parse(window.localStorage.getItem('user'));
+        //     let access_token = user["auth"]["access-token"]
+        //     const refresh_token = user["auth"]["refresh-token"]
+
+
+
+        const response = await api.put(`locations/`, JSON.stringify({ access_token, refresh_token }));
+        const r = await handleNewResponse(response);
+        return r;
+
+    }
+
+    // console.log("locat")
+    // console.log("ffff")
+    // const r = checkTokens()
+    // console.log(r)
+    // console.log(3)
+
+    // if (r["status"]) {
+    //     console.log(2)
+    //     let access_token = r["access-token"]
+    //     const refresh_token = r["refresh-token"]
+
+    //     console.log(1)
+
+    //     const response = await api.get(`locations/`, JSON.stringify({ access_token, refresh_token }));
+    //     console.log("response", response)
+    //     let r2 = await handleNewResponse(response);
+    //     return r2;
+
+    // } else {
+    //     console.log("status false")
+    // }
+
+}
+
 
 
 function login(username, password) {
@@ -44,25 +98,66 @@ function logout() {
 }
 
 function checkTokens() {
-    if ((localStorage.getItem("user") !== null) &&
-        ("auth" in user) &&
-        ("access-token" in user["auth"]) &&
-        ("refresh-token" in user["auth"])
-    ) {
-        let user = JSON.parse(window.localStorage.getItem('user'));
-        let access_token = user["auth"]["access-token"]
-        const refresh_token = user["auth"]["refresh-token"]
 
-        return {
-            "status": true,
-            "access_token": access_token,
-            "refresh_token": refresh_token
+    console.log("check tokens")
+    console.log()
+
+    if (localStorage.getItem("user") !== null) {
+        let user = JSON.parse(window.localStorage.getItem('user'));
+
+        if (("auth" in user) &&
+            ("access-token" in user["auth"]) &&
+            ("refresh-token" in user["auth"])
+        ) {
+            console.log("have evertythin")
+
+            // let user = JSON.parse(window.localStorage.getItem('user'));
+            const access_token = user["auth"]["access-token"]
+            const refresh_token = user["auth"]["refresh-token"]
+
+            // console.log(access_token)
+            // console.log(refresh_token)
+
+            return {
+                "status": true,
+                "access_token": access_token,
+                "refresh_token": refresh_token
+            }
+
         }
-    } else {
-        return {
-            "status": true
-        }
+
     }
+
+    return {
+        "status": true
+    }
+
+
+    // if ((window.localStorage.getItem("user") !== null) &&
+    //     ("auth" in localStorage.getItem("user")) &&
+    //     ("access-token" in localStorage.getItem("user")["auth"]) &&
+    //     ("refresh-token" in localStorage.getItem("user")["auth"])
+    // ) {
+    //     console.log("have evertythin")
+
+    //     let user = JSON.parse(window.localStorage.getItem('user'));
+    //     let access_token = user["auth"]["access-token"]
+    //     const refresh_token = user["auth"]["refresh-token"]
+
+    //     return {
+    //         "status": true,
+    //         "access_token": access_token,
+    //         "refresh_token": refresh_token
+    //     }
+    // } else {
+    //     console.log("local storage missing")
+
+    //     return {
+    //         "status": true
+    //     }
+    // }
+
+    // console.log("other")
 }
 
 async function getAllTest() {
