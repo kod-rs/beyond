@@ -1,4 +1,4 @@
-<template>
+<!-- <template>
 
     <form @submit.prevent="handleSubmit">
         <div v-for="(item, i) in modelFields" :key="item.id" class="form-group">
@@ -45,4 +45,71 @@
 
 <script>
 
-</script>
+</script> -->
+
+
+<template>
+
+    location add form
+
+    <form @submit.prevent="handleSubmit">
+        section
+        <input type="text" v-model="section" name="section" class="form-control" />
+        type
+        <input type="text" v-model="type" name="type" class="form-control" />
+        latitude
+        <input type="text" v-model="latitude" name="latitude" class="form-control" />
+        longitude
+        <input type="text" v-model="longitude" name="longitude" class="form-control" />
+
+
+
+        <button class="btn btn-primary btn-dark btn-lg btn-block">add</button>
+    </form>
+
+
+
+</template>
+
+
+
+
+<script>
+import { router } from '../_helpers';
+import { userService } from '../_services';
+
+export default {
+    data() {
+        return {
+            section: '',
+            type: '',
+            latitude: '',
+            longitude: ''
+        }
+    },
+    methods: {
+        handleSubmit(e) {
+            console.log("hello submit")
+            // this.submitted = true;
+            const { section, type, latitude, longitude } = this;
+
+
+
+            if (!(section && type && latitude && longitude)) {
+                console.log("form not filled")
+                return;
+            }
+            // this.loading = true;
+            userService.addLocation(section, type, latitude, longitude).then(
+                t => {
+                    this.accepted = true
+                    alert("added")
+                },
+                error => {
+                    console.log("error", error)
+                }
+            );
+        }
+    }
+};
+</script> 
