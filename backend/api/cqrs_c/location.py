@@ -3,6 +3,8 @@ from backend.api.model.location import Location
 
 def add(section, type, latitude, longitude):
 
+    print(section, type, latitude, longitude)
+
     l = Location.objects.create(
         # device_id=device_id,
         section=section,
