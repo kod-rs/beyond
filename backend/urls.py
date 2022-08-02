@@ -23,13 +23,20 @@ api_router.register('device', DeviceView, basename="device")
 
 urlpatterns = [
     path('', IndexView.as_view()),
+
     path('login/', LoginView.as_view()),
     path('logout/', LogoutView.as_view()),
+
     path("device/<int:pk>", DeviceView.as_view()),
     path("device/", DeviceView.as_view()),
+
     path('puredjango', pureDjangoView, name='home'),
+
     path("testcrud/", TestCrudView.as_view()),
+
+    path("locations/<int:pk>", LocationsView.as_view()),
     path("locations/", LocationsView.as_view()),
+
     path('api/admin/', admin.site.urls),
 
     # path('accounts/', include('allauth.urls')),
