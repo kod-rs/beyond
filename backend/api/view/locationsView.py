@@ -15,22 +15,21 @@ class LocationsView(APIView):
 
     def put(self, request):
         """update by editing existing"""
+        print("put locations")
 
     # def patch(self, request):
     #     """update by replacing"""
 
     def delete(self, request, pk=None):
         print("todo checking role")
+        print("delete locations")
 
         roles = request.roles
-        response = {
-            "auth": {
-                "status": True,
-                "access-token": request.access_token,
-                "refresh-token": request.refresh_token
-            }
-        }
-        response["payload"] = {"status": False}
+        response = {"auth": {
+            "status": True,
+            "access-token": request.access_token,
+            "refresh-token": request.refresh_token
+        }, "payload": {"status": False}}
 
         # todo check role
         if not any(i in ROLES for i in roles):
@@ -65,38 +64,128 @@ class LocationsView(APIView):
     def post(self, request):
         """create"""
 
-        response = {
-            "auth": {
-                "status": True,
-                "access-token": request.access_token,
-                "refresh-token": request.refresh_token
+        action = request.action
+        print(action)
+
+        print("post locations")
+
+
+        if action == "add":
+
+
+            response = {
+                "auth": {
+                    "status": True,
+                    "access-token": request.access_token,
+                    "refresh-token": request.refresh_token
+                }
             }
-        }
 
-        roles = request.roles
+            roles = request.roles
 
-        # todo check role
-        if any(i in ROLES for i in roles):
-            print("access granted")
+            # todo check role
+            if any(i in ROLES for i in roles):
+                print("access granted")
 
-            if request.body:
-                body_content = decode_data(request.body)
-                print(f"{body_content=}")
+                if request.body:
+                    body_content = decode_data(request.body)
+                    print(f"{body_content=}")
 
+                    section = body_content["section"]
+                    location_type = body_content["type"]
+                    latitude = body_content["latitude"]
+                    longitude = body_content["longitude"]
 
-                d = add(**body_content)
+                    # d = add(**body_content)
+                    d = add(section, location_type, latitude, longitude)
+
+                    response["payload"] = {
+                        "status": True
+                    }
+
+                    return JsonResponse(response)
+
+            response["payload"] = {"status": False}
+            return JsonResponse(response)
+
+        elif action == "get all":
+            print("get locations")
+
+            response = {
+                "auth": {
+                    "status": True,
+                    "access-token": request.access_token,
+                    "refresh-token": request.refresh_token
+                }
+            }
+
+            roles = request.roles
+            print(f"{roles=}")
+            # todo check role
+            if any(i in ROLES for i in roles):
+                print("access granted")
+
+                print("getting roles")
+
+                d = get_all()
+
+                [print(i) for i in d]
 
                 response["payload"] = {
-                    "status": True
+                    "status": True,
+                    "content": d
                 }
 
-                return JsonResponse(response)
+                print("returning location, everything ok")
 
-        response["payload"] = {"status": False}
-        return JsonResponse(response)
+            else:
+                print("role check error")
+                response["payload"] = {"status": False}
 
+            # print("response", response)
+
+
+            return JsonResponse(response)
+
+        elif action == "delete":
+            print("delete")
+
+            response = {
+                "auth": {
+                    "status": True,
+                    "access-token": request.access_token,
+                    "refresh-token": request.refresh_token
+                }
+            }
+
+
+            roles = request.roles
+            print(f"{roles=}")
+            # todo check role
+            if any(i in ROLES for i in roles):
+                print("access granted")
+
+                print("getting roles")
+
+                if request.body:
+                    body_content = decode_data(request.body)
+                    print(f"{body_content=}")
+
+                    index = body_content["index"]
+
+                    d = delete(index)
+
+
+                response["payload"] = {
+                    "status": True,
+                    "content": d
+                }
+
+            print("returning location, everything ok")
+            return JsonResponse(response)
 
     def get(self, request):
+        print("get locations")
 
         response = {
             "auth": {
@@ -129,5 +218,6 @@ class LocationsView(APIView):
         else:
             response["payload"] = {"status": False}
 
+        print("response", response)
 
         return JsonResponse(response)
