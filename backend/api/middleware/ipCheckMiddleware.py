@@ -148,8 +148,6 @@ class IpCheckMiddleware:
             access_token = res["access_token"]
             refresh_token = res["refresh_token"]
 
-
-
             auth_user(ip)
             request.roles = get_roles(access_token)
             request.access_token = access_token
