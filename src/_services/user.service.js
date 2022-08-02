@@ -4,65 +4,67 @@ export const userService = {
     login,
     logout,
     createOrUpdate,
-    getAllLocations
+    getAllLocations,
+    addLocation,
+    deleteLocation
 };
 
-async function getAllLocations(aT, rT) {
+
+async function deleteLocation(i) {
 
     const r = checkTokens()
-    console.log(2)
+
     if (r["status"]) {
-        console.log(3)
 
         let access_token = r["access_token"]
         let refresh_token = r["refresh_token"]
 
-        console.log(1)
-        // if ((localStorage.getItem("user") !== null) &&
-        //     ("auth" in user) &&
-        //     ("access-token" in user["auth"]) && 
-        //     ("refresh-token" in user["auth"])
-        // ) {
-        //     let user = JSON.parse(window.localStorage.getItem('user'));
-        //     let access_token = user["auth"]["access-token"]
-        //     const refresh_token = user["auth"]["refresh-token"]
-
-
-
-        const response = await api.put(`locations/`, JSON.stringify({ access_token, refresh_token }));
-        const r = await handleNewResponse(response);
-        return r;
+        const response = await api.post(`locations/`, JSON.stringify({ access_token, refresh_token, action: "delete", index: i }));
+        // const response = await api.get(`locations/`, JSON.stringify({ access_token, refresh_token }));
+        return await handleNewResponse(response);
 
     }
 
-    // console.log("locat")
-    // console.log("ffff")
-    // const r = checkTokens()
-    // console.log(r)
-    // console.log(3)
+}
 
-    // if (r["status"]) {
-    //     console.log(2)
-    //     let access_token = r["access-token"]
-    //     const refresh_token = r["refresh-token"]
+async function getAllLocations() {
 
-    //     console.log(1)
+    const r = checkTokens()
 
-    //     const response = await api.get(`locations/`, JSON.stringify({ access_token, refresh_token }));
-    //     console.log("response", response)
-    //     let r2 = await handleNewResponse(response);
-    //     return r2;
+    if (r["status"]) {
 
-    // } else {
-    //     console.log("status false")
-    // }
+        let access_token = r["access_token"]
+        let refresh_token = r["refresh_token"]
+
+        const response = await api.post(`locations/`, JSON.stringify({ access_token, refresh_token, action: "get all" }));
+        // const response = await api.get(`locations/`, JSON.stringify({ access_token, refresh_token }));
+        return await handleNewResponse(response);
+
+    }
+
+}
+
+async function addLocation(section, type, latitude, longitude) {
+
+    const r = checkTokens()
+
+    if (r["status"]) {
+
+        let access_token = r["access_token"]
+        let refresh_token = r["refresh_token"]
+
+        const response = await api.post(`locations/`, JSON.stringify({
+            access_token, refresh_token, action: "add",
+            type, section, latitude, longitude
+        }));
+        return await handleNewResponse(response);
+
+    }
 
 }
 
 
-
 function login(username, password) {
-
 
     return api.post(`login/`, JSON.stringify({ username, password }))
 
@@ -74,8 +76,6 @@ function login(username, password) {
 
             return user;
         });
-
-
 
 }
 
@@ -93,8 +93,6 @@ function logout() {
             })
     }
 
-
-
 }
 
 function checkTokens() {
@@ -105,18 +103,15 @@ function checkTokens() {
     if (localStorage.getItem("user") !== null) {
         let user = JSON.parse(window.localStorage.getItem('user'));
 
-        if (("auth" in user) &&
+        if (
+            ("auth" in user) &&
             ("access-token" in user["auth"]) &&
             ("refresh-token" in user["auth"])
         ) {
-            console.log("have evertythin")
+            console.log("at & rt present")
 
-            // let user = JSON.parse(window.localStorage.getItem('user'));
             const access_token = user["auth"]["access-token"]
             const refresh_token = user["auth"]["refresh-token"]
-
-            // console.log(access_token)
-            // console.log(refresh_token)
 
             return {
                 "status": true,
@@ -129,35 +124,10 @@ function checkTokens() {
     }
 
     return {
-        "status": true
+        "status": false
     }
 
 
-    // if ((window.localStorage.getItem("user") !== null) &&
-    //     ("auth" in localStorage.getItem("user")) &&
-    //     ("access-token" in localStorage.getItem("user")["auth"]) &&
-    //     ("refresh-token" in localStorage.getItem("user")["auth"])
-    // ) {
-    //     console.log("have evertythin")
-
-    //     let user = JSON.parse(window.localStorage.getItem('user'));
-    //     let access_token = user["auth"]["access-token"]
-    //     const refresh_token = user["auth"]["refresh-token"]
-
-    //     return {
-    //         "status": true,
-    //         "access_token": access_token,
-    //         "refresh_token": refresh_token
-    //     }
-    // } else {
-    //     console.log("local storage missing")
-
-    //     return {
-    //         "status": true
-    //     }
-    // }
-
-    // console.log("other")
 }
 
 async function getAllTest() {
@@ -177,26 +147,12 @@ async function createOrUpdate(id, newValue) {
     const r = checkTokens()
     if (r["status"]) {
         let access_token = r["access-token"]
-        const refresh_token = r["refresh-token"]
-
-
-        // if ((localStorage.getItem("user") !== null) &&
-        //     ("auth" in user) &&
-        //     ("access-token" in user["auth"]) && 
-        //     ("refresh-token" in user["auth"])
-        // ) {
-        //     let user = JSON.parse(window.localStorage.getItem('user'));
-        //     let access_token = user["auth"]["access-token"]
-        //     const refresh_token = user["auth"]["refresh-token"]
-
-
+        let refresh_token = r["refresh-token"]
 
         const response = await api.put(`testcrud/`, JSON.stringify({ access_token, refresh_token, id, newValue }));
-        const r = await handleNewResponse(response);
-        return r;
+        return await handleNewResponse(response);
 
     }
-
 
 }
 
