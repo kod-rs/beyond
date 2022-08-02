@@ -2,15 +2,14 @@ import json
 
 from django.http import JsonResponse
 from rest_framework.views import APIView
-# from backend.api.comm.comm import decode_data
 
-# from backend.api.cqrs_c.device import create
-# from backend.api.cqrs_q.device import get_all, get_by_id
 from backend.api.comm.comm import decode_data
 from backend.api.cqrs_q.location import get_all
-from backend.api.cqrs_c.location import add
+from backend.api.cqrs_c.location import add, delete
 from backend.api.config.main import ROLES
 from django.core import serializers
+
+
 class LocationsView(APIView):
     # create rename update delete
 
@@ -18,7 +17,50 @@ class LocationsView(APIView):
         """update by editing existing"""
 
     # def patch(self, request):
-    #     """update by editing existing"""
+    #     """update by replacing"""
+
+    def delete(self, request, pk=None):
+        print("todo checking role")
+
+        roles = request.roles
+        response = {
+            "auth": {
+                "status": True,
+                "access-token": request.access_token,
+                "refresh-token": request.refresh_token
+            }
+        }
+        response["payload"] = {"status": False}
+
+        # todo check role
+        if not any(i in ROLES for i in roles):
+            print("access not granted")
+            return JsonResponse(response)
+
+        if not pk:
+            print("no pk -------------")
+            return JsonResponse(response)
+
+        print("pk present", pk)
+
+        r = delete(pk)
+
+        if request.body:
+            body_content = decode_data(request.body)
+            print(f"{body_content=}")
+
+        response = {
+            "auth": {
+                "status": True,
+                "access-token": request.access_token,
+                "refresh-token": request.refresh_token
+            },
+            "payload": {
+                "page": "put device",
+            }
+        }
+
+        return JsonResponse(response)
 
     def post(self, request):
         """create"""
@@ -43,19 +85,14 @@ class LocationsView(APIView):
 
 
                 d = add(**body_content)
-                d = "sace"
 
                 response["payload"] = {
-                    "status": True,
-                    "content": d
+                    "status": True
                 }
 
                 return JsonResponse(response)
 
-        # else:
         response["payload"] = {"status": False}
-
-
         return JsonResponse(response)
 
 
