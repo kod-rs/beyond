@@ -1,5 +1,5 @@
 import json
-from urllib.parse import unquote,parse_qs
+from urllib.parse import unquote, parse_qs
 
 
 def pretty_print_json(payload):
