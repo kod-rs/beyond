@@ -12,7 +12,6 @@ from backend.api.keycloak.keycloak_manager import keycloak_obtain_token
 class IndexView(APIView):
 
     def get(self, request):
-
         response = {
             "auth": {
                 "status": True,
@@ -90,6 +89,3 @@ class MapView(APIView):
             }
 
         return JsonResponse(response)
-
-
-
