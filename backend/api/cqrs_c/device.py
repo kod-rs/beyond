@@ -1,9 +1,10 @@
 from backend.api.model.device import Device
 
+
 # get_or_create
 # update_or_create
 
-def create( data_id, device_type, consumption):
+def create(data_id, device_type, consumption):
     d = Device.objects.create(
         # device_id=device_id,
         data_id=data_id,
