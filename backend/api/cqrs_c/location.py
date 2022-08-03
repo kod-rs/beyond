@@ -2,7 +2,6 @@ from backend.api.model.location import Location
 
 
 def add(section, location_type, latitude, longitude):
-
     print(section, location_type, latitude, longitude)
 
     l = Location.objects.create(
@@ -14,6 +13,7 @@ def add(section, location_type, latitude, longitude):
     )
 
     l.save()
+
 
 def delete(id):
     instance = Location.objects.get(id=id)
