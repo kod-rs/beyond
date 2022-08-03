@@ -4,6 +4,8 @@ import IndexPage from '../index/IndexPage';
 import LoginPage from '../login/LoginPage';
 import Page1 from "../page1/Page1";
 import Page2 from "../page2/Page2";
+import LocationAdd from "../views/location/LocationAdd.vue";
+import LocationView from "../views/location/LocationView.vue";
 
 export const router = createRouter({
   history: createWebHistory(),
@@ -14,6 +16,7 @@ export const router = createRouter({
     },
     {
       path: '/',
+      name: "index",
       component: IndexPage
     },
     {
@@ -25,6 +28,16 @@ export const router = createRouter({
       path: '/page2',
       name: "page2",
       component: Page2
+    },
+    {
+      path: '/addlocation',
+      name: "addlocation",
+      component: LocationAdd
+    },
+    {
+      path: '/viewLocation',
+      name: "viewlocation",
+      component: LocationView
     },
     {
       path: '/:pathMatch(.*)*',
