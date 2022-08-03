@@ -12,7 +12,11 @@
                     <li>
                         <a href="#" class="nav-link px-3 active">
                             <span class="me-2"><i class="bi bi-box"></i></span>
-                            <span>Home</span>
+                            <span>
+                                <router-link :to="{ name: 'index' }">Home</router-link>
+
+
+                            </span>
                             <!-- <router-link :to="{ name: 'index' }">map</router-link> -->
 
                         </a>
@@ -28,7 +32,7 @@
                     <li>
                         <a class="nav-link px-3 sidebar-link" data-bs-toggle="collapse" href="#layouts">
                             <span class="me-2"><i class="bi bi-layout-split"></i></span>
-                            <span>Test</span>
+                            <span>Locations</span>
                             <span class="ms-auto">
                                 <span class="right-icon">
                                     <i class="bi bi-chevron-down"></i>
@@ -39,8 +43,26 @@
                             <ul class="navbar-nav ps-3">
                                 <li>
                                     <a href="#" class="nav-link px-3">
-                                        <span class="me-2"><i class="bi bi-speedometer2"></i></span>
-                                        <span>Dashboard</span>
+                                        <span class="me-2"><i class="bi bi-file-earmark-plus"></i></span>
+                                        <span>
+
+                                            <router-link :to="{ name: 'addlocation' }">Create</router-link>
+
+
+                                        </span>
+
+                                        <!-- <router-link :to="{ name: 'page1' }">page 1</router-link> -->
+
+                                    </a>
+                                </li>
+                            </ul>
+                            <ul class="navbar-nav ps-3">
+                                <li>
+                                    <a href="#" class="nav-link px-3">
+                                        <span class="me-2"><i class="bi bi-view-list"></i></span>
+                                        <span>
+                                            <router-link :to="{ name: 'viewlocation' }">View</router-link>
+                                        </span>
                                     </a>
                                 </li>
                             </ul>
@@ -83,21 +105,10 @@
                     </li>
                     <li>
                         <div class="text-muted small fw-bold text-uppercase px-3 mb-3">
-                            Addons
+                            Control
                         </div>
                     </li>
-                    <li>
-                        <a href="#" class="nav-link px-3">
-                            <span class="me-2"><i class="bi bi-graph-up"></i></span>
-                            <span>Charts</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#" class="nav-link px-3">
-                            <span class="me-2"><i class="bi bi-table"></i></span>
-                            <span>Tables</span>
-                        </a>
-                    </li>
+
                     <li>
                         <a href="#" class="nav-link px-3">
                             <span class="me-2"><i class="bi bi-table"></i></span>
