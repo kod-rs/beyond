@@ -7,4 +7,3 @@ def get_all():
 
 def get_by_id(id):
     return Device.objects.filter(id=id)
-
