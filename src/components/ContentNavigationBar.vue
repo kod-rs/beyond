@@ -11,8 +11,10 @@
                     </li>
                     <li>
                         <a href="#" class="nav-link px-3 active">
-                            <span class="me-2"><i class="bi bi-speedometer2"></i></span>
-                            <span>Dashboard</span>
+                            <span class="me-2"><i class="bi bi-box"></i></span>
+                            <span>Home</span>
+                            <!-- <router-link :to="{ name: 'index' }">map</router-link> -->
+
                         </a>
                     </li>
                     <li class="my-4">
