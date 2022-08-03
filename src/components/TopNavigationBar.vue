@@ -12,26 +12,26 @@
             </button>
             <div class="collapse navbar-collapse" id="topNavBar">
                 <form class="d-flex ms-auto my-3 my-lg-0">
-                    <div class="input-group">
-                        <input class="form-control" type="search" placeholder="Search" aria-label="Search" />
-                        <button class="btn btn-primary" type="submit">
-                            <i class="bi bi-search"></i>
-                        </button>
-                    </div>
+                    <!-- <div class="input-group"> -->
+                    <!-- <input class="form-control" type="search" placeholder="Search" aria-label="Search" /> -->
+                    <!-- <button class="btn btn-primary" type="submit"> -->
+                    <!-- <i class="bi bi-search"></i> -->
+                    <!-- </button> -->
+                    <!-- </div> -->
                 </form>
                 <ul class="navbar-nav">
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle ms-2" href="#" role="button" data-bs-toggle="dropdown"
+                        <!-- <a class="nav-link dropdown-toggle ms-2" href="#" role="button" data-bs-toggle="dropdown"
                             aria-expanded="false">
                             <i class="bi bi-person-fill"></i>
-                        </a>
-                        <ul class="dropdown-menu dropdown-menu-end">
+                        </a> -->
+                        <!-- <ul class="dropdown-menu dropdown-menu-end">
                             <li><a class="dropdown-item" href="#">Action</a></li>
                             <li><a class="dropdown-item" href="#">Another action</a></li>
                             <li>
                                 <a class="dropdown-item" href="#">Something else here</a>
                             </li>
-                        </ul>
+                        </ul> -->
                     </li>
                 </ul>
             </div>
