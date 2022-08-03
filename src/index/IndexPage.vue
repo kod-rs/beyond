@@ -10,33 +10,26 @@
         <main class="mt-5 pt-3">
             <div class="container-fluid">
 
-                <div class="row">
-                    add new
-                    <LocationForm></LocationForm>
 
-                </div>
-                <hr>
-                <hr>
-                <hr>
 
                 <div class="row">
 
 
 
 
-                    <!-- <Map /> -->
+                    <Map />
 
 
                     <!-- <input v-model="searchInput" @keyup.enter="search" placeholder="Enter place" /> -->
-                    <button @click="refreshLocations">refresh locations, maybe someone else placed something
-                        new</button>
+                    <!-- <button @click="refreshLocations">refresh locations, maybe someone else placed something
+                        new</button> -->
                 </div>
 
+                <!-- <hr>
                 <hr>
-                <hr>
-                <hr>
+                <hr> -->
 
-                <div class="row">
+                <!-- <div class="row">
                     <div class="col-md-12 mb-3">
 
                         <div class="card">
@@ -60,7 +53,6 @@
                                         <tbody>
 
                                             <tr v-for="(item, i) in modelContent" :key="item.id">
-                                                <!-- <td>{{ i }}</td> -->
                                                 <td v-for="(jitem, j) in item">{{ jitem }}</td>
                                                 <td><button @click="deleteElement(modelContent[i]['pk'])">delete
                                                         id = {{ modelContent[i]["pk"] }}</button>
@@ -83,7 +75,7 @@
                             </div>
                         </div>
                     </div>
-                </div>
+                </div> -->
 
 
 
