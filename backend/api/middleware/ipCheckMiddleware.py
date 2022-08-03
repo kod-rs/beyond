@@ -1,14 +1,9 @@
-import json
-
 from decouple import config
 from django.http import JsonResponse
 from ipware import get_client_ip
 
-from backend.api.authenticate import login, check_tokens
-from backend.api.cqrs_c.ip import log_user_auth_attempt, auth_user
+from backend.api.cqrs_c.ip import log_user_auth_attempt
 from backend.api.cqrs_q.ip import check_max_count
-from backend.api.comm.comm import decode_data
-from backend.api.keycloak.keycloak_manager import get_roles
 
 
 class IpCheckMiddleware:
@@ -19,7 +14,9 @@ class IpCheckMiddleware:
         self.debug = config("DEBUG") != "0"
 
     def __call__(self, request):
-        print(80 * "-")
+        if self.debug:
+            print(80 * "-")
+            print("\tIpCheckMiddleware")
 
         rejection = {
             "auth": {
@@ -30,23 +27,6 @@ class IpCheckMiddleware:
             "payload": {},
             "debug": ""
         }
-
-        if self.debug:
-            print("todo check role")
-            print("ip & https check")
-
-        if request.is_secure() == "https":
-            if self.debug:
-                print("using https")
-        else:
-            if self.debug:
-                print("using http")
-
-            if config("HTTPS_ONLY") != "0":
-                if self.debug:
-                    print("rejecting")
-
-                return JsonResponse(rejection)
 
         ip, is_routable = get_client_ip(request)
 
@@ -71,103 +51,6 @@ class IpCheckMiddleware:
             return JsonResponse(rejection)
 
         log_user_auth_attempt(ip)
-
-        username = None
-        password = None
-        access_token = None
-        refresh_token = None
-        action = None
-
-        if request.headers:
-            if "action" in request.headers:
-                action = request.headers["action"]
-
-            if all((i in request.headers) for i in ["username", "password"]):
-                username = request.headers["username"]
-                password = request.headers["password"]
-
-            if all((i in request.headers) for i in
-                     ["access-token", "refresh-token"]):
-
-                access_token = request.headers["access-token"]
-                refresh_token = request.headers["refresh-token"]
-
-            if all((i in request.headers) for i in
-                     ["access_token", "refresh_token"]):
-
-                access_token = request.headers["access_token"]
-                refresh_token = request.headers["refresh_token"]
-
-        if request.body:
-            print("decoding", request.body)
-            body_content = decode_data(request.body)
-
-            if "action" in body_content:
-                action = body_content["action"]
-
-            if all((i in body_content) for i in ["username", "password"]):
-                username = body_content["username"]
-                password = body_content["password"]
-
-            if all((i in body_content) for i in
-                    ["access-token", "refresh-token"]):
-                access_token = body_content["access-token"]
-                refresh_token = body_content["refresh-token"]
-
-            if all((i in body_content) for i in
-                    ["access_token", "refresh_token"]):
-
-                access_token = body_content["access_token"]
-                refresh_token = body_content["refresh_token"]
-
-        if self.debug:
-            print(f"{username=}")
-            print(f"{password=}")
-            print(f"{str(access_token)[:15]=}")
-            print(f"{str(refresh_token)[:15]=}")
-
-        is_validated = None
-
-        if username and password:
-            if self.debug:
-                print("using user pass")
-
-            res = login(username, password)
-
-            is_validated = res["ok"]
-
-        elif access_token and refresh_token:
-
-            if self.debug:
-                print("using tokens")
-
-            res = check_tokens(
-                access_token,
-                refresh_token
-            )
-
-            is_validated = res["is_valid"]
-
-        if not is_validated:
-            if self.debug:
-                print("not valid")
-
-            rejection["debug"] = "not is_validated"
-            return JsonResponse(rejection)
-
-
-
-        if self.debug:
-            print("returning correct")
-
-        access_token = res["access_token"]
-        refresh_token = res["refresh_token"]
-
-        auth_user(ip)
-        request.roles = get_roles(access_token)
-        request.action = action
-        request.access_token = access_token
-        request.refresh_token = refresh_token
 
         if self.debug:
             print("returning")
