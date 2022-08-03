@@ -8,6 +8,7 @@ class TestCRUD(models.Model):
     id_val = models.CharField(max_length=200)
     val_val = models.CharField(max_length=200)
 
+
 # c u
 def add_or_update(a, b):
     """
@@ -19,29 +20,35 @@ def add_or_update(a, b):
     )
     k.save()
 
+
 # r
 def rename(a, b):
     """
     add or update key
 
     """
-    t =      TestCRUD.objects.get(id_val=a)
+    t = TestCRUD.objects.get(id_val=a)
     t.id_val = b
     t.save()
+
 
 # d
 def delete(key_type):
     instance = TestCRUD.objects.get(val_val=key_type)
     instance.delete()
 
+
 def get_all():
     return [i for i in TestCRUD.objects.all().iterator()]
+
 
 def get_one(id_val):
     return TestCRUD.objects.get(id_val=id_val)
 
+
 from rest_framework.views import APIView
 from django.http import JsonResponse
+
 
 class TestCrudView(APIView):
 
