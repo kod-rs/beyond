@@ -1,114 +1,163 @@
-<template>
-    <div id="c">
-        <div id="f">
-            <div class="cell cell-map">
-                a
-                <!-- <MapContainer :geojson="geojson" v-on:select="selected = $event"></MapContainer> -->
+<!-- <template>
+    <ol-map :loadTilesWhileAnimating="true" :loadTilesWhileInteracting="true" style="height:400px">
+        <ol-view ref="view" :center="center" :rotation="rotation" :zoom="zoom" :projection="projection" />
 
-            </div>
-            <div class="cell cell-edit">
-                <!-- b -->
+        <ol-tile-layer>
+            <ol-source-osm />
+        </ol-tile-layer>
 
-                <form class="d-flex ms-auto my-3 my-lg-0">
-                    <div class="input-group">
-                        <input class="form-control" type="search" placeholder="Search" aria-label="Search" />
+        <ol-interaction-clusterselect @select="featureSelected" :pointRadius="20">
+            <ol-style>
+                <ol-style-stroke color="green" :width="5"></ol-style-stroke>
+                <ol-style-fill color="rgba(255,255,255,0.5)"></ol-style-fill>
+                <ol-style-icon :src="markerIcon" :scale="0.05"></ol-style-icon>
+            </ol-style>
+        </ol-interaction-clusterselect>
 
-                    </div>
-                </form>
+        <ol-animated-clusterlayer :animationDuration="500" :distance="40">
+            <ol-source-vector ref="vectorsource">
+                <ol-feature v-for="index in 500" :key="index">
+                    <ol-geom-point :coordinates="[getRandomInRange(24, 45, 3), getRandomInRange(35, 41, 3)]">
+                    </ol-geom-point>
+                </ol-feature>
+            </ol-source-vector>
 
-                <!-- <Edit :geojson="geojson" v-on:change="geojson = $event"></Edit> -->
-            </div>
-            <div class="cell cell-inspect">
-                c
-                <!-- <Inspect :feature="selected"></Inspect> -->
-            </div>
-        </div>
+            <ol-style :overrideStyleFunction="overrideStyleFunction">
+                <ol-style-stroke color="red" :width="2"></ol-style-stroke>
+                <ol-style-fill color="rgba(255,255,255,0.1)"></ol-style-fill>
 
-    </div>
+                <ol-style-circle :radius="20">
+                    <ol-style-stroke color="black" :width="15" :lineDash="[]" lineCap="butt"></ol-style-stroke>
+                    <ol-style-fill color="black"></ol-style-fill>
+                </ol-style-circle>
+
+                <ol-style-text>
+                    <ol-style-fill color="white"></ol-style-fill>
+                </ol-style-text>
+            </ol-style>
+        </ol-animated-clusterlayer>
+    </ol-map>
 </template>
 
 <script>
-import MapContainer from './MapContainer'
-import Edit from './Edit'
-import Inspect from './Inspect'
+import {
+    ref
+} from 'vue'
+
+import markerIcon from './../assets/logo.png'
 
 export default {
-    components: {
-        Inspect,
-        Edit,
-        MapContainer
-    },
-    data: () => ({
-        selected: undefined,
-        geojson: {
-            type: 'Feature',
-            properties: {
-                name: 'default object',
-                quality: 'top'
-            },
-            geometry: {
-                type: 'Polygon',
-                coordinates: [
-                    [
-                        [
-                            -27.0703125,
-                            43.58039085560784
-                        ],
-                        [
-                            -28.125,
-                            23.563987128451217
-                        ],
-                        [
-                            -10.8984375,
-                            32.84267363195431
-                        ],
-                        [
-                            -27.0703125,
-                            43.58039085560784
-                        ]
-                    ]
-                ]
-            }
+    setup() {
+        const center = ref([40, 40])
+        const projection = ref('EPSG:4326')
+        const zoom = ref(5)
+        const rotation = ref(0)
+
+        const overrideStyleFunction = (feature, style) => {
+
+            let clusteredFeatures = feature.get('features');
+            let size = clusteredFeatures.length;
+
+            let color = size > 20 ? "192,0,0" : size > 8 ? "255,128,0" : "0,128,0";
+            var radius = Math.max(8, Math.min(size, 20));
+            let dash = 2 * Math.PI * radius / 6;
+            let calculatedDash = [0, dash, dash, dash, dash, dash, dash];
+
+            style.getImage().getStroke().setLineDash(dash);
+            style.getImage().getStroke().setColor("rgba(" + color + ",0.5)");
+            style.getImage().getStroke().setLineDash(calculatedDash);
+            style.getImage().getFill().setColor("rgba(" + color + ",1)");
+
+            style.getImage().setRadius(radius)
+
+            style.getText().setText(size.toString());
+
         }
-    })
+
+        const getRandomInRange = (from, to, fixed) => {
+            console.log(from, to, fixed,)
+            let t = (Math.random() * (to - from) + from).toFixed(fixed) * 1;
+            console.log(t, typeof (t))
+            return t
+        }
+
+        const featureSelected = (event) => {
+            console.log(event)
+
+        }
+
+        return {
+            center,
+            projection,
+            zoom,
+            rotation,
+            markerIcon,
+            getRandomInRange,
+            overrideStyleFunction,
+            featureSelected
+        }
+    },
+}
+</script> -->
+
+<template>
+    <ol-map :loadTilesWhileAnimating="true" :loadTilesWhileInteracting="true" style="height:400px">
+        <ol-view ref="view" :center="center" :rotation="rotation" :zoom="zoom" :projection="projection" />
+
+        <ol-tile-layer>
+            <ol-source-osm />
+        </ol-tile-layer>
+
+        <ol-vector-layer>
+            <ol-source-vector ref="vectors">
+                <ol-interaction-draw @drawstart="drawstart" :type="drawType">
+                </ol-interaction-draw>
+            </ol-source-vector>
+
+            <ol-style>
+                <ol-style-icon :src="markerIcon" :scale="2"></ol-style-icon>
+            </ol-style>
+        </ol-vector-layer>
+
+    </ol-map>
+</template>
+
+<script>
+import markerIcon from './../assets/logo.png'
+// import markerIcon from "../../assets/img/locationSingle.svg"
+import { ref } from "vue";
+
+export default {
+    name: "test",
+    setup() {
+        const center = ref([54.1966794, 31.8797732])
+        const projection = ref('EPSG:4326')
+        const zoom = ref(6)
+        const rotation = ref(0)
+
+        const markers = ref(null);
+        const drawType = ref("Point")
+
+        const drawedMarker = ref()
+        const vectors = ref(null);
+
+        const drawstart = (event) => {
+            vectors.value.source.removeFeature(drawedMarker.value);
+            drawedMarker.value = event.feature;
+            console.log(vectors.value.source)
+        }
+
+        return {
+            vectors,
+            drawstart,
+            center,
+            projection,
+            zoom,
+            rotation,
+            markerIcon,
+            markers,
+            drawType
+        }
+    },
 }
 </script>
-
-<style>
-#c {
-    height: 100%;
-    margin: 0;
-}
-
-#f {
-    font-family: Avenir, Helvetica, Arial, sans-serif;
-    height: 100%;
-    display: grid;
-    grid-template-columns: 100vh;
-    grid-auto-rows: 1fr;
-    grid-gap: 1rem;
-    padding: 1rem;
-    box-sizing: border-box;
-}
-
-.cell {
-    border-radius: 4px;
-    background-color: lightgrey;
-}
-
-.cell-map {
-    grid-column: 1;
-    grid-row-start: 1;
-    grid-row-end: 3;
-}
-
-.cell-edit {
-    grid-column: 2;
-    grid-row: 1;
-}
-
-.cell-inspect {
-    grid-column: 2;
-    grid-row: 2;
-}
-</style>
