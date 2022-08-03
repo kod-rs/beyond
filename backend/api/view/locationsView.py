@@ -1,13 +1,10 @@
-import json
-
 from django.http import JsonResponse
 from rest_framework.views import APIView
 
 from backend.api.comm.comm import decode_data
-from backend.api.cqrs_q.location import get_all
-from backend.api.cqrs_c.location import add, delete
 from backend.api.config.main import ROLES
-from django.core import serializers
+from backend.api.cqrs_c.location import add, delete
+from backend.api.cqrs_q.location import get_all
 
 
 class LocationsView(APIView):
@@ -69,9 +66,7 @@ class LocationsView(APIView):
 
         print("post locations")
 
-
         if action == "add":
-
 
             response = {
                 "auth": {
@@ -144,7 +139,6 @@ class LocationsView(APIView):
 
             # print("response", response)
 
-
             return JsonResponse(response)
 
         elif action == "delete":
@@ -157,7 +151,6 @@ class LocationsView(APIView):
                     "refresh-token": request.refresh_token
                 }
             }
-
 
             roles = request.roles
             print(f"{roles=}")
@@ -174,7 +167,6 @@ class LocationsView(APIView):
                     index = body_content["index"]
 
                     d = delete(index)
-
 
                 response["payload"] = {
                     "status": True,
