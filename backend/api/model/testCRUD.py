@@ -1,9 +1,7 @@
-import json
-
 from django.db import models
-
-from rest_framework.views import APIView
 from django.http import JsonResponse
+from rest_framework.views import APIView
+
 
 class TestCRUD(models.Model):
     # primary
@@ -46,6 +44,7 @@ def get_all():
 
 def get_one(id_val):
     return TestCRUD.objects.get(id_val=id_val)
+
 
 from backend.api.comm.comm import decode_data
 
@@ -91,7 +90,7 @@ class TestCrudView(APIView):
 
         print("get test curd")
 
-        r  = get_all()
+        r = get_all()
 
         response = {
             "auth": {
