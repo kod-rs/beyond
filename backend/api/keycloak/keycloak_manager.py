@@ -47,7 +47,8 @@ def get_roles(access_token):
                 return []
 
             if "resource_access" in jwt_:
-                return jwt_["resource_access"][get_config()["client id"]]["roles"]
+                return jwt_["resource_access"][get_config()["client id"]][
+                    "roles"]
 
             else:
                 return []
