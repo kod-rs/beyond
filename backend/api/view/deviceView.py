@@ -1,12 +1,9 @@
-import json
-
 from django.http import JsonResponse
 from rest_framework.views import APIView
-from backend.api.comm.comm import decode_data
 
+from backend.api.comm.comm import decode_data
 from backend.api.cqrs_c.device import create
 from backend.api.cqrs_q.device import get_all, get_by_id
-
 
 
 class DeviceView(APIView):
@@ -38,8 +35,8 @@ class DeviceView(APIView):
             "payload": {
                 "page": "put device",
                 "device_type =": body_content["device_type"][0],
-                "consumption = ":body_content["consumption"][0],
-                "data_id = ":body_content["data_id"][0]
+                "consumption = ": body_content["consumption"][0],
+                "data_id = ": body_content["data_id"][0]
 
             }
         }
@@ -77,4 +74,3 @@ class DeviceView(APIView):
         }
 
         return JsonResponse(response)
-
