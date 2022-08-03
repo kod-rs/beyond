@@ -5,6 +5,7 @@ http://whitenoise.evans.io/en/stable/django.html?highlight=django
 """
 
 import os
+
 from decouple import config
 
 SETTINGS_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -16,7 +17,6 @@ DEBUG = True
 ALLOWED_HOSTS = ['*']
 
 SITE_ID = 1
-
 
 INSTALLED_APPS = [
     'django.contrib.sites',
@@ -32,7 +32,7 @@ INSTALLED_APPS = [
     'backend.api',
 ]
 
-PWD = os.path.dirname(os.path.realpath(__file__ ))
+PWD = os.path.dirname(os.path.realpath(__file__))
 
 MIDDLEWARE = [
     "corsheaders.middleware.CorsMiddleware",
@@ -94,7 +94,6 @@ TIME_ZONE = 'UTC'
 USE_I18N = True
 USE_L10N = True
 USE_TZ = True
-
 
 MIDDLEWARE_CLASSES = (
     'whitenoise.middleware.WhiteNoiseMiddleware',
