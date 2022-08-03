@@ -1,16 +1,22 @@
-git add /home/kim/Documents/github/kod-rs/beyond/test/location.py
-git commit -m "test location.py - wip"
+git add /home/kim/Documents/github/kod-rs/beyond/backend/api/cqrs_c/ip.py
+git commit -m "backend api cqrs_c ip.py - fix ip check"
+git add /home/kim/Documents/github/kod-rs/beyond/backend/api/cqrs_q/ip.py
+git commit -m "backend api cqrs_q ip.py - fix ip check"
+git add /home/kim/Documents/github/kod-rs/beyond/backend/api/middleware/ipCheckMiddleware.py
+git commit -m "backend api middleware ipCheckMiddleware.py - fix ip check, ref"
+git add /home/kim/Documents/github/kod-rs/beyond/README.md
+git commit -m "README.md - add todo"
 git add /home/kim/Documents/github/kod-rs/beyond/playground/marin-jovanovic/git.sh
 git commit -m "playground marin-jovanovic git.sh - "
-git add /home/kim/Documents/github/kod-rs/beyond/src/_services/user.service.js
-git commit -m "src _services user.service.js - wip"
-git add /home/kim/Documents/github/kod-rs/beyond/src/index/IndexPage.vue
-git commit -m "src index IndexPage.vue - wip"
-git add /home/kim/Documents/github/kod-rs/beyond/backend/urls.py
-git commit -m "backend urls.py - wip"
-git add /home/kim/Documents/github/kod-rs/beyond/backend/api/cqrs_c/location.py
-git commit -m "backend api cqrs_c location.py - wip"
-git add /home/kim/Documents/github/kod-rs/beyond/backend/api/view/locationsView.py
-git commit -m "backend api view locationsView.py - wip"
-git add /home/kim/Documents/github/kod-rs/beyond/src/components/LocationForm.vue
-git commit -m "src components LocationForm.vue - wip"
+git add /home/kim/Documents/github/kod-rs/beyond/src/components/TopNavigationBar.vue
+git commit -m "src components TopNavigationBar.vue - remove search"
+git add /home/kim/Documents/github/kod-rs/beyond/backend/api/middleware/authCheckMiddleware.py
+git commit -m "backend api middleware authCheckMiddleware.py - ref"
+git add /home/kim/Documents/github/kod-rs/beyond/backend/api/middleware/roleCheckMiddleware.py
+git commit -m "backend api middleware roleCheckMiddleware.py - ref"
+git add /home/kim/Documents/github/kod-rs/beyond/src/components/ContentNavigationBar.vue
+git commit -m "src components ContentNavigationBar.vue - ref"
+git add /home/kim/Documents/github/kod-rs/beyond/backend/settings/dev.py
+git commit -m "backend settings dev.py - add mw"
+git add /home/kim/Documents/github/kod-rs/beyond/backend/api/middleware/httpsCheckMiddleware.py
+git commit -m "backend api middleware httpsCheckMiddleware.py - ref"
