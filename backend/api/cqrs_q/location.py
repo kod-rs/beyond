@@ -1,14 +1,12 @@
 import ast
 import json
 
-from backend.api.model.location import Location
 from django.core import serializers
-from django.forms.models import model_to_dict
-import json
-from ast import parse
+
+from backend.api.model.location import Location
+
 
 def get_all():
-
     t = serializers.serialize('json', Location.objects.all())
     t = json.loads(t)
     print(t)
@@ -34,15 +32,13 @@ def get_all():
     # t = []
 
     try:
-        t = [{k: ast.literal_eval(v)[0] for k,v in i.items()} for i in t]
+        t = [{k: ast.literal_eval(v)[0] for k, v in i.items()} for i in t]
     except ValueError:
         try:
-            t = [{k: ast.literal_eval(v) for k,v in i.items()} for i in t]
+            t = [{k: ast.literal_eval(v) for k, v in i.items()} for i in t]
         except ValueError:
-            t = [{k: v for k,v in i.items()} for i in t]
-
+            t = [{k: v for k, v in i.items()} for i in t]
 
     return t
 
     # return [i  i in Location.objects.all().iterator()]
-
