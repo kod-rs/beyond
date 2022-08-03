@@ -1,4 +1,3 @@
-
 """ Production Settings """
 
 from .dev import *  # NOQA
