@@ -90,6 +90,7 @@ export default {
     this.deactivateActivityTracker();
     clearTimeout(this.userActivityTimeout);
     clearTimeout(this.userActivityThrottlerTimeout);
+    window.sessionStorage.removeItem('user');
   }
 };
 </script>

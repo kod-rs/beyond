@@ -71,7 +71,7 @@ function login(username, password) {
         .then(handleNewResponse)
         .then(user => {
             if (user) {
-                localStorage.setItem('user', JSON.stringify(user));
+                sessionStorage.setItem('user', JSON.stringify(user));
             }
 
             return user;
@@ -80,11 +80,11 @@ function login(username, password) {
 }
 
 function logout() {
-    if (localStorage.getItem("user") !== null) {
-        let user = JSON.parse(window.localStorage.getItem('user'));
+    if (sessionStorage.getItem("user") !== null) {
+        let user = JSON.parse(window.sessionStorage.getItem('user'));
         let access_token = user["auth"]["access-token"]
         const refresh_token = user["auth"]["refresh-token"]
-        localStorage.removeItem('user');
+        sessionStorage.removeItem('user');
 
         api.post(`logout/`, JSON.stringify({ access_token, refresh_token }))
             .then(r => {
@@ -100,8 +100,8 @@ function checkTokens() {
     console.log("check tokens")
     console.log()
 
-    if (localStorage.getItem("user") !== null) {
-        let user = JSON.parse(window.localStorage.getItem('user'));
+    if (sessionStorage.getItem("user") !== null) {
+        let user = JSON.parse(window.sessionStorage.getItem('user'));
 
         if (
             ("auth" in user) &&

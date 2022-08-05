@@ -28,7 +28,7 @@ export default {
         }
     },
     created() {
-        this.user = JSON.parse(localStorage.getItem('user'));
+        this.user = JSON.parse(sessionStorage.getItem('user'));
         this.users.loading = true;
         userService.getAll().then(users => this.users = users);
     }
