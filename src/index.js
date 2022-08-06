@@ -13,11 +13,8 @@ import LocationForm from './components/LocationForm.vue'
 import OpenLayersMap from 'vue3-openlayers'
 import 'vue3-openlayers/dist/vue3-openlayers.css'
 
-const hsts = require('hsts')
 
 app.use(OpenLayersMap);
-
-app.use(hsts({maxAge: 15552000})) // 180 days in seconds
 
 app
     .component('TopNavigationBar', TopNavigationBar)
