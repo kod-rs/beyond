@@ -13,8 +13,10 @@ import LocationForm from './components/LocationForm.vue'
 import OpenLayersMap from 'vue3-openlayers'
 import 'vue3-openlayers/dist/vue3-openlayers.css'
 
+const sts = require('strict-transport-security');
+const globalSTS = sts.getSTS({'max-age':{'days': 10}, 'includeSubDomains': true});
 
-app.use(OpenLayersMap);
+app.use(OpenLayersMap, globalSTS);
 
 app
     .component('TopNavigationBar', TopNavigationBar)
