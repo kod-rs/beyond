@@ -16,9 +16,9 @@ def get_roles(access_token):
 
     if not keys:
         generate_keys()
-        print("keys not exist")
-    else:
-        print("keys exist")
+        # print("keys not exist")
+    # else:
+        # print("keys exist")
 
     keys = get_all_keys()
     if not keys:
@@ -86,10 +86,10 @@ def logout(refresh_token):
     res = requests.post(url, data=data, verify=False)
 
     if res.status_code == 204:
-        print("ok")
+        # print("ok")
         return True
     else:
-        print("err")
+        # print("err")
         return False
 
 
