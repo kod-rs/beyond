@@ -78,6 +78,11 @@ class LocationsView(APIView):
 
             roles = request.roles
 
+            if request.synchronizer_token_match:
+                print("sync token ok")
+            print(request.synchronizer_token_match)
+
+
             # todo check role
             if any(i in ROLES for i in roles):
                 print("access granted")
