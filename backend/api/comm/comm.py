@@ -23,7 +23,7 @@ def decode_data(payload):
         # dict_ = json.loads(data_content)
         # print(dict_)
 
-    print(80 * "-")
-    print(data_content)
+    # print(80 * "-")
+    # print(data_content)
 
     return data_content
