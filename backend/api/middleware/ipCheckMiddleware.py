@@ -39,20 +39,15 @@ class IpCheckMiddleware:
                 print("The client's IP address is private")
 
         if not ip:
-            if self.debug:
-                print("unable to get clients ip")
             rejection["debug"] = "unable to get clients ip"
             return JsonResponse(rejection)
 
         if check_max_count(ip, self.max_brute_force_count):
-            if self.debug:
-                print("max try exceeded")
+
             rejection["debug"] = "max try exceeded"
             return JsonResponse(rejection)
 
         log_user_auth_attempt(ip)
 
-        if self.debug:
-            print("returning")
-
+        request.ip = ip
         return self.get_response(request)
