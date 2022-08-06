@@ -10,6 +10,9 @@ from backend.api.view.locationsView import LocationsView
 from backend.api.view.loginView import LoginView
 from backend.api.view.logoutView import LogoutView
 from backend.api.views import IndexView
+from backend.api.view.CSRFView import CSRFView
+
+# from backend.api_kc.view.LoginKCView import LoginKCView
 
 run_startup()
 
@@ -36,6 +39,9 @@ urlpatterns = [
     path("locations/", LocationsView.as_view()),
 
     path('api/admin/', admin.site.urls),
+    path("csrf/", CSRFView.as_view()),
+
+    # path('loginkc/', LoginKCView.as_view()),
 
     # path('accounts/', include('allauth.urls')),
     # path('bank', BankViewSet.as_view, name='bank'),
