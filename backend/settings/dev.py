@@ -37,10 +37,13 @@ PWD = os.path.dirname(os.path.realpath(__file__))
 
 MIDDLEWARE = [
     "corsheaders.middleware.CorsMiddleware",
+
     "backend.api.middleware.httpsCheckMiddleware.HttpsCheckMiddleware",
     "backend.api.middleware.ipCheckMiddleware.IpCheckMiddleware",
+    "backend.api.middleware.CSRFCheckMiddleware.CSRFCheckMiddleware",
     "backend.api.middleware.authCheckMiddleware.AuthCheckMiddleware",
     "backend.api.middleware.roleCheckMiddleware.RoleCheckMiddleware",
+
     'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
