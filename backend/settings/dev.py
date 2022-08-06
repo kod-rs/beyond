@@ -30,18 +30,17 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'backend.api',
+    'django_extensions'
 ]
 
 PWD = os.path.dirname(os.path.realpath(__file__))
 
 MIDDLEWARE = [
     "corsheaders.middleware.CorsMiddleware",
-
     "backend.api.middleware.httpsCheckMiddleware.HttpsCheckMiddleware",
     "backend.api.middleware.ipCheckMiddleware.IpCheckMiddleware",
     "backend.api.middleware.authCheckMiddleware.AuthCheckMiddleware",
     "backend.api.middleware.roleCheckMiddleware.RoleCheckMiddleware",
-
     'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -74,19 +73,12 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'backend.wsgi.application'
 
+_validation_path = 'django.contrib.auth.password_validation.'
 AUTH_PASSWORD_VALIDATORS = [
-    {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
-    },
+    {'NAME': _validation_path + '.UserAttributeSimilarityValidator'},
+    {'NAME': _validation_path + 'MinimumLengthValidator'},
+    {'NAME': _validation_path + 'CommonPasswordValidator'},
+    {'NAME': _validation_path + '.NumericPasswordValidator'},
 ]
 
 LANGUAGE_CODE = 'en-us'
