@@ -53,6 +53,8 @@
     location add form
 
     <form @submit.prevent="handleSubmit">
+        <!-- <input type="hidden" name="csrf-token" value={{}} /> -->
+        <CSRFToken ref="csrftokenelement" />
         section
         <input type="text" v-model="section" name="section" class="form-control" />
         type
@@ -61,7 +63,6 @@
         <input type="text" v-model="latitude" name="latitude" class="form-control" />
         longitude
         <input type="text" v-model="longitude" name="longitude" class="form-control" />
-
 
 
         <button class="btn btn-primary btn-dark btn-lg btn-block">add</button>
@@ -75,7 +76,6 @@
 
 
 <script>
-import { router } from '../_helpers';
 import { userService } from '../_services';
 
 export default {
@@ -89,26 +89,25 @@ export default {
     },
     methods: {
         handleSubmit(e) {
-            console.log("hello submit")
-            // this.submitted = true;
             const { section, type, latitude, longitude } = this;
 
-
+            const csrfToken = this.$refs.csrftokenelement.content
+            console.log("---------------------", csrfToken)
 
             if (!(section && type && latitude && longitude)) {
                 console.log("form not filled")
                 return;
             }
-            // this.loading = true;
-            userService.addLocation(section, type, latitude, longitude).then(
+
+            userService.addLocation(section, type, latitude, longitude, csrfToken).then(
                 t => {
-                    this.accepted = true
                     alert("added")
                 },
                 error => {
                     console.log("error", error)
                 }
             );
+
         }
     }
 };
