@@ -1,6 +1,7 @@
 var HtmlWebpackPlugin = require('html-webpack-plugin');
 const { VueLoaderPlugin } = require('vue-loader')
 const path = require('path');
+const fs = require('fs');
 
 module.exports = {
     mode: 'development',
@@ -58,19 +59,16 @@ module.exports = {
             '/api*': {
                 target: 'http://localhost:8000/',
             }
-        }
+        },
+        https: {
+            key: fs.readFileSync(path.resolve(__dirname, 'playground', 'certs', 'localhost-key.pem')),
+            cert: fs.readFileSync(path.resolve(__dirname, 'playground', 'certs', 'localhost.pem')),
+        },
+
     },
     externals: {
         config: JSON.stringify({
             djangoApi: 'http://localhost:8000'
         })
-    },
-    // chainWebpack: config => {
-    //     config
-    //       .plugin('html')
-    //       .tap(args => {
-    //         args[0].template = 'src_vue/template/start.html'
-    //         return args
-    //       })
-    //   }
+    }
 }
