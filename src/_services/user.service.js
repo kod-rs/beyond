@@ -6,8 +6,35 @@ export const userService = {
     createOrUpdate,
     getAllLocations,
     addLocation,
-    deleteLocation
+    deleteLocation,
+    getCSRFAuthData
 };
+
+async function getCSRFAuthData() {
+
+    const r = checkTokens()
+
+    const funRes = {
+        "status": false,
+        "synchronizer_token": undefined
+    }
+
+    if (r["status"]) {
+
+        let access_token = r["access_token"]
+        let refresh_token = r["refresh_token"];
+
+        const response = await api.post(`csrf/`, JSON.stringify({ access_token, refresh_token, action: "generate" }));
+        const responseData = await handleNewResponse(response)["payload"]
+
+        funRes["synchronizer_token"] = responseData["synchronizer_token"]
+        funRes["status"] = true
+
+    }
+
+    return funRes
+
+}
 
 
 async function deleteLocation(i) {
@@ -44,7 +71,7 @@ async function getAllLocations() {
 
 }
 
-async function addLocation(section, type, latitude, longitude) {
+async function addLocation(section, type, latitude, longitude, csrfToken) {
 
     const r = checkTokens()
 
@@ -55,7 +82,7 @@ async function addLocation(section, type, latitude, longitude) {
 
         const response = await api.post(`locations/`, JSON.stringify({
             access_token, refresh_token, action: "add",
-            type, section, latitude, longitude
+            type, section, latitude, longitude, synchronizer_token: csrfToken
         }));
         return await handleNewResponse(response);
 
