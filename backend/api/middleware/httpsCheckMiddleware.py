@@ -9,20 +9,13 @@ class HttpsCheckMiddleware:
         self.debug = config("DEBUG") != "0"
 
     def __call__(self, request):
-        if self.debug:
-            print(80 * "-")
-            print("\tHttpsCheckMiddleware")
+
 
         if request.is_secure() == "https":
-            if self.debug:
-                print("using https")
+            pass
         else:
-            if self.debug:
-                print("using http")
 
             if config("HTTPS_ONLY") != "0":
-                if self.debug:
-                    print("rejecting")
 
                 rejection = {
                     "auth": {
