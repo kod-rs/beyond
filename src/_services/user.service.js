@@ -25,14 +25,14 @@ async function getCSRFAuthData() {
         let refresh_token = r["refresh_token"];
 
         const response = await api.post(`csrf/`, JSON.stringify({ access_token, refresh_token, action: "generate" }));
-        const responseData = await handleNewResponse(response)["payload"]
+        const responseData = await handleNewResponse(response)["payload"];
 
-        funRes["synchronizer_token"] = responseData["synchronizer_token"]
-        funRes["status"] = true
+        funRes["synchronizer_token"] = responseData["synchronizer_token"];
+        funRes["status"] = true;
 
     }
 
-    return funRes
+    return funRes;
 
 }
 
@@ -114,18 +114,15 @@ function logout() {
         sessionStorage.removeItem('user');
 
         api.post(`logout/`, JSON.stringify({ access_token, refresh_token }))
-            .then(r => {
-                console.log("logout done")
+        // .then(r => {
 
-            })
+        // })
     }
 
 }
 
 function checkTokens() {
 
-    console.log("check tokens")
-    console.log()
 
     if (sessionStorage.getItem("user") !== null) {
         let user = JSON.parse(window.sessionStorage.getItem('user'));
@@ -135,7 +132,6 @@ function checkTokens() {
             ("access-token" in user["auth"]) &&
             ("refresh-token" in user["auth"])
         ) {
-            console.log("at & rt present")
 
             const access_token = user["auth"]["access-token"]
             const refresh_token = user["auth"]["refresh-token"]
