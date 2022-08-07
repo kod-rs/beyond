@@ -1,5 +1,3 @@
-// import api from './api';
-
 import axios from 'axios'
 import Cookies from 'js-cookie'
 
@@ -11,17 +9,6 @@ const api = axios.create({
         'X-CSRFToken': Cookies.get('csrftoken')
     }
 })
-
-// export const userService = {
-//     login,
-//     logout,
-//     createOrUpdate,
-//     getAllLocations,
-//     addLocation,
-//     deleteLocation,
-//     getCSRFAuthData
-// };
-
 
 async function getCSRFAuthData() {
 
@@ -48,7 +35,6 @@ async function getCSRFAuthData() {
     return funRes;
 
 }
-
 
 async function deleteLocation(i) {
 
