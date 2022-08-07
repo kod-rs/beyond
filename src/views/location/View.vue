@@ -89,9 +89,7 @@
 </template>
 
 <script>
-import { router } from '../../_helpers';
-import { userService } from '../../_services';
-import LocationForm from '../../components/LocationForm.vue';
+import { apiCalls } from '../../scripts/api';
 
 export default {
     name: "f",
@@ -100,7 +98,6 @@ export default {
             searchInput: "",
             modelFields: ["section", "type", "longitude", "latitude"],
             modelContent: [],
-            // modelContent: [["a", "b", "c", "d"], ["f", "f", "g", "i"]],
             error: "",
             loading: false
         };
@@ -108,7 +105,7 @@ export default {
     mounted() {
         // refreshLocations()
 
-        userService.getAllLocations().then(res => {
+        apiCalls.getAllLocations().then(res => {
             console.log("new locations");
             console.log(res);
             this.modelContent = res["payload"]["content"];
@@ -123,7 +120,7 @@ export default {
     methods: {
         refreshLocations() {
             console.log("refreshing locations");
-            userService.getAllLocations().then(res => {
+            apiCalls.getAllLocations().then(res => {
                 console.log("new locations");
                 console.log(res);
                 this.modelContent = res["payload"]["content"];
@@ -148,7 +145,7 @@ export default {
         async deleteElement(i) {
             console.log("delete i", i)
 
-            userService.deleteLocation(i).then(res => {
+            apiCalls.deleteLocation(i).then(res => {
                 console.log("location deleted");
                 this.refreshLocations()
 
@@ -160,8 +157,9 @@ export default {
             });
 
         }
-    },
-    components: { LocationForm }
+    }
+    // ,
+    // components: { LocationForm }
 }
 
 </script>
