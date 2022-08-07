@@ -4,16 +4,26 @@ export const store = createStore({
     state() {
         return {
             count: 0,
-            synchronizerToken: ""
+            synchronizerToken: "",
+            latitude: 0,
+            longitude: 0
         }
     },
     mutations: {
         increment(state) {
-            state.count++
+            state.count++;
+
         },
         setSynchronizerToken(state, newValue) {
             state.synchronizerToken = newValue;
+        },
+        latitude(state, newValue) {
+            state.latitude = newValue
+        },
+        longitude(scripts, newValue) {
+            store.longitude = newValue
         }
+
     },
     // getters: {
     //     getSynchronizerToken(state) {
