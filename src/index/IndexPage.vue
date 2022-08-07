@@ -23,17 +23,6 @@
 
                                     <Map />
 
-                                    <!-- <ol-map :loadTilesWhileAnimating="true" :loadTilesWhileInteracting="true"
-                                        style="height:400px">
-
-                                        <ol-view ref="view" :center="center" :rotation="rotation" :zoom="zoom"
-                                            :projection="projection" />
-
-                                        <ol-tile-layer>
-                                            <ol-source-osm />
-                                        </ol-tile-layer>
-
-                                    </ol-map> -->
 
                                 </div>
                             </div>
@@ -79,16 +68,10 @@
 </template>
 
 <script>
-import { router } from '../_helpers';
-import { userService } from '../_services';
 import LocationForm from '../components/LocationForm.vue';
 import MapContainer from '../components/MapContainer.vue';
-// import OLMap from '../components/OLMap.vue';
 
 
-import {
-    ref
-} from 'vue'
 export default {
     name: "f",
 
