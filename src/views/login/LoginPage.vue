@@ -105,8 +105,8 @@
 
 
 <script>
-import { router } from '../../_helpers';
-import { userService } from '../../_services';
+import { router } from '../../scripts/router';
+import { apiCalls } from '../../scripts/api';
 
 export default {
     data() {
@@ -120,7 +120,7 @@ export default {
         }
     },
     created() {
-        userService.logout();
+        apiCalls.logout();
         this.returnUrl = this.$route.query.returnUrl || '/';
     },
     methods: {
@@ -132,7 +132,7 @@ export default {
                 return;
             }
             this.loading = true;
-            userService.login(username, password).then(
+            apiCalls.login(username, password).then(
                 user => router.push(this.returnUrl),
                 error => {
                     this.error = "invalid credentials"
