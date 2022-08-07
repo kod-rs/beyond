@@ -59,6 +59,8 @@ export default {
     },
     methods: {
         refreshLocations() {
+
+
             console.log("refreshing locations");
             userService.getAllLocations().then(res => {
                 console.log("new locations");
