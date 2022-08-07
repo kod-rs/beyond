@@ -2,10 +2,8 @@
 
     <div id="root">
 
+        <Navigation></Navigation>
 
-        <TopNavigationBar />
-
-        <ContentNavigationBar />
 
         <main class="mt-5 pt-3">
             <div class="container-fluid">
@@ -66,13 +64,9 @@
 </template>
 
 <script>
-import LocationForm from '../../components/LocationForm.vue';
-import MapContainer from '../../components/MapContainer.vue';
 
 export default {
-    name: "f",
 
-    components: { LocationForm, MapContainer }
 }
 
 </script>
