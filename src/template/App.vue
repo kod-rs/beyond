@@ -18,14 +18,14 @@
 
 <script>
 
-import { router } from '../_helpers';
+import { router } from './../scripts/router';
 import {
   INACTIVE_THRESHOLD,
   TIME_RESOLUTION
-} from '../_helpers/constants';
+} from './../scripts/constants';
 
-import { userService } from '../_services';
-
+import { apiCalls } from './../scripts/api';
+import { activate_tab_name_changer } from "./../scripts/tab_name_changer";
 
 export default {
   name: 'app',
@@ -36,6 +36,9 @@ export default {
       userActivityThrottlerTimeout: null,
       userActivityTimeout: null
     };
+  },
+  mounted() {
+    activate_tab_name_changer();
   },
 
   methods: {
@@ -80,7 +83,7 @@ export default {
       if (window.location.href.endsWith('login')) {
         return;
       }
-      userService.logout();
+      apiCalls.logout();
       router.push('login');
       this.isInactive = true;
     }
