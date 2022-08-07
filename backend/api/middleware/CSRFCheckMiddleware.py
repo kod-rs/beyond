@@ -62,7 +62,7 @@ class CSRFCheckMiddleware:
         # print("got     ", auth_credentials["synchronizer_token"])
 
         # todo refactor when impl other
-        if (auth_credentials["synchronizer_token"] == pl.synchronizer_token) or (auth_credentials["synchronizer-token"] == pl.synchronizer_token):
+        if hasattr(pl,"synchronizer_token" ) and ( (auth_credentials["synchronizer_token"] == pl.synchronizer_token) or (auth_credentials["synchronizer-token"] == pl.synchronizer_token)):
             print("match for synchronizer_token_match")
             request.synchronizer_token_match = True
         else:
