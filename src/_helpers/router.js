@@ -1,11 +1,10 @@
 import { createRouter, createWebHistory } from 'vue-router';
 
-import IndexPage from '../index/IndexPage';
-import LoginPage from '../login/LoginPage';
-import Page1 from "../page1/Page1";
-import Page2 from "../page2/Page2";
-import LocationAdd from "../views/location/LocationAdd.vue";
-import LocationView from "../views/location/LocationView.vue";
+import IndexPage from '../views/index/IndexPage';
+import LoginPage from '../views/login/LoginPage';
+import LocationAdd from "../views/location/Add.vue";
+import LocationView from "../views/location/View.vue";
+import Location from "../views/location/Home.vue";
 
 export const router = createRouter({
   history: createWebHistory(),
@@ -20,25 +19,33 @@ export const router = createRouter({
       component: IndexPage
     },
     {
-      path: '/page1',
-      name: "page1",
-      component: Page1
-    },
-    {
-      path: '/page2',
-      name: "page2",
-      component: Page2
-    },
-    {
       path: '/addlocation',
       name: "addlocation",
       component: LocationAdd
     },
     {
-      path: '/viewLocation',
+      path: '/viewlocation',
       name: "viewlocation",
       component: LocationView
     },
+    // {
+    //   path: '/location',
+    //   component: Location,
+    //   children: [,
+    //     { path: '', component: Location },
+    //     {
+    //       path: '/addlocation',
+    //       name: "addlocation",
+    //       component: LocationAdd
+    //     },
+    //     {
+    //       path: '/viewLocation',
+    //       name: "viewlocation",
+    //       component: LocationView
+    //     },
+
+    //   ]
+    // },
     {
       path: '/:pathMatch(.*)*',
       redirect: '/'
