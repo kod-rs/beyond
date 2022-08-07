@@ -17,7 +17,6 @@
 
 
                             </span>
-                            <!-- <router-link :to="{ name: 'index' }">map</router-link> -->
 
                         </a>
                     </li>
@@ -51,7 +50,6 @@
 
                                         </span>
 
-                                        <!-- <router-link :to="{ name: 'page1' }">page 1</router-link> -->
 
                                     </a>
                                 </li>
@@ -80,26 +78,8 @@
                             <span>ff</span>
                         </a>
                     </li>
-                    <li>
-                        <a href="#" class="nav-link px-3">
-                            <span class="me-2"><i class="bi bi-book-fill"></i></span>
-                            <span>
 
-                                <router-link :to="{ name: 'page1' }">page 1</router-link>
-                            </span>
 
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#" class="nav-link px-3">
-                            <span class="me-2"><i class="bi bi-book-fill"></i></span>
-                            <span>
-
-                                <router-link :to="{ name: 'page2' }">map</router-link>
-                            </span>
-
-                        </a>
-                    </li>
                     <li class="my-4">
                         <hr class="dropdown-divider bg-light" />
                     </li>
@@ -127,12 +107,6 @@
 
 <script>
 export default {
-    data() {
-        return {
-            // a: 0
-        }
-    }
 }
-
 </script>
 
