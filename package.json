@@ -23,6 +23,7 @@
     "startbootstrap-sb-admin-2": "^3.3.7",
     "strict-transport-security": "^0.3.0",
     "vue": "^3.2.37",
+    "vue-browser-geolocation": "^1.8.0",
     "vue-router": "^4.1.2",
     "vue3-openlayers": "^0.1.68",
     "vuex": "^4.0.2"
