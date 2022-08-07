@@ -18,6 +18,10 @@ import 'vue3-openlayers/dist/vue3-openlayers.css'
 const sts = require('strict-transport-security');
 const globalSTS = sts.getSTS({ 'max-age': { 'days': 10 }, 'includeSubDomains': true });
 
+// import VueGeolocation from 'vue-browser-geolocation';
+// app.use(VueGeolocation);
+
+
 app.use(OpenLayersMap, globalSTS);
 
 app
