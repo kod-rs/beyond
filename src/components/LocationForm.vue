@@ -50,11 +50,11 @@
 
 <template>
 
-    location add form
+    <!-- location add form -->
 
-    <form @submit.prevent="handleSubmit">
-        <!-- <input type="hidden" name="csrf-token" value={{}} /> -->
+    <!-- <form @submit.prevent="handleSubmit">
         <CSRFToken ref="csrftokenelement" />
+
         section
         <input type="text" v-model="section" name="section" class="form-control" />
         type
@@ -67,8 +67,22 @@
 
         <button class="btn btn-primary btn-dark btn-lg btn-block">add</button>
     </form>
+ -->
+
+    <form @submit.prevent="handleSubmit">
+        <CSRFToken ref="csrftokenelement" />
 
 
+        <div v-for="option in formData" :value="option.value">
+            {{ option.key }}
+
+            <input type="text" v-model="option.value" :name="option.key" class="form-control" />
+            <br>
+
+        </div>
+
+        <button class="btn btn-primary btn-dark btn-lg btn-block">add</button>
+    </form>
 
 </template>
 
@@ -81,25 +95,47 @@ import { userService } from '../_services';
 export default {
     data() {
         return {
-            section: '',
-            type: '',
-            latitude: '',
-            longitude: ''
+            // section: '',
+            // type: '',
+            // latitude: '',
+            // longitude: '',
+            formData: [
+                { key: 'section', value: 'A' },
+                { key: 'type', value: 'B' },
+                { key: 'latitude', value: 'C' },
+                { key: "longitude", value: "fmp" }
+            ]
         }
     },
     methods: {
-        handleSubmit(e) {
-            const { section, type, latitude, longitude } = this;
+        handleSubmit: async () => {
 
-            const csrfToken = this.$refs.csrftokenelement.content
-            console.log("---------------------", csrfToken)
+            let formContent = {};
 
-            if (!(section && type && latitude && longitude)) {
-                console.log("form not filled")
-                return;
+
+            // increment() {
+
+            // }
+
+            for (const i of this.formData) {
+
+                if (element.value) {
+                    formContent[element.key] = element.value
+
+                } else {
+                    return
+                }
             }
 
-            userService.addLocation(section, type, latitude, longitude, csrfToken).then(
+            console.log(formContent)
+            console.log(this.$store.state.synchronizer_token)
+
+            // const csrfToken = this.$refs.csrftokenelement.content
+            const csrfToken = this.$store.state.synchronizer_token
+            console.log(this.$store.state.synchronizer_token)
+
+
+            await userService.addLocation(formContent["section"], formContent["type"], formContent["latitude"], formContent["longitude"], csrfToken).then(
                 t => {
                     alert("added")
                 },
