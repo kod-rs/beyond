@@ -80,6 +80,11 @@ class LocationsView(APIView):
 
             if request.synchronizer_token_match:
                 print("sync token ok")
+            else:
+
+                response["payload"] = {"status": False}
+                return JsonResponse(response)
+
             print(request.synchronizer_token_match)
 
 
