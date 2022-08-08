@@ -60,10 +60,6 @@ module.exports = {
                 target: 'http://localhost:8000/',
             }
         },
-        https: {
-            key: fs.readFileSync(path.resolve(__dirname, 'playground', 'certs', 'localhost-key.pem')),
-            cert: fs.readFileSync(path.resolve(__dirname, 'playground', 'certs', 'localhost.pem')),
-        },
 
     },
     externals: {
