@@ -6,7 +6,7 @@
     <!-- <input type="text" value="ff" > -->
     your coordinates
     <input type="text" v-model="lat" :name="lat" class="form-control" />
-    <input type="text" v-model="lon" :name="lonn" class="form-control" />
+    <input type="text" v-model="lon" :name="lon" class="form-control" />
 
     <ol-map :loadTilesWhileAnimating="true" :loadTilesWhileInteracting="true" style="height:400px">
         <ol-view ref="view" :center="center" :rotation="rotation" :zoom="zoom" :projection="projection" />
@@ -42,35 +42,59 @@ export default {
         }
     },
 
-    methods: {
-        getUserLocation() {
-            // this.content = event.target.value.trim() // Formatting example
-            // this.$store.commit('setSynchronizerToken', this.content)
-            console.log("get user location")
-            if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(showPosition, showError, { timeout: 5000 });
-            }
-            else {
 
-                alert("Geolocation is not supported by this browser.")
-            }
+    setup() {
+
+        // const getUserLocation = () => {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(position => {
+                this.$store.commit('setLatitude', position.coords.latitude);
+                this.$store.commit('setLongitude', position.coords.longitude);
 
 
+                alert("Latitude: " + position.coords.latitude +
+                    "<br>Longitude: " + position.coords.longitude);
+            })
+        }
+
+        // }
 
 
-        },
-        showPosition(position) {
-            var x = document.getElementById("demo");
 
-            this.$store.commit('latitude', position.coords.latitude);
-            this.$store.commit('longitude', position.coords.longitude);
+        // const getUserLocation = () => {
+        //     // this.content = event.target.value.trim() // Formatting example
+        //     // this.$store.commit('setSynchronizerToken', this.content)
+        //     console.log("get user location")
+        //     if (navigator.geolocation) {
+        //         navigator.geolocation.getCurrentPosition(position => {
+        //             this.$store.commit('setLatitude', position.coords.latitude);
+        //             this.$store.commit('setLongitude', position.coords.longitude);
 
 
-            alert("Latitude: " + position.coords.latitude +
-                "<br>Longitude: " + position.coords.longitude);
-        },
+        //             alert("Latitude: " + position.coords.latitude +
+        //                 "<br>Longitude: " + position.coords.longitude);
 
-        showError(error) {
+        //         }, showError, { timeout: 5000 });
+        //     }
+        //     else {
+
+        //         alert("Geolocation is not supported by this browser.")
+        //     }
+
+        // }
+
+        // const showPosition = (position) => {
+        //     // var x = document.getElementById("demo");
+
+        //     this.$store.commit('setLatitude', position.coords.latitude);
+        //     this.$store.commit('setLongitude', position.coords.longitude);
+
+
+        //     alert("Latitude: " + position.coords.latitude +
+        //         "<br>Longitude: " + position.coords.longitude);
+        // }
+
+        function showError(error) {
             switch (error.code) {
                 case error.PERMISSION_DENIED:
                     alert("User denied the request for Geolocation.")
@@ -87,19 +111,10 @@ export default {
             }
         }
 
-    },
-    setup() {
-        // this.getUserLocation();
-
+        // getUserLocation();
 
         const center = ref([54.1966794, 31.8797732])
 
-
-
-        //  function getLocation() {
-
-
-        // const center = ref([54.1966794, 31.8797732])
         const projection = ref('EPSG:4326')
         const zoom = ref(6)
         const rotation = ref(0)
