@@ -34,88 +34,34 @@ import markerIcon from './../../assets/login_logo.png'
 import { ref } from "vue";
 
 export default {
-    name: "test",
     data() {
         return {
             lat: 0,
             lon: 0
         }
     },
-    // computed() {
-    //     // storeVals() {
-    //     this.$store.commit('setLatitude', 3);
-    //     this.$store.commit('setLongitude', 4);
-    //     console.log(".streod")
-    //     // }
-    // },
-    // methods: {
-    //     updateLocation(lat, lon) {
-    //         console.log("primjje")
-    //         // this.content = event.target.value.trim() // Formatting example
-    //         this.$store.commit('setLatitude', 2)
-    //         console.log("nakon")
-    //     }
-    // },
-    async mounted() {
+    methods: {
+        getUserLocation() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    this.showPosition,
+                    this.showError, { timeout: 5000 });
+            }
+            else {
+                alert("Geolocation is not supported by this browser.")
+            }
+        },
+        showPosition(position) {
+            this.$store.commit('setLatitude', position.coords.latitude);
+            this.$store.commit('setLongitude', position.coords.longitude);
+            this.lat = this.$store.state.latitude
+            this.lon = this.$store.state.longitude
 
-        this.$store.commit('setLatitude', 2)
-        console.log("nakon")
 
-        // const CSRFPayload = await apiCalls.getCSRFAuthData();
-
-        // if (CSRFPayload["status"]) {
-        //     this.content = CSRFPayload["synchronizer_token"]
-        //     this.$store.commit('setSynchronizerToken', CSRFPayload["synchronizer_token"])
-
-        // } else {
-        //     this.content = ""
-        //     this.$store.commit('setSynchronizerToken', '')
-
-        //     alert("error generating, you will not be able to submit form, contact admin")
-        // }
-    },
-    setup() {
-
-        // this.updateLocation(2, 3)
-        // this.storeVals()
-
-        // const getUserLocation = () => {
-        if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(position => {
-                // this.$store.commit('setLatitude', position.coords.latitude);
-                // this.$store.commit('setLongitude', position.coords.longitude);
-
-                alert("Latitude: " + position.coords.latitude +
-                    "<br>Longitude: " + position.coords.longitude);
-            })
+            alert("Latitude: " + position.coords.latitude +
+                "<br>Longitude: " + position.coords.longitude);
         }
-
-        // }
-        // const getUserLocation = () => {
-        //     // this.content = event.target.value.trim() // Formatting example
-        //     // this.$store.commit('setSynchronizerToken', this.content)
-        //     console.log("get user location")
-        //     if (navigator.geolocation) {
-        //         navigator.geolocation.getCurrentPosition(position => {
-        //             this.$store.commit('setLatitude', position.coords.latitude);
-        //             this.$store.commit('setLongitude', position.coords.longitude);
-        //             alert("Latitude: " + position.coords.latitude +
-        //                 "<br>Longitude: " + position.coords.longitude);
-        //         }, showError, { timeout: 5000 });
-        //     }
-        //     else {
-        //         alert("Geolocation is not supported by this browser.")
-        //     }
-        // }
-        // const showPosition = (position) => {
-        //     // var x = document.getElementById("demo");
-        //     this.$store.commit('setLatitude', position.coords.latitude);
-        //     this.$store.commit('setLongitude', position.coords.longitude);
-        //     alert("Latitude: " + position.coords.latitude +
-        //         "<br>Longitude: " + position.coords.longitude);
-        // }
-
-        function showError(error) {
+        , showError(error) {
             switch (error.code) {
                 case error.PERMISSION_DENIED:
                     alert("User denied the request for Geolocation.")
@@ -130,6 +76,77 @@ export default {
                     alert("An unknown error occurred.")
                     break;
             }
+        }
+    },
+    mounted() {
+        // this.setLat()
+        this.$store.commit('setLatitude', 15);
+        // setLat() {
+        this.$store.commit('setLatitude', 28);
+        this.lat = this.$store.state.latitude
+
+        // },
+
+        this.getUserLocation()
+        // (this.$store.$store.latitude)
+        // this.lat = this.$store.$store.latitude
+        // this.lon = this.$store.$store.longitude
+
+    },
+
+    setup() {
+
+        // this.updateLocation(2, 3)
+        // this.storeVals()
+        // this.$store.commit('setLatitude', 15);
+
+        // const getUserLocation = () => {
+        //     if (navigator.geolocation) {
+        //         navigator.geolocation.getCurrentPosition(position => {
+        //             this.$store.commit('setLatitude', position.coords.latitude);
+        //             this.$store.commit('setLongitude', position.coords.longitude);
+
+        //             alert("Latitude: " + position.coords.latitude +
+        //                 "<br>Longitude: " + position.coords.longitude);
+        //         })
+        //     }
+
+        // }
+        const getUserLocation = () => {
+            // this.$store.commit('setLatitude', 25);
+            // this.content = event.target.value.trim() // Formatting example
+            // this.$store.commit('setSynchronizerToken', this.content)
+            console.log("get user location")
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(showPosition, showError, { timeout: 5000 });
+            }
+            else {
+                alert("Geolocation is not supported by this browser.")
+            }
+        }
+        const showPosition = (position) => {
+            // var x = document.getElementById("demo");
+            // this.$store.commit('setLatitude', position.coords.latitude);
+            // this.$store.commit('setLongitude', position.coords.longitude);
+            alert("Latitude: " + position.coords.latitude +
+                "<br>Longitude: " + position.coords.longitude);
+        }
+
+        function showError(error) {
+            // switch (error.code) {
+            //     case error.PERMISSION_DENIED:
+            //         alert("User denied the request for Geolocation.")
+            //         break;
+            //     case error.POSITION_UNAVAILABLE:
+            //         alert("Location information is unavailable.")
+            //         break;
+            //     case error.TIMEOUT:
+            //         alert("The request to get user location timed out.")
+            //         break;
+            //     case error.UNKNOWN_ERROR:
+            //         alert("An unknown error occurred.")
+            //         break;
+            // }
         }
 
         // getUserLocation();
