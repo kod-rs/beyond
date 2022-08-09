@@ -10,7 +10,7 @@ def main():
 
     same_comment = True
     comment = None
-    comment = "fix add"
+    comment = "wip; make checkpoint for migration to bare ol"
     if same_comment:
         if not comment:
             comment = input("comment for all commits will be same:")
