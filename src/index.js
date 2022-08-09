@@ -5,9 +5,12 @@ import { store } from "./scripts/store"
 
 const app = createApp(App);
 
-app.use(store)
+// app.use(store)
 
-app.use(router).mount('#app');
+app.use(router, store).mount('#app');
+
+store.commit('setLatitude', 2);
+console.log("store lat", store.state.latitude)
 
 import Map from './components/map/Map.vue'
 import CSRFToken from './components/form/CSRFToken.vue'
