@@ -20,8 +20,8 @@ export const store = createStore({
         latitude(state, newValue) {
             state.latitude = newValue
         },
-        longitude(scripts, newValue) {
-            store.longitude = newValue
+        longitude(state, newValue) {
+            state.longitude = newValue
         }
 
     },
