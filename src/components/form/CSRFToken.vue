@@ -1,17 +1,14 @@
 <template>
-    <!-- <input type="hidden" name="csrf-token" value={{}} /> -->
 
-    <!-- one way binding -->
-    <!-- <input name="csrf-token" :value=content /> -->
+    <input v-if="this.$store.state.appMode == 'development'" :value="content" @change="updateMyValue" />
+    <input v-else type="hidden" :value="content" @change="updateMyValue" />
 
-    <!-- two way binding -->
-    <!-- <input name="csrf-token" v-model=content onchange=changed() /> -->
-    <input :value="content" @change="updateMyValue" />
     <br>
 
 </template>
 
 <script>
+
 import { apiCalls } from '../../scripts/api';
 
 export default {
