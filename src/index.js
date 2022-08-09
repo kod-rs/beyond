@@ -17,8 +17,6 @@ const app = createApp(App);
 
 app.use(router).use(store).mount('#app');
 
-store.commit('setLatitude', 12);
-console.log("store lat", store.state.latitude)
 const globalSTS = sts.getSTS({ 'max-age': { 'days': 10 }, 'includeSubDomains': true });
 
 // import VueGeolocation from 'vue-browser-geolocation';
