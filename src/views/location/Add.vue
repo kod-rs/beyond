@@ -1,33 +1,8 @@
-<!-- <template>
-
-    <form @submit.prevent="handleSubmit">
-
-
-        <br>
-        <div class="form-group">
-            <button class="btn btn-primary btn-dark btn-lg btn-block" :disabled="loading">Login</button>
-
-            <img v-show="loading"
-                src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==" />
-        </div>
-        <br>
-    </form>
-
-
-</template>
-
-<script>
-
-</script> -->
-
-
 <template>
-
 
     <div id="root">
 
         <Navigation />
-
 
         <main class="mt-5 pt-3">
             <div class="container-fluid">
@@ -36,19 +11,17 @@
                     add new
                     <br>
                     <hr>
-                    <div class="hidden-csrf">
-                        <CSRFToken ref="csrftokenelement" />
-                    </div>
                     <div v-if="error" class="alert alert-danger">{{ error }}</div>
 
                     <form @submit.prevent="handleSubmit">
+                        <CSRFToken ref="csrftokenelement" />
 
                         <div v-for="option in formData" :value="option.value">
                             {{ option.key.charAt(0).toUpperCase() + option.key.slice(1) }}
                             <span v-if="option.key == 'section' || option.key == 'type'">
-                                <span class="hint" @mouseover="hover = true" @mouseleave="hover = false">?</span>
-                                <span v-if="hover" class="hinttext">Only letters, numbers, spaces, commas and dots
-                                    accepted in the input</span>
+                                <span class="hint" @mouseover="option.hovered = true"
+                                    @mouseleave="option.hovered = false">?</span>
+                                <span v-if="option.hovered" class="hint_text"> {{ option.msg }}</span>
                             </span>
 
                             <input type="text" v-model="option.value" :name="option.key" class="form-control" />
@@ -61,7 +34,12 @@
 
                         </div>
 
-                        <button class="btn btn-primary btn-dark btn-lg btn-block">add</button>
+                        <button class="btn btn-primary btn-dark btn-lg btn-block" :disabled="loading">add</button>
+
+                        <img v-show="loading"
+                            src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==" />
+
+
                     </form>
                 </div>
 
@@ -70,12 +48,7 @@
 
     </div>
 
-
-
 </template>
-
-
-
 
 <script>
 import { apiCalls } from '../../scripts/api';
@@ -85,8 +58,8 @@ export default {
         return {
             hover: false,
             formData: [
-                { key: 'section', value: 'A' },
-                { key: 'type', value: 'B' },
+                { key: 'section', value: 'A', msg: "Only letters, numbers, spaces, commas and dots accepted in the input", hovered: false },
+                { key: 'type', value: 'B', msg: "Only letters, numbers, spaces, commas and dots accepted in the input", hovered: false },
                 { key: 'latitude', value: '2' },
                 { key: "longitude", value: "3" }
             ]
@@ -110,18 +83,16 @@ export default {
                 }
             }
 
-            // const csrfToken = this.$store.state.synchronizerToken
+            const csrfToken = this.$store.state.synchronizerToken
 
-            // await apiCalls.addLocation(formContent["section"], formContent["type"], formContent["latitude"], formContent["longitude"], csrfToken).then(
-            //     t => {
-            //         alert("added")
-            //     },
-            //     error => {
-            //         console.log("error", error)
-            //     }
-            // );
-
-            alert("simulacija slanja")
+            await apiCalls.addLocation(formContent["section"], formContent["type"], formContent["latitude"], formContent["longitude"], csrfToken).then(
+                _ => {
+                    alert("added")
+                },
+                error => {
+                    console.log("error", error)
+                }
+            );
 
             this.formData.forEach(i => {
                 i.value = ""
@@ -148,14 +119,10 @@ export default {
     height: 1.2vw;
 }
 
-.hinttext {
+.hint_text {
     background: #e3e3e3;
     color: #6e6e6e;
     display: inline;
     text-align: center;
-}
-
-.hidden-csrf {
-    display: none;
 }
 </style>
