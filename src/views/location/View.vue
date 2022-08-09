@@ -1,11 +1,8 @@
 <template>
 
     <div id="root">
+        <Navigation />
 
-
-        <TopNavigationBar />
-
-        <ContentNavigationBar />
 
         <main class="mt-5 pt-3">
             <div class="container-fluid">
@@ -16,7 +13,6 @@
 
 
 
-                    <!-- <Map /> -->
 
 
                     <!-- <input v-model="searchInput" @keyup.enter="search" placeholder="Enter place" /> -->
