@@ -7,6 +7,13 @@ import subprocess
 
 
 def main():
+
+    same_comment = True
+    comment = None
+
+    if same_comment:
+        comment = input("comment for all commits will be same:")
+
     base_dir = pathlib.Path(os.getcwd()).parent.parent
 
     result = subprocess.run(
@@ -40,7 +47,10 @@ def main():
     print("enter messages")
 
     for file in set(to_c):
-        desc = input(f"{file}\n")
+        if not same_comment:
+            desc = input(f"{file}\n")
+        else:
+            desc = comment
 
         message = "git commit -m " + f'\"{" ".join(file.split("/"))} - {desc}\"'
 
