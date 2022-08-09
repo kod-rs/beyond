@@ -190,11 +190,23 @@ function handleNewResponse(response) {
     return response.data
 }
 
+async function getCoordinates() {
+
+    let response = await api.get(`https://ipapi.co/json/`)
+    response = response["data"]
+    return {
+        latitude: response["latitude"],
+        longitude: response["longitude"]
+    }
+
+}
+
 export const apiCalls = {
     logout,
     login,
     getAllLocations,
     deleteLocation,
     getCSRFAuthData,
-    addLocation
+    addLocation,
+    getCoordinates
 }

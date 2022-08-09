@@ -26,7 +26,8 @@ export default {
 
         if (CSRFPayload["status"]) {
             this.content = CSRFPayload["synchronizer_token"]
-            this.$store.commit('setSynchronizerToken', CSRFPayload["synchronizer_token"])
+            console.log("contetn", this.content)
+            this.$store.commit('setSynchronizerToken', this.content)
 
         } else {
             this.content = ""

@@ -4,6 +4,11 @@
         <Navigation />
 
 
+<<<<<<< HEAD
+=======
+        <Navigation />
+
+>>>>>>> dev-wip-geo
         <main class="mt-5 pt-3">
             <div class="container-fluid">
 
@@ -86,6 +91,7 @@
 
 <script>
 import { apiCalls } from '../../scripts/api';
+import Navigation from '../../components/navigation/Navigation.vue';
 
 export default {
     name: "f",
@@ -100,7 +106,6 @@ export default {
     },
     mounted() {
         // refreshLocations()
-
         apiCalls.getAllLocations().then(res => {
             console.log("new locations");
             console.log(res);
@@ -139,23 +144,22 @@ export default {
             const jsonResponse = await res.json();
         },
         async deleteElement(i) {
-            console.log("delete i", i)
-
+            console.log("delete i", i);
             apiCalls.deleteLocation(i).then(res => {
                 console.log("location deleted");
-                this.refreshLocations()
-
+                this.refreshLocations();
             }, error => {
                 console.log("err", error);
                 this.error = "invalid credentials";
                 // this.error = error;
                 this.loading = false;
             });
-
         }
     }
     // ,
     // components: { LocationForm }
+    ,
+    components: { Navigation }
 }
 
 </script>
