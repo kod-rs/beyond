@@ -1,5 +1,7 @@
 import { createStore } from 'vuex'
 
+// state : development / production
+
 export const store = createStore({
     state() {
         return {
@@ -7,7 +9,8 @@ export const store = createStore({
             synchronizerToken: "",
             latitude: 0,
             longitude: 0,
-            username: ""
+            username: "",
+            appMode: "development"
         }
     },
     mutations: {
