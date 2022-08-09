@@ -10,9 +10,10 @@ def main():
 
     same_comment = True
     comment = None
-
+    comment = "fix add"
     if same_comment:
-        comment = input("comment for all commits will be same:")
+        if not comment:
+            comment = input("comment for all commits will be same:")
 
     base_dir = pathlib.Path(os.getcwd()).parent.parent
 
