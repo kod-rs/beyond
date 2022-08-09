@@ -1,6 +1,10 @@
-git add /home/kim/Documents/github/kod-rs/beyond/src/scripts/store.js
-git commit -m "src scripts store.js - wip"
-git add /home/kim/Documents/github/kod-rs/beyond/src/views/location/View.vue
-git commit -m "src views location View.vue - wip"
+git add /home/kim/Documents/github/kod-rs/beyond/src/components/form/CSRFToken.vue
+git commit -m "src components form CSRFToken.vue - fix show user geo "
+git add /home/kim/Documents/github/kod-rs/beyond/src/components/map/Map.vue
+git commit -m "src components map Map.vue - fix show user geo "
+git add /home/kim/Documents/github/kod-rs/beyond/src/main.js
+git commit -m "src main.js - fix show user geo "
 git add /home/kim/Documents/github/kod-rs/beyond/playground/marin-jovanovic/git.sh
-git commit -m "playground marin-jovanovic git.sh - wip"
+git commit -m "playground marin-jovanovic git.sh - fix show user geo "
+git add /home/kim/Documents/github/kod-rs/beyond/src/index.js
+git commit -m "src index.js - fix show user geo "
