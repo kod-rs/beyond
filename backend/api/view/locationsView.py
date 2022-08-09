@@ -1,3 +1,6 @@
+import enum
+import re
+
 from django.http import JsonResponse
 from rest_framework.views import APIView
 
@@ -5,6 +8,12 @@ from backend.api.comm.comm import decode_data
 from backend.api.config.main import ROLES
 from backend.api.cqrs_c.location import add, delete
 from backend.api.cqrs_q.location import get_all
+
+
+class ACTIONS(enum.Enum):
+    ADD = 'add'
+    GET_ALL = 'get all'
+    DELETE = 'delete'
 
 
 class LocationsView(APIView):
@@ -61,21 +70,25 @@ class LocationsView(APIView):
     def post(self, request):
         """create"""
 
+        response = {
+            "auth": {
+                "status": True,
+                "access-token": request.access_token,
+                "refresh-token": request.refresh_token
+            }
+        }
+
+        if not _check_request_data(request.data):
+            print('invalid data')
+            response["payload"] = {"status": False}
+            return JsonResponse(response)
+
         action = request.action
         print(action)
 
         print("post locations")
 
-        if action == "add":
-
-            response = {
-                "auth": {
-                    "status": True,
-                    "access-token": request.access_token,
-                    "refresh-token": request.refresh_token
-                }
-            }
-
+        if action == ACTIONS.ADD.value:
             roles = request.roles
 
             if request.synchronizer_token_match:
@@ -86,7 +99,6 @@ class LocationsView(APIView):
                 return JsonResponse(response)
 
             print(request.synchronizer_token_match)
-
 
             # todo check role
             if any(i in ROLES for i in roles):
@@ -104,25 +116,15 @@ class LocationsView(APIView):
                     # d = add(**body_content)
                     d = add(section, location_type, latitude, longitude)
 
-                    response["payload"] = {
-                        "status": True
-                    }
+                    response["payload"] = {"status": True}
 
                     return JsonResponse(response)
 
             response["payload"] = {"status": False}
             return JsonResponse(response)
 
-        elif action == "get all":
+        elif action == ACTIONS.GET_ALL.value:
             print("get locations")
-
-            response = {
-                "auth": {
-                    "status": True,
-                    "access-token": request.access_token,
-                    "refresh-token": request.refresh_token
-                }
-            }
 
             roles = request.roles
             print(f"{roles=}")
@@ -151,16 +153,8 @@ class LocationsView(APIView):
 
             return JsonResponse(response)
 
-        elif action == "delete":
+        elif action == ACTIONS.DELETE.value:
             print("delete")
-
-            response = {
-                "auth": {
-                    "status": True,
-                    "access-token": request.access_token,
-                    "refresh-token": request.refresh_token
-                }
-            }
 
             roles = request.roles
             print(f"{roles=}")
@@ -178,10 +172,8 @@ class LocationsView(APIView):
 
                     d = delete(index)
 
-                response["payload"] = {
-                    "status": True,
-                    "content": d
-                }
+                response["payload"] = {"status": True,
+                                       "content": d}
 
             print("returning location, everything ok")
             return JsonResponse(response)
@@ -211,11 +203,8 @@ class LocationsView(APIView):
             [print(i) for i in d]
             # serialized_d = serializers.serialize('json', [d, ])
 
-            response["payload"] = {
-                "status": True,
-                "content": d
-            }
-
+            response["payload"] = {"status": True,
+                                   "content": d}
 
         else:
             response["payload"] = {"status": False}
@@ -223,3 +212,50 @@ class LocationsView(APIView):
         print("response", response)
 
         return JsonResponse(response)
+
+
+def _check_request_data(request_data):
+    if request_data['action'] not in [a.value for a in ACTIONS]:
+        print('invalid action')
+        return False
+
+    if request_data['action'] != ACTIONS.ADD.value:
+        return True
+
+    if not _type_check(request_data['latitude'], float):
+        return False
+
+    if not _type_check(request_data['longitude'], float):
+        return False
+
+    if not _type_check(request_data['section'], str):
+        return False
+
+    if not _type_check(request_data['type'], str):
+        return False
+
+    if not _string_check(request_data['section']):
+        return False
+
+    if not _string_check(request_data['type']):
+        return False
+
+    return True
+
+
+def _type_check(value, expected_type):
+    try:
+        expected_type(value)
+        return True
+    except ValueError:
+        print(f'value={value} is not the expected type')
+        return False
+
+
+def _string_check(input_string):
+    pattern = re.compile('^[čćžšđČĆŽŠĐA-Za-z0-9.,\\s]+$')
+
+    if re.search(pattern, input_string):
+        return True
+    else:
+        return False
