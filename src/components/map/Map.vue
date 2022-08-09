@@ -41,16 +41,49 @@ export default {
             lon: 0
         }
     },
+    // computed() {
+    //     // storeVals() {
+    //     this.$store.commit('setLatitude', 3);
+    //     this.$store.commit('setLongitude', 4);
+    //     console.log(".streod")
+    //     // }
+    // },
+    // methods: {
+    //     updateLocation(lat, lon) {
+    //         console.log("primjje")
+    //         // this.content = event.target.value.trim() // Formatting example
+    //         this.$store.commit('setLatitude', 2)
+    //         console.log("nakon")
+    //     }
+    // },
+    async mounted() {
 
+        this.$store.commit('setLatitude', 2)
+        console.log("nakon")
 
+        // const CSRFPayload = await apiCalls.getCSRFAuthData();
+
+        // if (CSRFPayload["status"]) {
+        //     this.content = CSRFPayload["synchronizer_token"]
+        //     this.$store.commit('setSynchronizerToken', CSRFPayload["synchronizer_token"])
+
+        // } else {
+        //     this.content = ""
+        //     this.$store.commit('setSynchronizerToken', '')
+
+        //     alert("error generating, you will not be able to submit form, contact admin")
+        // }
+    },
     setup() {
+
+        // this.updateLocation(2, 3)
+        // this.storeVals()
 
         // const getUserLocation = () => {
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(position => {
-                this.$store.commit('setLatitude', position.coords.latitude);
-                this.$store.commit('setLongitude', position.coords.longitude);
-
+                // this.$store.commit('setLatitude', position.coords.latitude);
+                // this.$store.commit('setLongitude', position.coords.longitude);
 
                 alert("Latitude: " + position.coords.latitude +
                     "<br>Longitude: " + position.coords.longitude);
@@ -58,9 +91,6 @@ export default {
         }
 
         // }
-
-
-
         // const getUserLocation = () => {
         //     // this.content = event.target.value.trim() // Formatting example
         //     // this.$store.commit('setSynchronizerToken', this.content)
@@ -69,27 +99,18 @@ export default {
         //         navigator.geolocation.getCurrentPosition(position => {
         //             this.$store.commit('setLatitude', position.coords.latitude);
         //             this.$store.commit('setLongitude', position.coords.longitude);
-
-
         //             alert("Latitude: " + position.coords.latitude +
         //                 "<br>Longitude: " + position.coords.longitude);
-
         //         }, showError, { timeout: 5000 });
         //     }
         //     else {
-
         //         alert("Geolocation is not supported by this browser.")
         //     }
-
         // }
-
         // const showPosition = (position) => {
         //     // var x = document.getElementById("demo");
-
         //     this.$store.commit('setLatitude', position.coords.latitude);
         //     this.$store.commit('setLongitude', position.coords.longitude);
-
-
         //     alert("Latitude: " + position.coords.latitude +
         //         "<br>Longitude: " + position.coords.longitude);
         // }
