@@ -18,9 +18,11 @@ export const store = createStore({
             state.synchronizerToken = newValue;
         },
         setLatitude(state, newValue) {
+            console.log("set lat")
             state.latitude = newValue
         },
         setLongitude(state, newValue) {
+            console.log("sta lon")
             state.longitude = newValue
         }
 
