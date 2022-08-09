@@ -6,7 +6,8 @@ export const store = createStore({
             count: 0,
             synchronizerToken: "",
             latitude: 0,
-            longitude: 0
+            longitude: 0,
+            username: ""
         }
     },
     mutations: {
@@ -22,6 +23,9 @@ export const store = createStore({
         },
         setLongitude(state, newValue) {
             state.longitude = newValue
+        },
+        setUseraname(state, username) {
+            state.username = username
         }
 
     }

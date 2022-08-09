@@ -15,6 +15,10 @@ vue entry point MUST be "src/main.js"
     check data types before storing in db
     check in vue if using https
 
+    Forgot password?
+    Terms of use
+    Privacy policy
+
 # fixme
 
     favicon

@@ -26,7 +26,6 @@ export default {
 
         if (CSRFPayload["status"]) {
             this.content = CSRFPayload["synchronizer_token"]
-            console.log("contetn", this.content)
             this.$store.commit('setSynchronizerToken', this.content)
 
         } else {
@@ -38,7 +37,7 @@ export default {
     },
     methods: {
         updateMyValue(event) {
-            this.content = event.target.value.trim() // Formatting example
+            this.content = event.target.value.trim()
             this.$store.commit('setSynchronizerToken', this.content)
         }
     }
