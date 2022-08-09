@@ -4,11 +4,6 @@
         <Navigation />
 
 
-<<<<<<< HEAD
-=======
-        <Navigation />
-
->>>>>>> dev-wip-geo
         <main class="mt-5 pt-3">
             <div class="container-fluid">
 
