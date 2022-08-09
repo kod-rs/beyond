@@ -17,10 +17,10 @@ export const store = createStore({
         setSynchronizerToken(state, newValue) {
             state.synchronizerToken = newValue;
         },
-        latitude(state, newValue) {
+        setLatitude(state, newValue) {
             state.latitude = newValue
         },
-        longitude(state, newValue) {
+        setLongitude(state, newValue) {
             state.longitude = newValue
         }
 
