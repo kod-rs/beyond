@@ -5,6 +5,7 @@ import LoginPage from '../views/login/LoginPage';
 import LocationAdd from "../views/location/Add.vue";
 import LocationView from "../views/location/View.vue";
 import Location from "../views/location/Home.vue";
+import LogoutPage from '../views/logout/LogoutPage';
 
 export const router = createRouter({
   history: createWebHistory(),
@@ -12,6 +13,10 @@ export const router = createRouter({
     {
       path: '/login',
       component: LoginPage
+    },
+    {
+      path: '/logout',
+      component: LogoutPage
     },
     {
       path: '/',
