@@ -16,6 +16,15 @@ class ACTIONS(enum.Enum):
     DELETE = 'delete'
 
 
+permissions = {
+    ROLES.AGGREGATOR_AND_MANAGER.value: [
+        ACTIONS.ADD, ACTIONS.GET_ALL, ACTIONS.DELETE],
+    ROLES.AGGREGATOR.value: [
+        ACTIONS.ADD, ACTIONS.GET_ALL, ACTIONS.DELETE],
+    ROLES.BUILDING_MANAGER.value: [
+        ACTIONS.ADD, ACTIONS.GET_ALL]}
+
+
 class LocationsView(APIView):
     # create rename update delete
 
@@ -27,213 +36,112 @@ class LocationsView(APIView):
     #     """update by replacing"""
 
     def delete(self, request, pk=None):
-        print("todo checking role")
         print("delete locations")
 
         roles = request.roles
-        response = {"auth": {
-            "status": True,
-            "access-token": request.access_token,
-            "refresh-token": request.refresh_token
-        }, "payload": {"status": False}}
+        response = {"auth": {"status": True,
+                             "access-token": request.access_token,
+                             "refresh-token": request.refresh_token}}
 
-        # todo check role
-        if not any(i in ROLES for i in roles):
-            print("access not granted")
-            return JsonResponse(response)
-
-        if not pk:
-            print("no pk -------------")
+        if not _has_permission(roles, ACTIONS.DELETE) or not pk:
+            response["payload"] = {"status": False}
             return JsonResponse(response)
 
         print("pk present", pk)
 
-        r = delete(pk)
+        status = delete(pk)
 
-        if request.body:
-            body_content = decode_data(request.body)
-            print(f"{body_content=}")
+        if not status:
+            response["payload"] = {"status": False}
+            return JsonResponse(response)
 
-        response = {
-            "auth": {
-                "status": True,
-                "access-token": request.access_token,
-                "refresh-token": request.refresh_token
-            },
-            "payload": {
-                "page": "put device",
-            }
-        }
-
+        response["payload"] = {"page": "put device"}
         return JsonResponse(response)
 
     def post(self, request):
         """create"""
-
-        response = {
-            "auth": {
-                "status": True,
-                "access-token": request.access_token,
-                "refresh-token": request.refresh_token
-            }
-        }
-
-        if not _check_request_data(request.data):
-            print('invalid data')
-            response["payload"] = {"status": False}
-            return JsonResponse(response)
-
-        action = request.action
-        print(action)
-
         print("post locations")
 
+        response = {"auth": {"status": True,
+                             "access-token": request.access_token,
+                             "refresh-token": request.refresh_token}}
+        roles = request.roles
+        action = request.action
+
+        print(action)
+
         if action == ACTIONS.ADD.value:
-            roles = request.roles
-
-            if request.synchronizer_token_match:
-                print("sync token ok")
-            else:
-
+            if (not _has_permission(roles, ACTIONS.ADD)
+                    or not _check_request_data(request.data)
+                    or not request.synchronizer_token_match
+                    or not request.body):
+                print('add not valid')
                 response["payload"] = {"status": False}
                 return JsonResponse(response)
 
-            print(request.synchronizer_token_match)
+            body_content = decode_data(request.body)
 
-            # todo check role
-            if any(i in ROLES for i in roles):
-                print("access granted")
+            status = add(body_content["section"],
+                         body_content["type"],
+                         body_content["latitude"],
+                         body_content["longitude"])
 
-                if request.body:
-                    body_content = decode_data(request.body)
-                    print(f"{body_content=}")
+            response["payload"] = {"status": status}
 
-                    section = body_content["section"]
-                    location_type = body_content["type"]
-                    latitude = body_content["latitude"]
-                    longitude = body_content["longitude"]
-
-                    # d = add(**body_content)
-                    d = add(section, location_type, latitude, longitude)
-
-                    response["payload"] = {"status": True}
-
-                    return JsonResponse(response)
-
-            response["payload"] = {"status": False}
             return JsonResponse(response)
 
-        elif action == ACTIONS.GET_ALL.value:
+        if action == ACTIONS.GET_ALL.value:
             print("get locations")
-
-            roles = request.roles
-            print(f"{roles=}")
-            # todo check role
-            if any(i in ROLES for i in roles):
-                print("access granted")
-
-                print("getting roles")
-
-                d = get_all()
-
-                [print(i) for i in d]
-
-                response["payload"] = {
-                    "status": True,
-                    "content": d
-                }
-
-                print("returning location, everything ok")
-
-            else:
-                print("role check error")
+            if not _has_permission(roles, ACTIONS.GET_ALL):
                 response["payload"] = {"status": False}
+                return JsonResponse(response)
 
-            # print("response", response)
+            print("access granted, getting roles")
+            all_locations = get_all()
+            [print(i) for i in all_locations]
 
+            response["payload"] = {"status": True, "content": all_locations}
+            print("returning location, everything ok")
             return JsonResponse(response)
 
         elif action == ACTIONS.DELETE.value:
-            print("delete")
+            print(f"delete\n{roles=}")
+            if not _has_permission(roles, ACTIONS.DELETE) or not request.body:
+                response["payload"] = {"status": False}
+                return JsonResponse(response)
 
-            roles = request.roles
-            print(f"{roles=}")
-            # todo check role
-            if any(i in ROLES for i in roles):
-                print("access granted")
-
-                print("getting roles")
-
-                if request.body:
-                    body_content = decode_data(request.body)
-                    print(f"{body_content=}")
-
-                    index = body_content["index"]
-
-                    d = delete(index)
-
-                response["payload"] = {"status": True,
-                                       "content": d}
-
-            print("returning location, everything ok")
+            body_content = decode_data(request.body)
+            print(f"{body_content=}")
+            index = body_content["index"]
+            status = delete(index)
+            response["payload"] = {"status": status}
             return JsonResponse(response)
+
+        print('unsupported action')
+        response["payload"] = {"status": False}
+        return JsonResponse(response)
 
     def get(self, request):
         print("get locations")
 
-        response = {
-            "auth": {
-                "status": True,
-                "access-token": request.access_token,
-                "refresh-token": request.refresh_token
-            }
-        }
+        response = {"auth": {"status": True,
+                             "access-token": request.access_token,
+                             "refresh-token": request.refresh_token}}
 
         roles = request.roles
 
-        # todo check role
-        if any(i in ROLES for i in roles):
-            print("access granted")
-
-            print("getting roles")
-
-            d = get_all()
-
-            # print(d)
-            [print(i) for i in d]
-            # serialized_d = serializers.serialize('json', [d, ])
-
-            response["payload"] = {"status": True,
-                                   "content": d}
-
-        else:
+        if not _has_permission(roles, ACTIONS.GET_ALL):
             response["payload"] = {"status": False}
+            return JsonResponse(response)
 
-        print("response", response)
-
+        print("access granted, getting roles")
+        all_locations = get_all()
+        [print(i) for i in all_locations]
+        response["payload"] = {"status": True, "content": all_locations}
         return JsonResponse(response)
 
 
 def _check_request_data(request_data):
-    if request_data['action'] not in [a.value for a in ACTIONS]:
-        print('invalid action')
-        return False
-
-    if request_data['action'] != ACTIONS.ADD.value:
-        return True
-
-    if not _type_check(request_data['latitude'], float):
-        return False
-
-    if not _type_check(request_data['longitude'], float):
-        return False
-
-    if not _type_check(request_data['section'], str):
-        return False
-
-    if not _type_check(request_data['type'], str):
-        return False
-
     if not _string_check(request_data['section']):
         return False
 
@@ -259,3 +167,11 @@ def _string_check(input_string):
         return True
     else:
         return False
+
+
+def _has_permission(roles, action):
+    roles = set(roles).intersection(set(permissions.keys()))
+    for role in roles:
+        if action in permissions[role]:
+            return True
+    return False
