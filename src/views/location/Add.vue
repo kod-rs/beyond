@@ -86,8 +86,13 @@ export default {
             const csrfToken = this.$store.state.synchronizerToken
 
             await apiCalls.addLocation(formContent["section"], formContent["type"], formContent["latitude"], formContent["longitude"], csrfToken).then(
-                _ => {
-                    alert("Location add successful.")
+                r => {
+                    if (r.payload.status){
+                        alert("Location add successful.");
+                    } else {
+                        alert("Location add failed.");
+                    }
+
                 },
                 error => {
                     alert("Location add failed.");
