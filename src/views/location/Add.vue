@@ -87,9 +87,10 @@ export default {
 
             await apiCalls.addLocation(formContent["section"], formContent["type"], formContent["latitude"], formContent["longitude"], csrfToken).then(
                 _ => {
-                    alert("added")
+                    alert("Location add successful.")
                 },
                 error => {
+                    alert("Location add failed.");
                     console.log("error", error)
                 }
             );
