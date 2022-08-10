@@ -2,74 +2,35 @@
 
 <template>
     <img src='marker-blue.png' />
-    <ol-map :loadTilesWhileAnimating="true" :loadTilesWhileInteracting="true" style="height:400px" ref="map">
+    fff
 
-        <ol-view ref="view" :center="center" :rotation="rotation" :zoom="zoom" :projection="projection" />
+    <div class="mw-100 main-container">
 
-        <ol-tile-layer>
-            <ol-source-osm />
-        </ol-tile-layer>
+    </div>
 
-        <ol-geolocation :projection="projection" @positionChanged="geoLocChange">
-            <template v-slot="slotProps">
-                <ol-vector-layer :zIndex="2">
-                    <ol-source-vector>
-                        <ol-feature ref="positionFeature">
-                            <ol-geom-point :coordinates="slotProps.position"></ol-geom-point>
-                            <ol-style>
-                                <ol-style-icon :src="hereIcon" :scale="0.1"></ol-style-icon>
-                            </ol-style>
-                        </ol-feature>
-                    </ol-source-vector>
 
-                </ol-vector-layer>
-            </template>
-        </ol-geolocation>
+    <div style="height: 15vw; background-color: rgba(255,0,0,0.1);">
+        <div class="h-25 d-inline-block" style="width: 120px; background-color: rgba(0,0,255,.1)">Height 25%</div>
+        <div class="h-50 d-inline-block" style="width: 120px; background-color: rgba(0,0,255,.1)">Height 50%</div>
+        <div class="h-75 d-inline-block" style="width: 120px; background-color: rgba(0,0,255,.1)">Height 75%</div>
+        <div class="h-100 d-inline-block" style="width: 120px; background-color: rgba(0,0,255,.1)">Height 100%
+        </div>
+    </div>
 
-    </ol-map>
 </template>
 
 <script>
-import hereIcon from './marker-blue.png'
-// import hereIcon from './../../assets/marker-blue.png'
 
-// import hereIcon from '@/assets/here.png'
-import {
-    ref
-} from 'vue'
 export default {
     data() {
-        imageF: "marker-blue.png"
 
-    },
-
-    setup() {
-        const center = ref([40, 40])
-        const projection = ref('EPSG:4326')
-        const zoom = ref(8)
-        const rotation = ref(0)
-
-        const view = ref(null)
-        const map = ref(null)
-
-        const geoLocChange = (loc) => {
-            console.log(loc);
-            view.value.fit([loc[0], loc[1], loc[0], loc[1]], {
-                maxZoom: 14
-            })
-        }
-
-        return {
-            center,
-            projection,
-            zoom,
-            rotation,
-            hereIcon,
-            view,
-            map,
-            geoLocChange
-        }
-    },
+    }
 }
 
 </script>
+
+<style>
+.col-md-12>div:nth-child(1)>div:nth-child(2) {
+    /* background-color: blue; */
+}
+</style>
