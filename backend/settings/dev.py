@@ -39,6 +39,7 @@ MIDDLEWARE = [
     "corsheaders.middleware.CorsMiddleware",
 
     "backend.api.middleware.httpsCheckMiddleware.HttpsCheckMiddleware",
+    "backend.api.middleware.msgBodyCheckMiddleware.MsgBodyCheckMiddleware",
     "backend.api.middleware.ipCheckMiddleware.IpCheckMiddleware",
     "backend.api.middleware.CSRFCheckMiddleware.CSRFCheckMiddleware",
     "backend.api.middleware.authCheckMiddleware.AuthCheckMiddleware",
