@@ -5,15 +5,9 @@ from django.http import JsonResponse
 from rest_framework.views import APIView
 
 from backend.api.comm.comm import decode_data
-from backend.api.config.main import ROLES
+from backend.api.config.main import ROLES, ACTIONS
 from backend.api.cqrs_c.location import add, delete
 from backend.api.cqrs_q.location import get_all
-
-
-class ACTIONS(enum.Enum):
-    ADD = 'add'
-    GET_ALL = 'get all'
-    DELETE = 'delete'
 
 
 permissions = {
