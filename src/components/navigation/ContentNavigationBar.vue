@@ -93,7 +93,7 @@
                         <a href="#" class="nav-link px-3">
                             <span class="me-2"><i class="bi bi-table"></i></span>
                             <span>
-                                <router-link to="/login">Logout</router-link>
+                                <router-link to="/logout">Logout</router-link>
                             </span>
                         </a>
                     </li>
