@@ -1,23 +1,46 @@
 <template>
 
+
+    <!-- <img src="./baseline_place_black_24dp.png" alt=""> -->
+
     <div class="container-fluid">
 
         <div class="row">
-            <button @click="addLocation()">add location</button>
+            image
+            <!-- <img src="./baseline_place_black_24dp.png" alt=""> -->
         </div>
 
+        <div class="row">
+            <button>
+                <router-link class="dropdown-item" to="/logout">Logout</router-link>
+            </button>
+        </div>
+
+        <div class="row">
+            <button @click="addLocation()">add location, when user wants to add new location to map</button>
+            <div>
+                lon: <div id="lon_tmp">1</div>
+            </div>
+            <div>
+                lat: <div id="lat_tmp">2</div>
+            </div>
+        </div>
 
         <div class="row">
             <button>position map on user location</button>
         </div>
 
-        <div class="row">
+        <!-- <div class="row">
             <button>add this</button>
-        </div>
+        </div> -->
 
         <div class="row">
             <button id="zoom-out">Zoom out</button>
             <button id="zoom-in">Zoom in</button>
+        </div>
+
+        <div class="row">
+            <button @click="addLocation()">logout</button>
         </div>
 
         <div class="row">
@@ -27,21 +50,11 @@
             </div>
 
             <div style="display: none;">
-                <!-- Clickable label for Vienna -->
-                <a class="overlay" id="vienna" target="_blank" href="https://en.wikipedia.org/wiki/Vienna">Vienna</a>
-                <div id="marker" title="Marker"></div>
-                <!-- Popup -->
                 <div id="popup" title="Selected location"></div>
             </div>
-
-
         </div>
 
-
-
     </div>
-
-
 
 </template>
 
@@ -61,7 +74,8 @@ import VectorSource from 'ol/source/Vector';
 import { Vector as VectorLayer } from 'ol/layer';
 
 
-
+import marker from "./../../assets/markers/dot.png"
+import marker2 from "./baseline_place_black_24dp.png";
 
 export default {
     data() {
@@ -105,13 +119,31 @@ export default {
                     geometry: new Point(fromLonLat([value.lat, value.lon])),
                 });
 
+
+                // f.setStyle(
+                //     new Style({
+                //         image: new Icon({
+                //             src: 'baseline_place_black_24dp.png',
+                //             // src: 'marker-blue.png',
+                //             scale: 1,
+
+                //         }),
+                //     })
+                // );
+
+
                 f.setStyle(
                     new Style({
                         image: new Icon({
-                            color: 'rgba(255, 0, 0, .5)',
-                            crossOrigin: 'anonymous',
-                            src: 'marker-blue.png',
-                            scale: 1,
+                            // color: 'rgba(255, 0, 0, .5)',
+                            // crossOrigin: 'anonymous',
+                            src: marker2,
+                            // src: './baseline_place_black_24dp.png',
+                            // src: "marker-blue.png",
+                            // img: 
+                            // src: 'marker-blue.png',
+                            scale: 0.2,
+
                         }),
                     })
                 );
@@ -189,6 +221,10 @@ export default {
                     $(element).popover('show');
 
                     console.log("clicked", hdms, coordinate)
+                    console.log(toLonLat(coordinate))
+                    document.querySelector("#lat_tmp").innerHTML = coordinate[0]
+                    document.querySelector("#lon_tmp").innerHTML = coordinate[1]
+
                 } else {
                     console.log("not enabled")
                 }
@@ -212,7 +248,10 @@ export default {
         }
     },
 
+
+
     mounted() {
+        console.log("moutned")
 
         const map = this.initMap();
 
@@ -227,8 +266,6 @@ export default {
 
         // ----------------------------------------------------------------------------------------------
         this.zoomSetupButtons(map)
-
-
 
     }
 }
