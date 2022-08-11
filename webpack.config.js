@@ -42,6 +42,7 @@ module.exports = {
         new HtmlWebpackPlugin({
             template: 'src/template/index.html',
             title: 'Beyond',
+            BASE_URL: "f"
         })
     ],
     devServer: {
