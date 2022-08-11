@@ -12,7 +12,7 @@ import 'vue3-openlayers/dist/vue3-openlayers.css'
 const sts = require('strict-transport-security');
 import TopNavigationBar from "./components/navigation/TopNavigationBar.vue";
 const app = createApp(App);
-
+import UserCoordinates from "./components/map/UserCoordinates.vue"
 // app.use(store)
 
 app.use(router).use(store).mount('#app');
@@ -30,7 +30,7 @@ app
     .component('CSRFToken', CSRFToken)
     .component('Navigation', Navigation)
     .component("TopNavigationBar", TopNavigationBar)
-
+    .component("UserCoordinates", UserCoordinates)
 // webpack
 
 console.log("src index")
