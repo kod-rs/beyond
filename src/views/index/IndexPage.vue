@@ -1,52 +1,49 @@
 <template>
 
 
+
     <div class="container-fluid">
 
         <div class="row">
-            <UserCoordinates @userCoordinates="drawUserLocation" :canSend="this.canSend" ref="userCoordinatesManager">
-            </UserCoordinates>
-        </div>
-
-        <div class="row">
-            <button>
-                <router-link class="dropdown-item" to="/logout">Logout</router-link>
-            </button>
-        </div>
-
-        <div class="row">
-            <button @click="allowLocationAdding()">add location, when user wants to add new location to map</button>
-            <div>
-                lon: <div id="lon_tmp">1</div>
+            <div class="col-sm">
+                <div class="row">
+                    <UserCoordinates @userCoordinates="drawUserLocation" :canSend="this.canSend"
+                        ref="userCoordinatesManager">
+                    </UserCoordinates>
+                    <button>
+                        <router-link class="dropdown-item" to="/logout">Logout</router-link>
+                    </button>
+                    <button @click="allowLocationAdding()">add location, when user wants to add new location to
+                        map, allow location adding</button>
+                    <div>
+                        lon: <div id="lon_tmp">1</div>
+                    </div>
+                    <div>
+                        lat: <div id="lat_tmp">2</div>
+                    </div>
+                    <button>position map on user location</button>
+                    <button id="zoom-out">Zoom out</button>
+                    <button id="zoom-in">Zoom in</button>
+                </div>
             </div>
-            <div>
-                lat: <div id="lat_tmp">2</div>
-            </div>
-        </div>
-
-        <div class="row">
-            <button>position map on user location</button>
-        </div>
-
-        <div class="row">
-            <button id="zoom-out">Zoom out</button>
-            <button id="zoom-in">Zoom in</button>
-        </div>
-
-        <div class="row">
-            <button @click="allowLocationAdding()">logout</button>
-        </div>
-
-        <div class="row">
-            <div id="map" class="map" tabindex="0" style="width: 90%; height: 90%; 
+            <div class="col-sm">
+                <div class="row">
+                    <div id="map" class="map" tabindex="0" style="width: 90%; height: 90%; 
                 position:fixed; 
                 border: 1px solid #ccc;">
-            </div>
+                    </div>
 
-            <div style="display: none;">
-                <div id="popup" title="Selected location"></div>
+                    <div style="display: none;">
+                        <div id="popup" title="Selected location"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm">
             </div>
         </div>
+
+
+
 
     </div>
 
@@ -77,7 +74,9 @@ export default {
             userLon: undefined,
             map: undefined,
             userLocationLayer: undefined,
-            canSend: false
+            canSend: false,
+            view: undefined,
+            vectorSource: undefined
         }
     },
     methods: {
@@ -118,7 +117,18 @@ export default {
 
             this.map.addLayer(vectorLayer);
 
-            this.userLocationLayer = vectorLayer;
+            this.userLocationLayer = vectorLayer
+
+            console.log(this.map.getView().getCenter())
+
+            // center
+            const feature = vectorSource.getFeatures()[0];
+            const point = feature.getGeometry();
+            const size = this.map.getSize();
+            this.view.centerOn(point.getCoordinates(), size, [500, 500]);
+
+            // zoom
+            this.view.fit(point, { padding: [170, 50, 30, 150], minResolution: 50 });
 
         }
         ,
@@ -174,12 +184,12 @@ export default {
 
             }
 
-            const vectorSource = new VectorSource({
+            this.vectorSource = new VectorSource({
                 features: features,
             });
 
             const vectorLayer = new VectorLayer({
-                source: vectorSource,
+                source: this.vectorSource,
             });
 
             map.addLayer(vectorLayer)
@@ -253,6 +263,11 @@ export default {
 
         },
         initMap() {
+            this.view = new View({
+                center: [0, 0],
+                zoom: 2,
+            });
+
             return new Map({
                 layers: [
                     new TileLayer({
@@ -260,19 +275,9 @@ export default {
                     }),
                 ],
                 target: 'map',
-                view: new View({
-                    center: [0, 0],
-                    zoom: 2,
-                }),
+                view: this.view,
             });
         }
-    },
-
-    beforeMount() {
-        console.log("beforeMount")
-
-        // const map = this.initMap();
-        // this.map = map;
     },
 
     mounted() {
@@ -283,8 +288,6 @@ export default {
 
         this.$refs.userCoordinatesManager.enableCoordinates();
 
-        // const map = this.map
-        // 
         // ----------------------------------------------------------------------------------------------
         this.activatePopup(this.map)
 
