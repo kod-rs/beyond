@@ -14,7 +14,7 @@ BASE_DIR = os.path.dirname(SETTINGS_DIR)
 SECRET_KEY = config("SECRET_KEY")
 
 DEBUG = True
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['localhost']
 
 SITE_ID = 1
 
@@ -53,6 +53,8 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+
 
 CORS_ORIGIN_ALLOW_ALL = True
 CORS_ALLOW_CREDENTIALS = True
