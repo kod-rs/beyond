@@ -10,7 +10,7 @@ import Navigation from './components/navigation/Navigation.vue'
 import OpenLayersMap from 'vue3-openlayers'
 import 'vue3-openlayers/dist/vue3-openlayers.css'
 const sts = require('strict-transport-security');
-
+import TopNavigationBar from "./components/navigation/TopNavigationBar.vue";
 const app = createApp(App);
 
 // app.use(store)
@@ -29,6 +29,7 @@ app
     .component('Map', Map)
     .component('CSRFToken', CSRFToken)
     .component('Navigation', Navigation)
+    .component("TopNavigationBar", TopNavigationBar)
 
 // webpack
 
