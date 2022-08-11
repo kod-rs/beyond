@@ -28,13 +28,20 @@ module.exports = {
                     { loader: "css-loader" },
                 ],
             },
+            // {
+            //     test: /\.(jpeg|png|gif|svg)$/i,
+            //     loader: 'file-loader',
+            //     options: {
+            //         name: '/login/[name].[ext]'
+            //     }
+            // }
             {
-                test: /\.(jpe?g|png|gif|svg)$/i,
-                loader: 'file-loader',
-                options: {
-                    name: '/login/[name].[ext]'
-                }
-            }
+
+                test: /\.(png|svg|jpg|jpeg|gif)$/i,
+
+                type: 'asset/resource',
+
+            },
         ]
     },
     plugins: [
@@ -42,6 +49,7 @@ module.exports = {
         new HtmlWebpackPlugin({
             template: 'src/template/index.html',
             title: 'Beyond',
+            BASE_URL: "f"
         })
     ],
     devServer: {

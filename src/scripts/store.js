@@ -16,7 +16,6 @@ export const store = createStore({
     mutations: {
         increment(state) {
             state.count++;
-
         },
         setSynchronizerToken(state, newValue) {
             state.synchronizerToken = newValue;
