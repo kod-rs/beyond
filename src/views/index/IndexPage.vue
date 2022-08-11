@@ -1,13 +1,11 @@
 <template>
 
 
-    <!-- <img src="./baseline_place_black_24dp.png" alt=""> -->
-
     <div class="container-fluid">
 
         <div class="row">
-            image
-            <!-- <img src="./baseline_place_black_24dp.png" alt=""> -->
+            <UserCoordinates @userCoordinates="drawUserLocation" :canSend="this.canSend" ref="userCoordinatesManager">
+            </UserCoordinates>
         </div>
 
         <div class="row">
@@ -17,7 +15,7 @@
         </div>
 
         <div class="row">
-            <button @click="addLocation()">add location, when user wants to add new location to map</button>
+            <button @click="allowLocationAdding()">add location, when user wants to add new location to map</button>
             <div>
                 lon: <div id="lon_tmp">1</div>
             </div>
@@ -30,17 +28,13 @@
             <button>position map on user location</button>
         </div>
 
-        <!-- <div class="row">
-            <button>add this</button>
-        </div> -->
-
         <div class="row">
             <button id="zoom-out">Zoom out</button>
             <button id="zoom-in">Zoom in</button>
         </div>
 
         <div class="row">
-            <button @click="addLocation()">logout</button>
+            <button @click="allowLocationAdding()">logout</button>
         </div>
 
         <div class="row">
@@ -73,25 +67,70 @@ import { Icon, Style } from 'ol/style';
 import VectorSource from 'ol/source/Vector';
 import { Vector as VectorLayer } from 'ol/layer';
 
-
 import marker2 from "./../../assets/markers/baseline_place_black_24dp.png"
-// import marker2 from "./baseline_place_black_24dp.png";
 
 export default {
     data() {
         return {
             addLocationEnabled: false,
-
+            userLat: undefined,
+            userLon: undefined,
+            map: undefined,
+            userLocationLayer: undefined,
+            canSend: false
         }
     },
     methods: {
-        addLocation() {
-            console.log("adding lcoation")
+        drawUserLocation(lat, lon) {
+
+            console.log("draw user location", lat, lon)
+
+            if (this.userLocationLayer) {
+                this.map.removeLayer(this.userLocationLayer)
+            }
+
+            this.userLat = this.$store.state.latitude;
+            this.userLon = this.$store.state.longitude;
+
+            let f = new Feature({
+                geometry: new Point(fromLonLat([lon, lat])),
+            });
+
+            f.setStyle(
+                new Style({
+                    image: new Icon({
+
+                        src: marker2,
+
+                        scale: 0.5,
+
+                    }),
+                })
+            );
+
+            const vectorSource = new VectorSource({
+                features: [f],
+            });
+
+            const vectorLayer = new VectorLayer({
+                source: vectorSource,
+            });
+
+            this.map.addLayer(vectorLayer);
+
+            this.userLocationLayer = vectorLayer;
+
+        }
+        ,
+        allowLocationAdding() {
             this.addLocationEnabled = true
             console.log("enabled", this.addLocationEnabled)
         },
         getExistingLocations() {
+
+            // todo extract as api
             const featuresApi = {};
+
             [
                 { name: "n 1", lat: 1, lon: 2 },
                 { name: "n 2", lat: 3, lon: 4 },
@@ -104,10 +143,10 @@ export default {
                 { name: "d 1", lat: 63, lon: 3 },
                 { name: "a 2", lat: 1, lon: 25 }
 
-
             ].forEach(i => {
                 featuresApi[i.name] = { lat: i.lat, lon: i.lon }
             })
+
             return featuresApi;
         },
         drawLocations(map, featuresApi) {
@@ -119,29 +158,12 @@ export default {
                     geometry: new Point(fromLonLat([value.lat, value.lon])),
                 });
 
-
-                // f.setStyle(
-                //     new Style({
-                //         image: new Icon({
-                //             src: 'baseline_place_black_24dp.png',
-                //             // src: 'marker-blue.png',
-                //             scale: 1,
-
-                //         }),
-                //     })
-                // );
-
-
                 f.setStyle(
                     new Style({
                         image: new Icon({
-                            // color: 'rgba(255, 0, 0, .5)',
-                            // crossOrigin: 'anonymous',
+
                             src: marker2,
-                            // src: './baseline_place_black_24dp.png',
-                            // src: "marker-blue.png",
-                            // img: 
-                            // src: 'marker-blue.png',
+
                             scale: 0.2,
 
                         }),
@@ -151,8 +173,6 @@ export default {
                 features.push(f)
 
             }
-
-
 
             const vectorSource = new VectorSource({
                 features: features,
@@ -248,24 +268,34 @@ export default {
         }
     },
 
+    beforeMount() {
+        console.log("beforeMount")
 
+        // const map = this.initMap();
+        // this.map = map;
+    },
 
     mounted() {
         console.log("moutned")
 
         const map = this.initMap();
+        this.map = map;
 
+        this.$refs.userCoordinatesManager.enableCoordinates();
+
+        // const map = this.map
+        // 
         // ----------------------------------------------------------------------------------------------
-        this.activatePopup(map)
+        this.activatePopup(this.map)
 
         // ----------------------------------------------------------------------------------------------
 
         const featuresApi = this.getExistingLocations();
 
-        this.drawLocations(map, featuresApi);
+        this.drawLocations(this.map, featuresApi);
 
         // ----------------------------------------------------------------------------------------------
-        this.zoomSetupButtons(map)
+        this.zoomSetupButtons(this.map)
 
     }
 }
