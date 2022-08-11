@@ -10,7 +10,7 @@ def main():
 
     same_comment = True
     comment = None
-    comment = "vue"
+    comment = "add zoom to user location"
     if same_comment:
         if not comment:
             comment = input("comment for all commits will be same:")
