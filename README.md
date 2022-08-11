@@ -23,3 +23,5 @@ vue entry point MUST be "src/main.js"
 
     favicon
     login page: input and logo picture fit inside div
+
+    <!-- <link rel="icon" href="<%= BASE_URL %>favicon.ico"> -->

@@ -1,11 +1,12 @@
 
 export const activate_tab_name_changer = () => {
 
-    onload = (event) => {
+    function randomChange() {
         var title = document.title;
 
         var titles = [
-            "beyond", "BEYOND"
+            "beyond",
+            "BEYOND"
         ];
         var driver = null;
 
@@ -37,6 +38,10 @@ export const activate_tab_name_changer = () => {
 
         });
 
+    }
+
+    onload = (event) => {
+        randomChange()
     };
 
 

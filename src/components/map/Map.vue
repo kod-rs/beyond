@@ -1,61 +1,36 @@
+
+
 <template>
+    <img src='marker-blue.png' />
+    fff
 
-    <UserCoordinates></UserCoordinates>
+    <div class="mw-100 main-container">
 
-    <ol-map :loadTilesWhileAnimating="true" :loadTilesWhileInteracting="true" style="height:400px">
-        <ol-view ref="view" :center="center" :rotation="rotation" :zoom="zoom" :projection="projection" />
+    </div>
 
-        <ol-tile-layer>
-            <ol-source-osm />
-        </ol-tile-layer>
 
-        <ol-vector-layer>
-            <ol-source-vector ref="vectors">
-                <ol-interaction-draw @drawstart="drawstart" :type="drawType">
-                </ol-interaction-draw>
-            </ol-source-vector>
+    <div style="height: 15vw; background-color: rgba(255,0,0,0.1);">
+        <div class="h-25 d-inline-block" style="width: 120px; background-color: rgba(0,0,255,.1)">Height 25%</div>
+        <div class="h-50 d-inline-block" style="width: 120px; background-color: rgba(0,0,255,.1)">Height 50%</div>
+        <div class="h-75 d-inline-block" style="width: 120px; background-color: rgba(0,0,255,.1)">Height 75%</div>
+        <div class="h-100 d-inline-block" style="width: 120px; background-color: rgba(0,0,255,.1)">Height 100%
+        </div>
+    </div>
 
-            <ol-style>
-                <ol-style-icon :src="markerIcon" :scale="2"></ol-style-icon>
-            </ol-style>
-        </ol-vector-layer>
-
-    </ol-map>
 </template>
 
 <script>
-import markerIcon from './../../assets/login_logo.png'
 
-import { ref } from "vue";
-import UserCoordinates from "./UserCoordinates.vue"
 export default {
+    data() {
 
-    setup() {
-        const center = ref([54.1966794, 31.8797732]);
-        const projection = ref("EPSG:4326");
-        const zoom = ref(6);
-        const rotation = ref(0);
-        const markers = ref(null);
-        const drawType = ref("Point");
-        const drawedMarker = ref();
-        const vectors = ref(null);
-        const drawstart = (event) => {
-            vectors.value.source.removeFeature(drawedMarker.value);
-            drawedMarker.value = event.feature;
-            console.log(vectors.value.source);
-        };
-        return {
-            vectors,
-            drawstart,
-            center,
-            projection,
-            zoom,
-            rotation,
-            markerIcon,
-            markers,
-            drawType
-        };
-    },
-    components: { UserCoordinates }
+    }
 }
+
 </script>
+
+<style>
+.col-md-12>div:nth-child(1)>div:nth-child(2) {
+    /* background-color: blue; */
+}
+</style>

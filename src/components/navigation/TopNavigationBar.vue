@@ -21,17 +21,20 @@
                 </form>
                 <ul class="navbar-nav">
                     <li class="nav-item dropdown">
-                        <!-- <a class="nav-link dropdown-toggle ms-2" href="#" role="button" data-bs-toggle="dropdown"
+
+                        <a class="nav-link dropdown-toggle ms-2" href="#" role="button" data-bs-toggle="dropdown"
                             aria-expanded="false">
+                            {{ this.$store.state.username }}
                             <i class="bi bi-person-fill"></i>
-                        </a> -->
-                        <!-- <ul class="dropdown-menu dropdown-menu-end">
-                            <li><a class="dropdown-item" href="#">Action</a></li>
-                            <li><a class="dropdown-item" href="#">Another action</a></li>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end">
+
                             <li>
-                                <a class="dropdown-item" href="#">Something else here</a>
+                                <router-link class="dropdown-item" to="/logout">Logout</router-link>
+
                             </li>
-                        </ul> -->
+
+                        </ul>
                     </li>
                 </ul>
             </div>
@@ -42,6 +45,11 @@
 
 <script>
 export default {
+    data() {
+        return {
+
+        }
+    }
 }
 </script>
 
