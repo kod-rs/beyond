@@ -74,8 +74,8 @@ import VectorSource from 'ol/source/Vector';
 import { Vector as VectorLayer } from 'ol/layer';
 
 
-import marker from "./../../assets/markers/dot.png"
-import marker2 from "./baseline_place_black_24dp.png";
+import marker2 from "./../../assets/markers/baseline_place_black_24dp.png"
+// import marker2 from "./baseline_place_black_24dp.png";
 
 export default {
     data() {
