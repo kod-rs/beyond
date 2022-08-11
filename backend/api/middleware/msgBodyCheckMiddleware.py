@@ -24,6 +24,10 @@ class MsgBodyCheckMiddleware:
             body = json.loads(request.body)
             keys = list(body.keys())
 
+            if request.environ['QUERY_STRING'] != '':
+                print('query string not empty')
+                return JsonResponse(rejection)
+
             if request.path == '/csrf/':
                 if keys != ['access_token', 'refresh_token', 'action']:
                     print('rejected csrf')
