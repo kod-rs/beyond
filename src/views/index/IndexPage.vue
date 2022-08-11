@@ -1,192 +1,241 @@
 <template>
 
+    <div class="container-fluid">
 
-    <header>
-        <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
-            <div class="container-fluid">
-                <a class="navbar-brand" href="#">Carousel</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse"
-                    aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="collapse navbar-collapse" id="navbarCollapse">
-                    <ul class="navbar-nav me-auto mb-2 mb-md-0">
-                        <li class="nav-item">
-                            <a class="nav-link active" aria-current="page" href="#">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">Link</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link disabled">Disabled</a>
-                        </li>
-                    </ul>
-                    <form class="d-flex" role="search">
-                        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-                        <button class="btn btn-outline-success" type="submit">Search</button>
-                    </form>
-                </div>
+        <div class="row">
+            <button @click="addLocation()">add location</button>
+        </div>
+
+
+        <div class="row">
+            <button>position map on user location</button>
+        </div>
+
+        <div class="row">
+            <button>add this</button>
+        </div>
+
+        <div class="row">
+            <button id="zoom-out">Zoom out</button>
+            <button id="zoom-in">Zoom in</button>
+        </div>
+
+        <div class="row">
+            <div id="map" class="map" tabindex="0" style="width: 90%; height: 90%; 
+                position:fixed; 
+                border: 1px solid #ccc;">
             </div>
-        </nav>
-    </header>
 
-    <main>
+            <div style="display: none;">
+                <!-- Clickable label for Vienna -->
+                <a class="overlay" id="vienna" target="_blank" href="https://en.wikipedia.org/wiki/Vienna">Vienna</a>
+                <div id="marker" title="Marker"></div>
+                <!-- Popup -->
+                <div id="popup" title="Selected location"></div>
+            </div>
 
 
-                <div class="carousel-item active">
-                    <svg class="bd-placeholder-img" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg"
-                        aria-hidden="true" preserveAspectRatio="xMidYMid slice" focusable="false">
-                        <rect width="100%" height="100%" fill="#777" />
-                    </svg>
-
-                    <div class="container">
-                        <div class="carousel-caption text-start">
-                            <h1>Example headline.</h1>
-                            <p>Some representative placeholder content for the first slide of the carousel.</p>
-                            <p><a class="btn btn-lg btn-primary" href="#">Sign up today</a></p>
-                        </div>
-                    </div>
-                </div>
-              
+        </div>
 
 
 
+    </div>
 
-        <!-- FOOTER -->
-        <footer class="container">
-            <p class="float-end"><a href="#">Back to top</a></p>
-            <p>&copy; 2017–2022 Company, Inc. &middot; <a href="#">Privacy</a> &middot; <a href="#">Terms</a></p>
-        </footer>
-    </main>
-
-
-    <!-- <script src="../assets/dist/js/bootstrap.bundle.min.js"></script> -->
 
 
 </template>
 
-<style>
-  @import './carousel.css';
-
-/* * {
-    border: 1px solid black;
-} */
-
-/* .myCarousel  */
-.carousel-item  {
-    height: 95vh;
-}
-
-      .bd-placeholder-img {
-        font-size: 1.125rem;
-        text-anchor: middle;
-        -webkit-user-select: none;
-        -moz-user-select: none;
-        user-select: none;
-      }
-
-      @media (min-width: 768px) {
-        .bd-placeholder-img-lg {
-          font-size: 3.5rem;
-        }
-      }
-
-      .b-example-divider {
-        height: 3rem;
-        background-color: rgba(0, 0, 0, .1);
-        border: solid rgba(0, 0, 0, .15);
-        border-width: 1px 0;
-        box-shadow: inset 0 .5em 1.5em rgba(0, 0, 0, .1), inset 0 .125em .5em rgba(0, 0, 0, .15);
-      }
-
-      .b-example-vr {
-        flex-shrink: 0;
-        width: 1.5rem;
-        height: 100vh;
-      }
-
-      .bi {
-        vertical-align: -.125em;
-        fill: currentColor;
-      }
-
-      .nav-scroller {
-        position: relative;
-        z-index: 2;
-        height: 2.75rem;
-        overflow-y: hidden;
-      }
-
-      .nav-scroller .nav {
-        display: flex;
-        flex-wrap: nowrap;
-        padding-bottom: 1rem;
-        margin-top: -1px;
-        overflow-x: auto;
-        text-align: center;
-        white-space: nowrap;
-        -webkit-overflow-scrolling: touch;
-      }
-</style>
-
-
 <script>
 
-// import 
+import Map from 'ol/Map';
+import OSM from 'ol/source/OSM';
+import TileLayer from 'ol/layer/Tile';
+import View from 'ol/View';
+import Overlay from 'ol/Overlay';
+import { toStringHDMS } from 'ol/coordinate';
+import { fromLonLat, toLonLat } from 'ol/proj';
+import Point from 'ol/geom/Point';
+import Feature from 'ol/Feature';
+import { Icon, Style } from 'ol/style';
+import VectorSource from 'ol/source/Vector';
+import { Vector as VectorLayer } from 'ol/layer';
+
+
+
 
 export default {
     data() {
         return {
+            addLocationEnabled: false,
 
         }
+    },
+    methods: {
+        addLocation() {
+            console.log("adding lcoation")
+            this.addLocationEnabled = true
+            console.log("enabled", this.addLocationEnabled)
+        },
+        getExistingLocations() {
+            const featuresApi = {};
+            [
+                { name: "n 1", lat: 1, lon: 2 },
+                { name: "n 2", lat: 3, lon: 4 },
+                { name: "a", lat: 1, lon: 21 },
+                { name: "b 2", lat: 3, lon: 25 },
+                { name: "d 1", lat: 7, lon: 11 },
+                { name: "f 2", lat: 5, lon: 5 },
+                { name: "g 1", lat: 6, lon: 3 },
+                { name: "w 2", lat: 12, lon: 4 },
+                { name: "d 1", lat: 63, lon: 3 },
+                { name: "a 2", lat: 1, lon: 25 }
+
+
+            ].forEach(i => {
+                featuresApi[i.name] = { lat: i.lat, lon: i.lon }
+            })
+            return featuresApi;
+        },
+        drawLocations(map, featuresApi) {
+            let features = []
+
+            for (const [key, value] of Object.entries(featuresApi)) {
+
+                let f = new Feature({
+                    geometry: new Point(fromLonLat([value.lat, value.lon])),
+                });
+
+                f.setStyle(
+                    new Style({
+                        image: new Icon({
+                            color: 'rgba(255, 0, 0, .5)',
+                            crossOrigin: 'anonymous',
+                            src: 'marker-blue.png',
+                            scale: 1,
+                        }),
+                    })
+                );
+
+                features.push(f)
+
+            }
+
+
+
+            const vectorSource = new VectorSource({
+                features: features,
+            });
+
+            const vectorLayer = new VectorLayer({
+                source: vectorSource,
+            });
+
+            map.addLayer(vectorLayer)
+        },
+        addLocationPoint() {
+            const london = new Feature({
+                geometry: new Point(fromLonLat([-0.12755, 51.507222])),
+            });
+
+            london.setStyle(
+                new Style({
+                    image: new Icon({
+                        color: 'rgba(255, 0, 0, .5)',
+                        crossOrigin: 'anonymous',
+                        src: 'marker-blue.png',
+                        scale: 1,
+                    }),
+                })
+            );
+        },
+        zoomSetupButtons(map) {
+
+            document.getElementById('zoom-out').onclick = function () {
+                const view = map.getView();
+                const zoom = view.getZoom();
+                view.setZoom(zoom - 1);
+            };
+
+            document.getElementById('zoom-in').onclick = function () {
+                const view = map.getView();
+                const zoom = view.getZoom();
+                view.setZoom(zoom + 1);
+            };
+        },
+        activatePopup(map,) {
+
+            const popup = new Overlay({
+                element: document.getElementById('popup'),
+            });
+            map.addOverlay(popup);
+
+
+            map.on('click', (evt) => {
+
+                if (this.addLocationEnabled) {
+                    const element = popup.getElement();
+                    const coordinate = evt.coordinate;
+                    const hdms = toStringHDMS(toLonLat(coordinate));
+
+                    $(element).popover('dispose');
+                    popup.setPosition(coordinate);
+                    $(element).popover({
+                        container: element,
+                        placement: 'top',
+                        animation: false,
+                        html: true,
+                        content: '<p>Selected:</p><code>' + hdms + '</code>',
+                    });
+                    $(element).popover('show');
+
+                    console.log("clicked", hdms, coordinate)
+                } else {
+                    console.log("not enabled")
+                }
+
+            });
+
+        },
+        initMap() {
+            return new Map({
+                layers: [
+                    new TileLayer({
+                        source: new OSM(),
+                    }),
+                ],
+                target: 'map',
+                view: new View({
+                    center: [0, 0],
+                    zoom: 2,
+                }),
+            });
+        }
+    },
+
+    mounted() {
+
+        const map = this.initMap();
+
+        // ----------------------------------------------------------------------------------------------
+        this.activatePopup(map)
+
+        // ----------------------------------------------------------------------------------------------
+
+        const featuresApi = this.getExistingLocations();
+
+        this.drawLocations(map, featuresApi);
+
+        // ----------------------------------------------------------------------------------------------
+        this.zoomSetupButtons(map)
+
+
+
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-//     <meta charset="utf-8">
-//     <meta name="viewport" content="width=device-width, initial-scale=1">
-//     <meta name="description" content="">
-//     <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
-//     <meta name="generator" content="Hugo 0.101.0">
-//     <title>Carousel Template · Bootstrap v5.2</title>
-
-//     <link rel="canonical" href="https://getbootstrap.com/docs/5.2/examples/carousel/">
-
-    
-
-    
-
-// <link href="../assets/dist/css/bootstrap.min.css" rel="stylesheet">
-
-
-    
-//     <!-- Custom styles for this template -->
-//     <link href="carousel.css" rel="stylesheet">
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 </script>
+
+<style>
+#map:focus {
+    outline: #4A74A8 solid 0.15em;
+}
+</style>
