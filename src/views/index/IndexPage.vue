@@ -66,8 +66,11 @@ import Feature from 'ol/Feature';
 import { Icon, Style } from 'ol/style';
 import VectorSource from 'ol/source/Vector';
 import { Vector as VectorLayer } from 'ol/layer';
+import GeoJSON from 'ol/format/GeoJSON';
 
 import marker2 from "./../../assets/markers/baseline_place_black_24dp.png"
+import countriesjson from "./../../assets/layers/countries.json"
+
 
 export default {
     data() {
@@ -79,7 +82,8 @@ export default {
             userLocationLayer: undefined,
             canSend: false,
             view: undefined,
-            vectorSource: undefined
+            vectorSource: undefined,
+            countriesLayer: undefined,
         }
     },
     methods: {
@@ -276,15 +280,33 @@ export default {
                     new TileLayer({
                         source: new OSM(),
                     }),
+
                 ],
                 target: 'map',
                 view: this.view,
             });
+        },
+        createCountriesLayer() {
+
+            this.map.addLayer(
+
+                new VectorLayer({
+                    source: new VectorSource({
+                        // url: 'https://openlayers.org/data/vector/ecoregions.json',
+                        format: new GeoJSON(),
+                        url: countriesjson,
+                    }),
+                }),
+
+            )
         }
     },
 
     mounted() {
         console.log("moutned")
+
+        console.table(countriesjson)
+        console.table(typeof (countriesjson))
 
         const map = this.initMap();
         this.map = map;
@@ -302,6 +324,8 @@ export default {
 
         // ----------------------------------------------------------------------------------------------
         this.zoomSetupButtons(this.map)
+
+        this.createCountriesLayer()
 
     }
 }
