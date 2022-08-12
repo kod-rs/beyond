@@ -64,23 +64,46 @@ router.beforeEach((to, from, next) => {
   // console.log("next", next)
 
   let result = decodeURIComponent(to.path);
-  console.log(result);
+  // console.log(result);
   // console.log(to)
   // console.table(to)
-  console.table(to.query)
+  // console.table(to.query)
 
-  if (sessionStorage.getItem("user")) {
-    console.log("logiran je, moze ic tamo")
-  } else {
+  // if (sessionStorage.getItem("user")) {
+  // } else {
 
-    console.log("nije logiran, vrati na auth")
 
-  }
+  // }
 
   const publicPages = ['/login'];
   const authRequired = !publicPages.includes(to.path);
   const loggedIn = sessionStorage.getItem('user');
   // console.log("is loged in", !!loggedIn)
+
+  // console.table(from.query)
+  // console.log(typeof (from.query))
+
+  // console.log(!!loggedIn)
+  // console.log(from.query)
+  // console.log(from.query["returnUrl"])
+
+  if (loggedIn && from.query.returnUrl) {
+    // console.log(from.query.returnUrl)
+    // console.log("", from.query.returnUrl)
+
+    if (from.query.returnUrl === "" || from.query.returnUrl === "/") {
+      // console.log("route")
+    } else {
+      // return next({
+      //   path: from.query.returnUrl,
+      //   query: {}
+      // });
+
+    }
+
+
+
+  }
 
   if (authRequired && !loggedIn) {
     return next({
