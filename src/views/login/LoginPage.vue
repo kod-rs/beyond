@@ -102,22 +102,16 @@ export default {
     },
     methods: {
         handleSubmit(e) {
-            // console.log("sub")
             this.submitted = true;
             const { username, password } = this;
 
             if (!(username && password)) {
                 return;
             }
-            console.log("ret url")
-            console.log("return url", this.returnUrl)
-            console.log("return url", typeof (this.returnUrl))
             this.loading = true;
             apiCalls.login(username, password).then(
                 user => {
                     router.push(this.returnUrl);
-
-                    // router.push("viewlocation")
                     this.$store.commit('setUsername', username);
 
                 },
