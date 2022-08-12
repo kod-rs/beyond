@@ -2,7 +2,7 @@ var HtmlWebpackPlugin = require('html-webpack-plugin');
 const { VueLoaderPlugin } = require('vue-loader')
 const path = require('path');
 const fs = require('fs');
-
+// const json = require('./file.json');
 module.exports = {
     mode: 'development',
     resolve: {
@@ -42,6 +42,17 @@ module.exports = {
                 type: 'asset/resource',
 
             },
+            {
+
+                test: /\.(json)$/i,
+
+                type: 'asset/resource',
+
+            },
+            // {
+            //     test: /\.json$/,
+            //     loader: 'json-loader'
+            // },
         ]
     },
     plugins: [
@@ -66,7 +77,10 @@ module.exports = {
         proxy: {
             '/api*': {
                 target: 'http://localhost:8000/',
-            }
+            },
+            //     '/github*': {
+            //         target: "https://github.com/"
+            //     }
         },
 
     },
