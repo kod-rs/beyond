@@ -59,9 +59,28 @@ export const router = createRouter({
 });
 
 router.beforeEach((to, from, next) => {
+  // console.log("to", to)
+  // console.log("from", from)
+  // console.log("next", next)
+
+  let result = decodeURIComponent(to.path);
+  console.log(result);
+  // console.log(to)
+  // console.table(to)
+  console.table(to.query)
+
+  if (sessionStorage.getItem("user")) {
+    console.log("logiran je, moze ic tamo")
+  } else {
+
+    console.log("nije logiran, vrati na auth")
+
+  }
+
   const publicPages = ['/login'];
   const authRequired = !publicPages.includes(to.path);
   const loggedIn = sessionStorage.getItem('user');
+  // console.log("is loged in", !!loggedIn)
 
   if (authRequired && !loggedIn) {
     return next({
