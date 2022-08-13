@@ -15,7 +15,6 @@ import { store } from "./scripts/store"
 import MapComponent from './components/map/MapComponent.vue'
 import CSRFToken from './components/form/CSRFToken.vue'
 import InputAutocomplete from './components/form/InputAutocomplete.vue';
-// import TestNavigation from './components/navigation/TestNavigation.vue'
 import NavigationTemplate from './components/navigation/NavigationTemplate.vue'
 import TopNavigationBar from "./components/navigation/TopNavigationBar.vue";
 import UserCoordinates from "./components/map/UserCoordinates.vue"
@@ -35,7 +34,6 @@ app
     .component('CSRFToken', CSRFToken)
     .component("InputAutocomplete", InputAutocomplete)
     .component('NavigationTemplate', NavigationTemplate)
-    // .component("TestNavigation", TestNavigation)
     .component("TopNavigationBar", TopNavigationBar)
     .component("UserCoordinates", UserCoordinates)
 
