@@ -1,9 +1,0 @@
-send email on login
-send email on signup
-forgot password
-2fa
-check password strength
-
-
-todo
-    frontend check if using https before sending
