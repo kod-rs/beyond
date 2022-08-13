@@ -53,7 +53,7 @@ export default {
     async created() {
         apiCalls.logout();
         this.returnUrl = this.$route.query.returnUrl || '/';
-        await new Promise(r => setTimeout(r, 2000)).then(r => {
+        await new Promise(r => setTimeout(r, 2000)).then(() => {
             router.push(this.returnUrl);
 
         });
