@@ -5,7 +5,7 @@
 
         </div>
 
-        <InputAutocomplete :ph="fromTimeWindow" @input="userTypedLocation" ref="inputautocompletefield" :initItems="[]">
+        <InputAutocomplete @input="userTypedLocation" ref="inputautocompletefield" :initItems="[]">
 
         </InputAutocomplete>
 
@@ -16,7 +16,7 @@
 
 <script>
 import InputAutocomplete from './../form/InputAutocomplete.vue';
-import countryNameJson from "./../../assets/layers/country_names.json";
+import countryNameJson from "/public/assets/layers/country_names.json";
 import axios from 'axios';
 
 export default {
