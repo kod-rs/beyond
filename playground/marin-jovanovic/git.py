@@ -10,7 +10,7 @@ def main():
 
     same_comment = True
     comment = None
-    comment = "add countries layer"
+    comment = "add: track mouse on map and log country"
     if same_comment:
         if not comment:
             comment = input("comment for all commits will be same:")
