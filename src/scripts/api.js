@@ -148,31 +148,31 @@ function checkTokens() {
 
 }
 
-async function getAllTest() {
-    const r = checkTokens()
-    if (r["status"]) {
-        let access_token = r["access-token"]
-        const refresh_token = r["refresh-token"]
+// async function getAllTest() {
+//     const r = checkTokens()
+//     if (r["status"]) {
+//         let access_token = r["access-token"]
+//         const refresh_token = r["refresh-token"]
 
-        const response = await api.put(`getAll/`, JSON.stringify({ access_token, refresh_token }));
-        let r2 = await handleNewResponse(response);
-        return r2;
+//         const response = await api.put(`getAll/`, JSON.stringify({ access_token, refresh_token }));
+//         let r2 = await handleNewResponse(response);
+//         return r2;
 
-    }
-}
+//     }
+// }
 
-async function createOrUpdate(id, newValue) {
-    const r = checkTokens()
-    if (r["status"]) {
-        let access_token = r["access-token"]
-        let refresh_token = r["refresh-token"]
+// async function createOrUpdate(id, newValue) {
+//     const r = checkTokens()
+//     if (r["status"]) {
+//         let access_token = r["access-token"]
+//         let refresh_token = r["refresh-token"]
 
-        const response = await api.put(`testcrud/`, JSON.stringify({ access_token, refresh_token, id, newValue }));
-        return await handleNewResponse(response);
+//         const response = await api.put(`testcrud/`, JSON.stringify({ access_token, refresh_token, id, newValue }));
+//         return await handleNewResponse(response);
 
-    }
+//     }
 
-}
+// }
 
 
 function handleNewResponse(response) {
