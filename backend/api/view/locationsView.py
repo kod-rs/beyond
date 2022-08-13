@@ -65,26 +65,14 @@ class LocationsView(APIView):
         print(action)
 
         if action == ACTIONS.ADD.value:
-            if (not _has_permission(roles, ACTIONS.ADD)
-                    or not _check_request_data(request.data)
-                    or not request.synchronizer_token_match
-                    or not request.body):
-                print('add not valid')
-                response["payload"] = {"status": False}
-                return JsonResponse(response)
+            payload = self.location_add(request, roles)
 
-            body_content = decode_data(request.body)
-
-            status = add(body_content["section"],
-                         body_content["type"],
-                         body_content["latitude"],
-                         body_content["longitude"])
-
-            response["payload"] = {"status": status}
-
+            response["payload"] = payload
             return JsonResponse(response)
 
         if action == ACTIONS.GET_ALL.value:
+
+            # payload = None
             print("get locations")
             if not _has_permission(roles, ACTIONS.GET_ALL):
                 response["payload"] = {"status": False}
@@ -95,6 +83,8 @@ class LocationsView(APIView):
             [print(i) for i in all_locations]
 
             response["payload"] = {"status": True, "content": all_locations}
+
+            # response["payload"] = payload
             print("returning location, everything ok")
             return JsonResponse(response)
 
@@ -114,6 +104,28 @@ class LocationsView(APIView):
         print('unsupported action')
         response["payload"] = {"status": False}
         return JsonResponse(response)
+
+    def location_add(self, request, roles):
+        payload = None
+        if (not _has_permission(roles, ACTIONS.ADD)
+                or not _check_request_data(request.data)
+                or not request.synchronizer_token_match
+                or not request.body):
+            print('add not valid')
+            payload = {"status": False}
+
+            # response["payload"] = {"status": False}
+        else:
+            body_content = decode_data(request.body)
+
+            status = add(body_content["section"],
+                         body_content["type"],
+                         body_content["latitude"],
+                         body_content["longitude"])
+
+            payload = {"status": status}
+            # response["payload"] = {"status": status}
+        return payload
 
     def get(self, request):
         print("get locations")
