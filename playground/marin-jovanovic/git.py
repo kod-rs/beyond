@@ -10,7 +10,7 @@ def main():
 
     same_comment = True
     comment = None
-    comment = "add: country filter"
+    comment = "wip: restore point for webpack"
     if same_comment:
         if not comment:
             comment = input("comment for all commits will be same:")
