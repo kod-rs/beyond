@@ -13,6 +13,7 @@
                     mouse is pointing at this country:
                     <div id="info">&nbsp;</div>
                     <hr>
+                    <!-- todo  -->
                     <UserCoordinates @userCoordinates="drawUserLocation" :canSend="this.canSend"
                         ref="userCoordinatesManager">
                     </UserCoordinates>
@@ -73,8 +74,12 @@ import $ from 'jquery'
 import LocationSelector from '../../components/map/LocationSelector.vue'; //Optional default CSS
 
 import marker2 from "/public/assets/markers/baseline_place_black_24dp.png"
+import userMarker from "/public/assets/markers/geolocation_marker.png"
+
+
 import countriesjson from "/public/assets/layers/countries.json";
 
+import { apiCalls } from '../../scripts/api';
 
 
 export default {
@@ -119,11 +124,8 @@ export default {
             f.setStyle(
                 new Style({
                     image: new Icon({
-
-                        src: marker2,
-
-                        scale: 0.5,
-
+                        src: userMarker,
+                        scale: 0.6,
                     }),
                 })
             );
@@ -158,6 +160,19 @@ export default {
         },
         getExistingLocations() {
 
+            apiCalls.getAllLocations().then(res => {
+                console.log("new locations");
+                console.log(res);
+                this.modelContent = res["payload"]["content"];
+                console.log(this.modelContent);
+            }, error => {
+                console.log("err", error);
+                this.error = "invalid credentials";
+                // this.error = error;
+                this.loading = false;
+            });
+
+
             // todo extract as api
             const featuresApi = {};
 
@@ -189,13 +204,9 @@ export default {
                 });
 
                 let icon = new Icon({
-
                     src: marker2,
-
                     scale: 0.2,
-
                 })
-
 
                 f.setStyle(
                     new Style({
@@ -368,7 +379,7 @@ export default {
             this.map.on('click', (evt) => {
                 displayFeatureInfo(evt.pixel);
             });
-        }
+        },
     },
 
     mounted() {
@@ -376,18 +387,15 @@ export default {
         const map = this.initMap();
         this.map = map;
 
+        // todo enable
         this.$refs.userCoordinatesManager.enableCoordinates();
 
-        // ----------------------------------------------------------------------------------------------
         this.activatePopup(this.map)
-
-        // ----------------------------------------------------------------------------------------------
 
         const featuresApi = this.getExistingLocations();
 
         this.drawLocations(this.map, featuresApi);
 
-        // ----------------------------------------------------------------------------------------------
         this.zoomSetupButtons(this.map)
 
         this.createCountriesLayer()
