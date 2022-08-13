@@ -21,6 +21,7 @@ class MsgBodyCheckMiddleware:
                      "payload": {},
                      "debug": ""}
         try:
+            print(f"{request.body=}")
             body = json.loads(request.body)
             keys = list(body.keys())
 
