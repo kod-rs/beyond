@@ -26,10 +26,10 @@
     "vue-browser-geolocation": "^1.8.0",
     "vue-router": "^4.1.2",
     "vue3-openlayers": "^0.1.68",
+    "vue3-simple-typeahead": "^1.0.9",
     "vuex": "^4.0.2"
   },
   "devDependencies": {
-    "json-loader": "^0.5.4",
     "babel-core": "^6.26.3",
     "babel-loader": "^8.2.5",
     "babel-preset-env": "^1.7.0",
@@ -48,6 +48,7 @@
     "gulp-sass": "^5.1.0",
     "gulp-uglify": "3.0.2",
     "html-webpack-plugin": "^5.5.0",
+    "json-loader": "^0.5.4",
     "merge-stream": "2.0.0",
     "path": "^0.12.7",
     "style-loader": "^3.3.1",
