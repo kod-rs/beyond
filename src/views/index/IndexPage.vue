@@ -69,11 +69,11 @@ import { Vector as VectorLayer } from 'ol/layer';
 import GeoJSON from 'ol/format/GeoJSON';
 import { Stroke } from 'ol/style';
 
-
+import $ from 'jquery'
 import LocationSelector from '../../components/map/LocationSelector.vue'; //Optional default CSS
 
-import marker2 from "./../../assets/markers/baseline_place_black_24dp.png"
-import countriesjson from "./../../assets/layers/countries.json";
+import marker2 from "/public/assets/markers/baseline_place_black_24dp.png"
+import countriesjson from "/public/assets/layers/countries.json";
 
 
 
@@ -96,7 +96,7 @@ export default {
         }
     },
     methods: {
-        userTypedLocation(location) {
+        userTypedLocation() {
             console.log("user location")
         },
 
@@ -183,7 +183,7 @@ export default {
             let features = []
 
             for (const [key, value] of Object.entries(featuresApi)) {
-
+                console.log(key);
                 let f = new Feature({
                     geometry: new Point(fromLonLat([value.lat, value.lon])),
                 });
