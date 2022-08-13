@@ -9,7 +9,7 @@ from backend.api.view.deviceView import DeviceView
 from backend.api.view.locationsView import LocationsView
 from backend.api.view.loginView import LoginView
 from backend.api.view.logoutView import LogoutView
-from backend.api.views import IndexView
+from backend.api.view.index import IndexView
 from backend.api.view.CSRFView import CSRFView
 
 # from backend.api_kc.view.LoginKCView import LoginKCView
