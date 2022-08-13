@@ -10,7 +10,7 @@ def main():
 
     same_comment = True
     comment = None
-    comment = "wip: fix webpack config to babel"
+    comment = "fix config"
     if same_comment:
         if not comment:
             comment = input("comment for all commits will be same:")
