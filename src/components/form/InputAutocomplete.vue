@@ -1,8 +1,8 @@
 <template>
 
     <div class="autocomplete">
-        <input type="text" :placeholder="ph" @input="onChange" v-model="search" @keyup.down="onArrowDown"
-            @keyup.up="onArrowUp" @keyup.enter="onEnter" />
+        <input type="text" @input="onChange" v-model="search" @keyup.down="onArrowDown" @keyup.up="onArrowUp"
+            @keyup.enter="onEnter" />
         <ul id="autocomplete-results" v-show="isOpen" class="autocomplete-results">
             <li class="loading" v-if="isLoading">
                 Loading results...
@@ -20,15 +20,10 @@
 <script>
 
 export default {
-    name: "autocomplete",
+    name: "autoComplete",
     template: "#autocomplete",
     props: {
-        // ph: {
-        //     type: String,
-        //     required: false,
-        //     default: "start typing"
 
-        // },
         initItems: {
             type: Array,
             required: false,
@@ -83,7 +78,7 @@ export default {
             this.search = result;
             this.isOpen = false;
         },
-        onArrowDown(evt) {
+        onArrowDown() {
             if (this.arrowCounter < this.results.length) {
                 this.arrowCounter = this.arrowCounter + 1;
             }
@@ -119,7 +114,7 @@ export default {
         this.items = this.initItems;
         document.addEventListener("click", this.handleClickOutside);
     },
-    destroyed() {
+    unmounted() {
         document.removeEventListener("click", this.handleClickOutside);
     }
 }
