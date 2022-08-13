@@ -3,18 +3,10 @@
     <div id="root">
         <NavigationTemplate />
 
-
         <main class="mt-5 pt-3">
             <div class="container-fluid">
 
-
                 <div class="row">
-
-
-
-
-
-
                     <!-- <input v-model="searchInput" @keyup.enter="search" placeholder="Enter place" /> -->
                     <button @click="refreshLocations">refresh locations, maybe someone else placed something
                         new</button>
@@ -73,10 +65,6 @@
                     </div>
                 </div>
 
-
-
-
-
             </div>
         </main>
 
@@ -86,7 +74,6 @@
 
 <script>
 import { apiCalls } from '../../scripts/api';
-// import Navigation from '../../components/navigation/Navigation.vue';
 
 export default {
     name: "viewLocation",
@@ -128,16 +115,7 @@ export default {
                 this.loading = false;
             });
         },
-        // search() {
-        //     this.fetchData();
-        // },
-        // async fetchData() {
-        //     // const apiKey = import.meta.env.tTT;
-        //     const url = ``;
-        //     this.searchInput = "";
-        //     const res = await fetch(url);
-        //     // const jsonResponse = await res.json();
-        // },
+
         async deleteElement(i) {
             console.log("delete i", i);
             apiCalls.deleteLocation(i).then(() => {
@@ -151,17 +129,12 @@ export default {
             });
         }
     }
-    // ,
-    // components: { LocationForm }
 
-    // components: { Navigation }
 }
 
 </script>
 
 <style>
-/* @import './style.css'; */
-
 #root {
     border-style: solid;
 }
