@@ -1,11 +1,17 @@
 <template>
 
-  <div id="app">
+  <!-- <div :class="]"> -->
+  <!-- <img v-if="infoLogoURL !== ''" :src="infoLogoURL" class="logo" alt="" @error="$event.target.src = '/favicon.ico'"> -->
+  <!-- // v-else show your material icon -->
+  <!-- </div> -->
+  <!-- <md-icon >{{ infoSubIcon }}</md-icon> -->
 
-    <router-view>
-    </router-view>
+  <TestNavigation></TestNavigation>
 
-  </div>
+  <router-view>
+  </router-view>
+
+
 
 </template>
 
