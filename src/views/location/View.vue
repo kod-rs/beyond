@@ -1,7 +1,7 @@
 <template>
 
     <div id="root">
-        <Navigation />
+        <NavigationTemplate />
 
 
         <main class="mt-5 pt-3">
@@ -49,7 +49,7 @@
 
                                             <tr v-for="(item, i) in modelContent" :key="item.id">
                                                 <!-- <td>{{ i }}</td> -->
-                                                <td v-for="(jitem, j) in item">{{ jitem }}</td>
+                                                <td v-for="(jitem) in item" :key="jitem.id">{{ jitem }}</td>
                                                 <td><button @click="deleteElement(modelContent[i]['pk'])">delete
                                                         id = {{ modelContent[i]["pk"] }}</button>
                                                 </td>
@@ -86,10 +86,10 @@
 
 <script>
 import { apiCalls } from '../../scripts/api';
-import Navigation from '../../components/navigation/Navigation.vue';
+// import Navigation from '../../components/navigation/Navigation.vue';
 
 export default {
-    name: "f",
+    name: "viewLocation",
     data() {
         return {
             searchInput: "",
@@ -128,19 +128,19 @@ export default {
                 this.loading = false;
             });
         },
-        search() {
-            this.fetchData();
-        },
-        async fetchData() {
-            const apiKey = import.meta.env.tTT;
-            const url = ``;
-            this.searchInput = "";
-            const res = await fetch(url);
-            const jsonResponse = await res.json();
-        },
+        // search() {
+        //     this.fetchData();
+        // },
+        // async fetchData() {
+        //     // const apiKey = import.meta.env.tTT;
+        //     const url = ``;
+        //     this.searchInput = "";
+        //     const res = await fetch(url);
+        //     // const jsonResponse = await res.json();
+        // },
         async deleteElement(i) {
             console.log("delete i", i);
-            apiCalls.deleteLocation(i).then(res => {
+            apiCalls.deleteLocation(i).then(() => {
                 console.log("location deleted");
                 this.refreshLocations();
             }, error => {
@@ -153,8 +153,8 @@ export default {
     }
     // ,
     // components: { LocationForm }
-    ,
-    components: { Navigation }
+
+    // components: { Navigation }
 }
 
 </script>
