@@ -2,11 +2,6 @@
 
     <div class="container-fluid">
 
-        test routes:
-        <router-link :to="{ name: 'addlocation' }">Create</router-link> |
-        <router-link :to="{ name: 'viewlocation' }">View</router-link> |
-        <router-link to="/logout">Logout</router-link>
-
 
         <div class="row">
             <div class="col-sm">
