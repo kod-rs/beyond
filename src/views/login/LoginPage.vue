@@ -1,5 +1,5 @@
 <template>
-    <section class="vh-100" style="background-image: url('login_bg.jpg');">
+    <section class="vh-100" style="background-image: url('assets/login_bg.jpg');">
         <div class="container py-5 h-100">
             <div class="row d-flex justify-content-center align-items-center h-100">
                 <div class="col col-xl-10">
@@ -8,7 +8,7 @@
                             <div class="col-md-6 col-lg-5 d-none d-md-block">
 
 
-                                <img src="login_profile.jpg" alt="login form" class="img-fluid"
+                                <img src="assets/login_profile.jpg" alt="login form" class="img-fluid"
                                     style="border-radius: 1rem 0 0 1rem;" />
 
                             </div>
@@ -101,7 +101,7 @@ export default {
         this.returnUrl = this.$route.query.returnUrl || '/';
     },
     methods: {
-        handleSubmit(e) {
+        handleSubmit() {
             this.submitted = true;
             const { username, password } = this;
 
@@ -110,14 +110,14 @@ export default {
             }
             this.loading = true;
             apiCalls.login(username, password).then(
-                user => {
+                () => {
                     router.push(this.returnUrl);
                     this.$store.commit('setUsername', username);
 
                 },
                 error => {
                     this.error = "invalid credentials"
-                    // this.error = error;
+                    this.error = error;
                     this.loading = false;
                 }
             );
