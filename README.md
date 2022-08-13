@@ -3,6 +3,13 @@
 #### how to run
 
     mark backend as source folder for python
+    yarn install
+    pip install django
+    pip install whitenoise==5.0.1
+    pip install djangorestframework
+    python3 manage.py migrate
+    python3 manage.py runserver
+
 
 vue entry point MUST be "src/main.js"
 
@@ -10,20 +17,26 @@ vue entry point MUST be "src/main.js"
     
     pip3 freeze > requirements.pip.txt
 
-# todo
+## Project setup
+```
+npm install
+```
 
-    check data types before storing in db
-    check in vue if using https
+### Compiles and hot-reloads for development
+```
+npm run serve
+```
 
-    Forgot password?
-    Terms of use
-    Privacy policy
+### Compiles and minifies for production
+```
+npm run build
+```
 
-    confirm delete portfolio
+### Lints and fixes files
+```
+npm run lint
+```
 
-# fixme
+### Customize configuration
+See [Configuration Reference](https://cli.vuejs.org/config/).
 
-    favicon
-    login page: input and logo picture fit inside div
-
-    <!-- <link rel="icon" href="<%= BASE_URL %>favicon.ico"> -->
