@@ -6,7 +6,8 @@ import LocationAdd from "../views/location/Add.vue";
 import LocationView from "../views/location/View.vue";
 import Location from "../views/location/Home.vue";
 import LogoutPage from '../views/logout/LogoutPage';
-
+import PortfolioPage from '../views/portfolio/Index.vue';
+// import LocationsPage from '../views/'
 export const router = createRouter({
   history: createWebHistory(),
   routes: [
@@ -33,6 +34,17 @@ export const router = createRouter({
       name: "viewlocation",
       component: LocationView
     },
+    {
+      path: '/portfolio',
+      name: "portfolio",
+      component: PortfolioPage
+    },
+    {
+      path: "/locations",
+      name: "locations",
+      component: Location
+    },
+
     // {
     //   path: '/location',
     //   component: Location,
