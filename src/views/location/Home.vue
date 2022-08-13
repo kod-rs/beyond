@@ -9,7 +9,7 @@
 <script>
 
 export default {
-    name: "f",
+    name: "homeLocation",
     data() {
         return {
         };
