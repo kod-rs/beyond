@@ -26,7 +26,7 @@ export const store = createStore({
         setLongitude(state, newValue) {
             state.longitude = newValue
         },
-        setUseraname(state, username) {
+        setUsername(state, username) {
             state.username = username
         }
 
