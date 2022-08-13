@@ -29,7 +29,7 @@ export default {
         //     default: "start typing"
 
         // },
-        items: {
+        initItems: {
             type: Array,
             required: false,
             default: () => []
@@ -48,24 +48,27 @@ export default {
             search: "",
             isLoading: false,
             arrowCounter: 0,
-            ph: "start"
+            ph: "start typing",
+            items: []
         };
     },
 
     methods: {
+        getSearch() {
+            return this.search;
+        },
         setPlaceholder(newValue) {
-            console.log("set ph")
             this.ph = newValue
         },
+        updateItems(newItems) {
+            this.items = this.items.concat(newItems);
+        },
         onChange() {
-            // Let's warn the parent that a change was made
-            this.$emit("input", this.search);
+            // this.$emit("input", this.search);
 
-            // Is the data given by an outside ajax request?
             if (this.isAsync) {
                 this.isLoading = true;
             } else {
-                // Let's search our flat array
                 this.filterResults();
                 this.isOpen = true;
             }
@@ -94,6 +97,8 @@ export default {
             this.search = this.results[this.arrowCounter];
             this.isOpen = false;
             this.arrowCounter = -1;
+            // this.$emit("input", this.search);
+
         },
         handleClickOutside(evt) {
             if (!this.$el.contains(evt.target)) {
@@ -104,7 +109,6 @@ export default {
     },
     watch: {
         items: function (val, oldValue) {
-            // actually compare them
             if (val.length !== oldValue.length) {
                 this.results = val;
                 this.isLoading = false;
@@ -112,6 +116,7 @@ export default {
         }
     },
     mounted() {
+        this.items = this.initItems;
         document.addEventListener("click", this.handleClickOutside);
     },
     destroyed() {
@@ -124,14 +129,6 @@ export default {
 
 
 <style>
-#app {
-    font-family: "Avenir", Helvetica, Arial, sans-serif;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    color: #2c3e50;
-    margin-top: 60px;
-}
-
 .autocomplete {
     position: relative;
     width: 130px;
