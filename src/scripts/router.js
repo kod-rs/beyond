@@ -2,12 +2,12 @@ import { createRouter, createWebHistory } from 'vue-router';
 
 import IndexPage from '../views/index/IndexPage';
 import LoginPage from '../views/login/LoginPage';
-import LocationAdd from "../views/location/Add.vue";
+import LocationAdd from "../views/location/AddLocation.vue";
 import LocationView from "../views/location/View.vue";
 import Location from "../views/location/Home.vue";
 import LogoutPage from '../views/logout/LogoutPage';
 import PortfolioPage from '../views/portfolio/Index.vue';
-// import LocationsPage from '../views/'
+
 export const router = createRouter({
   history: createWebHistory(),
   routes: [
