@@ -11,21 +11,13 @@
         <div class="row">
             <div class="col-sm">
                 <div class="row">
-                    enter location
-                    <InputAutocomplete :ph="fromTimeWindow" ref="inputautocompletefield" :items="getLocations()">
+                    <LocationSelector>
 
-                        <!-- :items="['Apple', 'Banana', 'Orange', 'Mango', 'Pear', 'Peach', 'Grape', 'Tangerine', 'Pineapple']">
-                     -->
-                        <!-- getLocations -->
-                    </InputAutocomplete>
-
-                    <div class="">
-
-                    </div>
-
-                    country:
+                    </LocationSelector>
+                    <hr>
+                    mouse is pointing at this country:
                     <div id="info">&nbsp;</div>
-
+                    <hr>
                     <UserCoordinates @userCoordinates="drawUserLocation" :canSend="this.canSend"
                         ref="userCoordinatesManager">
                     </UserCoordinates>
@@ -61,9 +53,6 @@
             </div>
         </div>
 
-
-
-
     </div>
 
 </template>
@@ -85,19 +74,17 @@ import { Vector as VectorLayer } from 'ol/layer';
 import GeoJSON from 'ol/format/GeoJSON';
 import { Stroke } from 'ol/style';
 
-import InputAutocomplete from '../../components/form/InputAutocomplete.vue'; //Optional default CSS
 
+import LocationSelector from '../../components/map/LocationSelector.vue'; //Optional default CSS
 
 import marker2 from "./../../assets/markers/baseline_place_black_24dp.png"
 import countriesjson from "./../../assets/layers/countries.json";
-import countryNameJson from "./../../assets/layers/country_names.json";
-import axios from 'axios';
-import { resolve } from 'path';
+
 
 
 export default {
     components: {
-        InputAutocomplete
+        LocationSelector
     },
     data() {
         return {
@@ -114,28 +101,10 @@ export default {
         }
     },
     methods: {
-        getLocations() {
-            console.log("getting locations")
-
-            // return axios.get(countryNameJson)
-            //     .then(r => {
-            //         r = r.data
-            //         // console.table(r)
-            //         // console.log("alb")
-            //         // console.log(r["Albania"])
-            //         // // c = r.map(i => i)
-            //         let c = Object.keys(r)
-            //         console.log(c)
-            //         // resolve(c)
-            //         return c
-            //     })
-
-            return ['Apple', 'Banana', 'Orange', 'Mango', 'Pear', 'Peach', 'Grape', 'Tangerine', 'Pineapple']
+        userTypedLocation(location) {
+            console.log("user location")
         },
 
-        findLocation() {
-            console.log("entered sth new")
-        },
 
         drawUserLocation(lat, lon) {
 
@@ -381,8 +350,6 @@ export default {
                         info.innerHTML = '&nbsp;';
                     }
 
-
-
                     if (feature !== highlight) {
                         if (highlight) {
                             featureOverlay.getSource().removeFeature(highlight);
@@ -410,12 +377,6 @@ export default {
     },
 
     mounted() {
-        console.log("moutned")
-
-        this.$refs.inputautocompletefield.setPlaceholder("type location");
-
-        console.table(countriesjson)
-        console.table(typeof (countriesjson))
 
         const map = this.initMap();
         this.map = map;
