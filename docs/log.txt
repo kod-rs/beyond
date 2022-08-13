@@ -1,1 +1,9 @@
-    13.8 fix webpack config, source: https://github.com/vuejs/vue-cli/issues/3156
+13.8 fix webpack config, source: https://github.com/vuejs/vue-cli/issues/3156
+
+dodaj api za dohvacanje lokacija po useru da se mogu
+prikazat na karti drugom bojom i da se mogu
+manageat u viewu za to
+
+npm run serve
+fix
+
