@@ -14,7 +14,7 @@ export const activate_tab_name_changer = () => {
             return Math.floor(Math.random() * (max - min)) + min;
         }
 
-        document.addEventListener("visibilitychange", function (e) {
+        document.addEventListener("visibilitychange", function () {
 
             if (document.hidden) {
                 driver = setInterval(function () {
@@ -40,11 +40,8 @@ export const activate_tab_name_changer = () => {
 
     }
 
-    onload = (event) => {
+    onload = () => {
         randomChange()
     };
-
-
-
 
 }
