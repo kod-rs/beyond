@@ -34,8 +34,7 @@ export default {
 
         },
         userTypedLocation(location) {
-            console.log("new location typed")
-            console.log(location)
+            console.log("new location typed", location)
         },
         async getLocations() {
             let r = await axios.get(countryNameJson);
