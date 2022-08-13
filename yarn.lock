@@ -8974,7 +8974,7 @@
     "@vue/compiler-sfc" "2.7.8"
     "csstype" "^3.1.0"
 
-"vue@^3.0.2", "vue@^3.2.0", "vue@^3.2.37", "vue@3.2.37":
+"vue@^3.0.2", "vue@^3.0.5", "vue@^3.2.0", "vue@^3.2.37", "vue@3.2.37":
   "integrity" "sha512-bOKEZxrm8Eh+fveCqS1/NkG/n6aMidsI6hahas7pa0w/l7jkbssJVsRhVDs07IdDq7h9KHswZOgItnwJAgtVtQ=="
   "resolved" "https://registry.npmjs.org/vue/-/vue-3.2.37.tgz"
   "version" "3.2.37"
@@ -8996,6 +8996,11 @@
     "ol-contextmenu" "^4.1.0"
     "ol-ext" "^3.2.24"
     "proj4" "^2.7.5"
+
+"vue3-simple-typeahead@^1.0.9":
+  "integrity" "sha512-ct5iF9tTgv7DYatEOm67gvV953KKiB1hPAvg2b2DXSWz4vhXq1alNPfhuNXmrhIvqD69IxOJuKWcfqSnQ6I0dw=="
+  "resolved" "https://registry.npmjs.org/vue3-simple-typeahead/-/vue3-simple-typeahead-1.0.9.tgz"
+  "version" "1.0.9"
 
 "vuex@^4.0.2":
   "integrity" "sha512-M6r8uxELjZIK8kTKDGgZTYX/ahzblnzC4isU1tpmEuOIIKmV+TRdc+H4s8ds2NuZ7wpUTdGRzJRtoj+lI+pc0Q=="
