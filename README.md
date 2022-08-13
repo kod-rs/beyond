@@ -19,6 +19,8 @@ vue entry point MUST be "src/main.js"
     Terms of use
     Privacy policy
 
+    confirm delete portfolio
+
 # fixme
 
     favicon
