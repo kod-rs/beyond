@@ -7,9 +7,25 @@
         <router-link :to="{ name: 'viewlocation' }">View</router-link> |
         <router-link to="/logout">Logout</router-link>
 
+
         <div class="row">
             <div class="col-sm">
                 <div class="row">
+                    enter location
+                    <InputAutocomplete :ph="fromTimeWindow" ref="inputautocompletefield" :items="getLocations()">
+
+                        <!-- :items="['Apple', 'Banana', 'Orange', 'Mango', 'Pear', 'Peach', 'Grape', 'Tangerine', 'Pineapple']">
+                     -->
+                        <!-- getLocations -->
+                    </InputAutocomplete>
+
+                    <div class="">
+
+                    </div>
+
+                    country:
+                    <div id="info">&nbsp;</div>
+
                     <UserCoordinates @userCoordinates="drawUserLocation" :canSend="this.canSend"
                         ref="userCoordinatesManager">
                     </UserCoordinates>
@@ -67,12 +83,22 @@ import { Icon, Style } from 'ol/style';
 import VectorSource from 'ol/source/Vector';
 import { Vector as VectorLayer } from 'ol/layer';
 import GeoJSON from 'ol/format/GeoJSON';
+import { Stroke } from 'ol/style';
+
+import InputAutocomplete from '../../components/form/InputAutocomplete.vue'; //Optional default CSS
+
 
 import marker2 from "./../../assets/markers/baseline_place_black_24dp.png"
-import countriesjson from "./../../assets/layers/countries.json"
+import countriesjson from "./../../assets/layers/countries.json";
+import countryNameJson from "./../../assets/layers/country_names.json";
+import axios from 'axios';
+import { resolve } from 'path';
 
 
 export default {
+    components: {
+        InputAutocomplete
+    },
     data() {
         return {
             addLocationEnabled: false,
@@ -84,9 +110,33 @@ export default {
             view: undefined,
             vectorSource: undefined,
             countriesLayer: undefined,
+
         }
     },
     methods: {
+        getLocations() {
+            console.log("getting locations")
+
+            // return axios.get(countryNameJson)
+            //     .then(r => {
+            //         r = r.data
+            //         // console.table(r)
+            //         // console.log("alb")
+            //         // console.log(r["Albania"])
+            //         // // c = r.map(i => i)
+            //         let c = Object.keys(r)
+            //         console.log(c)
+            //         // resolve(c)
+            //         return c
+            //     })
+
+            return ['Apple', 'Banana', 'Orange', 'Mango', 'Pear', 'Peach', 'Grape', 'Tangerine', 'Pineapple']
+        },
+
+        findLocation() {
+            console.log("entered sth new")
+        },
+
         drawUserLocation(lat, lon) {
 
             console.log("draw user location", lat, lon)
@@ -137,8 +187,7 @@ export default {
             // zoom
             this.view.fit(point, { padding: [170, 50, 30, 150], minResolution: 50 });
 
-        }
-        ,
+        },
         allowLocationAdding() {
             this.addLocationEnabled = true
             console.log("enabled", this.addLocationEnabled)
@@ -175,19 +224,23 @@ export default {
                     geometry: new Point(fromLonLat([value.lat, value.lon])),
                 });
 
+                let icon = new Icon({
+
+                    src: marker2,
+
+                    scale: 0.2,
+
+                })
+
+
                 f.setStyle(
                     new Style({
-                        image: new Icon({
-
-                            src: marker2,
-
-                            scale: 0.2,
-
-                        }),
+                        image: icon
                     })
                 );
 
                 features.push(f)
+
 
             }
 
@@ -288,22 +341,78 @@ export default {
         },
         createCountriesLayer() {
 
-            this.map.addLayer(
-
-                new VectorLayer({
-                    source: new VectorSource({
-                        // url: 'https://openlayers.org/data/vector/ecoregions.json',
-                        format: new GeoJSON(),
-                        url: countriesjson,
-                    }),
+            this.countriesLayer = new VectorLayer({
+                source: new VectorSource({
+                    format: new GeoJSON(),
+                    url: countriesjson,
                 }),
+            })
 
+            this.map.addLayer(
+                this.countriesLayer
             )
+        },
+        filterByCountry() {
+
+            const highlightStyle = new Style({
+                stroke: new Stroke({
+                    color: 'rgba(255, 255, 255, 0.7)',
+                    width: 2,
+                }),
+            });
+
+            const featureOverlay = new VectorLayer({
+                source: new VectorSource(),
+                map: this.map,
+                style: highlightStyle,
+            });
+
+            let highlight;
+            const displayFeatureInfo = (pixel) => {
+
+                this.countriesLayer.getFeatures(pixel).then(function (features) {
+                    const feature = features.length ? features[0] : undefined;
+
+                    const info = document.getElementById('info');
+                    if (features.length) {
+                        info.innerHTML = feature.get('name');
+                        console.log("todo: get from db for location", feature.get('name'));
+                    } else {
+                        info.innerHTML = '&nbsp;';
+                    }
+
+
+
+                    if (feature !== highlight) {
+                        if (highlight) {
+                            featureOverlay.getSource().removeFeature(highlight);
+                        }
+                        if (feature) {
+                            featureOverlay.getSource().addFeature(feature);
+                        }
+                        highlight = feature;
+                    }
+                });
+            };
+
+            this.map.on('pointermove', (evt) => {
+                if (evt.dragging) {
+                    return;
+                }
+                const pixel = this.map.getEventPixel(evt.originalEvent);
+                displayFeatureInfo(pixel);
+            });
+
+            this.map.on('click', (evt) => {
+                displayFeatureInfo(evt.pixel);
+            });
         }
     },
 
     mounted() {
         console.log("moutned")
+
+        this.$refs.inputautocompletefield.setPlaceholder("type location");
 
         console.table(countriesjson)
         console.table(typeof (countriesjson))
@@ -326,6 +435,8 @@ export default {
         this.zoomSetupButtons(this.map)
 
         this.createCountriesLayer()
+
+        this.filterByCountry()
 
     }
 }
