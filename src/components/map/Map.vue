@@ -1,8 +1,8 @@
 
 
 <template>
-    <img src='marker-blue.png' />
-    fff
+    <!-- <img src='marker-blue.png' /> -->
+    map
 
     <div class="mw-100 main-container">
 
@@ -29,8 +29,3 @@ export default {
 
 </script>
 
-<style>
-.col-md-12>div:nth-child(1)>div:nth-child(2) {
-    /* background-color: blue; */
-}
-</style>
