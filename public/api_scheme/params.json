@@ -1,0 +1,50 @@
+{
+  "locations":{
+    "add single": {
+      "access_token": true,
+      "refresh_token": true,
+      "action": true,
+
+      "username": true,
+      "type":  true,
+      "section":  true,
+      "latitude":  true,
+      "longitude": true,
+      "synchronizer_token": true
+    },
+    "delete single": {
+      "access_token": true,
+      "refresh_token": true,
+      "action": true,
+
+      "index": true
+    },
+    "select all": {
+      "access_token": true,
+      "refresh_token": true,
+      "action": true
+    }
+  },
+  "csrf": {
+    "synchronizer": {
+      "access_token":  true,
+      "refresh_token":  true,
+      "action": true
+    }
+  },
+  "login": {
+    "__comm": {
+    "username": true,
+    "password": true,
+      "action": true
+    }
+  },
+  "logout": {
+    "__comm": {
+    "access_token": true,
+    "refresh_token": true,
+      "action": true
+    }
+  }
+
+}
