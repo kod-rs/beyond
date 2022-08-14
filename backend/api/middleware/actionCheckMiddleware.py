@@ -1,40 +1,26 @@
-from backend.api.comm.role_validator import SchemeValidator
-from backend.api.config.main import MIDDLEWARE_NO_ACTION
-from backend.api.view.comm import check_request_contains
 from decouple import config
 from backend.api.comm.comm import decode_data
+from backend.api.comm.http import get_empty_response_template
+from django.http import JsonResponse
 
 
 class ActionCheckMiddleware:
+    """check if action is present in body"""
+
     def __init__(self, get_response):
         self.get_response = get_response
 
         self.debug = config("DEBUG") != "0"
-        self.scheme_validator = SchemeValidator()
 
     def __call__(self, request):
+        print("ActionCheckMiddleware")
 
-
-        if not hasattr(request, "body"):
-            print("err")
-
-        body = getattr(request, "body")
-        decoded_body = decode_data(body)
-        action = decoded_body["action"]
-
-        roles = request.roles
+        if "action" not in decode_data(request.body):
+            if self.debug:
+                print("ActionCheckMiddleware: no action in body")
+            rejection = get_empty_response_template()
+            return JsonResponse(rejection)
 
         request.action = decode_data(request.body)["action"]
-
-
-
-        # request.action = check_request_contains(
-        #     request=decode_data(request.body),
-        #     attribute="action",
-        #     raise_exception=False,
-        #     default_attribute=MIDDLEWARE_NO_ACTION
-        # )
-
-        # print(f"--- {request.action}")
 
         return self.get_response(request)
