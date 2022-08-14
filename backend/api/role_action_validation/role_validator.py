@@ -1,10 +1,9 @@
-from backend.api.comm.json_loader import role_validation_cfg
 
 
 class SchemeValidator:
     """check if role can perform given action"""
 
-    def __init__(self):
+    def __init__(self, role_validation_cfg):
         self.scheme = role_validation_cfg
         self.serialization_connector = ";"
 
@@ -49,6 +48,7 @@ class SchemeValidator:
         splitters = [self.serialization_connector, " "]
 
         if not any([payload.__contains__(i) for i in splitters]):
+            """assumption: already deserialized"""
             return [payload]
 
         if self.serialization_connector in payload:
@@ -59,47 +59,47 @@ class SchemeValidator:
             return [i.strip() for i in
                     payload.split(" ", 1) if i.strip()]
 
-
-def main():
-    scheme_validator = SchemeValidator()
-
-    for role_k, role_v in {"aggregator": True, "role_false": False}.items():
-
-        for table_k, table_v in {"locations ": True,
-                                 "table_false": False}.items():
-
-            for action_k, action_v in {"create single": True,
-                                       "action false": False}.items():
-
-                for strip_test in ["", " "]:
-                    for connector in [";", " "]:
-
-                        action_composite = table_k + connector + strip_test + action_k
-
-                        for deserialize_option in [True, False]:
-                            if deserialize_option:
-                                action_composite = scheme_validator.deserialize(
-                                    action_composite)
-
-                            print(
-                                f"pass {role_k:15} {str(action_composite):15}")
-                            print(
-                                f"{role_v:10} {table_v:15} {action_v:15} {deserialize_option:15}")
-
-                            r = scheme_validator.check_action(role_k,
-                                                              action_composite)
-
-                            if role_v and table_v and action_v:
-                                print(f"expecting true, got {r}")
-                                if not r:
-                                    raise Exception("err")
-                            else:
-                                print(f"expecting false, got {r}")
-                                if r:
-                                    raise Exception("err")
-                            print()
-    print("test ok")
-
-
-if __name__ == '__main__':
-    main()
+#
+# def main():
+#     scheme_validator = SchemeValidator()
+#
+#     for role_k, role_v in {"aggregator": True, "role_false": False}.items():
+#
+#         for table_k, table_v in {"locations ": True,
+#                                  "table_false": False}.items():
+#
+#             for action_k, action_v in {"create single": True,
+#                                        "action false": False}.items():
+#
+#                 for strip_test in ["", " "]:
+#                     for connector in [";", " "]:
+#
+#                         action_composite = table_k + connector + strip_test + action_k
+#
+#                         for deserialize_option in [True, False]:
+#                             if deserialize_option:
+#                                 action_composite = scheme_validator.deserialize(
+#                                     action_composite)
+#
+#                             print(
+#                                 f"pass {role_k:15} {str(action_composite):15}")
+#                             print(
+#                                 f"{role_v:10} {table_v:15} {action_v:15} {deserialize_option:15}")
+#
+#                             r = scheme_validator.check_action(role_k,
+#                                                               action_composite)
+#
+#                             if role_v and table_v and action_v:
+#                                 print(f"expecting true, got {r}")
+#                                 if not r:
+#                                     raise Exception("err")
+#                             else:
+#                                 print(f"expecting false, got {r}")
+#                                 if r:
+#                                     raise Exception("err")
+#                             print()
+#     print("test ok")
+#
+#
+# if __name__ == '__main__':
+#     main()
