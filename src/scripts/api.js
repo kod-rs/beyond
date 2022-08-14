@@ -62,7 +62,7 @@ async function getAllLocations() {
         let access_token = r["access_token"]
         let refresh_token = r["refresh_token"]
 
-        const response = await api.post(`locations/`, JSON.stringify({ access_token, refresh_token, action: "get all" }));
+        const response = await api.post(`locations/`, JSON.stringify({ access_token, refresh_token, action: "location; select all" }));
         // const response = await api.get(`locations/`, JSON.stringify({ access_token, refresh_token }));
         return await handleNewResponse(response);
 
