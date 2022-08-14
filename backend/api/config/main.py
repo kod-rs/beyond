@@ -19,7 +19,7 @@ MIDDLEWARE_NO_ACTION = config("CONFIG_DEFAULT_ACTION")
 INTERNAL_SERVER_ERROR_MESSAGE = "internal server error"
 
 
-prefix = "location;"
+prefix = "locations;"
 
 
 class LOCATION_ACTION(enum.Enum):
