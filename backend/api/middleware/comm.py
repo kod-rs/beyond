@@ -1,22 +1,8 @@
 from decouple import config
-
-def shortcircuitmiddleware(f):
-    """ view decorator, the sole purpose to is 'rename' the function
-    '_shortcircuitmiddleware' """
-    def _shortcircuitmiddleware(*args, **kwargs):
-        return f(*args, **kwargs)
-    return _shortcircuitmiddleware
-
-class ShortCircuitMiddleware(object):
-    """ Middleware; looks for a view function named '_shortcircuitmiddleware'
-    and short-circuits. Relies on the fact that if you return an HttpResponse
-    from a view, it will short-circuit other middleware, see:
-    https://docs.djangoproject.com/en/dev/topics/http/middleware/#process-request
-     """
-    def process_view(self, request, view_func, view_args, view_kwargs):
-        if view_func.func_name == "_shortcircuitmiddleware":
-            return view_func(request, *view_args, **view_kwargs)
-        return None
+# from backend.api.role_action_validation.comm import deserialize_action_composite
+# from backend.api.role_action_validation.role_validator import deserialize_action_composite
+from backend.api.startup import startup_configuration
+from backend.api.comm.json_loader import vue_interface_cfg
 
 class DebuggableMiddleware:
     def __init__(self, get_response):
@@ -28,42 +14,24 @@ class DebuggableMiddleware:
         if self.debug:
             print(payload)
 
-def get_empty_response_template():
-    response = {
-        "auth": {
-            "status": False,
-            "access-token": "",
-            "refresh-token": ""
-        },
-        "payload": {
 
-        },
-        "debug": {
+def middleware_check_params(action_composite, given):
+    """check if all parameters are present that are required for this request"""
 
-        }
-    }
-    return response
+    route, action = startup_configuration\
+        .get_scheme_validator()\
+        .deserialize(action_composite)
 
-
-def middleware_check_params(vue_interface_cfg,c, given):
-    route = c.split(";")[0]
-    action = c.split(";")[1]
-    # print(f"{route=} {action=} {given=}")
-
-
-    # print(vue_interface_cfg)
     if route not in vue_interface_cfg:
-        # print("route not in vue")
+        # print(f"no route {route}")
         return False
+
     r = vue_interface_cfg[route]
-    # print("tu")
-    # print(r)
-
-
 
     if action not in r:
+        # print(f"no action {action}")
         return False
 
     r = r[action]
-    print(r)
+    # print(f"expecting {r}")
     return all([given.__contains__(i) for i in r])
