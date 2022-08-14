@@ -10,7 +10,7 @@ def main():
 
     same_comment = True
     comment = None
-    comment = "fix: add location"
+    comment = "fix: show only user locations in view & fix role checking"
     if same_comment:
         if not comment:
             comment = input("comment for all commits will be same:")
