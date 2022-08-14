@@ -9,7 +9,7 @@ from backend.api.model.location import Location
 def get_all():
     t = serializers.serialize('json', Location.objects.all())
     t = json.loads(t)
-    print(t)
+    # print(t)
 
     n = []
     for i in t:
