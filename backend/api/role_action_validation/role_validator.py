@@ -2,41 +2,38 @@ from backend.api.comm.json_loader import role_validation_cfg
 
 
 class SchemeValidator:
+    """check if role can perform given action"""
 
     def __init__(self):
         self.scheme = role_validation_cfg
         self.serialization_connector = ";"
 
     def check_action(self, role, action):
-        """"""
-        print(f"check action {role=} {action=}")
+        # print(f"check action {role=} {action=}")
         if isinstance(action, str):
             action = self.deserialize(action)
 
         if len(action) == 1:
             return False
 
-        # todo add test for this
         if isinstance(role, list):
-            return any([self.check_action(r, action) for r in role])
+            if len(role) != 1:
+                return any([self.check_action(r, action) for r in role])
+
+            role = role[0]
 
         if role not in self.scheme["roles"]:
             return False
 
         t = self.scheme["roles"][role]
-
         table = action[0]
         action = action[1]
         if table not in t:
             return False
         t = t[table]
-
         if action not in t:
             return False
-
-        t = t[action]
-
-        return t
+        return t[action]
 
     def get_all_tables(self):
         r = []
@@ -68,10 +65,10 @@ def main():
 
     for role_k, role_v in {"aggregator": True, "role_false": False}.items():
 
-        for table_k, table_v in {"location ": True,
+        for table_k, table_v in {"locations ": True,
                                  "table_false": False}.items():
 
-            for action_k, action_v in {"add single": True,
+            for action_k, action_v in {"create single": True,
                                        "action false": False}.items():
 
                 for strip_test in ["", " "]:
