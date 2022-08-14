@@ -22,6 +22,11 @@
       "access_token": true,
       "refresh_token": true,
       "action": true
+    },
+    "select username": {
+      "access_token": true,
+      "refresh_token": true,
+      "action": true
     }
   },
   "csrf": {
