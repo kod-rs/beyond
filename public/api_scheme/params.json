@@ -1,11 +1,10 @@
 {
   "locations":{
-    "add single": {
+    "create single": {
       "access_token": true,
       "refresh_token": true,
       "action": true,
 
-      "username": true,
       "type":  true,
       "section":  true,
       "latitude":  true,
@@ -26,7 +25,7 @@
     }
   },
   "csrf": {
-    "synchronizer": {
+    "select synchronizer_token": {
       "access_token":  true,
       "refresh_token":  true,
       "action": true
