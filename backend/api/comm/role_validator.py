@@ -9,8 +9,12 @@ class SchemeValidator:
 
     def check_action(self, role, action):
         """"""
+        print(f"check action {role=} {action=}")
         if isinstance(action, str):
             action = self.deserialize(action)
+
+        if len(action) == 1:
+            return False
 
         # todo add test for this
         if isinstance(role, list):
@@ -44,6 +48,11 @@ class SchemeValidator:
         return r
 
     def deserialize(self, payload):
+
+        splitters = [self.serialization_connector, " "]
+
+        if not any([payload.__contains__(i) for i in splitters]):
+            return [payload]
 
         if self.serialization_connector in payload:
             return [i.strip() for i in
