@@ -81,7 +81,8 @@ class AuthCheckMiddleware:
             )
 
             is_validated = res["is_valid"]
-            username = res["preferred_username"]
+            if is_validated:
+                username = res["preferred_username"]
 
         if not is_validated:
 
