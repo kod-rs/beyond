@@ -24,7 +24,7 @@ async function getCSRFAuthData() {
         let access_token = r["access_token"]
         let refresh_token = r["refresh_token"];
 
-        const response = await api.post(`csrf/`, JSON.stringify({ access_token, refresh_token, action: "generate" }));
+        const response = await api.post(`csrf/`, JSON.stringify({ access_token, refresh_token, action: "csrf;select synchronizer_token" }));
         const responseData = await handleNewResponse(response)["payload"];
 
         funRes["synchronizer_token"] = responseData["synchronizer_token"];
@@ -45,7 +45,7 @@ async function deleteLocation(i) {
         let access_token = r["access_token"]
         let refresh_token = r["refresh_token"]
 
-        const response = await api.post(`locations/`, JSON.stringify({ access_token, refresh_token, action: "delete", index: i }));
+        const response = await api.post(`locations/`, JSON.stringify({ access_token, refresh_token, action: "location;delete single", index: i }));
         // const response = await api.get(`locations/`, JSON.stringify({ access_token, refresh_token }));
         return await handleNewResponse(response);
 
@@ -62,7 +62,7 @@ async function getAllLocations() {
         let access_token = r["access_token"]
         let refresh_token = r["refresh_token"]
 
-        const response = await api.post(`locations/`, JSON.stringify({ access_token, refresh_token, action: "location; select all" }));
+        const response = await api.post(`locations/`, JSON.stringify({ access_token, refresh_token, action: "locations;select all" }));
         // const response = await api.get(`locations/`, JSON.stringify({ access_token, refresh_token }));
         return await handleNewResponse(response);
 
@@ -80,7 +80,7 @@ async function addLocation(section, type, latitude, longitude, csrfToken) {
         let refresh_token = r["refresh_token"]
 
         const response = await api.post(`locations/`, JSON.stringify({
-            access_token, refresh_token, action: "add",
+            access_token, refresh_token, action: "locations;create single",
             type, section, latitude, longitude, synchronizer_token: csrfToken
         }));
         return await handleNewResponse(response);
@@ -92,7 +92,7 @@ async function addLocation(section, type, latitude, longitude, csrfToken) {
 
 async function login(username, password) {
 
-    const response = await api.post(`login/`, JSON.stringify({ username, password }))
+    const response = await api.post(`login/`, JSON.stringify({ username, password, action: "login;__comm" }))
     const user = await handleNewResponse(response)
     if (user) {
         sessionStorage.setItem('user', JSON.stringify(user))
@@ -108,7 +108,7 @@ function logout() {
         const refresh_token = user["auth"]["refresh-token"]
         sessionStorage.removeItem('user');
 
-        api.post(`logout/`, JSON.stringify({ access_token, refresh_token }))
+        api.post(`logout/`, JSON.stringify({ access_token, refresh_token, action: "logout;__comm" }))
         // .then(r => {
 
         // })
@@ -147,33 +147,6 @@ function checkTokens() {
 
 
 }
-
-// async function getAllTest() {
-//     const r = checkTokens()
-//     if (r["status"]) {
-//         let access_token = r["access-token"]
-//         const refresh_token = r["refresh-token"]
-
-//         const response = await api.put(`getAll/`, JSON.stringify({ access_token, refresh_token }));
-//         let r2 = await handleNewResponse(response);
-//         return r2;
-
-//     }
-// }
-
-// async function createOrUpdate(id, newValue) {
-//     const r = checkTokens()
-//     if (r["status"]) {
-//         let access_token = r["access-token"]
-//         let refresh_token = r["refresh-token"]
-
-//         const response = await api.put(`testcrud/`, JSON.stringify({ access_token, refresh_token, id, newValue }));
-//         return await handleNewResponse(response);
-
-//     }
-
-// }
-
 
 function handleNewResponse(response) {
 
