@@ -1,4 +1,8 @@
 13.8 fix webpack config, source: https://github.com/vuejs/vue-cli/issues/3156
+14.8 improve: add json for validating req body content,
+              checks if all params are present
+     todo: check if role can delete only his data or global
+
 
 dodaj api za dohvacanje lokacija po useru da se mogu
 prikazat na karti drugom bojom i da se mogu
