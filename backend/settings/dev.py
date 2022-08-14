@@ -1,3 +1,26 @@
+MIDDLEWARE = [
+    "corsheaders.middleware.CorsMiddleware",
+
+    # "backend.api.middleware.httpsCheckMiddleware.HttpsCheckMiddleware",
+
+    "backend.api.middleware.authCheckMiddleware.AuthCheckMiddleware",
+    "backend.api.middleware.roleCheckMiddleware.RoleCheckMiddleware",
+
+    "backend.api.middleware.actionCheckMiddleware.ActionCheckMiddleware",
+
+    "backend.api.middleware.msgBodyCheckMiddleware.MsgBodyCheckMiddleware",
+    "backend.api.middleware.ipCheckMiddleware.IpCheckMiddleware",
+    "backend.api.middleware.CSRFCheckMiddleware.CSRFCheckMiddleware",
+
+    'whitenoise.middleware.WhiteNoiseMiddleware',
+    'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.middleware.common.CommonMiddleware',
+    'django.middleware.csrf.CsrfViewMiddleware',
+    'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'django.contrib.messages.middleware.MessageMiddleware',
+    'django.middleware.clickjacking.XFrameOptionsMiddleware',
+]
+
 """
 https://docs.djangoproject.com/en/2.1/ref/settings/
 http://whitenoise.evans.io/en/stable/django.html?highlight=django
@@ -12,6 +35,7 @@ SETTINGS_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 BASE_DIR = os.path.dirname(SETTINGS_DIR)
 
 SECRET_KEY = config("SECRET_KEY")
+
 
 DEBUG = True
 ALLOWED_HOSTS = ['localhost']
@@ -35,25 +59,7 @@ INSTALLED_APPS = [
 
 PWD = os.path.dirname(os.path.realpath(__file__))
 
-MIDDLEWARE = [
-    "corsheaders.middleware.CorsMiddleware",
 
-    "backend.api.middleware.httpsCheckMiddleware.HttpsCheckMiddleware",
-    "backend.api.middleware.msgBodyCheckMiddleware.MsgBodyCheckMiddleware",
-    "backend.api.middleware.ipCheckMiddleware.IpCheckMiddleware",
-    "backend.api.middleware.CSRFCheckMiddleware.CSRFCheckMiddleware",
-    "backend.api.middleware.authCheckMiddleware.AuthCheckMiddleware",
-    "backend.api.middleware.actionCheckMiddleware.ActionCheckMiddleware",
-    "backend.api.middleware.roleCheckMiddleware.RoleCheckMiddleware",
-
-    'whitenoise.middleware.WhiteNoiseMiddleware',
-    'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
-    'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',
-]
 
 CORS_ORIGIN_ALLOW_ALL = True
 CORS_ALLOW_CREDENTIALS = True
