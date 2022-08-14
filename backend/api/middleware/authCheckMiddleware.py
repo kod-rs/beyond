@@ -5,6 +5,7 @@ from ipware import get_client_ip
 from backend.api.authenticate import login, check_tokens
 from backend.api.comm.comm import decode_data
 from backend.api.cqrs_c.ip import auth_user
+from backend.api.comm.http import get_empty_response_template
 
 
 class AuthCheckMiddleware:
@@ -15,89 +16,38 @@ class AuthCheckMiddleware:
         self.debug = config("DEBUG") != "0"
 
     def __call__(self, request):
+        print("AuthCheckMiddleware")
 
-        rejection = {
-            "auth": {
-                "status": False,
-                "access-token": "",
-                "refresh-token": ""
-            },
-            "payload": {},
-            "debug": ""
-        }
+        if request.is_auth:
+            return self.get_response(request)
 
         auth_credentials = {
-            "username": None,
-            "password": None,
             "access_token": None,
             "refresh_token": None,
-            "access-token": None,
-            "refresh-token": None
         }
 
-        if request.headers:
+        body_content = decode_data(request.body)
 
-            for k, v in auth_credentials.items():
-                if k in request.headers:
-                    auth_credentials[k] = request.headers[k]
+        for k, v in auth_credentials.items():
+            if k in body_content:
+                auth_credentials[k] = body_content[k]
 
-        if request.body:
-            body_content = decode_data(request.body)
+        res = check_tokens(
+            # *auth_credentials
+            auth_credentials["access_token"],
+            auth_credentials["refresh_token"]
+        )
 
-            for k, v in auth_credentials.items():
-                if k in body_content:
-                    auth_credentials[k] = body_content[k]
-
-        username = auth_credentials["username"]
-        password = auth_credentials["password"]
-        access_token = auth_credentials["access_token"] if auth_credentials[
-            "access_token"] else auth_credentials["access-token"]
-        refresh_token = auth_credentials["refresh_token"] if auth_credentials[
-            "refresh_token"] else auth_credentials["refresh-token"]
-
-        action = None
-        if request.headers:
-            if "action" in request.headers:
-                action = request.headers["action"]
-
-        if request.body:
-            body_content = decode_data(request.body)
-            if "action" in body_content:
-                action = body_content["action"]
-
-        is_validated = None
-
-        if username and password:
-
-            res = login(username, password)
-
-            is_validated = res["ok"]
-
-        elif access_token and refresh_token:
-
-            res = check_tokens(
-                access_token,
-                refresh_token
-            )
-
-            is_validated = res["is_valid"]
-            if is_validated:
-                username = res["preferred_username"]
-
-        if not is_validated:
-
+        if not res["is_valid"]:
+            rejection = get_empty_response_template()
             rejection["debug"] = "not is_validated"
             return JsonResponse(rejection)
-
-        access_token = res["access_token"]
-        refresh_token = res["refresh_token"]
 
         ip, _ = get_client_ip(request)
         auth_user(ip)
 
-        request.action = action
-        request.access_token = access_token
-        request.refresh_token = refresh_token
-        request.username = username
+        request.access_token = res["access_token"]
+        request.refresh_token = res["refresh_token"]
+        request.username = res["preferred_username"]
 
         return self.get_response(request)
