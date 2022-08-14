@@ -15,7 +15,6 @@
 
                     <form @submit.prevent="handleSubmit">
                         <CSRFToken ref="csrftokenelement" />
-                        <!-- <div v-for="post in posts" :key="post.id"> -->
                         <div v-for="option in formData" :value="option.value" :key="option.value">
                             {{ option.key.charAt(0).toUpperCase() + option.key.slice(1) }}
                             <span v-if="option.key == 'section' || option.key == 'type'">
