@@ -14,9 +14,9 @@ class IpCheckMiddleware:
         self.debug = config("DEBUG") != "0"
 
     def __call__(self, request):
-        if self.debug:
-            print(80 * "-")
-            print("\tIpCheckMiddleware")
+        # if self.debug:
+        #     print(80 * "-")
+        #     print("\tIpCheckMiddleware")
 
         rejection = {
             "auth": {
