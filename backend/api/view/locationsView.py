@@ -125,8 +125,8 @@ class DeleteSingle(LocationAction):
 
 import collections
 def validate_actions(correct_actions, to_check_actions):
-    # print(f"{correct_actions=}")
-    # print(f"{to_check_actions=}")
+    print(f"{correct_actions=}")
+    print(f"{to_check_actions=}")
     return collections.Counter(correct_actions) == collections.Counter(to_check_actions)
     # return correct_actions == to_check_actions
 
@@ -136,7 +136,7 @@ class LocationsView(APIView):
 
     def __init__(self):
 
-        self.route = "location"
+        self.route = "locations"
 
         self.actions = {
             LOCATION_ACTION.ADD_SINGLE.value: AddSingle(),
