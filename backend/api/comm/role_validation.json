@@ -1,24 +1,52 @@
 {
 	"roles":{
 		"aggregator":{
+			"csrf": {
+				"select synchronizer_token": true
+			},
 			"location":{
-				"add single":true,
+				"create single":true,
 				"select username":true,
 				"select all":true,
 				"delete single":true
+			},
+			"login": {
+				"__comm": true
+			},
+			"logout": {
+				"__comm": true
 			}
 		},
 		"building_manager":{
-			"add single":true,
-			"select all":true
+			"csrf": {
+				"select synchronizer_token": true
+			},
+			"location":{
+				"create single":true,
+				"select all":true
+			},
+			"login": {
+				"__comm": true
+			},
+			"logout": {
+				"__comm": true
+			}
 		},
 		"aggregator_and_building_manager":{
+			"csrf": {
+				"select synchronizer_token": true
+			},
 			"location":{
-				"add single":true,
+				"create single":true,
 				"delete single":true,
 				"select all":true
+			},
+			"login": {
+				"__comm": true
+			},
+			"logout": {
+				"__comm": true
 			}
 		}
-	},
-	"no action":"__no_action"
+	}
 }
