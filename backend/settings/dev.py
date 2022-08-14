@@ -43,6 +43,7 @@ MIDDLEWARE = [
     "backend.api.middleware.ipCheckMiddleware.IpCheckMiddleware",
     "backend.api.middleware.CSRFCheckMiddleware.CSRFCheckMiddleware",
     "backend.api.middleware.authCheckMiddleware.AuthCheckMiddleware",
+    "backend.api.middleware.actionCheckMiddleware.ActionCheckMiddleware",
     "backend.api.middleware.roleCheckMiddleware.RoleCheckMiddleware",
 
     'whitenoise.middleware.WhiteNoiseMiddleware',
