@@ -1,18 +1,18 @@
 from decouple import config
 
 from backend.api.keycloak.keycloak_manager import get_roles
-from backend.api.comm.role_validator import SchemeValidator
 from backend.api.config.main import MIDDLEWARE_NO_ACTION, INTERNAL_SERVER_ERROR_MESSAGE
-
+from backend.api.startup import startup_configuration
 
 class RoleCheckMiddleware:
     def __init__(self, get_response):
         self.get_response = get_response
 
         self.debug = config("DEBUG") != "0"
-        self.scheme_validator = SchemeValidator()
+        # self.scheme_validator = SchemeValidator()
 
     def __call__(self, request):
+        print("RoleCheckMiddleware")
 
         access_token = request.access_token
 
@@ -25,11 +25,9 @@ class RoleCheckMiddleware:
             print("action is empty")
             request.action_checked = MIDDLEWARE_NO_ACTION
         else:
-            print(f"has action: {request.action=}")
             roles = get_roles(access_token)
             action = request.action
-            r = self.scheme_validator.check_action(roles, action)
-            print("checking action against role", r)
+            startup_configuration.get_scheme_validator().check_action(roles, action)
             request.action_checked = MIDDLEWARE_NO_ACTION
 
         request.roles = get_roles(access_token)
