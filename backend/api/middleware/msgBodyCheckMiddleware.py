@@ -12,16 +12,13 @@ class MsgBodyCheckMiddleware:
         self.debug = config("DEBUG") != "0"
 
     def __call__(self, request):
-        if self.debug:
-            print(80 * "-")
-            print("\tMsgBodyCheckMiddleware")
+
         rejection = {"auth": {"status": False,
                               "access-token": "",
                               "refresh-token": ""},
                      "payload": {},
                      "debug": ""}
         try:
-            print(f"{request.body=}")
             body = json.loads(request.body)
             keys = list(body.keys())
 
