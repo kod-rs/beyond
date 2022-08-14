@@ -1,16 +1,25 @@
+body
+    if body is present
+
 https
     if not https
         return
 
-role
-    append role
+login
+    check user password
+
+auth
+    check tokens
 
 action
 
     if action not present
         return
 
-    check if this role can perform this action
+role
+    append role
+
+----    check if this role can perform this action
 
 msgbody
     if params not correct
@@ -21,8 +30,3 @@ ip
 
 csrf
     check
-
-auth
-    user pass | tokens
-
-role
