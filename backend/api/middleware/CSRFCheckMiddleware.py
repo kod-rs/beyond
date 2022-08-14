@@ -10,9 +10,7 @@ class CSRFCheckMiddleware:
         self.debug = config("DEBUG") != "0"
 
     def __call__(self, request):
-        # if self.debug:
-        #     print(80 * "-")
-        #     print("\tCSRFCheckMiddleware")
+        print("CSRFCheckMiddleware")
 
         ip = request.ip
         pl = get_by_ip(ip)
@@ -43,10 +41,10 @@ class CSRFCheckMiddleware:
 
         # todo refactor when impl other
         if hasattr(pl,"synchronizer_token" ) and ( (auth_credentials["synchronizer_token"] == pl.synchronizer_token) or (auth_credentials["synchronizer-token"] == pl.synchronizer_token)):
-            print("match for synchronizer_token_match")
+            print("\tmatch for synchronizer_token_match")
             request.synchronizer_token_match = True
         else:
-            print("no match for synchronizer_token_match")
+            print("\tno match for synchronizer_token_match")
             request.synchronizer_token_match = False
 
         return self.get_response(request)
