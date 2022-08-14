@@ -45,13 +45,31 @@ async function deleteLocation(i) {
         let access_token = r["access_token"]
         let refresh_token = r["refresh_token"]
 
-        const response = await api.post(`locations/`, JSON.stringify({ access_token, refresh_token, action: "location;delete single", index: i }));
+        const response = await api.post(`locations/`, JSON.stringify({ access_token, refresh_token, action: "locations;delete single", index: i }));
         // const response = await api.get(`locations/`, JSON.stringify({ access_token, refresh_token }));
         return await handleNewResponse(response);
 
     }
 
 }
+
+async function getLocationsFilterUsername() {
+
+    const r = checkTokens()
+
+    if (r["status"]) {
+
+        let access_token = r["access_token"]
+        let refresh_token = r["refresh_token"]
+
+        const response = await api.post(`locations/`, JSON.stringify({ access_token, refresh_token, action: "locations;select username" }));
+        // const response = await api.get(`locations/`, JSON.stringify({ access_token, refresh_token }));
+        return await handleNewResponse(response);
+
+    }
+
+}
+
 
 async function getAllLocations() {
 
@@ -181,5 +199,6 @@ export const apiCalls = {
     deleteLocation,
     getCSRFAuthData,
     addLocation,
-    getCoordinates
+    getCoordinates,
+    getLocationsFilterUsername
 }
