@@ -1,24 +1,17 @@
 from django.http import JsonResponse
 from rest_framework.views import APIView
 
-from backend.api.config.main import LOCATION_ACTION
-from backend.api.mode.type_validator import _check_request_data
-from backend.api.view.comm import get_auth_ok_response_template
 from backend.api.comm.comm import decode_data
+from backend.api.config.main import get_actions_for_routes, \
+    INTERNAL_SERVER_ERROR_MESSAGE
 from backend.api.cqrs_c.location import add, delete
 from backend.api.cqrs_q.location import get_all, get_all_by_username
+from backend.api.mode.type_validator import _check_request_data
 from backend.api.view.comm import check_request_contains
-from backend.api.config.main import get_actions_for_routes, INTERNAL_SERVER_ERROR_MESSAGE
-# from backend.api.c
-# .
-# permissions = {
-#     ROLES.AGGREGATOR_AND_MANAGER.value: [
-#         ACTIONS.ADD, ACTIONS.GET_ALL, ACTIONS.DELETE],
-#     ROLES.AGGREGATOR.value: [
-#         ACTIONS.ADD, ACTIONS.GET_ALL, ACTIONS.DELETE],
-#     ROLES.BUILDING_MANAGER.value: [
-#         ACTIONS.ADD, ACTIONS.GET_ALL]}
+from backend.api.view.comm import get_auth_ok_response_template
 
+
+import collections
 
 class LocationAction:
 
@@ -30,32 +23,27 @@ class LocationAction:
 
 
 class AddSingle(LocationAction):
-    """"""
 
     def perform_action(self, request):
-        print("add single")
-        print("username", request.username)
 
-        # if (not _has_permission(roles, ACTIONS.ADD)
         if (not _check_request_data(request.data)
                 or not request.synchronizer_token_match
                 or not request.body):
             print('add not valid')
             payload = {"status": False}
-
             print(request)
+            return payload
 
-        else:
-            body_content = decode_data(request.body)
+        body_content = decode_data(request.body)
 
-            status = add(
-                request.username,
-                body_content["section"],
-                body_content["type"],
-                body_content["latitude"],
-                body_content["longitude"])
+        status = add(
+            request.username,
+            body_content["section"],
+            body_content["type"],
+            body_content["latitude"],
+            body_content["longitude"])
 
-            payload = {"status": status}
+        payload = {"status": status}
         return payload
 
 
@@ -63,6 +51,8 @@ class SelectUsername(LocationAction):
 
     def perform_action(self, request):
         print("select by username")
+        # print("add single")
+        # print("username", request.username)
 
         username_locations = get_all_by_username(request.username)
         payload = {"status": True, "content": username_locations}
@@ -86,76 +76,44 @@ class DeleteSingle(LocationAction):
         print("delete single")
 
         body_content = decode_data(request.body)
-        print(f"{body_content=}")
-        index = body_content["index"]
-        status = delete(index)
-        payload = {"status": status}
-        return payload
 
-        # print("delete locations")
-
-        # roles = request.roles
-        # response = {"auth": {"status": True,
-        #                      "access-token": request.access_token,
-        #                      "refresh-token": request.refresh_token}}
-        #
-        # if not _has_permission(roles, ACTIONS.DELETE) or not pk:
-        #     response["payload"] = {"status": False}
-        #     return JsonResponse(response)
-        #
-        # print("pk present", pk)
-        #
-        # status = delete(pk)
-        #
-        # if not status:
-        #     response["payload"] = {"status": False}
-        #     return JsonResponse(response)
-        #
-        # response["payload"] = {"page": "put device"}
-        # return JsonResponse(response)
+        return {
+            "status": delete(body_content["index"])
+        }
 
 
-# class ActionPerformer:
-#
-#     def __init__(self, action):
-#         self.action = action
-#
-#     def execute_action(self, request):
-#         return self.action.perform_action(request)
 
-import collections
 def validate_actions(correct_actions, to_check_actions):
-    print(f"{correct_actions=}")
-    print(f"{to_check_actions=}")
-    return collections.Counter(correct_actions) == collections.Counter(to_check_actions)
-    # return correct_actions == to_check_actions
+    # print(f"{correct_actions=}")
+    # print(f"{to_check_actions=}")
+    return collections.Counter(correct_actions) == collections.Counter(
+        to_check_actions)
+
+
+def serialize(route, action):
+    return route + ";" + action
+
 
 class LocationsView(APIView):
-
-
 
     def __init__(self):
 
         self.route = "locations"
 
         self.actions = {
-            LOCATION_ACTION.ADD_SINGLE.value: AddSingle(),
-            LOCATION_ACTION.SELECT_ALL.value: SelectAll(),
-            LOCATION_ACTION.SELECT_BY_USERNAME.value: SelectUsername(),
-            LOCATION_ACTION.DELETE_SINGLE.value: DeleteSingle()
+            serialize(self.route, "create single"): AddSingle(),
+            serialize(self.route, "select all"): SelectAll(),
+            serialize(self.route, "select username"): SelectUsername(),
+            serialize(self.route, "delete single"): DeleteSingle()
         }
 
-        r = get_actions_for_routes()[self.route]
-
-        t = validate_actions(
-            correct_actions=r,
-            to_check_actions=list(self.actions)
-        )
-        if not t:
+        if not validate_actions(
+                correct_actions=get_actions_for_routes()[self.route],
+                to_check_actions=list(self.actions)
+        ):
             raise Exception(INTERNAL_SERVER_ERROR_MESSAGE)
 
-        # print("validating actions: ", t)
-        # print("possible actions for location:", r)
+        print(f"validated {self.route}")
 
     # def put(self, request):
     #     """update by editing existing"""
@@ -190,9 +148,7 @@ class LocationsView(APIView):
 
         response = get_auth_ok_response_template(request)
 
-        action = check_request_contains(request, "action", raise_exception=True)
-
-        print(f"{action=}")
+        action = request.action
 
         if action in self.actions:
             result = self.actions[action].perform_action(request)
@@ -267,10 +223,3 @@ class LocationsView(APIView):
     #     [print(i) for i in all_locations]
     #     response["payload"] = {"status": True, "content": all_locations}
     #     return JsonResponse(response)
-
-# def _has_permission(roles, action):
-#     roles = set(roles).intersection(set(permissions.keys()))
-#     for role in roles:
-#         if action in permissions[role]:
-#             return True
-#     return False
