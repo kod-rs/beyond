@@ -10,7 +10,7 @@ def main():
 
     same_comment = True
     comment = None
-    comment = "wip: role check rewrite"
+    comment = "ref: rewrite msgBodyCheckMiddleware"
     if same_comment:
         if not comment:
             comment = input("comment for all commits will be same:")
