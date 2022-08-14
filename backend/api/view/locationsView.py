@@ -7,7 +7,7 @@ from rest_framework.views import APIView
 from backend.api.comm.comm import decode_data
 from backend.api.config.main import ROLES, ACTIONS
 from backend.api.cqrs_c.location import add, delete
-from backend.api.cqrs_q.location import get_all
+from backend.api.cqrs_q.location import get_all, get_all_by_username
 
 
 permissions = {
@@ -17,6 +17,77 @@ permissions = {
         ACTIONS.ADD, ACTIONS.GET_ALL, ACTIONS.DELETE],
     ROLES.BUILDING_MANAGER.value: [
         ACTIONS.ADD, ACTIONS.GET_ALL]}
+
+
+class LocationAction:
+
+    def __init__(self):
+        """"""
+
+    def perform_action(self, request):
+        raise Exception("action not implemented")
+
+
+class AddSingle(LocationAction):
+    """"""
+
+    def perform_action(self, request):
+        print("add single")
+        # print("username", request.username)
+        #
+        # # if (not _has_permission(roles, ACTIONS.ADD)
+        # if (not _check_request_data(request.data)
+        #         or not request.synchronizer_token_match
+        #         or not request.body):
+        #     print('add not valid')
+        #     payload = {"status": False}
+        #
+        #     print(request)
+        #
+        # else:
+        #     body_content = decode_data(request.body)
+        #
+        #     status = add(
+        #         request.username,
+        #         body_content["section"],
+        #         body_content["type"],
+        #         body_content["latitude"],
+        #         body_content["longitude"])
+        #
+        #     payload = {"status": status}
+        # return payload
+
+
+class SelectUsername(LocationAction):
+
+    def perform_action(self, request):
+        print("select username")
+
+
+class SelectAll(LocationAction):
+    """"""
+
+    def perform_action(self, request):
+        print("select all")
+
+
+class DeleteSingle(LocationAction):
+    """"""
+
+    def perform_action(self, request):
+        print("delete single")
+
+class Context:
+
+    def __init__(self, action):
+        self.action = action
+
+    def set_action(self, action):
+        self.action = action
+
+    def execute_action(self):
+        self.action.perform_action()
+
 
 
 class LocationsView(APIView):
@@ -64,49 +135,57 @@ class LocationsView(APIView):
 
         print(action)
 
+        print()
+
         if action == ACTIONS.ADD.value:
             payload = self.location_add(request, roles)
 
-            response["payload"] = payload
-            return JsonResponse(response)
-
-        if action == ACTIONS.GET_ALL.value:
-
-            # payload = None
-            print("get locations")
-            if not _has_permission(roles, ACTIONS.GET_ALL):
-                response["payload"] = {"status": False}
-                return JsonResponse(response)
-
-            print("access granted, getting roles")
-            all_locations = get_all()
-            [print(i) for i in all_locations]
-
-            response["payload"] = {"status": True, "content": all_locations}
-
-            # response["payload"] = payload
-            print("returning location, everything ok")
-            return JsonResponse(response)
+        elif action == ACTIONS.GET_ALL.value:
+            payload = self.action_get_all(request, roles)
 
         elif action == ACTIONS.DELETE.value:
-            print(f"delete\n{roles=}")
-            if not _has_permission(roles, ACTIONS.DELETE) or not request.body:
-                response["payload"] = {"status": False}
-                return JsonResponse(response)
+            payload = self.delete_action_single(request, roles)
+
+        else:
+            payload = self.unssuported_action()
+
+        response["payload"] = payload
+        return JsonResponse(response)
+
+    def unssuported_action(self):
+        print('unsupported action')
+        payload = {"status": False}
+        return payload
+
+    def delete_action_single(self, request, roles):
+        if not _has_permission(roles, ACTIONS.DELETE) or not request.body:
+            payload = {"status": False}
+        else:
 
             body_content = decode_data(request.body)
             print(f"{body_content=}")
             index = body_content["index"]
             status = delete(index)
-            response["payload"] = {"status": status}
-            return JsonResponse(response)
+            payload = {"status": status}
+        return payload
 
-        print('unsupported action')
-        response["payload"] = {"status": False}
-        return JsonResponse(response)
+    def action_get_all(self, request, roles):
+        print("get locations")
+        if not _has_permission(roles, ACTIONS.GET_ALL):
+            payload = {"status": False}
+        else:
+            all_locations = get_all()
+            payload = {"status": True, "content": all_locations}
+        print("getting by username")
+        username_locations = get_all_by_username(request.username)
+        print("for usenrame", username_locations)
+        return payload
 
     def location_add(self, request, roles):
         payload = None
+
+        print("username", request.username)
+
         if (not _has_permission(roles, ACTIONS.ADD)
                 or not _check_request_data(request.data)
                 or not request.synchronizer_token_match
@@ -114,11 +193,15 @@ class LocationsView(APIView):
             print('add not valid')
             payload = {"status": False}
 
+            print(request)
+
             # response["payload"] = {"status": False}
         else:
             body_content = decode_data(request.body)
 
-            status = add(body_content["section"],
+            status = add(
+                request.username,
+                body_content["section"],
                          body_content["type"],
                          body_content["latitude"],
                          body_content["longitude"])
