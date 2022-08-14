@@ -16,7 +16,6 @@ class RoleCheckMiddleware:
 
         access_token = request.access_token
 
-
         if not hasattr(request, "action"):
             print("internal server error, check action middleware, "
                   "he is not adding empty action")
@@ -32,7 +31,6 @@ class RoleCheckMiddleware:
             r = self.scheme_validator.check_action(roles, action)
             print("checking action against role", r)
             request.action_checked = MIDDLEWARE_NO_ACTION
-            # print("roles", roles)
 
         request.roles = get_roles(access_token)
 
