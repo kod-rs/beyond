@@ -1,0 +1,10 @@
+{
+	"roles":{
+		"role 1":{
+			"route 1": {
+				"action 1": true
+			},
+			"route 2":{
+				"action 1":true,
+				"action 2":true,
+...
