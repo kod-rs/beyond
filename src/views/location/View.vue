@@ -18,12 +18,13 @@
 
                 <div class="row">
                     <div class="col-md-12 mb-3">
-
+                        only showing locations for this user
                         <div class="card">
                             <div class="card-header">
                                 <span><i class="bi bi-table me-2"></i></span> Locations
 
                             </div>
+
                             <div class="card-body">
                                 <div class="table-responsive">
                                     <table id="example" class="table table-striped data-table" style="width: 100%">
@@ -87,27 +88,13 @@ export default {
         };
     },
     mounted() {
-        // refreshLocations()
-        apiCalls.getAllLocations().then(res => {
-            console.log("new locations");
-            console.log(res);
-            this.modelContent = res["payload"]["content"];
-            console.log(this.modelContent);
-        }, error => {
-            console.log("err", error);
-            this.error = "invalid credentials";
-            // this.error = error;
-            this.loading = false;
-        });
+        this.refreshLocations()
     },
     methods: {
         refreshLocations() {
             console.log("refreshing locations");
-            apiCalls.getAllLocations().then(res => {
-                console.log("new locations");
-                console.log(res);
+            apiCalls.getLocationsFilterUsername().then(res => {
                 this.modelContent = res["payload"]["content"];
-                console.log(this.modelContent);
             }, error => {
                 console.log("err", error);
                 this.error = "invalid credentials";
