@@ -1,0 +1,24 @@
+{
+	"roles":{
+		"aggregator":{
+			"location":{
+				"add single":true,
+				"select username":true,
+				"select all":true,
+				"delete single":true
+			}
+		},
+		"building_manager":{
+			"add single":true,
+			"select all":true
+		},
+		"aggregator_and_building_manager":{
+			"location":{
+				"add single":true,
+				"delete single":true,
+				"select all":true
+			}
+		}
+	},
+	"no action":"__no_action"
+}
