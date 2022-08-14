@@ -4,7 +4,7 @@
 			"csrf": {
 				"select synchronizer_token": true
 			},
-			"location":{
+			"locations":{
 				"create single":true,
 				"select username":true,
 				"select all":true,
@@ -21,9 +21,10 @@
 			"csrf": {
 				"select synchronizer_token": true
 			},
-			"location":{
+			"locations":{
 				"create single":true,
-				"select all":true
+							"delete single":true,
+	"select all":true
 			},
 			"login": {
 				"__comm": true
@@ -36,7 +37,7 @@
 			"csrf": {
 				"select synchronizer_token": true
 			},
-			"location":{
+			"locations":{
 				"create single":true,
 				"delete single":true,
 				"select all":true
