@@ -1,0 +1,28 @@
+https
+    if not https
+        return
+
+role
+    append role
+
+action
+
+    if action not present
+        return
+
+    check if this role can perform this action
+
+msgbody
+    if params not correct
+        return
+
+ip
+    check brute force
+
+csrf
+    check
+
+auth
+    user pass | tokens
+
+role
