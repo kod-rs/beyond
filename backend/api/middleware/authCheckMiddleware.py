@@ -81,6 +81,7 @@ class AuthCheckMiddleware:
             )
 
             is_validated = res["is_valid"]
+            username = res["preferred_username"]
 
         if not is_validated:
 
@@ -96,5 +97,6 @@ class AuthCheckMiddleware:
         request.action = action
         request.access_token = access_token
         request.refresh_token = refresh_token
+        request.username = username
 
         return self.get_response(request)
