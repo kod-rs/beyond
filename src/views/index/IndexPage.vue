@@ -1,8 +1,6 @@
 <template>
 
     <div class="container-fluid">
-
-
         <div class="row">
             <div class="col-sm">
                 <div class="row">
@@ -36,13 +34,16 @@
             <div class="col-sm">
                 <div class="row">
                     <div id="map" class="map" tabindex="0" style="width: 90%; height: 90%; 
-                position:fixed; 
-                border: 1px solid #ccc;">
+                        position:fixed; 
+                            border: 1px solid #ccc;     ">
                     </div>
-
-                    <div style="display: none;">
+                    <div id="popup" class="ol-popup">
+                        <a href="#" id="popup-closer" class="ol-popup-closer"></a>
+                        <div id="popup-content"></div>
+                    </div>
+                    <!-- <div style="display: none;">
                         <div id="popup" title="Selected location"></div>
-                    </div>
+                    </div> -->
                 </div>
             </div>
             <div class="col-sm">
@@ -52,6 +53,56 @@
     </div>
 
 </template>
+
+<style>
+.ol-popup {
+    position: absolute;
+    background-color: white;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+    padding: 15px;
+    border-radius: 10px;
+    border: 1px solid #cccccc;
+    bottom: 12px;
+    left: -50px;
+    min-width: 280px;
+}
+
+.ol-popup:after,
+.ol-popup:before {
+    top: 100%;
+    border: solid transparent;
+    content: " ";
+    height: 0;
+    width: 0;
+    position: absolute;
+    pointer-events: none;
+}
+
+.ol-popup:after {
+    border-top-color: white;
+    border-width: 10px;
+    left: 48px;
+    margin-left: -10px;
+}
+
+.ol-popup:before {
+    border-top-color: #cccccc;
+    border-width: 11px;
+    left: 48px;
+    margin-left: -11px;
+}
+
+.ol-popup-closer {
+    text-decoration: none;
+    position: absolute;
+    top: 2px;
+    right: 8px;
+}
+
+.ol-popup-closer:after {
+    content: "✖";
+}
+</style>
 
 <script>
 
@@ -70,7 +121,8 @@ import { Vector as VectorLayer } from 'ol/layer';
 import GeoJSON from 'ol/format/GeoJSON';
 import { Stroke } from 'ol/style';
 
-import $ from 'jquery'
+// import $ from 'jquery';
+// window.$ = window.jQuery = require('jquery');
 import LocationSelector from '../../components/map/LocationSelector.vue'; //Optional default CSS
 
 import marker2 from "/public/assets/markers/baseline_place_black_24dp.png"
@@ -189,6 +241,7 @@ export default {
                 });
 
                 let icon = new Icon({
+                    // color: 'rgba(255, 0, 0, .5)',
                     src: marker2,
                     scale: 0.2,
                 })
@@ -253,25 +306,31 @@ export default {
 
 
             map.on('click', (evt) => {
+                // const coordinate = evt.coordinate;
+                // const hdms = toStringHDMS(toLonLat(coordinate));
+
+                // content.innerHTML = '<p>You clicked here:</p><code>' + hdms + '</code>';
+                // overlay.setPosition(coordinate);
 
                 if (this.addLocationEnabled) {
-                    const element = popup.getElement();
+                    // const element = popup.getElement();
                     const coordinate = evt.coordinate;
                     const hdms = toStringHDMS(toLonLat(coordinate));
 
-                    $(element).popover('dispose');
-                    popup.setPosition(coordinate);
-                    $(element).popover({
-                        container: element,
-                        placement: 'top',
-                        animation: false,
-                        html: true,
-                        content: '<p>Selected:</p><code>' + hdms + '</code>',
-                    });
-                    $(element).popover('show');
 
-                    console.log("clicked", hdms, coordinate)
-                    console.log(toLonLat(coordinate))
+                    // $(element).popover('dispose');
+                    // popup.setPosition(coordinate);
+                    // $(element).popover({
+                    //     container: element,
+                    //     placement: 'top',
+                    //     animation: false,
+                    //     html: true,
+                    //     content: '<p>Selected:</p><code>' + hdms + '</code>',
+                    // });
+                    // $(element).popover('show');
+
+                    console.log("clicked old", hdms, coordinate, toLonLat(coordinate))
+
                     document.querySelector("#lat_tmp").innerHTML = coordinate[0]
                     document.querySelector("#lon_tmp").innerHTML = coordinate[1]
 
@@ -369,8 +428,61 @@ export default {
 
     async mounted() {
 
+
+        const container = document.getElementById('popup');
+        const content = document.getElementById('popup-content');
+        const closer = document.getElementById('popup-closer');
+
+        const overlay = new Overlay({
+            element: container,
+            // autoPan: {
+            //     animation: {
+            //         duration: 250,
+            //     },
+            // },
+        });
+
+
+        closer.onclick = function () {
+            overlay.setPosition(undefined);
+            closer.blur();
+            return false;
+        };
+
+
+
+
         const map = this.initMap();
         this.map = map;
+
+        this.map.addOverlay(overlay);
+
+        // from tile clicker
+        map.on('singleclick', function (evt) {
+            const coordinate = evt.coordinate;
+            const hdms = toStringHDMS(toLonLat(coordinate));
+            // console.log("clicked new impl", hdms)
+            console.log("clicked new", hdms, coordinate, toLonLat(coordinate))
+
+            // $(element).popover('dispose');
+            // popup.setPosition(coordinate);
+            // $(element).popover({
+            //     container: element,
+            //     placement: 'top',
+            //     animation: false,
+            //     html: true,
+            //     content: '<p>Selected:</p><code>' + hdms + '</code>',
+            // });
+            // $(element).popover('show');
+
+
+
+            content.innerHTML = '<p>You clicked here:</p><code>' + hdms + '</code>';
+            overlay.setPosition(coordinate);
+            // overlay.set
+        });
+
+
 
         // todo enable
         this.$refs.userCoordinatesManager.enableCoordinates();
