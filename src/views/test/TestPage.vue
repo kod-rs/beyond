@@ -35,17 +35,13 @@ export default {
     data() {
 
     },
-    async created() {
-
-
-    },
     mounted() {
 
 
         /**
          * Create the map.
          *   
-                 */
+        */
         const map = new Map({
             layers: [
                 new TileLayer({
@@ -53,7 +49,6 @@ export default {
                 }),
 
             ],
-            // overlays: [overlay],
             target: 'map',
             view: new View({
                 center: [0, 0],
@@ -67,8 +62,7 @@ export default {
          * Add a click handler to the map to render the popup.
          */
         map.on('singleclick', (evt) => {
-            // console.log("clicked", evt)
-            //     console.log("clicked", evt)
+
             const coordinate = evt.coordinate;
             const hdms = toStringHDMS(toLonLat(coordinate));
 
@@ -76,8 +70,7 @@ export default {
             console.log("set postiion,", coordinate)
             this.$refs.mappopup.setText(hdms);
             this.$refs.mappopup.setPosition(coordinate);
-            //     content.innerHTML = '<p>You clicked here:</p><code>' + hdms + '</code>';
-            //     overlay.setPosition(coordinate);
+
         });
     }
 
