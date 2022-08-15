@@ -37,13 +37,9 @@
                         position:fixed; 
                             border: 1px solid #ccc;     ">
                     </div>
-                    <div id="popup" class="ol-popup">
-                        <a href="#" id="popup-closer" class="ol-popup-closer"></a>
-                        <div id="popup-content"></div>
-                    </div>
-                    <!-- <div style="display: none;">
-                        <div id="popup" title="Selected location"></div>
-                    </div> -->
+
+                    <MapPopup ref="mappopup"></MapPopup>
+
                 </div>
             </div>
             <div class="col-sm">
@@ -54,55 +50,7 @@
 
 </template>
 
-<style>
-.ol-popup {
-    position: absolute;
-    background-color: white;
-    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
-    padding: 15px;
-    border-radius: 10px;
-    border: 1px solid #cccccc;
-    bottom: 12px;
-    left: -50px;
-    min-width: 280px;
-}
 
-.ol-popup:after,
-.ol-popup:before {
-    top: 100%;
-    border: solid transparent;
-    content: " ";
-    height: 0;
-    width: 0;
-    position: absolute;
-    pointer-events: none;
-}
-
-.ol-popup:after {
-    border-top-color: white;
-    border-width: 10px;
-    left: 48px;
-    margin-left: -10px;
-}
-
-.ol-popup:before {
-    border-top-color: #cccccc;
-    border-width: 11px;
-    left: 48px;
-    margin-left: -11px;
-}
-
-.ol-popup-closer {
-    text-decoration: none;
-    position: absolute;
-    top: 2px;
-    right: 8px;
-}
-
-.ol-popup-closer:after {
-    content: "✖";
-}
-</style>
 
 <script>
 
@@ -120,6 +68,15 @@ import VectorSource from 'ol/source/Vector';
 import { Vector as VectorLayer } from 'ol/layer';
 import GeoJSON from 'ol/format/GeoJSON';
 import { Stroke } from 'ol/style';
+
+// import Map from 'ol/Map';
+
+// import TileLayer from 'ol/layer/Tile';
+// import View from 'ol/View';
+
+// import OSM from 'ol/source/OSM';
+// import { toLonLat } from 'ol/proj';
+// import { toStringHDMS } from 'ol/coordinate';
 
 // import $ from 'jquery';
 // window.$ = window.jQuery = require('jquery');
@@ -156,8 +113,6 @@ export default {
         userTypedLocation() {
             console.log("user location")
         },
-
-
         drawUserLocation(lat, lon) {
 
             console.log("draw user location", lat, lon)
@@ -427,61 +382,25 @@ export default {
     },
 
     async mounted() {
-
-
-        const container = document.getElementById('popup');
-        const content = document.getElementById('popup-content');
-        const closer = document.getElementById('popup-closer');
-
-        const overlay = new Overlay({
-            element: container,
-            // autoPan: {
-            //     animation: {
-            //         duration: 250,
-            //     },
-            // },
-        });
-
-
-        closer.onclick = function () {
-            overlay.setPosition(undefined);
-            closer.blur();
-            return false;
-        };
-
-
-
-
         const map = this.initMap();
         this.map = map;
 
-        this.map.addOverlay(overlay);
+        map.addOverlay(this.$refs.mappopup.getOverlay())
 
-        // from tile clicker
-        map.on('singleclick', function (evt) {
+        /**
+         * Add a click handler to the map to render the popup.
+         */
+        map.on('singleclick', (evt) => {
+
             const coordinate = evt.coordinate;
             const hdms = toStringHDMS(toLonLat(coordinate));
-            // console.log("clicked new impl", hdms)
-            console.log("clicked new", hdms, coordinate, toLonLat(coordinate))
 
-            // $(element).popover('dispose');
-            // popup.setPosition(coordinate);
-            // $(element).popover({
-            //     container: element,
-            //     placement: 'top',
-            //     animation: false,
-            //     html: true,
-            //     content: '<p>Selected:</p><code>' + hdms + '</code>',
-            // });
-            // $(element).popover('show');
+            console.log("log coord", hdms)
+            console.log("set postiion,", coordinate)
+            this.$refs.mappopup.setText(hdms);
+            this.$refs.mappopup.setPosition(coordinate);
 
-
-
-            content.innerHTML = '<p>You clicked here:</p><code>' + hdms + '</code>';
-            overlay.setPosition(coordinate);
-            // overlay.set
         });
-
 
 
         // todo enable
