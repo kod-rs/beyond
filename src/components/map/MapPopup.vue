@@ -1,3 +1,8 @@
+/**
+https://openlayers.org/en/latest/examples/popup.html
+ */
+
+
 <template>
     <div id="popup" class="ol-popup">
         <a href="#" id="popup-closer" class="ol-popup-closer"></a>
@@ -58,20 +63,6 @@ export default {
             closer.blur();
             return false;
         };
-
-        // /**
-        //  * Add a click handler to the map to render the popup.
-        //  */
-        // map.on('singleclick', function (evt) {
-        //     console.log("clicked", evt)
-        //     const coordinate = evt.coordinate;
-        //     const hdms = toStringHDMS(toLonLat(coordinate));
-
-        //     content.innerHTML = '<p>You clicked here:</p><code>' + hdms + '</code>';
-        //     overlay.setPosition(coordinate);
-        // });
-
-
     }
 }
 
