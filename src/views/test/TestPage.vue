@@ -1,6 +1,3 @@
-/**
-https://openlayers.org/en/latest/examples/popup.html
- */
 
 <template>
 
