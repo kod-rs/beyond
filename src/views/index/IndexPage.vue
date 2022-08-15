@@ -58,7 +58,6 @@ import Map from 'ol/Map';
 import OSM from 'ol/source/OSM';
 import TileLayer from 'ol/layer/Tile';
 import View from 'ol/View';
-import Overlay from 'ol/Overlay';
 import { toStringHDMS } from 'ol/coordinate';
 import { fromLonLat, toLonLat } from 'ol/proj';
 import Point from 'ol/geom/Point';
@@ -69,25 +68,10 @@ import { Vector as VectorLayer } from 'ol/layer';
 import GeoJSON from 'ol/format/GeoJSON';
 import { Stroke } from 'ol/style';
 
-// import Map from 'ol/Map';
-
-// import TileLayer from 'ol/layer/Tile';
-// import View from 'ol/View';
-
-// import OSM from 'ol/source/OSM';
-// import { toLonLat } from 'ol/proj';
-// import { toStringHDMS } from 'ol/coordinate';
-
-// import $ from 'jquery';
-// window.$ = window.jQuery = require('jquery');
 import LocationSelector from '../../components/map/LocationSelector.vue'; //Optional default CSS
-
 import marker2 from "/public/assets/markers/baseline_place_black_24dp.png"
 import userMarker from "/public/assets/markers/geolocation_marker.png"
-
-
 import countriesjson from "/public/assets/layers/countries.json";
-
 import { apiCalls } from '../../scripts/api';
 
 
@@ -252,39 +236,23 @@ export default {
                 view.setZoom(zoom + 1);
             };
         },
-        activatePopup(map,) {
+        activatePopup() {
 
-            const popup = new Overlay({
-                element: document.getElementById('popup'),
-            });
-            map.addOverlay(popup);
+            this.map.addOverlay(this.$refs.mappopup.getOverlay())
 
-
-            map.on('click', (evt) => {
-                // const coordinate = evt.coordinate;
-                // const hdms = toStringHDMS(toLonLat(coordinate));
-
-                // content.innerHTML = '<p>You clicked here:</p><code>' + hdms + '</code>';
-                // overlay.setPosition(coordinate);
+            /**
+             * Add a click handler to the map to render the popup.
+             */
+            this.map.on('singleclick', (evt) => {
 
                 if (this.addLocationEnabled) {
-                    // const element = popup.getElement();
                     const coordinate = evt.coordinate;
                     const hdms = toStringHDMS(toLonLat(coordinate));
 
-
-                    // $(element).popover('dispose');
-                    // popup.setPosition(coordinate);
-                    // $(element).popover({
-                    //     container: element,
-                    //     placement: 'top',
-                    //     animation: false,
-                    //     html: true,
-                    //     content: '<p>Selected:</p><code>' + hdms + '</code>',
-                    // });
-                    // $(element).popover('show');
-
-                    console.log("clicked old", hdms, coordinate, toLonLat(coordinate))
+                    console.log("log coord", hdms)
+                    console.log("set postiion,", coordinate)
+                    this.$refs.mappopup.setText(hdms);
+                    this.$refs.mappopup.setPosition(coordinate);
 
                     document.querySelector("#lat_tmp").innerHTML = coordinate[0]
                     document.querySelector("#lon_tmp").innerHTML = coordinate[1]
@@ -302,7 +270,7 @@ export default {
                 zoom: 2,
             });
 
-            return new Map({
+            this.map = new Map({
                 layers: [
                     new TileLayer({
                         source: new OSM(),
@@ -379,34 +347,17 @@ export default {
                 displayFeatureInfo(evt.pixel);
             });
         },
+
     },
 
     async mounted() {
-        const map = this.initMap();
-        this.map = map;
 
-        map.addOverlay(this.$refs.mappopup.getOverlay())
+        this.initMap();
 
-        /**
-         * Add a click handler to the map to render the popup.
-         */
-        map.on('singleclick', (evt) => {
-
-            const coordinate = evt.coordinate;
-            const hdms = toStringHDMS(toLonLat(coordinate));
-
-            console.log("log coord", hdms)
-            console.log("set postiion,", coordinate)
-            this.$refs.mappopup.setText(hdms);
-            this.$refs.mappopup.setPosition(coordinate);
-
-        });
-
+        this.activatePopup()
 
         // todo enable
         this.$refs.userCoordinatesManager.enableCoordinates();
-
-        this.activatePopup(this.map)
 
         const featuresApi = await this.getExistingLocations();
 
