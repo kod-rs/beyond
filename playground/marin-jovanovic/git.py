@@ -10,7 +10,7 @@ def main():
 
     same_comment = True
     comment = None
-    comment = "add: add locations from db"
+    comment = "fix: add map popup isolated example"
     if same_comment:
         if not comment:
             comment = input("comment for all commits will be same:")
