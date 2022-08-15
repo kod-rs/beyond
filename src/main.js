@@ -18,11 +18,12 @@ import InputAutocomplete from './components/form/InputAutocomplete.vue';
 import NavigationTemplate from './components/navigation/NavigationTemplate.vue'
 import TopNavigationBar from "./components/navigation/TopNavigationBar.vue";
 import UserCoordinates from "./components/map/UserCoordinates.vue"
+import MapPopup from "./components/map/MapPopup.vue"
+
 
 import OpenLayersMap from 'vue3-openlayers'
 import 'vue3-openlayers/dist/vue3-openlayers.css'
 const sts = require('strict-transport-security');
-
 
 const globalSTS = sts.getSTS({ 'max-age': { 'days': 10 }, 'includeSubDomains': true });
 
@@ -36,6 +37,7 @@ app
     .component('NavigationTemplate', NavigationTemplate)
     .component("TopNavigationBar", TopNavigationBar)
     .component("UserCoordinates", UserCoordinates)
+    .component("MapPopup", MapPopup)
 
 console.log("src index")
 
