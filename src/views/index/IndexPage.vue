@@ -158,13 +158,19 @@ export default {
             this.addLocationEnabled = true
             console.log("enabled", this.addLocationEnabled)
         },
-        getExistingLocations() {
+        async getExistingLocations() {
 
-            apiCalls.getAllLocations().then(res => {
-                console.log("new locations");
-                console.log(res);
-                this.modelContent = res["payload"]["content"];
-                console.log(this.modelContent);
+            return apiCalls.getAllLocations().then(res => {
+                let locations = res.payload.content;
+
+                const featuresApi = {};
+
+                locations.forEach(i => {
+                    featuresApi[i.pk] = { lat: i.latitude, lon: i.longitude }
+                })
+
+                return featuresApi;
+
             }, error => {
                 console.log("err", error);
                 this.error = "invalid credentials";
@@ -172,27 +178,6 @@ export default {
                 this.loading = false;
             });
 
-
-            // todo extract as api
-            const featuresApi = {};
-
-            [
-                { name: "n 1", lat: 1, lon: 2 },
-                { name: "n 2", lat: 3, lon: 4 },
-                { name: "a", lat: 1, lon: 21 },
-                { name: "b 2", lat: 3, lon: 25 },
-                { name: "d 1", lat: 7, lon: 11 },
-                { name: "f 2", lat: 5, lon: 5 },
-                { name: "g 1", lat: 6, lon: 3 },
-                { name: "w 2", lat: 12, lon: 4 },
-                { name: "d 1", lat: 63, lon: 3 },
-                { name: "a 2", lat: 1, lon: 25 }
-
-            ].forEach(i => {
-                featuresApi[i.name] = { lat: i.lat, lon: i.lon }
-            })
-
-            return featuresApi;
         },
         drawLocations(map, featuresApi) {
             let features = []
@@ -382,7 +367,7 @@ export default {
         },
     },
 
-    mounted() {
+    async mounted() {
 
         const map = this.initMap();
         this.map = map;
@@ -392,7 +377,7 @@ export default {
 
         this.activatePopup(this.map)
 
-        const featuresApi = this.getExistingLocations();
+        const featuresApi = await this.getExistingLocations();
 
         this.drawLocations(this.map, featuresApi);
 
