@@ -1,4 +1,7 @@
 <template>
+
+    <canvas id="canvas1"></canvas>
+
     <section class="vh-100" style="background-image: url('assets/login_bg.jpg');">
         <div class="container py-5 h-100">
             <div class="row d-flex justify-content-center align-items-center h-100">
@@ -78,18 +81,30 @@
     </section>
 </template>
 
+    <style>
+    #canvas1 {
+        border: 3px solid black;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        height: 100%;
+        width: 100%;
+    }
+    </style>
 
 
 
 <script>
 import { router } from '../../scripts/router';
 import { apiCalls } from '../../scripts/api';
+import { runClouds } from '../../scripts/clouds';
 
 export default {
     data() {
         return {
             username: 'a',
-            password: '',
+            password: 'a',
             submitted: false,
             loading: false,
             returnUrl: '',
@@ -100,6 +115,10 @@ export default {
         apiCalls.logout();
         this.returnUrl = this.$route.query.returnUrl || '/';
     },
+    mounted() {
+        runClouds();
+    },
+
     methods: {
         handleSubmit() {
             this.submitted = true;
