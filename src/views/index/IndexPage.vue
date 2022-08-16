@@ -4,6 +4,9 @@
         <div class="row">
             <div class="col-sm">
                 <div class="row">
+                    red - your
+                    <br>
+                    yellow - other
                     <LocationSelector>
 
                     </LocationSelector>
@@ -69,7 +72,13 @@ import GeoJSON from 'ol/format/GeoJSON';
 import { Stroke } from 'ol/style';
 
 import LocationSelector from '../../components/map/LocationSelector.vue'; //Optional default CSS
-import marker2 from "/public/assets/markers/baseline_place_black_24dp.png"
+// import marker2 from "/public/assets/markers/baseline_place_black_24dp.png"
+// import marker2 from "/public/assets/markers/grey_marker.svg"
+import yellow_marker from "/public/assets/markers/yellow_marker.svg"
+import red_marker from "/public/assets/markers/red_marker.svg"
+// import grey_marker from "/public/assets/markers/grey_marker.svg"
+
+
 import userMarker from "/public/assets/markers/geolocation_marker.png"
 import countriesjson from "/public/assets/layers/countries.json";
 import { apiCalls } from '../../scripts/api';
@@ -88,15 +97,11 @@ export default {
             userLocationLayer: undefined,
             canSend: false,
             view: undefined,
-            vectorSource: undefined,
             countriesLayer: undefined,
 
         }
     },
     methods: {
-        userTypedLocation() {
-            console.log("user location")
-        },
         drawUserLocation(lat, lon) {
 
             console.log("draw user location", lat, lon)
@@ -149,41 +154,22 @@ export default {
             this.addLocationEnabled = true
             console.log("enabled", this.addLocationEnabled)
         },
-        async getExistingLocations() {
-
-            return apiCalls.getAllLocations().then(res => {
-                let locations = res.payload.content;
-
-                const featuresApi = {};
-
-                locations.forEach(i => {
-                    featuresApi[i.pk] = { lat: i.latitude, lon: i.longitude }
-                })
-
-                return featuresApi;
-
-            }, error => {
-                console.log("err", error);
-                this.error = "invalid credentials";
-                // this.error = error;
-                this.loading = false;
-            });
-
-        },
-        drawLocations(map, featuresApi) {
+        drawLocations(featuresApi, marker) {
             let features = []
+            console.log("marker", marker)
+
+            let icon = new Icon({
+                src: marker,
+                scale: 0.9,
+            })
 
             for (const [key, value] of Object.entries(featuresApi)) {
+
                 console.log(key);
+
                 let f = new Feature({
                     geometry: new Point(fromLonLat([value.lat, value.lon])),
                 });
-
-                let icon = new Icon({
-                    // color: 'rgba(255, 0, 0, .5)',
-                    src: marker2,
-                    scale: 0.2,
-                })
 
                 f.setStyle(
                     new Style({
@@ -193,18 +179,15 @@ export default {
 
                 features.push(f)
 
-
             }
 
-            this.vectorSource = new VectorSource({
-                features: features,
-            });
-
             const vectorLayer = new VectorLayer({
-                source: this.vectorSource,
+                source: new VectorSource({
+                    features: features,
+                })
             });
 
-            map.addLayer(vectorLayer)
+            this.map.addLayer(vectorLayer)
         },
         addLocationPoint() {
             const london = new Feature({
@@ -347,7 +330,27 @@ export default {
                 displayFeatureInfo(evt.pixel);
             });
         },
+        prepareLocationsForDrawing(locations) {
 
+
+            // var obj = { 'a': 1, 'b': 2, 'c': 3 };
+
+            // let newObj = Object.fromEntries(Object.entries(obj).map(([k, v]) => [k, v * v]));
+
+            // console.log(newObj)
+
+
+
+
+            const featuresApi = {};
+
+            locations.forEach(i => {
+                featuresApi[i.pk] = { lat: i.latitude, lon: i.longitude }
+            })
+
+            return featuresApi;
+
+        }
     },
 
     async mounted() {
@@ -359,9 +362,19 @@ export default {
         // todo enable
         this.$refs.userCoordinatesManager.enableCoordinates();
 
-        const featuresApi = await this.getExistingLocations();
+        this.drawLocations(
+            this.prepareLocationsForDrawing(
+                (await apiCalls.getAllLocations()).payload.content
+            ),
+            yellow_marker
+        );
 
-        this.drawLocations(this.map, featuresApi);
+        this.drawLocations(
+            this.prepareLocationsForDrawing(
+                (await apiCalls.getLocationsFilterUsername()).payload.content
+            ),
+            red_marker
+        );
 
         this.zoomSetupButtons(this.map)
 
