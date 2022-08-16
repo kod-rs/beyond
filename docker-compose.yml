@@ -14,6 +14,7 @@ services:
       - postgres_data:/var/lib/postgresql/data/
   web:
     image: beyond
+    build: ./django-docker/
     command: ./run_django.sh
     depends_on:
       - db
