@@ -11,6 +11,7 @@ def main():
     same_comment = True
     comment = None
     comment = "wip:"
+    comment = "init: login clouds bg"
     if same_comment:
         if not comment:
             comment = input("comment for all commits will be same:")
