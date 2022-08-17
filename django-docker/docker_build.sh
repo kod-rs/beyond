@@ -1,1 +1,1 @@
-sudo docker build . -t beyond
+sudo docker build . -t django
