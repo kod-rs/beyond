@@ -1,8 +1,9 @@
 version: "3.9"
 services:
   db:
-    image: postgres:14.1-alpine
-    restart: always
+    image: postgres
+    build: ./postgres-docker/
+    command: ./run_psql.sh
     environment:
       - POSTGRES_USER=ps
       - POSTGRES_PASSWORD=123
@@ -10,8 +11,6 @@ services:
       - POSTGRES_HOST_AUTH_METHOD=trust
     ports:
       - '5432:5432'
-    volumes:
-      - postgres_data:/var/lib/postgresql/data/
   keycloak:
     image: keycloak
     build: ./keycloak-docker/
@@ -32,5 +31,3 @@ services:
     command: ./run_vue.sh
     ports:
       - "3000:3000"
-volumes:
-  postgres_data: 
