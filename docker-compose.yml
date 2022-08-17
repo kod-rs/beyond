@@ -26,5 +26,11 @@ services:
       - db
     ports:
       - "8000:8000"
+  vue:
+    image: vue
+    build: ./vue-docker/
+    command: ./run_vue.sh
+    ports:
+      - "3000:3000"
 volumes:
   postgres_data: 
