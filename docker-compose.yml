@@ -12,8 +12,14 @@ services:
       - '5432:5432'
     volumes:
       - postgres_data:/var/lib/postgresql/data/
-  web:
-    image: beyond
+  keycloak:
+    image: keycloak
+    build: ./keycloak-docker/
+    command: ./run_keycloak.sh
+    ports:
+      - "8080:8080"
+  django:
+    image: django
     build: ./django-docker/
     command: ./run_django.sh
     depends_on:
