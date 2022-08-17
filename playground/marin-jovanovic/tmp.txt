@@ -1,0 +1,38 @@
+menader jedan portfolio
+agregator vise portfolio
+
+dva menadera ne mogu imat isti portfolio
+dva agregatora mogu imat isti portfolio
+agregator i menader mogu imat isti portfolio
+
+svi mogu radit CRUD
+nad brisanjem mora bit are you sure
+ako se obrise treba bit backup
+
+agregator
+	jedan ili vise lokacija po portfoliu
+menader
+	jedan do par vise lokacija po portfoliu
+
+jedna lokacija moze bit u vise portfolia (od istog menadera, u jednom portfoliu od menadera i u vise potfolia od adgregatora)
+lokacija
+	CRUD
+	podaci o pojedinoj lokaciji
+	temperatura / + timestamp
+		samo dohvacanje (api)
+	potrosnja - vati ili vat sati / timestamp uz svaku vrijednost
+		samo dohvacanje (api)
+
+
+
+
+//     headers: {
+//       "X-Powered-By": 'Beyond',
+//       "Cache-Control": "no-cache, no-store, must-revalidate",
+//       "Pragma": "no-cache",
+//       "Strict-Transport-Security": "max-age=31536000; includeSubDomains"
+//     },
+
+
+
+
