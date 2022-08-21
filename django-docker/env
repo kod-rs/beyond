@@ -1,7 +1,7 @@
 DB_NAME=beyond
 DB_USER=ps
 DB_PASSWORD=123
-DB_HOST=db
+DB_HOST=localhost
 DB_PORT=5432
 client_secret=k6eHy1JnzCZPW8EGCv1z8ifCDogTqAlM
 KEYCLOAK_URL=http://localhost:8080/realms/beyond/protocol/openid-connect/
@@ -13,4 +13,4 @@ MAX_BRUTE_ATTEMPTS=50000
 DEBUG=1
 HTTPS_ONLY=0
 ENVIRONMENT=DEVELOPMENT
-HOST=localhost:8000
+HOST=0.0.0.0:8000

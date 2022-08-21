@@ -12,7 +12,7 @@ SETTINGS_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 BASE_DIR = os.path.dirname(SETTINGS_DIR)
 SECRET_KEY = config("SECRET_KEY")
 DEBUG = True
-ALLOWED_HOSTS = ['localhost', 'db']
+ALLOWED_HOSTS = ['localhost']
 SITE_ID = 1
 
 INSTALLED_APPS = [

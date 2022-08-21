@@ -16,6 +16,7 @@ RUN apt-get install -y libnss3-tools
 RUN apt-get install -y python3.10-dev
 
 ADD backend backend
+COPY wait-for-it.sh wait-for-it.sh
 COPY env env
 COPY manage.py manage.py
 COPY Pipfile Pipfile
@@ -26,4 +27,4 @@ COPY run_django.sh run_django.sh
 EXPOSE 8000
 
 RUN pip install -r requirements.pip.txt
-CMD ["python3", "manage.py", "runserver"]
+CMD ["./run_django.sh"]

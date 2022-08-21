@@ -1,1 +1,1 @@
-sudo docker run -p 3000:3000 -t -i django
+sudo docker run -p 8000:8000 -t -i django

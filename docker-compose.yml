@@ -10,7 +10,8 @@ services:
       - POSTGRES_DB=beyond
       - POSTGRES_HOST_AUTH_METHOD=trust
     ports:
-      - '5432:5432'
+      - '127.0.0.1:5432:5432'
+    network_mode: host
   keycloak:
     image: keycloak
     build: ./keycloak-docker/
@@ -21,10 +22,9 @@ services:
     image: django
     build: ./django-docker/
     command: ./run_django.sh
-    depends_on:
-      - db
     ports:
-      - "8000:8000"
+      - "127.0.0.1:8000:8000"
+    network_mode: host
   vue:
     image: vue
     build: ./vue-docker/
