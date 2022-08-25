@@ -33,7 +33,6 @@ class AuthCheckMiddleware:
                 auth_credentials[k] = body_content[k]
 
         res = check_tokens(
-            # *auth_credentials
             auth_credentials["access_token"],
             auth_credentials["refresh_token"]
         )
