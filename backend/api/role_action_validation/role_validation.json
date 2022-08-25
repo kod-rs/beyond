@@ -1,52 +1,62 @@
 {
 	"roles":{
 		"aggregator":{
-			"csrf": {
-				"select synchronizer_token": true
+			"portfolio": {
+				"select username":true,
+				"create single":true,
+				"delete single":true,
+				"update username": true
+			},
+			"csrf":{
+				"select synchronizer_token":true
 			},
 			"locations":{
 				"create single":true,
 				"select username":true,
-				"select all":true,
+				"select_all":true,
 				"delete single":true
 			},
-			"login": {
-				"__comm": true
+			"login":{
+				"__comm":true
 			},
-			"logout": {
-				"__comm": true
+			"logout":{
+				"__comm":true
 			}
 		},
 		"building_manager":{
-			"csrf": {
-				"select synchronizer_token": true
-			},
-			"locations":{
-				"create single":true,
-							"delete single":true,
-	"select all":true
-			},
-			"login": {
-				"__comm": true
-			},
-			"logout": {
-				"__comm": true
-			}
-		},
-		"aggregator_and_building_manager":{
-			"csrf": {
-				"select synchronizer_token": true
+			"portfolio": {
+				"select username":true
+			},	"csrf":{
+				"select synchronizer_token":true
 			},
 			"locations":{
 				"create single":true,
 				"delete single":true,
 				"select all":true
 			},
-			"login": {
-				"__comm": true
+			"login":{
+				"__comm":true
 			},
-			"logout": {
-				"__comm": true
+			"logout":{
+				"__comm":true
+			}
+		},
+		"aggregator_and_building_manager":{
+			"portfolio": {
+				"select username":true
+			},	"csrf":{
+				"select synchronizer_token":true
+			},
+			"locations":{
+				"create single":true,
+				"delete single":true,
+				"select all":true
+			},
+			"login":{
+				"__comm":true
+			},
+			"logout":{
+				"__comm":true
 			}
 		}
 	}
