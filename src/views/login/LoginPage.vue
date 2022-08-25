@@ -10,7 +10,6 @@
                         <div class="row g-0">
                             <div class="col-md-6 col-lg-5 d-none d-md-block">
 
-
                                 <img src="assets/login_profile.jpg" alt="login form" class="img-fluid"
                                     style="border-radius: 1rem 0 0 1rem;" />
 
@@ -20,8 +19,9 @@
 
                                     <div class="d-flex align-items-center mb-3 pb-1">
                                         <i class="fas fa-cubes fa-2x me-3" style="color: #ff6219;"></i>
-                                        <span class="h1 fw-bold mb-0">Logo
-                                            <!-- <img src="login_logo.png" alt=""> -->
+                                        <span class="h1 fw-bold mb-0">
+                                            <img src="assets/login_logo.png" alt="img" class="img-fluid float-left">
+
                                         </span>
                                     </div>
                                     <div v-if="error" class="alert alert-danger">{{ error }}</div>
