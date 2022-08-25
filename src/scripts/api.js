@@ -81,12 +81,27 @@ async function getAllLocations() {
         let refresh_token = r["refresh_token"]
 
         const response = await api.post(`locations/`, JSON.stringify({ access_token, refresh_token, action: "locations;select all" }));
-        // const response = await api.get(`locations/`, JSON.stringify({ access_token, refresh_token }));
         return await handleNewResponse(response);
 
     }
 
 }
+
+// async function getPortfolioUsername() {
+
+//     const r = checkTokens()
+
+//     if (r["status"]) {
+
+//         let access_token = r["access_token"]
+//         let refresh_token = r["refresh_token"]
+
+//         const response = await api.get(`portfolio/`, JSON.stringify({ access_token, refresh_token, action: "portfolio;select all" }));
+//         return await handleNewResponse(response);
+
+//     }
+
+// }
 
 async function addLocation(section, type, latitude, longitude, csrfToken) {
 
@@ -127,9 +142,7 @@ function logout() {
         sessionStorage.removeItem('user');
 
         api.post(`logout/`, JSON.stringify({ access_token, refresh_token, action: "logout;__comm" }))
-        // .then(r => {
 
-        // })
     }
 
 }
@@ -163,7 +176,6 @@ function checkTokens() {
         "status": false
     }
 
-
 }
 
 function handleNewResponse(response) {
@@ -192,7 +204,52 @@ async function getCoordinates() {
 
 }
 
+async function makeBackendRequest({ method, url, action, params }) {
+
+    const r = checkTokens()
+
+    console.log("params", params)
+    console.log("action", action)
+
+    if (r["status"]) {
+
+        let access_token = r["access_token"];
+        let refresh_token = r["refresh_token"];
+
+        if (method === "get") {
+
+            return await handleNewResponse(
+                await api.get(
+                    url,
+                    JSON.stringify({
+                        access_token,
+                        refresh_token,
+                        action
+                    })
+                )
+            );
+
+        } else if (method === "post") {
+            return await handleNewResponse(
+                await api.post(
+                    url,
+                    JSON.stringify({
+                        access_token,
+                        refresh_token,
+                        action
+                    })
+                )
+            );
+
+        }
+
+    }
+
+
+}
+
 export const apiCalls = {
+    makeBackendRequest,
     logout,
     login,
     getAllLocations,
