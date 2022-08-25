@@ -25,6 +25,29 @@ lokacija
 
 
 
+portfolio
+    portfolio_name
+    @user_username
+
+location
+    @portfolio_id
+
+location_vals
+    @location_id
+
+    value
+    timestamp
+
+    @location_vals_type_id
+
+// sifrarnik
+location_vals_type
+    type - (temperature / consumption)
+
+
+
+
+
 
 //     headers: {
 //       "X-Powered-By": 'Beyond',
