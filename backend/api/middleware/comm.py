@@ -23,15 +23,15 @@ def middleware_check_params(action_composite, given):
         .deserialize(action_composite)
 
     if route not in vue_interface_cfg:
-        # print(f"no route {route}")
+        print(f"no route {route}")
         return False
 
     r = vue_interface_cfg[route]
 
     if action not in r:
-        # print(f"no action {action}")
+        print(f"no action {action}")
         return False
 
     r = r[action]
-    # print(f"expecting {r}")
+    print(f"expecting {r}")
     return all([given.__contains__(i) for i in r])
