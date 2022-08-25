@@ -72,11 +72,8 @@ import GeoJSON from 'ol/format/GeoJSON';
 import { Stroke } from 'ol/style';
 
 import LocationSelector from '../../components/map/LocationSelector.vue'; //Optional default CSS
-// import marker2 from "/public/assets/markers/baseline_place_black_24dp.png"
-// import marker2 from "/public/assets/markers/grey_marker.svg"
 import yellow_marker from "/public/assets/markers/yellow_marker.svg"
 import red_marker from "/public/assets/markers/red_marker.svg"
-// import grey_marker from "/public/assets/markers/grey_marker.svg"
 
 
 import userMarker from "/public/assets/markers/geolocation_marker.png"
@@ -380,7 +377,16 @@ export default {
 
         this.createCountriesLayer()
 
-        this.filterByCountry()
+        this.filterByCountry();
+
+        console.log("get locatiosn");
+        let t = await apiCalls.makeBackendRequest({
+            method: "post",
+            url: "locations/",
+            action: "locations:select_all",
+        })
+
+        console.log(t);
 
     }
 }
