@@ -46,7 +46,6 @@ async function deleteLocation(i) {
         let refresh_token = r["refresh_token"]
 
         const response = await api.post(`locations/`, JSON.stringify({ access_token, refresh_token, action: "locations;delete single", index: i }));
-        // const response = await api.get(`locations/`, JSON.stringify({ access_token, refresh_token }));
         return await handleNewResponse(response);
 
     }
@@ -63,7 +62,6 @@ async function getLocationsFilterUsername() {
         let refresh_token = r["refresh_token"]
 
         const response = await api.post(`locations/`, JSON.stringify({ access_token, refresh_token, action: "locations;select username" }));
-        // const response = await api.get(`locations/`, JSON.stringify({ access_token, refresh_token }));
         return await handleNewResponse(response);
 
     }
