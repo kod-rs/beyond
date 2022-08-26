@@ -10,7 +10,7 @@ def main():
 
     same_comment = True
     comment = None
-    comment = "wip:"
+    comment = "wip: refactor role validation"
     # comment = "init: login clouds bg"
     if same_comment:
         if not comment:
