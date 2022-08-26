@@ -32,7 +32,7 @@
 			"locations":{
 				"create single":true,
 				"delete single":true,
-				"select all":true
+				"select_all":true
 			},
 			"login":{
 				"__comm":true
@@ -50,7 +50,7 @@
 			"locations":{
 				"create single":true,
 				"delete single":true,
-				"select all":true
+				"select_all":true
 			},
 			"login":{
 				"__comm":true
