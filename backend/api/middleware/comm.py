@@ -18,12 +18,9 @@ def middleware_check_params(action_composite, given):
 
     print(f"{action_composite=} {given=}")
 
-    t = startup_configuration\
+    route, action = startup_configuration\
         .get_scheme_validator()\
         .deserialize(action_composite)
-
-    print(f"{t=}")
-    route, action = t[0], t[1]
 
     if route not in vue_interface_cfg:
         print(f"no route {route}")
