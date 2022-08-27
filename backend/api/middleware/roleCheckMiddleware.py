@@ -27,6 +27,36 @@ class RoleCheckMiddleware:
         else:
             roles = get_roles(access_token)
             action = request.action
+            print(f"{roles=} {action=} {request}")
+
+            #     # print(request.META)
+            #
+            #     if hasattr(request, "POST"):
+            #         print(request.POST)
+            #         print("post")
+            #         username = request.POST.get('REQUEST_METHOD', default='xxx')
+            #         print(f"{username=}")
+            #         if hasattr(request.POST, "REQUEST_METHOD"):
+            #             method = request.POST.REQUEST_METHOD
+            #             print("method", method)
+            #         else:
+            #             print("nema")
+            #
+            #     elif hasattr(request, "GET"):
+            #         print("get")
+            #     else:
+            #         print("else")
+            #
+            #     if hasattr(request.META, "REQUEST_METHOD"):
+            #         method = request.META.REQUEST_METHOD
+            #         print("method", method)
+            #     else:
+            #         print("nema")
+
+            # method = request.META.get("REQUEST_METHOD", default=None)
+            # path = request.META.get("PATH_INFO", default=None)
+            # print(f"{method=} {path=}")
+
             startup_configuration.get_scheme_validator().check_action(roles, action)
             request.action_checked = MIDDLEWARE_NO_ACTION
 
