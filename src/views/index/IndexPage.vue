@@ -361,7 +361,15 @@ export default {
 
         this.drawLocations(
             this.prepareLocationsForDrawing(
-                (await apiCalls.getAllLocations()).payload.content
+                (
+
+                    await apiCalls.makeBackendRequest({
+                        method: "post",
+                        url: "locations/",
+                        action: "locations;select_all",
+                    })
+
+                ).payload.content
             ),
             yellow_marker
         );
@@ -378,15 +386,6 @@ export default {
         this.createCountriesLayer()
 
         this.filterByCountry();
-
-        console.log("get locatiosn");
-        let t = await apiCalls.makeBackendRequest({
-            method: "post",
-            url: "locations/",
-            action: "locations:select_all",
-        })
-
-        console.log(t);
 
     }
 }
