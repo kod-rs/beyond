@@ -78,7 +78,7 @@ async function getAllLocations() {
         let access_token = r["access_token"]
         let refresh_token = r["refresh_token"]
 
-        const response = await api.post(`locations/`, JSON.stringify({ access_token, refresh_token, action: "locations;select all" }));
+        const response = await api.post(`locations/`, JSON.stringify({ access_token, refresh_token, action: "locations;select_all" }));
         return await handleNewResponse(response);
 
     }
@@ -203,7 +203,7 @@ async function getCoordinates() {
 }
 
 async function makeBackendRequest({ method, url, action, params }) {
-
+    console.log("make backend req")
     const r = checkTokens()
 
     console.log("params", params)
