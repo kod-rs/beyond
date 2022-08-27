@@ -11,6 +11,7 @@ def main():
     same_comment = True
     comment = None
     comment = "wip: refactor role validation"
+    comment = "fix: role validation deserializer"
     # comment = "init: login clouds bg"
     if same_comment:
         if not comment:
