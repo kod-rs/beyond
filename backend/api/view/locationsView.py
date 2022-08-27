@@ -119,6 +119,10 @@ class LocationsView(APIView):
 
         action = request.action
 
+        print("check action")
+        print(f"{action=}")
+        print(f"{self.actions=}")
+
         if action in self.actions:
             result = self.actions[action].perform_action(request)
 
