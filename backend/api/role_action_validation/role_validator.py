@@ -53,16 +53,11 @@ class SchemeValidator:
             """assumption: already deserialized"""
             return [payload]
 
-        # if self.serialization_connector in payload:
         for j in splitters:
             if payload.__contains__(j):
                 return [i.strip() for i in
                         payload.split(j, 1)]
 
-        # else:
-        #     print("3")
-        #     return [i.strip() for i in
-        #             payload.split(" ", 1) if i.strip()]
 
 #
 def main():
