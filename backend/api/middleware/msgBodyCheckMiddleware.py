@@ -21,24 +21,25 @@ class MsgBodyCheckMiddleware(DebuggableMiddleware):
             print('query string not empty')
             return JsonResponse(rejection)
 
-        try:
+        # todo
+        # try:
 
-            body = json.loads(request.body)
-            keys = list(body.keys())
+        body = json.loads(request.body)
+        keys = list(body.keys())
 
-            if not middleware_check_params(
-                action_composite=request.action,
-                given=keys
-            ):
-                print(f"\tmissing something, {request.action=}")
-                print(f"\tprovided {keys}")
-                return JsonResponse(rejection)
+        if not middleware_check_params(
+            action_composite=request.action,
+            given=keys
+        ):
+            print(f"\tmissing something, {request.action=}")
+            print(f"\tprovided {keys}")
+            return JsonResponse(rejection)
 
-            return self.get_response(request)
+        return self.get_response(request)
 
-        except Exception as e:
-            if self.debug:
-                print(e)
-                print('rejected because of error')
-
-        return JsonResponse(rejection)
+        # except Exception as e:
+        #     if self.debug:
+        #         print(e)
+        #         print('rejected because of error')
+        #
+        # return JsonResponse(rejection)
