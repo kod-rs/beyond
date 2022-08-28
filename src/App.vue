@@ -9,7 +9,7 @@
 
 <style>
 @import "https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css";
-@import "//cdn.datatables.net/1.12.1/css/jquery.dataTables.min.css";
+/* @import "//cdn.datatables.net/1.12.1/css/jquery.dataTables.min.css"; */
 @import "https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css";
 </style>
 
