@@ -1,5 +1,7 @@
 <template>
 
+    <div> test </div>
+
     <div id="map" class="map"></div>
     <MapPopup ref="mappopup"></MapPopup>
 
