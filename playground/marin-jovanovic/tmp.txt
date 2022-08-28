@@ -23,8 +23,6 @@ lokacija
 	potrosnja - vati ili vat sati / timestamp uz svaku vrijednost
 		samo dohvacanje (api)
 
-
-
 portfolio
     portfolio_name
     @user_username
@@ -43,11 +41,6 @@ location_vals
 // sifrarnik
 location_vals_type
     type - (temperature / consumption)
-
-
-
-
-
 
 //     headers: {
 //       "X-Powered-By": 'Beyond',
