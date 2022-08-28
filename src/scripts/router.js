@@ -8,12 +8,16 @@ import Location from "../views/location/Home.vue";
 import LogoutPage from '../views/logout/LogoutPage';
 import PortfolioPage from '../views/portfolio/Index.vue';
 import TestPage from '../views/test/TestPage.vue';
+import ForgotPassword from '../views/login/ForgotPassword.vue';
+import TermsOfUse from '../views/login/TermsOfUse.vue';
+import PrivacyPolicy from '../views/login/PrivacyPolicy.vue';
 
 export const router = createRouter({
   history: createWebHistory(),
   routes: [
     {
       path: '/login',
+      name: 'login',
       component: LoginPage
     },
     {
@@ -71,6 +75,21 @@ export const router = createRouter({
     {
       path: '/:pathMatch(.*)*',
       redirect: '/'
+    },
+    {
+      path: '/forgotpassword',
+      name: 'forgotpassword',
+      component: ForgotPassword
+    },
+    {
+      path: '/termsofuse',
+      name: 'termsofuse',
+      component: TermsOfUse
+    },
+    {
+      path: '/privacypolicy',
+      name: 'privacypolicy',
+      component: PrivacyPolicy
     }
   ]
 });
@@ -78,16 +97,16 @@ export const router = createRouter({
 router.beforeEach((to, from, next) => {
 
 
-  const publicPages = ['/login'];
-  const authRequired = !publicPages.includes(to.path);
-  const loggedIn = sessionStorage.getItem('user');
+  // const publicPages = ['/login', '/forgotpassword', '/termsofuse', '/privacypolicy', '/logout'];
+  // const authRequired = !publicPages.includes(to.path);
+  // const loggedIn = sessionStorage.getItem('user');
 
-  if (authRequired && !loggedIn) {
-    return next({
-      path: '/login',
-      query: { returnUrl: to.path }
-    });
-  }
+  // if (authRequired && !loggedIn) {
+  //   return next({
+  //     path: '/login',
+  //     query: { returnUrl: to.path }
+  //   });
+  // }
 
   next();
 })
