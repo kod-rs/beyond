@@ -13,6 +13,7 @@ def main():
     comment = "wip: refactor role validation"
     comment = "fix: role validation deserializer"
     comment = "upd: rewrite select all api call"
+    comment = 'ref: public sites'
     # comment = "init: login clouds bg"
     if same_comment:
         if not comment:
