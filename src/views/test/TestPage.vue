@@ -1,74 +1,89 @@
 <template>
 
-    <div> test </div>
+    <div id="app" class="container mt-2">
+        <portfolio-list />
+        <hr>
+        <portfolio-details />
+    </div>
 
-    <div id="map" class="map"></div>
-    <MapPopup ref="mappopup"></MapPopup>
+    <!-- <div v-if="userType === 'building_manager'">
+        building_manager
+        <br>
+        <hr>
+        portfolio, click to edit
+
+        <div class="field">
+            <span class="field-value" v-show="!showField('name')" @click="focusField('name')">{{ name }}</span>
+            <input v-model="name" v-show="showField('name')" id="user-name" type="text" class="field-value form-control"
+                @focus="focusField('name')" @blur="blurField">
+        </div>
+
+
+    </div>
+    <div v-else-if="userType === 'aggregator'">
+        aggregator
+        <br>
+        <hr>
+        <button>
+            create new portfolio
+
+        </button>
+    </div>
+    <div v-else-if="userType === 'aggregator_and_building_manager'">
+        aggregator and building_manager
+        <br>
+        <hr>
+        <button>
+            create new portfolio
+
+        </button>
+    </div> -->
+
 
 </template>
 
 
-    <style>
-    .map {
-        width: 100%;
-        height: 800px;
-    }
-    </style>
-
 <script>
-import Map from 'ol/Map';
-
-import TileLayer from 'ol/layer/Tile';
-import View from 'ol/View';
-
-import OSM from 'ol/source/OSM';
-import { toLonLat } from 'ol/proj';
-import { toStringHDMS } from 'ol/coordinate';
 
 
+import PortfolioList from "./PortfolioList.vue";
+import PortfolioDetails from "./PortfolioDetails.vue";
+
+import "bootstrap/dist/css/bootstrap.css";
+
+import store from '../../scripts/store';
 
 export default {
-    data() {
-
-    },
-    mounted() {
-
-
-        /**
-         * Create the map.
-         *   
-        */
-        const map = new Map({
-            layers: [
-                new TileLayer({
-                    source: new OSM(),
-                }),
-
-            ],
-            target: 'map',
-            view: new View({
-                center: [0, 0],
-                zoom: 2,
-            }),
-        });
-
-        map.addOverlay(this.$refs.mappopup.getOverlay())
-
-        /**
-         * Add a click handler to the map to render the popup.
-         */
-        map.on('singleclick', (evt) => {
-
-            const coordinate = evt.coordinate;
-            const hdms = toStringHDMS(toLonLat(coordinate));
-
-            console.log("log coord", hdms)
-            console.log("set postiion,", coordinate)
-            this.$refs.mappopup.setText(hdms);
-            this.$refs.mappopup.setPosition(coordinate);
-
-        });
+    name: "TestPag",
+    store,
+    components: {
+        "portfolio-list": PortfolioList,
+        "portfolio-details": PortfolioDetails
     }
-
 };
+
+// export default {
+//     data() {
+//         return {
+//             userType: 'building_manager',
+//             name: 'ffff',
+//             editField: ''
+//         };
+//     },
+//     mounted() {
+//         console.log('type', this.userType)
+//     },
+//     methods: {
+//         focusField(name) {
+//             this.editField = name;
+//         },
+//         blurField() {
+//             this.editField = '';
+//         },
+//         showField(name) {
+//             return (this.name == '' || this.editField == name)
+//         }
+//     }
+
+// };
 </script> 
