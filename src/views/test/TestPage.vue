@@ -1,5 +1,6 @@
 <template>
 
+
     <div id="app" class="container mt-2">
         <portfolio-list />
         <hr>
@@ -44,7 +45,6 @@
 
 
 <script>
-
 
 import PortfolioList from "./PortfolioList.vue";
 import PortfolioDetails from "./PortfolioDetails.vue";
