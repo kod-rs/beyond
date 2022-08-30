@@ -14,13 +14,39 @@
             <thead>
                 <tr>
                     <th scope="col">Name</th>
+                    <th scope="col">name changeable</th>
+                    <th scope="col">marker color</th>
+                    <th></th>
+                    <th></th>
                 </tr>
             </thead>
             <tbody>
                 <tr v-for="portfolio in this.$store.getters.portfolios" :key="portfolio.id"
                     @click="selectRow(portfolio)" :class="{ 'table-primary': isSelected(portfolio.id) }">
                     <td scope="row">
-                        {{ portfolio.name }}
+                        {{  portfolio.name  }}
+
+                    </td>
+                    <td scope="row">
+                        <input class="form-control" type="text" id="name" :value="portfolio.name">
+
+                    </td>
+                    <td scope="row">
+                        <!-- two portfolios can not have same colour -->
+
+                        <select name="cars" id="cars">
+                            <option value="volvo">blue</option>
+                            <option value="saab">Saab</option>
+                            <option value="mercedes">Mercedes</option>
+                            <option value="audi">Audi</option>
+                        </select>
+                    </td>
+
+                    <td scope='row'>
+                        <button class="btn btn-secondary">Save changes</button>
+                    </td>
+                    <td scope='row'>
+                        <button class="btn btn-secondary">Delete</button>
                     </td>
                 </tr>
             </tbody>
