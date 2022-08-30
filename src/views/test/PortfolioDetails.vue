@@ -3,6 +3,14 @@
         <div class="col col-lg-1">
             <button class="btn btn-secondary" @click="newPortfolio">New</button>
         </div>
+    </div>
+    <div class="row">
+        <br>
+
+        <hr>
+        <br>
+    </div>
+    <div class="row">
         <div class="col">
             <form>
                 <fieldset>
@@ -26,7 +34,22 @@
                 </fieldset>
             </form>
         </div>
+
     </div>
+
+    <div class="row">
+        <hr>
+        <br>
+        <br>
+
+        <!-- <tr v-for="portfolio in this.$store.getters.portfolios" :key="portfolio.id">
+            {{  portfolio.name  }}
+            <hr>
+            <br>
+            <br>
+        </tr> -->
+    </div>
+
 </template>
   
   <script>
