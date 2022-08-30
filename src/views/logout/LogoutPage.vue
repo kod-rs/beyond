@@ -18,9 +18,6 @@
 
 <script>
 import PublicBase from "../../components/login/PublicBase.vue";
-
-
-
 import { router } from '../../scripts/router';
 import { apiCalls } from '../../scripts/api';
 
