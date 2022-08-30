@@ -15,6 +15,8 @@ def main():
     comment = "upd: rewrite select all api call"
     comment = 'ref: public sites'
     comment = "init: screens"
+    comment = "wip: master detail portfolio"
+
     if same_comment:
         if not comment:
             comment = input("comment for all commits will be same:")
