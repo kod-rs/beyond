@@ -1,7 +1,7 @@
 <template>
     <div id="root">
 
-        <Navigation />
+        <!-- <Navigation /> -->
 
         <main class="mt-5 pt-3">
             <div class="container-fluid">
@@ -13,7 +13,7 @@
                     <div v-if="error" class="alert alert-danger">{{ error }}</div>
 
                     <form @submit.prevent="handleSubmit">
-                        <CSRFToken ref="csrftokenelement" />
+                        <CSRFToken />
                         <div v-for="option in formData" :value="option.value" :key="option.value">
                             {{ option.key.charAt(0).toUpperCase() + option.key.slice(1) }}
                             <span v-if="option.key == 'section' || option.key == 'type'">
@@ -76,6 +76,9 @@
 
 
 <script>
+
+import CSRFToken from "../../components/form/CSRFToken.vue"
+import MapPopup from "../../components/map/MapPopup.vue"
 import { apiCalls } from '../../scripts/api';
 import Map from 'ol/Map';
 
@@ -91,6 +94,7 @@ import PortfolioSelector from '../../components/form/PortfolioSelector.vue';
 
 
 export default {
+
     data() {
         return {
             hover: false,
@@ -100,6 +104,9 @@ export default {
                 { key: "latitude", value: "2" },
                 { key: "longitude", value: "3" }
             ]
+            , submitted: false,
+            loading: false,
+            error: undefined
             // portfolio: ""
         };
     },
@@ -119,7 +126,6 @@ export default {
             }
             const csrfToken = this.$store.state.synchronizerToken;
 
-
             await apiCalls.addLocation(
                 formContent["section"],
                 formContent["type"],
@@ -138,9 +144,9 @@ export default {
                 console.log("error", error);
             });
 
-            this.formData.forEach(i => {
-                i.value = "";
-            });
+            // this.formData.forEach(i => {
+            //     i.value = "";
+            // });
             this.$router.go();
             this.submitted = false;
         }
@@ -177,7 +183,7 @@ export default {
             this.$refs.mappopup.setPosition(coordinate);
         });
     },
-    components: { PortfolioSelector }
+    components: { PortfolioSelector, CSRFToken, MapPopup }
 };
 </script> 
 
