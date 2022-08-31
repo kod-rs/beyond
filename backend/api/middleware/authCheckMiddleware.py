@@ -1,3 +1,5 @@
+import urllib
+
 from decouple import config
 from django.http import JsonResponse
 from ipware import get_client_ip
@@ -21,23 +23,26 @@ class AuthCheckMiddleware:
         if request.is_auth:
             return self.get_response(request)
 
-        auth_credentials = {
-            "access_token": None,
-            "refresh_token": None,
-        }
+        authorization_header = request.META['HTTP_AUTHORIZATION']
+        parsed_authorization_header = urllib.parse.unquote(authorization_header)
+        auth_type, payload = parsed_authorization_header.split(" ")
 
-        body_content = decode_data(request.body)
+        if auth_type == "Digest":
+            # todo https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Authorization
+            print("Digest")
 
-        for k, v in auth_credentials.items():
-            if k in body_content:
-                auth_credentials[k] = body_content[k]
+            access_token, refresh_token = payload.split(":")
 
-        res = check_tokens(
-            auth_credentials["access_token"],
-            auth_credentials["refresh_token"]
-        )
+            res = check_tokens(
+                access_token,
+                refresh_token
+            )
+
+        else:
+            res = {"is_valid": False}
 
         if not res["is_valid"]:
+            print("not valid")
             rejection = get_empty_response_template()
             rejection["debug"] = "not is_validated"
             return JsonResponse(rejection)
