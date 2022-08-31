@@ -1,3 +1,5 @@
+import urllib
+
 from decouple import config
 from django.http import JsonResponse
 from ipware import get_client_ip
@@ -17,38 +19,44 @@ class LoginMiddleware:
 
     def __call__(self, request):
         print("LoginMiddleware")
+        # rejection = get_empty_response_template()
+        #
+        # if "HTTP_AUTHORIZATION" not in request.META:
+        #     print("no authorization")
+        #     return JsonResponse(rejection)
 
-        auth_credentials = {
-            "username": None,
-            "password": None,
-        }
+        # authorization_header = request.META['HTTP_AUTHORIZATION']
 
-        body_content = decode_data(request.body)
+        # parsed_authorization_header = urllib.parse.unquote(authorization_header)
+        # auth_type, payload = parsed_authorization_header.split(" ")
 
-        for k, v in auth_credentials.items():
-            if k in body_content:
-                auth_credentials[k] = body_content[k]
+        # if auth_type != "Basic":
+        #     request.is_auth = False
+        #     return self.get_response(request)
 
-        if not all(auth_credentials.values()):
-            request.is_auth = False
-            return self.get_response(request)
+        # print("user pass")
+        # username, password = payload.split(":")
+        # res = login(username, password)
 
-        res = login(
-            auth_credentials["username"],
-            auth_credentials["password"]
-        )
+        # if not res["is_valid"]:
+        #     print("user pass err")
+        #     rejection["debug"] = "user pass error"
+        #     return JsonResponse(rejection)
 
-        if not res["ok"]:
-            rejection = get_empty_response_template()
-            rejection["debug"] = "not is_validated"
-            return JsonResponse(rejection)
-
+        # todo move to auth part backend, hotfix
         ip, _ = get_client_ip(request)
         auth_user(ip)
 
-        request.username = auth_credentials["username"]
-        request.access_token = res["access_token"]
-        request.refresh_token = res["refresh_token"]
+        # fixme hardcoded for testing
+        request.username = "username"
+        request.access_token = 'res["access_token"]'
+        request.refresh_token = 'res["refresh_token"]'
         request.is_auth = True
+
+
+        # request.username = username
+        # request.access_token = res["access_token"]
+        # request.refresh_token = res["refresh_token"]
+        # request.is_auth = True
 
         return self.get_response(request)
