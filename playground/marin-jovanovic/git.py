@@ -13,10 +13,10 @@ def main():
     comment = "wip: refactor role validation"
     comment = "fix: role validation deserializer"
     comment = "upd: rewrite select all api call"
-    comment = 'ref: public sites'
     comment = "init: screens"
-    comment = "wip: master detail portfolio"
     comment = 'ref: rewrite auth using backend'
+
+    comment = "init: basic master detail & fetch portfolios"
 
     if same_comment:
         if not comment:
