@@ -15,25 +15,25 @@ class MsgBodyCheckMiddleware(DebuggableMiddleware):
 
     def __call__(self, request):
         print("MsgBodyCheckMiddleware")
-        rejection = get_empty_response_template()
-
-        if request.environ['QUERY_STRING'] != '':
-            print('query string not empty')
-            return JsonResponse(rejection)
-
-        # todo
-        # try:
-
-        body = json.loads(request.body)
-        keys = list(body.keys())
-
-        if not middleware_check_params(
-            action_composite=request.action,
-            given=keys
-        ):
-            print(f"\tmissing something, {request.action=}")
-            print(f"\tprovided {keys}")
-            # return JsonResponse(rejection)
+        # rejection = get_empty_response_template()
+        #
+        # if request.environ['QUERY_STRING'] != '':
+        #     print('query string not empty')
+        #     return JsonResponse(rejection)
+        #
+        # # todo
+        # # try:
+        #
+        # body = json.loads(request.body)
+        # keys = list(body.keys())
+        #
+        # if not middleware_check_params(
+        #     action_composite=request.action,
+        #     given=keys
+        # ):
+        #     print(f"\tmissing something, {request.action=}")
+        #     print(f"\tprovided {keys}")
+        #     # return JsonResponse(rejection)
 
         return self.get_response(request)
 
