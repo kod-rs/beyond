@@ -18,8 +18,9 @@ def login(username, password):
         refresh_token = res["refresh_token"]
 
         response = {
-            "ok": True,
-            "id": "user.id",
+            # "ok": True,
+            # "id": "user.id",
+            "is_valid": True,
             "username": username,
 
             "access_token": access_token,
@@ -27,7 +28,8 @@ def login(username, password):
         }
     else:
         response = {
-            "ok": False,
+            # "ok": False,
+            "is_valid": False
         }
 
     return response
