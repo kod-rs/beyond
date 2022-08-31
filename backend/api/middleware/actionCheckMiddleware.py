@@ -15,12 +15,12 @@ class ActionCheckMiddleware:
     def __call__(self, request):
         print("ActionCheckMiddleware")
 
-        if "action" not in decode_data(request.body):
-            if self.debug:
-                print("ActionCheckMiddleware: no action in body")
-            rejection = get_empty_response_template()
-            return JsonResponse(rejection)
+        # if "action" not in decode_data(request.body):
+        #     if self.debug:
+        #         print("ActionCheckMiddleware: no action in body")
+        #     rejection = get_empty_response_template()
+        #     return JsonResponse(rejection)
 
-        request.action = decode_data(request.body)["action"]
+        # request.action = decode_data(request.body)["action"]
 
         return self.get_response(request)
