@@ -9,6 +9,7 @@
         <router-link :to="{ name: 'portfolio' }">manage portfolio</router-link> |
         <router-link :to="{ name: 'locations' }">manage locations</router-link> |
         <router-link :to="{ name: 'test' }">test</router-link> |
+        <router-link :to="{ name: 'login' }">login</router-link> |
 
 
     </div>
