@@ -10,6 +10,11 @@
                     :disabled="this.$store.getters.selectedPortfolio.id == -1">Delete</button>
             </div>
         </div>
+
+
+
+
+
         <table class="table table-hover">
             <thead>
                 <tr>
@@ -19,12 +24,25 @@
                     <th></th>
                     <th></th>
                 </tr>
+
+
             </thead>
             <tbody>
+                <!-- <div> -->
+                <tr>
+                    <td>a</td>
+                    <td>a</td>
+                    <td>a</td>
+                    <td>a</td>
+                    <td>a</td>
+                </tr>
+
+                <!-- </div> -->
                 <tr v-for="portfolio in this.$store.getters.portfolios" :key="portfolio.id"
                     @click="selectRow(portfolio)" :class="{ 'table-primary': isSelected(portfolio.id) }">
+
                     <td scope="row">
-                        {{  portfolio.name  }}
+                        {{ portfolio.name }}
 
                     </td>
                     <td scope="row">
@@ -48,6 +66,13 @@
                     <td scope='row'>
                         <button class="btn btn-secondary">Delete</button>
                     </td>
+
+
+
+                    <hr>
+                    <br>
+
+
                 </tr>
             </tbody>
         </table>
@@ -59,7 +84,7 @@
       name: "PortfolioList",
       methods: {
           selectRow(p) {
-              this.$store.dispatch("selectPortfolio", p);
+              this.$store.dispatch("selectPortfolio", p)
           },
           isSelected(id) {
               return id == this.$store.getters.selectedPortfolio.id;
