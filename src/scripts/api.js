@@ -120,20 +120,36 @@ async function login(username, password) {
 
     const user = await handleNewResponse(response)
     if (user) {
-        sessionStorage.setItem('user', JSON.stringify(user))
+        console.log("setting user", user)
+        sessionStorage.setItem('user', JSON.stringify(user));
     }
     return user
 
 }
 
-function logout() {
+function get_auth_header() {
     if (sessionStorage.getItem("user") !== null) {
         let user = JSON.parse(window.sessionStorage.getItem('user'));
         let access_token = user["auth"]["access-token"]
-        const refresh_token = user["auth"]["refresh-token"]
-        sessionStorage.removeItem('user');
+        let refresh_token = user["auth"]["refresh-token"];
 
-        api.post(`logout/`, JSON.stringify({ access_token, refresh_token, action: "logout;__comm" }))
+        // console.log(access_token)
+
+        return { headers: { 'Authorization': 'Digest ' + ((encodeURIComponent(access_token + ':' + refresh_token))) } }
+    } else {
+        return { headers: { 'Authorization': 'Digest ' + ((encodeURIComponent("not" + ':' + "present_err"))) } }
+    }
+
+}
+
+function logout() {
+    if (sessionStorage.getItem("user") !== null) {
+        api.post(
+            "logout/",
+            { action: "logout;__comm" },
+            get_auth_header()
+        );
+        sessionStorage.removeItem('user');
 
     }
 
@@ -240,9 +256,32 @@ async function makeBackendRequest({ method, url, action, params }) {
 
 }
 
+async function getPortoflios() {
+    let headers = get_auth_header();
+
+    // not working, todo
+    headers["body"] = { "action": "ffffffffffff" };
+    // console.log(headers)
+    return await handleNewResponse(
+        await api.get(
+            "portfolio/",
+            headers
+        )
+    );
+
+    // return await api.get(
+    //     "portfolio/",
+    //     { action: "tmp" },
+    //     get_auth_header()
+    // );
+
+
+    // const response = await api.post(`locations/`, JSON.stringify({ access_token, refresh_token, action: "locations;delete single", index: i }));
+    // return await handleNewResponse(response);
+
+}
+
 async function testcall() {
-
-
 
     const funRes = {
         "status": false,
@@ -257,7 +296,6 @@ async function testcall() {
 
     const response = await api.post(
         "csrf/",
-
 
         JSON.stringify({
             access_token,
@@ -276,13 +314,12 @@ async function testcall() {
     funRes["synchronizer_token"] = responseData["synchronizer_token"];
     funRes["status"] = true;
 
-    // }
-
     return funRes;
 }
 
 
 export const apiCalls = {
+    getPortoflios,
     makeBackendRequest,
     testcall,
     // makeBackendRequest,
