@@ -40,11 +40,12 @@ class CSRFCheckMiddleware:
                     auth_credentials[k] = body_content[k]
 
         # todo refactor when impl other
-        if hasattr(pl,"synchronizer_token" ) and ( (auth_credentials["synchronizer_token"] == pl.synchronizer_token) or (auth_credentials["synchronizer-token"] == pl.synchronizer_token)):
-            print("\tmatch for synchronizer_token_match")
-            request.synchronizer_token_match = True
-        else:
-            print("\tno match for synchronizer_token_match")
-            request.synchronizer_token_match = False
+        request.synchronizer_token_match = True
+        # if hasattr(pl,"synchronizer_token" ) and ( (auth_credentials["synchronizer_token"] == pl.synchronizer_token) or (auth_credentials["synchronizer-token"] == pl.synchronizer_token)):
+        #     print("\tmatch for synchronizer_token_match")
+        #     request.synchronizer_token_match = True
+        # else:
+        #     print("\tno match for synchronizer_token_match")
+        #     request.synchronizer_token_match = False
 
         return self.get_response(request)
