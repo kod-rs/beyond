@@ -1,89 +1,119 @@
+
 <template>
 
-
-    <div id="app" class="container mt-2">
-        <portfolio-list />
-        <hr>
-        <portfolio-details />
-    </div>
-
-    <!-- <div v-if="userType === 'building_manager'">
-        building_manager
-        <br>
-        <hr>
-        portfolio, click to edit
-
-        <div class="field">
-            <span class="field-value" v-show="!showField('name')" @click="focusField('name')">{{ name }}</span>
-            <input v-model="name" v-show="showField('name')" id="user-name" type="text" class="field-value form-control"
-                @focus="focusField('name')" @blur="blurField">
+    <div class="container vue">
+        <div>
+            name | marker colour | save changes | delete
         </div>
 
-
+        <div v-for="(group, key) in groups" :key="group.id">
+            <div @click="toggleExpansion(key)">
+                {{ group.name }} |
+                {{ group.colour }}
+            </div>
+            <div v-show="isExpanded(key)">
+                {{ group.desc }}
+            </div>
+            <hr>
+        </div>
     </div>
-    <div v-else-if="userType === 'aggregator'">
-        aggregator
-        <br>
-        <hr>
-        <button>
-            create new portfolio
-
-        </button>
-    </div>
-    <div v-else-if="userType === 'aggregator_and_building_manager'">
-        aggregator and building_manager
-        <br>
-        <hr>
-        <button>
-            create new portfolio
-
-        </button>
-    </div> -->
-
 
 </template>
 
 
 <script>
+var groups = {
+    "portfolio A": {
+        "name": "portfolio A",
+        "colour": "colour 1",
+        "open": false,
 
-import PortfolioList from "./PortfolioList.vue";
-import PortfolioDetails from "./PortfolioDetails.vue";
-
-import "bootstrap/dist/css/bootstrap.css";
-
-import store from '../../scripts/store';
+        "desc": "description 1",
+        "heading": "test",
+        "items": [
+            "item 1"
+        ]
+    },
+    "GROUP B": {
+        "name": "GROUP B",
+        "open": false,
+        "desc": "description 2",
+        "items": [
+            "item 1",
+            "item 2",
+            "item 3",
+            "item 4",
+            "item 5",
+            "item 6",
+            "item 7"
+        ]
+    },
+    "GROUP C": {
+        "name": "GROUP C",
+        "open": false,
+        "desc": "description 3",
+        "items": [
+            "item 1",
+            "item 2",
+            "item 3",
+            "item 4",
+            "item 5"
+        ]
+    },
+    "GROUP D": {
+        "name": "GROUP D",
+        "open": false,
+        "desc": "description 4",
+        "items": [
+            "item 1",
+            "item 2",
+            "item 3",
+            "item 4",
+            "item 5",
+            "item 6",
+            "item 7"
+        ]
+    },
+    "GROUP E": {
+        "name": "GROUP E",
+        "open": false,
+        "desc": "description 5",
+        "items": [
+            "item 1",
+            "item 2",
+            "item 3",
+            "item 4",
+            "item 5"
+        ]
+    }
+}
 
 export default {
     name: "TestPag",
-    store,
-    components: {
-        "portfolio-list": PortfolioList,
-        "portfolio-details": PortfolioDetails
+    data() {
+        return {
+            groups: undefined,
+            heading: "",
+            // isExpanded: false,
+            expandedGroup: []
+
+        }
+    },
+    mounted() {
+        this.groups = groups;
+        this.heading = "Plan Communications";
+    },
+    methods: {
+        isExpanded(key) {
+            return this.expandedGroup.indexOf(key) !== -1;
+        },
+        toggleExpansion(key) {
+            if (this.isExpanded(key))
+                this.expandedGroup.splice(this.expandedGroup.indexOf(key), 1);
+            else
+                this.expandedGroup.push(key);
+        }
     }
 };
 
-// export default {
-//     data() {
-//         return {
-//             userType: 'building_manager',
-//             name: 'ffff',
-//             editField: ''
-//         };
-//     },
-//     mounted() {
-//         console.log('type', this.userType)
-//     },
-//     methods: {
-//         focusField(name) {
-//             this.editField = name;
-//         },
-//         blurField() {
-//             this.editField = '';
-//         },
-//         showField(name) {
-//             return (this.name == '' || this.editField == name)
-//         }
-//     }
-
-// };
 </script> 
