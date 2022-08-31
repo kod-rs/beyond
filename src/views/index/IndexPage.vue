@@ -32,6 +32,14 @@
                     <button>position map on user location</button>
                     <button id="zoom-out">Zoom out</button>
                     <button id="zoom-in">Zoom in</button>
+
+
+                    <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px"
+                        fill="#FF0000">
+                        <path d="M0 0h24v24H0z" fill="none" />
+                        <path fill="#FF0000"
+                            d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" />
+                    </svg>
                 </div>
             </div>
             <div class="col-sm">
@@ -72,7 +80,7 @@ import GeoJSON from 'ol/format/GeoJSON';
 import { Stroke } from 'ol/style';
 
 import LocationSelector from '../../components/map/LocationSelector.vue'; //Optional default CSS
-import yellow_marker from "/public/assets/markers/yellow_marker.svg"
+// import yellow_marker from "/public/assets/markers/yellow_marker.svg"
 import red_marker from "/public/assets/markers/red_marker.svg"
 
 
@@ -80,10 +88,12 @@ import userMarker from "/public/assets/markers/geolocation_marker.png"
 import countriesjson from "/public/assets/layers/countries.json";
 import { apiCalls } from '../../scripts/api';
 
+import UserCoordinates from "../../components/map/UserCoordinates.vue";
+import MapPopup from "../../components/map/MapPopup.vue";
 
 export default {
     components: {
-        LocationSelector
+        LocationSelector, UserCoordinates, MapPopup
     },
     data() {
         return {
@@ -352,6 +362,8 @@ export default {
 
     async mounted() {
 
+        // node.getElementsByTagName("div")[4].innerHTML =
+
         this.initMap();
 
         this.activatePopup()
@@ -359,20 +371,20 @@ export default {
         // todo enable
         this.$refs.userCoordinatesManager.enableCoordinates();
 
-        this.drawLocations(
-            this.prepareLocationsForDrawing(
-                (
+        // this.drawLocations(
+        //     this.prepareLocationsForDrawing(
+        //         (
 
-                    await apiCalls.makeBackendRequest({
-                        method: "post",
-                        url: "locations/",
-                        action: "locations;select_all",
-                    })
+        //             await apiCalls.makeBackendRequest({
+        //                 method: "post",
+        //                 url: "locations/",
+        //                 action: "locations;select_all",
+        //             })
 
-                ).payload.content
-            ),
-            yellow_marker
-        );
+        //         ).payload.content
+        //     ),
+        //     yellow_marker
+        // );
 
         this.drawLocations(
             this.prepareLocationsForDrawing(
