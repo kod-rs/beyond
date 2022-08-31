@@ -12,27 +12,14 @@ const api = axios.create({
 
 async function getCSRFAuthData() {
 
-    const r = checkTokens()
+    return await handleNewResponse(
+        await api.post(
+            "csrf/",
+            {},
+            get_auth_header()
+        )
+    );
 
-    const funRes = {
-        "status": false,
-        "synchronizer_token": undefined
-    }
-
-    if (r["status"]) {
-
-        let access_token = r["access_token"]
-        let refresh_token = r["refresh_token"];
-
-        const response = await api.post(`csrf/`, JSON.stringify({ access_token, refresh_token, action: "csrf;select synchronizer_token" }));
-        const responseData = await handleNewResponse(response)["payload"];
-
-        funRes["synchronizer_token"] = responseData["synchronizer_token"];
-        funRes["status"] = true;
-
-    }
-
-    return funRes;
 
 }
 
@@ -52,56 +39,53 @@ async function deleteLocation(i) {
 
 }
 
-async function getLocationsFilterUsername() {
+// async function getLocationsFilterUsername() {
 
-    const r = checkTokens()
+//     const r = checkTokens()
 
-    if (r["status"]) {
+//     if (r["status"]) {
 
-        let access_token = r["access_token"]
-        let refresh_token = r["refresh_token"]
+//         let access_token = r["access_token"]
+//         let refresh_token = r["refresh_token"]
 
-        const response = await api.post(`locations/`, JSON.stringify({ access_token, refresh_token, action: "locations;select username" }));
-        return await handleNewResponse(response);
+//         const response = await api.post(`locations/`, JSON.stringify({ access_token, refresh_token, action: "locations;select username" }));
+//         return await handleNewResponse(response);
 
-    }
+//     }
 
-}
+// }
 
 
-async function getAllLocations() {
+// async function getAllLocations() {
 
-    const r = checkTokens()
+//     const r = checkTokens()
 
-    if (r["status"]) {
+//     if (r["status"]) {
 
-        let access_token = r["access_token"]
-        let refresh_token = r["refresh_token"]
+//         let access_token = r["access_token"]
+//         let refresh_token = r["refresh_token"]
 
-        const response = await api.post(`locations/`, JSON.stringify({ access_token, refresh_token, action: "locations;select_all" }));
-        return await handleNewResponse(response);
+//         const response = await api.post(`locations/`, JSON.stringify({ access_token, refresh_token, action: "locations;select_all" }));
+//         return await handleNewResponse(response);
 
-    }
+//     }
 
-}
+// }
 
 
 async function addLocation(section, type, latitude, longitude, csrfToken) {
 
-    const r = checkTokens()
+    return await handleNewResponse(
+        await api.post(
+            "locations/",
+            JSON.stringify({
 
-    if (r["status"]) {
+                type, section, latitude, longitude, synchronizer_token: csrfToken
+            }),
+            get_auth_header()
+        )
+    );
 
-        let access_token = r["access_token"]
-        let refresh_token = r["refresh_token"]
-
-        const response = await api.post(`locations/`, JSON.stringify({
-            access_token, refresh_token, action: "locations;create single",
-            type, section, latitude, longitude, synchronizer_token: csrfToken
-        }));
-        return await handleNewResponse(response);
-
-    }
 
 }
 
@@ -256,6 +240,31 @@ async function makeBackendRequest({ method, url, action, params }) {
 
 }
 
+async function getLocationsFilterUsername() {
+
+    let headers = get_auth_header();
+
+    // not working, todo
+    headers["body"] = { "action": "ffffffffffff" };
+    // console.log(headers)
+    return await handleNewResponse(
+        await api.get(
+            "locations/",
+            // {},
+            headers
+        )
+    );
+
+
+    // return await handleNewResponse(
+    //     await api.get(
+    //         "locations/",
+    //         get_auth_header()
+    //     )
+    // );
+
+}
+
 async function getPortoflios() {
     let headers = get_auth_header();
 
@@ -325,7 +334,8 @@ export const apiCalls = {
     // makeBackendRequest,
     logout,
     login,
-    getAllLocations,
+
+    // getAllLocations,
     deleteLocation,
     getCSRFAuthData,
     addLocation,
