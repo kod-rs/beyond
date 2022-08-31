@@ -25,9 +25,15 @@ class AddSingle(LocationAction):
 
     def perform_action(self, request):
 
-        if (not _check_request_data(request.data)
+        print(f"{_check_request_data(request.data)=}")
+        print(f"{request.synchronizer_token_match=}")
+        print(f"{request.body=}")
+
+        if (
+                not _check_request_data(request.data)
                 or not request.synchronizer_token_match
-                or not request.body):
+                or not request.body
+        ):
             print('add not valid')
             payload = {"status": False}
             print(request)
@@ -111,23 +117,54 @@ class LocationsView(APIView):
 
         print(f"validated {self.route}")
 
+
+    def get(self, request):
+        print()
+        print("get locations by username")
+        # todo check if get all or for this user
+
+        response = get_auth_ok_response_template(request)
+
+        # request.username =
+
+        result = self.actions["locations;select username"].perform_action(request)
+
+        # action = request.action
+        #
+        # print("check action")
+        # print(f"{action=}")
+        # print(f"{self.actions=}")
+
+        # if action in self.actions:
+        #     result = self.actions[action].perform_action(request)
+        #
+        # else:
+        #     result = self.unsupported_action()
+
+        response["payload"] = result
+        return JsonResponse(response)
+
+
+    # todo add type & section
     def post(self, request):
         print()
         print("post locations")
 
         response = get_auth_ok_response_template(request)
 
-        action = request.action
+        result = self.actions["locations;create single"].perform_action(request)
 
-        print("check action")
-        print(f"{action=}")
-        print(f"{self.actions=}")
+        # action = request.action
+        #
+        # print("check action")
+        # print(f"{action=}")
+        # print(f"{self.actions=}")
 
-        if action in self.actions:
-            result = self.actions[action].perform_action(request)
-
-        else:
-            result = self.unsupported_action()
+        # if action in self.actions:
+        #     result = self.actions[action].perform_action(request)
+        #
+        # else:
+        #     result = self.unsupported_action()
 
         response["payload"] = result
         return JsonResponse(response)
