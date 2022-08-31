@@ -97,16 +97,16 @@ export const router = createRouter({
 router.beforeEach((to, from, next) => {
 
 
-  // const publicPages = ['/login', '/forgotpassword', '/termsofuse', '/privacypolicy', '/logout'];
-  // const authRequired = !publicPages.includes(to.path);
-  // const loggedIn = sessionStorage.getItem('user');
+  const publicPages = ['/login', '/forgotpassword', '/termsofuse', '/privacypolicy', '/logout'];
+  const authRequired = !publicPages.includes(to.path);
+  const loggedIn = sessionStorage.getItem('user');
 
-  // if (authRequired && !loggedIn) {
-  //   return next({
-  //     path: '/login',
-  //     query: { returnUrl: to.path }
-  //   });
-  // }
+  if (authRequired && !loggedIn) {
+    return next({
+      path: '/login',
+      query: { returnUrl: to.path }
+    });
+  }
 
   next();
 })
