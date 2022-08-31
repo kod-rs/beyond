@@ -23,7 +23,7 @@ class LoginMiddleware:
 
         if "HTTP_AUTHORIZATION" not in request.META:
             print("no authorization")
-            print(request.META)
+            # print(request.META)
             request.is_auth = False
             return JsonResponse(rejection)
             # return self.get_response(request)
