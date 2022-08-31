@@ -32,7 +32,7 @@ class AuthCheckMiddleware:
             print("Digest")
 
             access_token, refresh_token = payload.split(":")
-
+            # print(payload)
             res = check_tokens(
                 access_token,
                 refresh_token
