@@ -107,7 +107,10 @@ STATICFILES_DIRS = []
 
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
+# AUTH_USER_MODEL = 'backend.api.authentication_backends.user.User'
 AUTHENTICATION_BACKENDS = [
+    "backend.api.authentication_backends.keycloakBackend.KeycloakBackend",
+
     # 'django.contrib.auth.backends.ModelBackend',
     # 'allauth.account.auth_backends.AuthenticationBackend',
     # 'social_core.backends.keycloak.KeycloakOAuth2',
