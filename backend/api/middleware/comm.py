@@ -2,6 +2,7 @@ from decouple import config
 from backend.api.startup import startup_configuration
 from backend.api.comm.json_loader import vue_interface_cfg
 
+
 class DebuggableMiddleware:
     def __init__(self, get_response):
         self.get_response = get_response
