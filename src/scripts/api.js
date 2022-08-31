@@ -85,21 +85,6 @@ async function getAllLocations() {
 
 }
 
-// async function getPortfolioUsername() {
-
-//     const r = checkTokens()
-
-//     if (r["status"]) {
-
-//         let access_token = r["access_token"]
-//         let refresh_token = r["refresh_token"]
-
-//         const response = await api.get(`portfolio/`, JSON.stringify({ access_token, refresh_token, action: "portfolio;select all" }));
-//         return await handleNewResponse(response);
-
-//     }
-
-// }
 
 async function addLocation(section, type, latitude, longitude, csrfToken) {
 
@@ -123,7 +108,16 @@ async function addLocation(section, type, latitude, longitude, csrfToken) {
 
 async function login(username, password) {
 
-    const response = await api.post(`login/`, JSON.stringify({ username, password, action: "login;__comm" }))
+    const response = await api.post(
+        "login/",
+        { action: "action tmp" },
+        {
+            headers: {
+                'Authorization': 'Basic ' + ((encodeURIComponent(username + ':' + password)))
+            }
+        }
+    );
+
     const user = await handleNewResponse(response)
     if (user) {
         sessionStorage.setItem('user', JSON.stringify(user))
@@ -246,8 +240,52 @@ async function makeBackendRequest({ method, url, action, params }) {
 
 }
 
+async function testcall() {
+
+
+
+    const funRes = {
+        "status": false,
+        "synchronizer_token": undefined
+    }
+
+    let access_token = "access_token";
+    let refresh_token = "refresh_token";
+
+    let username = "a";
+    let password = "a";
+
+    const response = await api.post(
+        "csrf/",
+
+
+        JSON.stringify({
+            access_token,
+            refresh_token,
+            action: "csrf;select synchronizer_token"
+        })
+        , {
+            headers: {
+                'Authorization': 'Basic ' + ((encodeURIComponent(username + ':' + password)))
+            },
+        }
+
+    );
+    const responseData = await handleNewResponse(response)["payload"];
+
+    funRes["synchronizer_token"] = responseData["synchronizer_token"];
+    funRes["status"] = true;
+
+    // }
+
+    return funRes;
+}
+
+
 export const apiCalls = {
     makeBackendRequest,
+    testcall,
+    // makeBackendRequest,
     logout,
     login,
     getAllLocations,
