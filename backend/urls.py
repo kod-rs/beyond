@@ -11,6 +11,7 @@ from backend.api.view.logoutView import LogoutView
 from backend.api.view.index import IndexView
 from backend.api.view.CSRFView import CSRFView
 from backend.api.view.userInfo import UserInfoView
+from backend.api.view.portfolioView import PortfolioView
 
 from backend.api.comm.json_loader import role_validation_cfg
 
@@ -45,6 +46,9 @@ urlpatterns = [
     path('api/admin/', admin.site.urls),
     path("csrf/", CSRFView.as_view()),
     path("userinfo/", UserInfoView.as_view()),
+    path("portfolio/", PortfolioView.as_view()),
+
+
 
     # path('loginkc/', LoginKCView.as_view()),
 
