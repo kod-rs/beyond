@@ -7,6 +7,8 @@
         <portfolio-details />
     </div>
 
+
+
     <!-- <div v-if="userType === 'building_manager'">
         building_manager
         <br>
@@ -48,7 +50,7 @@
 
 import PortfolioList from "./PortfolioList.vue";
 import PortfolioDetails from "./PortfolioDetails.vue";
-
+import { apiCalls } from '../../scripts/api';
 import "bootstrap/dist/css/bootstrap.css";
 
 import store from '../../scripts/store';
@@ -59,7 +61,15 @@ export default {
     components: {
         "portfolio-list": PortfolioList,
         "portfolio-details": PortfolioDetails
+    },
+    async mounted() {
+
+        console.log("moutned")
+        let t = await apiCalls.testcall()
+        console.log(t)
+
     }
+
 };
 
 // export default {
