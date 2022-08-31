@@ -50,7 +50,7 @@
 
 import PortfolioList from "./PortfolioList.vue";
 import PortfolioDetails from "./PortfolioDetails.vue";
-import { apiCalls } from '../../scripts/api';
+// import { apiCalls } from '../../scripts/api';
 import "bootstrap/dist/css/bootstrap.css";
 
 import store from '../../scripts/store';
@@ -64,9 +64,18 @@ export default {
     },
     async mounted() {
 
-        console.log("moutned")
-        let t = await apiCalls.testcall()
-        console.log(t)
+        // console.log("moutned")
+        // let res = await apiCalls.getPortoflios();
+        // console.log(res);
+
+        // if (res["auth"]["status"]) {
+        //     console.log("status ok")
+
+        //     const role = res["payload"]["role"];
+        //     const portfolios = res["payload"]["portfolios"];
+        //     console.log("role", role);
+        //     console.log("portfolios", portfolios)
+        // }
 
     }
 
