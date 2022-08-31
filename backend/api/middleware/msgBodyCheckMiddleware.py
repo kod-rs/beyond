@@ -33,7 +33,7 @@ class MsgBodyCheckMiddleware(DebuggableMiddleware):
         ):
             print(f"\tmissing something, {request.action=}")
             print(f"\tprovided {keys}")
-            return JsonResponse(rejection)
+            # return JsonResponse(rejection)
 
         return self.get_response(request)
 
