@@ -9,7 +9,6 @@ class BodyCheckMiddleware:
         self.get_response = get_response
 
         self.debug = config("DEBUG") != "0"
-        # self.scheme_validator = SchemeValidator()
 
     def __call__(self, request):
         print("BodyCheckMiddleware")
