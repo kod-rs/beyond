@@ -5,7 +5,8 @@ import { createStore } from 'vuex'
 function createEmptyPortfolio() {
     return {
         id: -1,
-        name: ""
+        name: "",
+        colour: ""
     };
 }
 
@@ -19,7 +20,7 @@ export const store = createStore({
             username: "",
             appMode: "development",
 
-            portfolios: [],
+            portfolios: {},
             selectedPortfolio: createEmptyPortfolio(),
             nextId: 1
 
@@ -59,7 +60,8 @@ export const store = createStore({
 
         ADD_PORTFOLIO(state, portfolio) {
             portfolio.id = state.nextId++;
-            state.portfolios.push(portfolio);
+            state.portfolios[portfolio.name] = portfolio;
+            // state.portfolios.push(portfolio);
             state.selectedPortfolio = portfolio;
         },
         SELECT_PORTFOLIO(state, portfolio) {
