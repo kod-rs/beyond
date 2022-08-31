@@ -27,19 +27,15 @@
 
 
             </thead>
-            <tbody>
+            <tbody v-for="portfolio in this.$store.getters.portfolios" :key="portfolio.id" @click="selectRow(portfolio)"
+                :class="{ 'table-primary': isSelected(portfolio.id) }">
                 <!-- <div> -->
-                <tr>
-                    <td>a</td>
-                    <td>a</td>
-                    <td>a</td>
-                    <td>a</td>
-                    <td>a</td>
-                </tr>
+
 
                 <!-- </div> -->
-                <tr v-for="portfolio in this.$store.getters.portfolios" :key="portfolio.id"
-                    @click="selectRow(portfolio)" :class="{ 'table-primary': isSelected(portfolio.id) }">
+                <tr>
+                    <!-- <tr v-for="portfolio in this.$store.getters.portfolios" :key="portfolio.id"
+                    @click="selectRow(portfolio)" :class="{ 'table-primary': isSelected(portfolio.id) }"> -->
 
                     <td scope="row">
                         {{ portfolio.name }}
@@ -73,6 +69,12 @@
                     <br>
 
 
+                </tr>
+                <tr>
+                    fff
+                    <td>a</td>
+
+                    <td>a</td>
                 </tr>
             </tbody>
         </table>
