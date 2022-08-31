@@ -34,10 +34,12 @@ class IpCheckMiddleware:
             rejection["debug"] = "unable to get clients ip"
             return JsonResponse(rejection)
 
-        if check_max_count(ip, self.max_brute_force_count):
+        # todo uncomm in prod
+        if not self.debug:
+            if check_max_count(ip, self.max_brute_force_count):
 
-            rejection["debug"] = "max try exceeded"
-            return JsonResponse(rejection)
+                rejection["debug"] = "max try exceeded"
+                return JsonResponse(rejection)
 
         log_user_auth_attempt(ip)
 
