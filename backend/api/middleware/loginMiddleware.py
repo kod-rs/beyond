@@ -19,44 +19,42 @@ class LoginMiddleware:
 
     def __call__(self, request):
         print("LoginMiddleware")
-        # rejection = get_empty_response_template()
-        #
-        # if "HTTP_AUTHORIZATION" not in request.META:
-        #     print("no authorization")
-        #     return JsonResponse(rejection)
+        rejection = get_empty_response_template()
 
-        # authorization_header = request.META['HTTP_AUTHORIZATION']
+        if "HTTP_AUTHORIZATION" not in request.META:
+            print("no authorization")
+            print(request.META)
+            request.is_auth = False
+            return JsonResponse(rejection)
+            # return self.get_response(request)
 
-        # parsed_authorization_header = urllib.parse.unquote(authorization_header)
-        # auth_type, payload = parsed_authorization_header.split(" ")
+        authorization_header = request.META['HTTP_AUTHORIZATION']
 
-        # if auth_type != "Basic":
-        #     request.is_auth = False
-        #     return self.get_response(request)
+        parsed_authorization_header = urllib.parse.unquote(authorization_header)
+        auth_type, payload = parsed_authorization_header.split(" ")
 
-        # print("user pass")
-        # username, password = payload.split(":")
-        # res = login(username, password)
+        if auth_type != "Basic":
+            print("not basic auth")
+            request.is_auth = False
+            return self.get_response(request)
 
-        # if not res["is_valid"]:
-        #     print("user pass err")
-        #     rejection["debug"] = "user pass error"
-        #     return JsonResponse(rejection)
+        print("basic auth")
+        username, password = payload.split(":")
+        res = login(username, password)
+
+        if not res["is_valid"]:
+            print("user pass err")
+            rejection["debug"] = "user pass error"
+            request.is_auth = False
+            return JsonResponse(rejection)
 
         # todo move to auth part backend, hotfix
         ip, _ = get_client_ip(request)
         auth_user(ip)
 
-        # fixme hardcoded for testing
-        request.username = "username"
-        request.access_token = 'res["access_token"]'
-        request.refresh_token = 'res["refresh_token"]'
+        request.username = username
+        request.access_token = res["access_token"]
+        request.refresh_token = res["refresh_token"]
         request.is_auth = True
-
-
-        # request.username = username
-        # request.access_token = res["access_token"]
-        # request.refresh_token = res["refresh_token"]
-        # request.is_auth = True
 
         return self.get_response(request)
