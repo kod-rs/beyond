@@ -16,7 +16,7 @@ def main():
     comment = "init: screens"
     comment = 'ref: rewrite auth using backend'
 
-    comment = "init: basic master detail & fetch portfolios"
+    comment = "wip: rewrite api calls for locations"
 
     if same_comment:
         if not comment:
