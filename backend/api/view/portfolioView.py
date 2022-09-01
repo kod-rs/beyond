@@ -14,19 +14,32 @@ class PortfolioView(APIView):
             "payload": {
                 "role": "role 1",
                 "colours": {
-                    " color 1": "color 1 val",
-                    "color 28": "c 2 val",
-                    "color 23": "3 val",
+                    "Black": {
+                        "name": "black",
+                        "hex": "#000000"
+                    },
+                    "Red": {
+                        "name": "red",
+                        "hex": "#FF0000"
+                    },
+                    "Maroon": {
+                        "name": "Maroon",
+                        "hex": "#800000"
+                    },
+                    "yellow": {
+                        "name": "yellow",
+                        "hex": "#DFFF00"
+                    }
                 },
                 "portfolios": {
                     "portfolio 1": {
-                        "colour": "color 1"
+                        "colour": "Black"
                     },
                     "portfolio 2": {
-                        "colour": "color 2"
+                        "colour": "Red"
                     },
                     "portfolio 3": {
-                        "colour": "color 3"
+                        "colour": "Maroon"
                     }
 
                 }
