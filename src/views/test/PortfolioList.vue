@@ -18,6 +18,7 @@
         <hr>
         notifications
 
+        <!-- todo if multiple changes happen show one below another -->
         <Green ref="green">
         </Green>
 
@@ -27,7 +28,7 @@
             <br>
             <!-- @click="selectRow(portofolioName)" -->
             <div v-for="(portfolioPayload, id, index) in this.portfolios" :key="id"
-                @click="selectRow(portfolioPayload.oldName)">
+                @click="selectRow(portfolioPayload)">
                 {{ portfolioPayload }} : {{ id }} : {{ index }}
 
                 <br>
@@ -72,19 +73,43 @@
 
                     <div class="col">
 
-                        <button @click="deletePortfolio(portfolioPayload)" class="btn btn-primary">Delete</button>
+
+                        <!-- todo role check config file -->
+                        <div class="col col-lg-1">
+                            <!-- todo negate -->
+                            <div v-if="this.role === 'manager'">
+
+                                <button @click="deletePortfolio(portfolioPayload)"
+                                    class="btn btn-primary">Delete</button>
+
+                            </div>
+                            <div v-else>
+
+                                <button v-if="!this.isContentCleared" class="btn btn-primary"
+                                    @click="clearContentPortfolio(portfolioPayload)">
+                                    Clear content
+                                </button>
+                                <button v-else class="btn btn-secondary" disabled>Clear content</button>
+
+
+                            </div>
+
+                        </div>
+
+
 
                     </div>
 
 
-                    <div class="col">
-
-                        <!-- <div v-show="isExpanded(portfolio.name)">
-                    bbbbbbbbbbbbbbbbbbbbbbbbb</div> -->
-
-                    </div>
                 </div>
 
+                <div class="row">
+
+                    <div v-show="portfolioPayload.isExpanded">
+                        bbbbbbbbbbbbbbbbbbbbbbbbb
+                    </div>
+
+                </div>
 
                 <hr>
                 <br>
@@ -157,7 +182,8 @@ export default {
             isTempCreated: false,
             timer: 1,
             customContent: "customContent",
-            autoSave: false
+            autoSave: false,
+            isContentCleared: false
         };
     },
 
@@ -172,6 +198,9 @@ export default {
         }
     },
     methods: {
+        clearContentPortfolio(portfolioPayload) {
+            console.log("clear content", portfolioPayload)
+        },
 
         createRow() {
 
@@ -187,7 +216,7 @@ export default {
                 "newName": "",
                 "oldName": "",
                 "colour": "placeholder",
-                "modifiedAndUnsaved": false
+                "isExpanded": false
 
             };
             this.isTempCreated = true;
@@ -196,8 +225,9 @@ export default {
         async savePortfolio(portfolioPayload) {
             let currentName = portfolioPayload.oldName;
             let newName = portfolioPayload.newName;
-
+            console.log(newName === "")
             if (newName === "") {
+                console.log("new name is empty")
                 return
             }
 
@@ -213,13 +243,24 @@ export default {
             let r = await apiCalls.createOrUpdatePortfolio(currentName, newName, newColour);
             console.log("saved or created", r);
 
-            this.$refs.green.setContent("saved changes for " + newName);
-            this.$refs.green.show();
+            if (r["payload"]["status"]) {
+                this.$refs.green.setContent("saved changes for " + newName);
+                this.$refs.green.show();
 
-            portfolioPayload.modifiedAndUnsaved = false;
+            } else {
+                console.log("error saving")
+            }
+
+
 
         },
         async deletePortfolio(portfolioPayload) {
+
+            if (portfolioPayload.newName === "") {
+                //  assumption: trying to delete new portfolio
+                console.log("new name is empty")
+                return
+            }
 
             if (!confirm('Are you sure you want to delete ' + portfolioPayload.newName + '?')) {
                 return
@@ -248,8 +289,9 @@ export default {
         // isExpanded(key) {
         //     return this.expandedGroup.indexOf(key) !== -1;
         // },
-        selectRow(p) {
-            console.log("select row", p)
+        selectRow(portfolioPayload) {
+            portfolioPayload.isExpanded = !portfolioPayload.isExpanded;
+            // console.log("select row", p)
             // this.$store.dispatch("selectPortfolio", p);
             // const key = p.name;
             // if (this.isExpanded(key)) {
