@@ -16,7 +16,7 @@ def main():
     comment = "init: screens"
     comment = 'ref: rewrite auth using backend'
 
-    comment = "impl: api colours"
+    comment = "impl: update colour in portfolio"
 
     if same_comment:
         if not comment:
