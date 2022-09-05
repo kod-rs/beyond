@@ -30,9 +30,17 @@
         <!-- <button @click="createNewGroup">create new group</button> -->
 
 
+        <form @submit.prevent="handleSubmit">
+
+            portfolio name
+            <input type="text" v-model="portfolioName">
+
+
+        </form>
+
         <hr>
 
-        <button @click="deletePortfolio">delete portfolio</button>
+        <!-- <button @click="deletePortfolio">delete portfolio</button> -->
 
 
     </div>
@@ -47,12 +55,29 @@ export default {
     },
     data() {
         return {
-
+            portfolioName: "tmp"
         }
     },
     methods: {
         // createNewGroup() {
         //     console.log("create new group")
+        // },
+
+        // handleSubmit() {
+        //     this.submitted = true;
+        //     const { username, password } = this;
+        //     if (!(username && password)) {
+        //         return;
+        //     }
+        //     this.loading = true;
+        //     apiCalls.login(username, password).then(() => {
+        //         router.push(this.returnUrl);
+        //         this.$store.commit("setUsername", username);
+        //     }, error => {
+        //         this.error = "invalid credentials";
+        //         this.error = error;
+        //         this.loading = false;
+        //     });
         // },
         deletePortfolio() {
             console.log("delete portfolio")
