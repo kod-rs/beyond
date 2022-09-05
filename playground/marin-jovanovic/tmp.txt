@@ -52,3 +52,4 @@ location_vals_type
 
 
 
+provjeri jel jedan user moze mjenjat tude podatke u bazi
