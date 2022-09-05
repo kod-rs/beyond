@@ -2,13 +2,21 @@ import { createStore } from 'vuex'
 
 // state : development / production
 
-function createEmptyPortfolio() {
-    return {
-        id: -1,
-        name: "",
-        colour: ""
-    };
-}
+// function createEmptyPortfolio() {
+//     return {
+//         id: -1,
+//         name: "",
+//         colour: "tmp colour"
+//     };
+// }
+
+// function deleteFromDict(key) {
+//     if (this.hasKey(key)) {
+//         delete this.container[key];
+//         return true;
+//     }
+//     return false;
+// }
 
 export const store = createStore({
     state() {
@@ -21,20 +29,24 @@ export const store = createStore({
             appMode: "development",
 
             portfolios: {},
-            selectedPortfolio: createEmptyPortfolio(),
-            nextId: 1
+            selectedPortfolio: { "id": -1 }
+            // selectedPortfolio: createEmptyPortfolio(),
+            // nextId: 1
 
         }
     },
     actions: {
+        updatePortfolioColour(context, pl) {
+            context.commit("UPDATE_PORTFOLIO_COLOUR", pl);
+        },
         addPortfolio(context, portfolio) {
             context.commit("ADD_PORTFOLIO", portfolio);
         },
         selectPortfolio(context, portfolio) {
             context.commit("SELECT_PORTFOLIO", portfolio);
         },
-        deletePortfolio(context, id) {
-            context.commit("DELETE_PORTFOLIO", id);
+        deletePortfolio(context, name) {
+            context.commit("DELETE_PORTFOLIO", name);
 
         },
         updatePortfolio(context, portfolio) {
@@ -45,6 +57,10 @@ export const store = createStore({
         increment(state) {
             state.count++;
         },
+        UPDATE_PORTFOLIO_COLOUR(state, pl) {
+            state.portfolios[pl.portfolioName]["colour"] = pl.colourName
+        },
+
         setSynchronizerToken(state, newValue) {
             state.synchronizerToken = newValue;
         },
@@ -59,7 +75,7 @@ export const store = createStore({
         },
 
         ADD_PORTFOLIO(state, portfolio) {
-            portfolio.id = state.nextId++;
+            // portfolio.id = state.nextId++;
             state.portfolios[portfolio.name] = portfolio;
             // state.portfolios.push(portfolio);
             state.selectedPortfolio = portfolio;
@@ -68,16 +84,10 @@ export const store = createStore({
             state.selectedPortfolio = portfolio;
         },
         DELETE_PORTFOLIO(state, id) {
-            if (state.selectedPortfolio.id == id) {
-                state.selectedPortfolio = createEmptyPortfolio();
-            }
-            state.portfolios = state.portfolios.filter(p => p.id != id);
+            delete state.portfolios[id];
         },
         UPDATE_PORTFOLIO(state, portfolio) {
-            var store_p = state.portfolios.find(p => p.id == portfolio.id);
-            if (store_p != null) {
-                store_p.name = portfolio.name;
-            }
+            console.log("todo", state, portfolio)
         }
 
     },
