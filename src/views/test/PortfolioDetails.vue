@@ -61,13 +61,16 @@
           newPortfolio() {
               const p = {
                   name: "New Portfolio",
+                  colour: "tmp new colour"
+  
               };
               this.$store.dispatch("addPortfolio", p);
           },
           savePerson(event) {
               const p = {
                   id: event.target.form["id"].value,
-                  name: event.target.form["name"].value,
+                  name: event.target.form["name"].value
+                  //   colour: "tmp new colour"
               };
               this.$store.dispatch("updatePortfolio", p);
           }
