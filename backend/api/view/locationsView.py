@@ -5,7 +5,7 @@ from backend.api.comm.comm import decode_data
 from backend.api.config.main import get_actions_for_routes, \
     INTERNAL_SERVER_ERROR_MESSAGE
 from backend.api.cqrs_c.location import add, delete
-from backend.api.cqrs_q.location import get_all, get_all_by_username
+from backend.api.cqrs_q.location import  get_all_by_username
 from backend.api.mode.type_validator import _check_request_data
 from backend.api.view.comm import get_auth_ok_response_template
 
@@ -57,18 +57,20 @@ class SelectUsername(LocationAction):
     def perform_action(self, request):
         print("select by username")
 
+        # ip_obj = Location.objects.filter(portfolio__username=username)
+
         username_locations = get_all_by_username(request.username)
         payload = {"status": True, "content": username_locations}
         return payload
-
+        # return {"status": False, "f": "todo"}
 
 class SelectAll(LocationAction):
 
     def perform_action(self, request):
         print("select all")
 
-        all_locations = get_all()
-        payload = {"status": True, "content": all_locations}
+        # all_locatio/ns = get_all()
+        payload = {"status": False, "content": "all_locations"}
         return payload
 
 
