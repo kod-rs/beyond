@@ -53,10 +53,7 @@
 
 import PortfolioList from "./PortfolioList.vue";
 import PortfolioDetails from "./PortfolioDetails.vue";
-// import { apiCalls } from '../../scripts/api';
 import "bootstrap/dist/css/bootstrap.css";
-// import SavedModal from '../../components/modals/SavedModal.vue'
-
 import store from '../../scripts/store';
 
 export default {
@@ -73,45 +70,9 @@ export default {
         "portfolio-details": PortfolioDetails
     },
     async mounted() {
-        // console.log("moutned")
-        // let res = await apiCalls.getPortoflios();
-        // console.log(res);
-
-        // if (res["auth"]["status"]) {
-        //     console.log("status ok")
-
-        //     const role = res["payload"]["role"];
-        //     const portfolios = res["payload"]["portfolios"];
-        //     console.log("role", role);
-        //     console.log("portfolios", portfolios)
-        // }
 
     }
 
 };
 
-// export default {
-//     data() {
-//         return {
-//             userType: 'building_manager',
-//             name: 'ffff',
-//             editField: ''
-//         };
-//     },
-//     mounted() {
-//         console.log('type', this.userType)
-//     },
-//     methods: {
-//         focusField(name) {
-//             this.editField = name;
-//         },
-//         blurField() {
-//             this.editField = '';
-//         },
-//         showField(name) {
-//             return (this.name == '' || this.editField == name)
-//         }
-//     }
-
-// };
 </script> 
