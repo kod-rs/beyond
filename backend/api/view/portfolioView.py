@@ -1,10 +1,10 @@
 from django.http import JsonResponse
 from rest_framework.views import APIView
-
-
+from backend.api.comm.json_loader import colours_cfg
 class PortfolioView(APIView):
 
     def get(self, request):
+
         response = {
             "auth": {
                 "status": True,
@@ -13,24 +13,8 @@ class PortfolioView(APIView):
             },
             "payload": {
                 "role": "role 1",
-                "colours": {
-                    "Black": {
-                        "name": "black",
-                        "hex": "#000000"
-                    },
-                    "Red": {
-                        "name": "red",
-                        "hex": "#FF0000"
-                    },
-                    "Maroon": {
-                        "name": "Maroon",
-                        "hex": "#800000"
-                    },
-                    "yellow": {
-                        "name": "yellow",
-                        "hex": "#DFFF00"
-                    }
-                },
+                "colours": colours_cfg
+                ,
                 "portfolios": {
                     "portfolio 1": {
                         "colour": "Black"
@@ -45,6 +29,5 @@ class PortfolioView(APIView):
                 }
             }
         }
-
         return JsonResponse(response)
 
