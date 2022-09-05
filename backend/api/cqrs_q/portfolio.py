@@ -2,6 +2,11 @@ from backend.api.model.portfolio import Portfolio
 from backend.api.model.location import Location
 from django.core import serializers
 
+
+def delete_portfolio(username, portfolio_name):
+    Portfolio.objects.filter(username=username, name=portfolio_name).delete()
+
+
 def get_portfolios(username):
 
     try:
