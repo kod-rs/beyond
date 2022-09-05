@@ -1,8 +1,6 @@
 from backend.api.model.portfolio import Portfolio
 
 
-
-
 def create_or_update(username, current_name, new_name, colour):
 
     print("create_or_update")
