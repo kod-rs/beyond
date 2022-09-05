@@ -2,26 +2,86 @@
     <div>
         <div class="row align-items-center">
             <div class="col">
-                <h1>Portfolio list</h1>
-            </div>
-            <div class="col col-lg-1">
-                <button class="btn btn-secondary" @click="deleteRow"
-                    :disabled="this.$store.getters.selectedPortfolio.id == -1">Delete</button>
+                <h1>Portfolio manager</h1>
             </div>
 
-            <div>
-                portfolio type for role: {{ this.role }}
+            <!-- todo role check config file -->
+            <div v-if="this.role !== 'manager'" class="col col-lg-1">
+
+                <button v-if="!this.isTempCreated" class="btn btn-primary" @click="createRow">Add</button>
+                <button v-else class="btn btn-secondary" disabled>Add</button>
+
             </div>
 
-            <!-- <div>
-                <input name="optionsRadios" id="optionsRadios1" v-model="srStatus">
-            </div> -->
         </div>
 
-        <div>
+        <hr>
+        notifications
 
-            <div class="container text-center" v-for="(portfolioPayload, portofolioName) in this.portfolios"
-                :key="portofolioName" @click="selectRow(portofolioName)">
+        <Green ref="green">
+        </Green>
+
+        <hr>
+
+        <div>
+            <br>
+            <!-- @click="selectRow(portofolioName)" -->
+            <div v-for="(portfolioPayload, id, index) in this.portfolios" :key="id">
+                {{ portfolioPayload }} : {{ id }} : {{ index }}
+
+                <br>
+
+                <div class="row">
+
+                    <div class="col">
+                        <input class="form-control" type="text" v-model="portfolioPayload.newName">
+                    </div>
+                    <div class="col">
+                        <div class="dropdown">
+                            <button class="dropbtn">
+                                {{ portfolioPayload.colour }}
+                            </button>
+
+                            <div class="dropdown-content">
+                                <a @click="colorClicked(id, colourName)" href="#"
+                                    v-for="(colourPayload, colourName) in this.colours" :key="colourName">
+
+                                    <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24"
+                                        width="24px" fill="#FF0000">
+                                        <path d="M0 0h24v24H0z" fill="none" />
+                                        <path :fill="colourPayload.hex"
+                                            d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" />
+                                    </svg> {{ colourName }}
+                                </a>
+
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="col">
+
+                        <!-- todo make disableable -->
+                        <button @click="savePortfolio(portfolioPayload)" class="btn btn-secondary">Save</button>
+
+                    </div>
+
+                    <div class="col">
+
+                        <button @click="deletePortfolio(portfolioName)" class="btn btn-secondary">Delete</button>
+
+                    </div>
+
+                </div>
+
+
+                <hr>
+                <br>
+
+            </div>
+
+            <!-- <div class="container text-center" v-for="(portfolioPayload, portfolioName) in this.portfolios"
+                :key="portfolioName" @click="selectRow(portfolioName)">
 
                 <div class="row">
                     <div class="col">
@@ -30,7 +90,7 @@
                     <div class="col">
                         <div class="dropdown">
                             <button class="dropbtn">
-                                {{ portfolio.colour }}
+                                {{ portfolioPayload }}
                             </button>
 
                             <div class="dropdown-content">
@@ -68,7 +128,7 @@
                 <hr>
                 <br>
 
-            </div>
+            </div> -->
         </div>
 
 
@@ -121,7 +181,7 @@
 
   <script>
 import { apiCalls } from '../../scripts/api';
-
+import Green from './Green.vue';
 
 export default {
     name: "PortfolioList",
@@ -130,111 +190,115 @@ export default {
             role: "",
             expandedGroup: [],
             colours: {},
-            portfolios: {}
-
-        }
-    }
-    // , watch: {
-    //     srStatus: function (val) {
-    //         console.log("val c", val)
-    //         // for (var i = 0; i < this.cases.length; i++) {
-    //         //     if (this.cases[i].status == val) {
-    //         //         this.activeCases.push(this.cases[i]);
-    //         //         console.log("fired", val)
-    //         //         // alert("Fired! " + val);
-    //         //     }
-    //         // }
-    //     }
-    // },
-    ,
+            portfolios: {},
+            isTempCreated: false,
+            timer: 1,
+            customContent: "customContent"
+        };
+    },
     async mounted() {
-        console.log("moutned")
+        console.log("moutned");
         let res = await apiCalls.getPortoflios();
-
         if (res["auth"]["status"]) {
-            console.log("status ok")
-
-
+            console.log("status ok");
             this.colours = res["payload"]["colours"];
             this.role = res["payload"]["role"];
             this.portfolios = res["payload"]["portfolios"];
-
-            // const existingPortfolios = this.$store.getters.portfolios;
-
-            // for (const [portfolioName, portfolioDetails] of Object.entries(portfolios)) {
-
-
-            //     this.$store.dispatch("addPortfolio",
-            //         {
-            //             name: portfolioName,
-            //             colour: portfolioDetails["colour"]
-            //         }
-            //     );
-
-            // }
-
-
-
         }
+        console.log("portf", this.portfolios);
     },
     methods: {
-        isUpdated(portfolioName) {
-            console.log(".updated", portfolioName)
-            return true
+        createGreenRef(portfolioName) {
+            console.log("new for ", portfolioName)
+            return "green-" + portfolioName.replaceAll(" ", "-");
         },
-        savePortfolio(portfolioName) {
-            console.log("todo save changes for", portfolioName);
-        },
-        deletePortfolio(portfolioName) {
-            console.log("todo delete for", portfolioName);
+        createRow() {
+            console.log("create row");
+            // todo check if empty exist 
+            let currentSize = Object.keys(this.portfolios).length;
+            console.log("current size", currentSize)
 
-            this.$store.dispatch(
-                "deletePortfolio",
-                portfolioName
-            );
+            this.portfolios[currentSize] = { "name": "ph name", "colour": "placeholder" };
+            this.isTempCreated = true;
+            // let currentName = this.portfolios[index].name;
 
-            // if (confirm('Are you sure?')) {
-            //     // this.deleteRow();
-            //     console.log('deleter.');
-            // } else {
-            //     // Do nothing!
-            //     console.log('no delete.');
-            // }
+            // write to db
         },
+        // isUpdated(portfolioName) {
+        //     console.log(".updated", portfolioName)
+        //     return true
+        // },
+        async savePortfolio(portfolioPayload) {
+            // let portfolioName = portfolioPayload.name;
+            console.log("todo save changes for", portfolioPayload);
+
+            // trigger confirmation box
+            let currentName = portfolioPayload.oldName;
+            // console.log("current name", currentName);
+            let newName = portfolioPayload.newName;
+            let newColour = portfolioPayload.colour;
+            // console.log(newName, newColour);
+
+
+            let r = await apiCalls.createOrUpdatePortfolio(currentName, newName, newColour);
+            console.log("saved or created", r);
+
+            this.$refs.green.setContent("saved changes for " + newName);
+            this.$refs.green.show();
+
+
+            // this.timer = 0;
+            // this.timer = 2;
+            // this.customContent = "saved changes for" + portfolioName;
+            // this.timer = 0;
+            // this.timer = 2;
+
+            // let name = this.createGreenRef(portfolioName);
+            // console.log("name", name);
+            // this.$refs[name].show();
+        },
+        // deletePortfolio(portfolioName) {
+        //     console.log("todo delete for", portfolioName);
+        //     this.$store.dispatch(
+        //         "deletePortfolio",
+        //         portfolioName
+        //     );
+        //     // if (confirm('Are you sure?')) {
+        //     //     // this.deleteRow();
+        //     //     console.log('deleter.');
+        //     // } else {
+        //     //     // Do nothing!
+        //     //     console.log('no delete.');
+        //     // }
+        // },
         colorClicked(portfolioName, colourName) {
-            console.log("clicked", colourName, "from", portfolioName)
-            this.$store.dispatch("updatePortfolioColour", {
-                "portfolioName": portfolioName,
-                "colourName": colourName
-            });
+            this.portfolios[portfolioName]["colour"] = colourName;
         },
-        isExpanded(key) {
-            return this.expandedGroup.indexOf(key) !== -1;
-        },
-        selectRow(p) {
-            this.$store.dispatch("selectPortfolio", p);
-
-            const key = p.name;
-
-            if (this.isExpanded(key)) {
-                this.expandedGroup.splice(this.expandedGroup.indexOf(key), 1);
-            } else {
-                this.expandedGroup.push(key);
-            }
-
-        },
-        isSelected(id) {
-            console.log(id)
-            return false
-            // return id == this.$store.getters.selectedPortfolio.id;
-        },
-        deleteRow() {
-            this.$store.dispatch(
-                "deletePortfolio",
-                this.$store.getters.selectedPortfolio.id
-            );
-        }
-    }
+        // isExpanded(key) {
+        //     return this.expandedGroup.indexOf(key) !== -1;
+        // },
+        // selectRow(p) {
+        //     this.$store.dispatch("selectPortfolio", p);
+        //     const key = p.name;
+        //     if (this.isExpanded(key)) {
+        //         this.expandedGroup.splice(this.expandedGroup.indexOf(key), 1);
+        //     } else {
+        //         this.expandedGroup.push(key);
+        //     }
+        // },
+        // isSelected(id) {
+        //     console.log(id)
+        //     return false
+        //     // return id == this.$store.getters.selectedPortfolio.id;
+        // },
+        // deleteRow() {
+        //     this.$store.dispatch(
+        //         "deletePortfolio",
+        //         this.$store.getters.selectedPortfolio.id
+        //     );
+        // }
+    },
+    components: { Green }
 };
 </script>
   
