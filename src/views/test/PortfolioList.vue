@@ -72,74 +72,6 @@
         </div>
 
 
-        <!-- <table class="table table-hover">
-
-            <tbody v-for="portfolio in this.$store.getters.portfolios" :key="portfolio.id" @click="selectRow(portfolio)"
-                :class="{ 'table-primary': isSelected(portfolio.id) }">
-
-                <tr>
-
-                    <td scope="row">
-                        <input class="form-control" type="text" id="name" :value="portfolio.name">
-                    </td>
-
-                    <td scope="row">
-
-                        <div class="dropdown">
-                            <button class="dropbtn">
-                                {{ portfolio.colour }}
-                            </button>
-
-                            <div class="dropdown-content">
-
-
-                                <a @click="colorClicked(portfolio.name, colourName)" href="#"
-                                    v-for="(colourPayload, colourName) in this.colours" :key="colourName">
-
-                                    <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24"
-                                        width="24px" fill="#FF0000">
-                                        <path d="M0 0h24v24H0z" fill="none" />
-                                        <path :fill="colourPayload.hex"
-                                            d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" />
-                                    </svg> {{ colourName }}
-                                </a>
-
-                            </div>
-                        </div>
-
-
-                    </td>
-
-                    <td scope='row'>
-                        <button @click="savePortfolio(portfolio.name)" class="btn btn-secondary">Save changes</button>
-                    </td>
-
-                    <td scope='row'>
-                        <button @click="deletePortfolio(portfolio.name)" class="btn btn-secondary">Delete</button>
-                    </td>
-
-
-
-                    <hr>
-                    <br>
-
-
-                </tr>
-
-
-                <tr>
-                    <td>
-                        <div v-if="true" class="alert alert-danger">click to confirm</div>
-
-                    </td>
-
-                </tr>
-                <tr v-show="isExpanded(portfolio.name)">
-                    bbbbbbbbbbbbbbbbbbbb
-                </tr>
-
-            </tbody>
-        </table> -->
     </div>
 </template>
   
@@ -197,16 +129,7 @@ export default {
         return {
             role: "",
             expandedGroup: [],
-            colours: {}
-            // , cases: [
-            //     { name: 'case A', status: '1' },
-            //     { name: 'case B', status: '0' },
-            //     { name: 'case C', status: '1' }
-            // ],
-            // activeCases: [],
-            // ,
-            // srStatus: 'trmp'
-            ,
+            colours: {},
             portfolios: {}
 
         }
