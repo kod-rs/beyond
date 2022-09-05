@@ -15,8 +15,9 @@ def main():
     comment = "upd: rewrite select all api call"
     comment = "init: screens"
     comment = "impl: create / update portfolio"
-    # comment = 'ref: rewrite db scheme'
+    comment = 'ref: rewrite db scheme'
 
+    comment = "fix: add & save button edge cases"
 
     if same_comment:
         if not comment:
