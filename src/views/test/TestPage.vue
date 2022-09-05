@@ -2,6 +2,9 @@
 
 
     <div id="app" class="container mt-2">
+
+        <!-- <SavedModal v-show="showModal" @close-modal="showModal = false" /> -->
+        <hr>
         <portfolio-list />
         <hr>
         <portfolio-details />
@@ -52,18 +55,24 @@ import PortfolioList from "./PortfolioList.vue";
 import PortfolioDetails from "./PortfolioDetails.vue";
 // import { apiCalls } from '../../scripts/api';
 import "bootstrap/dist/css/bootstrap.css";
+// import SavedModal from '../../components/modals/SavedModal.vue'
 
 import store from '../../scripts/store';
 
 export default {
     name: "TestPag",
     store,
+    data() {
+        return {
+            // showModal: true,
+        }
+    },
     components: {
+        // "SavedModal": SavedModal,
         "portfolio-list": PortfolioList,
         "portfolio-details": PortfolioDetails
     },
     async mounted() {
-
         // console.log("moutned")
         // let res = await apiCalls.getPortoflios();
         // console.log(res);
