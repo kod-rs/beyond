@@ -1,9 +1,18 @@
 from django.http import JsonResponse
 from rest_framework.views import APIView
 from backend.api.comm.json_loader import colours_cfg
+from backend.api.cqrs_q.portfolio import get_portfolio
+
 class PortfolioView(APIView):
 
     def get(self, request):
+
+        print("get for user")
+        username = request.username
+        print(username)
+
+        portfolios = get_portfolio(username)
+        print("portfolios", portfolios)
 
         response = {
             "auth": {
@@ -17,7 +26,11 @@ class PortfolioView(APIView):
                 ,
                 "portfolios": {
                     "portfolio 1": {
-                        "colour": "Black"
+                        "colour": "Black",
+                        # locations
+                        # "locations": {
+                        #
+                        # }
                     },
                     "portfolio 2": {
                         "colour": "Red"
