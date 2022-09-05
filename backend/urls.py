@@ -47,8 +47,7 @@ urlpatterns = [
     path("csrf/", CSRFView.as_view()),
     path("userinfo/", UserInfoView.as_view()),
     path("portfolio/", PortfolioView.as_view()),
-
-
+    path("portfolio/<str:name>", PortfolioView.as_view()),
 
     # path('loginkc/', LoginKCView.as_view()),
 
