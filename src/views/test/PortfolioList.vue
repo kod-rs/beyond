@@ -16,17 +16,7 @@
         </div>
 
         <table class="table table-hover">
-            <thead>
-                <tr>
-                    <th scope="col">Name</th>
-                    <!-- <th scope="col">name changeable</th> -->
-                    <th scope="col">marker color</th>
-                    <th></th>
-                    <th></th>
-                </tr>
 
-
-            </thead>
             <tbody v-for="portfolio in this.$store.getters.portfolios" :key="portfolio.id" @click="selectRow(portfolio)"
                 :class="{ 'table-primary': isSelected(portfolio.id) }">
 
@@ -37,7 +27,6 @@
                     </td>
 
                     <td scope="row">
-                        <!-- two portfolios can not have same colour -->
 
                         <div class="dropdown">
                             <button class="dropbtn">
@@ -46,24 +35,16 @@
 
                             <div class="dropdown-content">
 
-                                <a href="#" v-for="c in this.colours" :key="c" :value="c.name">
+
+                                <a @click="colorClicked(portfolio.name, colourName)" href="#"
+                                    v-for="(colourPayload, colourName) in this.colours" :key="colourName">
 
                                     <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24"
                                         width="24px" fill="#FF0000">
                                         <path d="M0 0h24v24H0z" fill="none" />
-                                        <path :fill="c.hex"
+                                        <path :fill="colourPayload.hex"
                                             d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" />
-                                    </svg> {{ c.name }}
-                                </a>
-
-
-                                <a href="#">
-                                    <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24"
-                                        width="24px" fill="#FF0000">
-                                        <path d="M0 0h24v24H0z" fill="none" />
-                                        <path fill="#FF0000"
-                                            d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" />
-                                    </svg> red
+                                    </svg> {{ colourName }}
                                 </a>
 
                             </div>
@@ -73,28 +54,34 @@
                     </td>
 
                     <td scope='row'>
-                        <button class="btn btn-secondary">Save changes</button>
+                        <button @click="savePortfolio(portfolio.name)" class="btn btn-secondary">Save changes</button>
                     </td>
 
                     <td scope='row'>
-                        <button class="btn btn-secondary">Delete</button>
+                        <button @click="deletePortfolio(portfolio.name)" class="btn btn-secondary">Delete</button>
                     </td>
+
+
 
                     <hr>
                     <br>
 
 
                 </tr>
+
+
+                <tr>
+                    <td>
+                        <div v-if="true" class="alert alert-danger">click to confirm</div>
+
+                    </td>
+
+                </tr>
                 <tr v-show="isExpanded(portfolio.name)">
                     <!-- {{ group.desc }} -->
                     bbbbbbbbbbbbbbbbbbbb
                 </tr>
-                <!-- <tr>
-                    fff
-                    <td>a</td>
 
-                    <td>a</td>
-                </tr> -->
             </tbody>
         </table>
     </div>
@@ -161,7 +148,6 @@ export default {
     async mounted() {
         console.log("moutned")
         let res = await apiCalls.getPortoflios();
-        //   console.log(res);
 
         if (res["auth"]["status"]) {
             console.log("status ok")
@@ -169,9 +155,6 @@ export default {
             this.colours = res["payload"]["colours"];
             this.role = res["payload"]["role"];
             const portfolios = res["payload"]["portfolios"];
-
-
-
 
             // const existingPortfolios = this.$store.getters.portfolios;
 
@@ -192,6 +175,32 @@ export default {
         }
     },
     methods: {
+        savePortfolio(portfolioName) {
+            console.log("todo save changes for", portfolioName);
+        },
+        deletePortfolio(portfolioName) {
+            console.log("todo delete for", portfolioName);
+
+            this.$store.dispatch(
+                "deletePortfolio",
+                portfolioName
+            );
+
+            // if (confirm('Are you sure?')) {
+            //     // this.deleteRow();
+            //     console.log('deleter.');
+            // } else {
+            //     // Do nothing!
+            //     console.log('no delete.');
+            // }
+        },
+        colorClicked(portfolioName, colourName) {
+            console.log("clicked", colourName, "from", portfolioName)
+            this.$store.dispatch("updatePortfolioColour", {
+                "portfolioName": portfolioName,
+                "colourName": colourName
+            });
+        },
         isExpanded(key) {
             return this.expandedGroup.indexOf(key) !== -1;
         },
@@ -208,7 +217,9 @@ export default {
 
         },
         isSelected(id) {
-            return id == this.$store.getters.selectedPortfolio.id;
+            console.log(id)
+            return false
+            // return id == this.$store.getters.selectedPortfolio.id;
         },
         deleteRow() {
             this.$store.dispatch(
