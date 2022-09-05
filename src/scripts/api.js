@@ -185,10 +185,35 @@ function handleNewResponse(response) {
     return response.data
 }
 
+async function createOrUpdatePortfolio(currentName, newName, colour) {
+    // todo csrf
+    console.log(JSON.stringify({
+        currentName,
+        newName
+        , colour
+
+    }))
+
+    return await handleNewResponse(
+        await api.post(
+            "portfolio/",
+            JSON.stringify({
+                currentName,
+                newName
+                , colour
+
+            }),
+            get_auth_header()
+        )
+    );
+
+
+}
 
 
 
 export const apiCalls = {
+    createOrUpdatePortfolio,
     getPortoflios,
     logout,
     login,
