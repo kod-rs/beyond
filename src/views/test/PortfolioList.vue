@@ -26,7 +26,8 @@
         <div>
             <br>
             <!-- @click="selectRow(portofolioName)" -->
-            <div v-for="(portfolioPayload, id, index) in this.portfolios" :key="id">
+            <div v-for="(portfolioPayload, id, index) in this.portfolios" :key="id"
+                @click="selectRow(portfolioPayload.oldName)">
                 {{ portfolioPayload }} : {{ id }} : {{ index }}
 
                 <br>
@@ -36,6 +37,8 @@
                     <div class="col">
                         <input class="form-control" type="text" v-model="portfolioPayload.newName">
                     </div>
+
+                    <!-- todo set modified for this also -->
                     <div class="col">
                         <div class="dropdown">
                             <button class="dropbtn">
@@ -61,17 +64,25 @@
 
                     <div class="col">
 
-                        <!-- todo make disableable -->
-                        <button @click="savePortfolio(portfolioPayload)" class="btn btn-secondary">Save</button>
+                        <button v-if="portfolioPayload.newName !== portfolioPayload.oldName"
+                            @click="savePortfolio(portfolioPayload)" class="btn btn-primary">Save</button>
+                        <button v-else class="btn btn-secondary" disabled>Save</button>
 
                     </div>
 
                     <div class="col">
 
-                        <button @click="deletePortfolio(portfolioName)" class="btn btn-secondary">Delete</button>
+                        <button @click="deletePortfolio(portfolioPayload)" class="btn btn-primary">Delete</button>
 
                     </div>
 
+
+                    <div class="col">
+
+                        <!-- <div v-show="isExpanded(portfolio.name)">
+                    bbbbbbbbbbbbbbbbbbbbbbbbb</div> -->
+
+                    </div>
                 </div>
 
 
@@ -80,55 +91,7 @@
 
             </div>
 
-            <!-- <div class="container text-center" v-for="(portfolioPayload, portfolioName) in this.portfolios"
-                :key="portfolioName" @click="selectRow(portfolioName)">
 
-                <div class="row">
-                    <div class="col">
-                        <input class="form-control" type="text" id="name" :value="portofolioName">
-                    </div>
-                    <div class="col">
-                        <div class="dropdown">
-                            <button class="dropbtn">
-                                {{ portfolioPayload }}
-                            </button>
-
-                            <div class="dropdown-content">
-                                <a @click="colorClicked(portfolio.name, colourName)" href="#"
-                                    v-for="(colourPayload, colourName) in this.colours" :key="colourName">
-
-                                    <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24"
-                                        width="24px" fill="#FF0000">
-                                        <path d="M0 0h24v24H0z" fill="none" />
-                                        <path :fill="colourPayload.hex"
-                                            d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" />
-                                    </svg> {{ colourName }}
-                                </a>
-
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col">
-                        <button @click="deletePortfolio(portfolio.name)" class="btn btn-secondary">Delete</button>
-
-                    </div>
-
-                </div>
-
-                <div v-show="isUpdated(portfolio.name)">
-                    <div class="alert alert-success" role="alert">
-                        updated & saved, todo what?
-                    </div>
-                </div>
-
-                <div v-show="isExpanded(portfolio.name)">
-                    bbbbbbbbbbbbbbbbbbbbbbbbb</div>
-
-                <hr>
-                <br>
-
-            </div> -->
         </div>
 
 
@@ -193,9 +156,11 @@ export default {
             portfolios: {},
             isTempCreated: false,
             timer: 1,
-            customContent: "customContent"
+            customContent: "customContent",
+            autoSave: false
         };
     },
+
     async mounted() {
         console.log("moutned");
         let res = await apiCalls.getPortoflios();
@@ -205,98 +170,94 @@ export default {
             this.role = res["payload"]["role"];
             this.portfolios = res["payload"]["portfolios"];
         }
-        console.log("portf", this.portfolios);
     },
     methods: {
-        createGreenRef(portfolioName) {
-            console.log("new for ", portfolioName)
-            return "green-" + portfolioName.replaceAll(" ", "-");
-        },
+
         createRow() {
+
             console.log("create row");
-            // todo check if empty exist 
+            if (this.isTempCreated) {
+                return
+            }
+
             let currentSize = Object.keys(this.portfolios).length;
             console.log("current size", currentSize)
 
-            this.portfolios[currentSize] = { "name": "ph name", "colour": "placeholder" };
-            this.isTempCreated = true;
-            // let currentName = this.portfolios[index].name;
+            this.portfolios[currentSize] = {
+                "newName": "",
+                "oldName": "",
+                "colour": "placeholder",
+                "modifiedAndUnsaved": false
 
-            // write to db
+            };
+            this.isTempCreated = true;
+
         },
-        // isUpdated(portfolioName) {
-        //     console.log(".updated", portfolioName)
-        //     return true
-        // },
         async savePortfolio(portfolioPayload) {
-            // let portfolioName = portfolioPayload.name;
+            let currentName = portfolioPayload.oldName;
+            let newName = portfolioPayload.newName;
+
+            if (newName === "") {
+                return
+            }
+
+            if (!currentName && newName !== "") {
+                // can create new
+                this.isTempCreated = false;
+            }
+
             console.log("todo save changes for", portfolioPayload);
 
             // trigger confirmation box
-            let currentName = portfolioPayload.oldName;
-            // console.log("current name", currentName);
-            let newName = portfolioPayload.newName;
             let newColour = portfolioPayload.colour;
-            // console.log(newName, newColour);
-
-
             let r = await apiCalls.createOrUpdatePortfolio(currentName, newName, newColour);
             console.log("saved or created", r);
 
             this.$refs.green.setContent("saved changes for " + newName);
             this.$refs.green.show();
 
+            portfolioPayload.modifiedAndUnsaved = false;
 
-            // this.timer = 0;
-            // this.timer = 2;
-            // this.customContent = "saved changes for" + portfolioName;
-            // this.timer = 0;
-            // this.timer = 2;
-
-            // let name = this.createGreenRef(portfolioName);
-            // console.log("name", name);
-            // this.$refs[name].show();
         },
-        // deletePortfolio(portfolioName) {
-        //     console.log("todo delete for", portfolioName);
-        //     this.$store.dispatch(
-        //         "deletePortfolio",
-        //         portfolioName
-        //     );
-        //     // if (confirm('Are you sure?')) {
-        //     //     // this.deleteRow();
-        //     //     console.log('deleter.');
-        //     // } else {
-        //     //     // Do nothing!
-        //     //     console.log('no delete.');
-        //     // }
-        // },
+        async deletePortfolio(portfolioPayload) {
+
+            if (!confirm('Are you sure you want to delete ' + portfolioPayload.newName + '?')) {
+                return
+            }
+
+            let currentName = portfolioPayload.oldName;
+
+            let r = await apiCalls.deletePortfolio(currentName);
+
+            if (r["payload"]["status"]) {
+                delete this.portfolios[currentName];
+
+                this.$refs.green.setContent("deleted " + currentName);
+                this.$refs.green.show();
+
+            } else {
+                alert("error deleting")
+                console.log("error delete")
+            }
+
+        },
         colorClicked(portfolioName, colourName) {
             this.portfolios[portfolioName]["colour"] = colourName;
         },
+        // selectRow
         // isExpanded(key) {
         //     return this.expandedGroup.indexOf(key) !== -1;
         // },
-        // selectRow(p) {
-        //     this.$store.dispatch("selectPortfolio", p);
-        //     const key = p.name;
-        //     if (this.isExpanded(key)) {
-        //         this.expandedGroup.splice(this.expandedGroup.indexOf(key), 1);
-        //     } else {
-        //         this.expandedGroup.push(key);
-        //     }
-        // },
-        // isSelected(id) {
-        //     console.log(id)
-        //     return false
-        //     // return id == this.$store.getters.selectedPortfolio.id;
-        // },
-        // deleteRow() {
-        //     this.$store.dispatch(
-        //         "deletePortfolio",
-        //         this.$store.getters.selectedPortfolio.id
-        //     );
-        // }
+        selectRow(p) {
+            console.log("select row", p)
+            // this.$store.dispatch("selectPortfolio", p);
+            // const key = p.name;
+            // if (this.isExpanded(key)) {
+            //     this.expandedGroup.splice(this.expandedGroup.indexOf(key), 1);
+            // } else {
+            //     this.expandedGroup.push(key);
+            // }
+        },
     },
     components: { Green }
 };
