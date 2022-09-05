@@ -15,7 +15,9 @@
                     <form @submit.prevent="handleSubmit">
                         <CSRFToken />
                         <div v-for="option in formData" :value="option.value" :key="option.value">
+
                             {{ option.key.charAt(0).toUpperCase() + option.key.slice(1) }}
+
                             <span v-if="option.key == 'section' || option.key == 'type'">
                                 <span class="hint" @mouseover="option.hovered = true"
                                     @mouseleave="option.hovered = false">?</span>
@@ -31,7 +33,18 @@
                             <br>
 
                         </div>
-                        <PortfolioSelector></PortfolioSelector>
+
+
+
+                        <!-- <PortfolioSelector></PortfolioSelector> -->
+                        portfolio
+                        <select>
+                            <option v-for="p in portfolios" :key="p">{{ p }}</option>
+
+                        </select>
+
+
+
                         <!-- <div>
                             Portfolio
 
@@ -46,7 +59,7 @@
 
                         </div> -->
 
-
+                        <hr>
                         <button class="btn btn-primary btn-dark btn-lg btn-block" :disabled="loading">add</button>
 
                         <img v-show="loading"
@@ -90,7 +103,7 @@ import { toLonLat } from 'ol/proj';
 import { toStringHDMS } from 'ol/coordinate';
 
 
-import PortfolioSelector from '../../components/form/PortfolioSelector.vue';
+// import PortfolioSelector from '../../components/form/PortfolioSelector.vue';
 
 
 export default {
@@ -106,12 +119,14 @@ export default {
             ]
             , submitted: false,
             loading: false,
-            error: undefined
-            // portfolio: ""
+            error: undefined,
+            portfolios: []
         };
     },
     methods: {
         async handleSubmit() {
+            console.log("submit for p",)
+            // return
             this.submitted = true;
             this.error = "";
             let formContent = {};
@@ -126,12 +141,14 @@ export default {
             }
             const csrfToken = this.$store.state.synchronizerToken;
 
+
             await apiCalls.addLocation(
                 formContent["section"],
                 formContent["type"],
                 formContent["latitude"],
                 formContent["longitude"],
                 csrfToken
+
             ).then(r => {
                 if (r.payload.status) {
                     alert("Location add successful.");
@@ -151,7 +168,26 @@ export default {
             this.submitted = false;
         }
     },
-    mounted() {
+    async mounted() {
+        let r = await apiCalls.getPortoflios();
+
+        if (r["auth"]["status"]) {
+            let pl = r["payload"]["portfolios"];
+            // console.log(
+
+            //     Object.keys(pl)
+            // )
+
+            this.portfolios = Object.keys(pl);
+
+            // pl.forEach(element => {
+            //     console.log(element)
+            // });
+        }
+
+        // console.log(r)
+
+
         /**
       * Create the map.
       *
@@ -183,7 +219,7 @@ export default {
             this.$refs.mappopup.setPosition(coordinate);
         });
     },
-    components: { PortfolioSelector, CSRFToken, MapPopup }
+    components: { CSRFToken, MapPopup }
 };
 </script> 
 
