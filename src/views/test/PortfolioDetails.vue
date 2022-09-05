@@ -1,32 +1,35 @@
 <template>
     <div class="row">
+        tmp
+    </div>
+    <!-- <div class="row">
         <div class="col col-lg-1">
             <button class="btn btn-secondary" @click="newPortfolio">New</button>
         </div>
-    </div>
-    <div class="row">
-        <br>
+    </div> -->
+    <!-- <div class="row"> -->
+    <!-- <br>
 
         <hr>
-        <br>
-    </div>
-    <div class="row">
+        <br> -->
+    <!-- </div> -->
+    <!-- <div class="row">
         <div class="col">
             <form>
                 <fieldset>
-                    <legend>Details</legend>
-
-                    <input type="hidden" id="id" :value="selectedPortfolio.id">
+                    <legend>new Portfolio Details</legend>
 
                     <div class="form-group">
                         <label for="name">Name</label>
                         <input class="form-control" type="text" id="name" :value="selectedPortfolio.name">
                     </div>
-
+                    <hr>
                     <div class="form-group">
                         <label for="name">Colour</label>
                         <br>
                         todo dropdown autocomplete / color picker
+                        <br>
+                        <input type="text" v-model="this.colour">
                     </div>
 
 
@@ -35,20 +38,9 @@
             </form>
         </div>
 
-    </div>
+    </div> -->
 
-    <div class="row">
-        <hr>
-        <br>
-        <br>
 
-        <!-- <tr v-for="portfolio in this.$store.getters.portfolios" :key="portfolio.id">
-            {{  portfolio.name  }}
-            <hr>
-            <br>
-            <br>
-        </tr> -->
-    </div>
 
 </template>
   
@@ -57,6 +49,12 @@
   
   export default {
       name: "PortfolioDetails",
+      data() {
+          return {
+              colour: "tmp color placeholder"
+          }
+      }
+      ,
       methods: {
           newPortfolio() {
               const p = {
