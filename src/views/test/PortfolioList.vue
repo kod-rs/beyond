@@ -1,4 +1,3 @@
-
 <template>
     <div>
         <div class="row align-items-center">
@@ -13,9 +12,67 @@
             <div>
                 portfolio type for role: {{ this.role }}
             </div>
+
+            <!-- <div>
+                <input name="optionsRadios" id="optionsRadios1" v-model="srStatus">
+            </div> -->
         </div>
 
-        <table class="table table-hover">
+        <div>
+
+            <div class="container text-center" v-for="(portfolioPayload, portofolioName) in this.portfolios"
+                :key="portofolioName" @click="selectRow(portofolioName)">
+
+                <div class="row">
+                    <div class="col">
+                        <input class="form-control" type="text" id="name" :value="portofolioName">
+                    </div>
+                    <div class="col">
+                        <div class="dropdown">
+                            <button class="dropbtn">
+                                {{ portfolio.colour }}
+                            </button>
+
+                            <div class="dropdown-content">
+                                <a @click="colorClicked(portfolio.name, colourName)" href="#"
+                                    v-for="(colourPayload, colourName) in this.colours" :key="colourName">
+
+                                    <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24"
+                                        width="24px" fill="#FF0000">
+                                        <path d="M0 0h24v24H0z" fill="none" />
+                                        <path :fill="colourPayload.hex"
+                                            d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" />
+                                    </svg> {{ colourName }}
+                                </a>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col">
+                        <button @click="deletePortfolio(portfolio.name)" class="btn btn-secondary">Delete</button>
+
+                    </div>
+
+                </div>
+
+                <div v-show="isUpdated(portfolio.name)">
+                    <div class="alert alert-success" role="alert">
+                        updated & saved, todo what?
+                    </div>
+                </div>
+
+                <div v-show="isExpanded(portfolio.name)">
+                    bbbbbbbbbbbbbbbbbbbbbbbbb</div>
+
+                <hr>
+                <br>
+
+            </div>
+        </div>
+
+
+        <!-- <table class="table table-hover">
 
             <tbody v-for="portfolio in this.$store.getters.portfolios" :key="portfolio.id" @click="selectRow(portfolio)"
                 :class="{ 'table-primary': isSelected(portfolio.id) }">
@@ -78,12 +135,11 @@
 
                 </tr>
                 <tr v-show="isExpanded(portfolio.name)">
-                    <!-- {{ group.desc }} -->
                     bbbbbbbbbbbbbbbbbbbb
                 </tr>
 
             </tbody>
-        </table>
+        </table> -->
     </div>
 </template>
   
@@ -142,9 +198,32 @@ export default {
             role: "",
             expandedGroup: [],
             colours: {}
+            // , cases: [
+            //     { name: 'case A', status: '1' },
+            //     { name: 'case B', status: '0' },
+            //     { name: 'case C', status: '1' }
+            // ],
+            // activeCases: [],
+            // ,
+            // srStatus: 'trmp'
+            ,
+            portfolios: {}
 
         }
-    },
+    }
+    // , watch: {
+    //     srStatus: function (val) {
+    //         console.log("val c", val)
+    //         // for (var i = 0; i < this.cases.length; i++) {
+    //         //     if (this.cases[i].status == val) {
+    //         //         this.activeCases.push(this.cases[i]);
+    //         //         console.log("fired", val)
+    //         //         // alert("Fired! " + val);
+    //         //     }
+    //         // }
+    //     }
+    // },
+    ,
     async mounted() {
         console.log("moutned")
         let res = await apiCalls.getPortoflios();
@@ -152,29 +231,34 @@ export default {
         if (res["auth"]["status"]) {
             console.log("status ok")
 
+
             this.colours = res["payload"]["colours"];
             this.role = res["payload"]["role"];
-            const portfolios = res["payload"]["portfolios"];
+            this.portfolios = res["payload"]["portfolios"];
 
             // const existingPortfolios = this.$store.getters.portfolios;
 
-            for (const [portfolioName, portfolioDetails] of Object.entries(portfolios)) {
+            // for (const [portfolioName, portfolioDetails] of Object.entries(portfolios)) {
 
 
-                this.$store.dispatch("addPortfolio",
-                    {
-                        name: portfolioName,
-                        colour: portfolioDetails["colour"]
-                    }
-                );
+            //     this.$store.dispatch("addPortfolio",
+            //         {
+            //             name: portfolioName,
+            //             colour: portfolioDetails["colour"]
+            //         }
+            //     );
 
-            }
+            // }
 
 
 
         }
     },
     methods: {
+        isUpdated(portfolioName) {
+            console.log(".updated", portfolioName)
+            return true
+        },
         savePortfolio(portfolioName) {
             console.log("todo save changes for", portfolioName);
         },
