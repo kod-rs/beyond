@@ -1,8 +1,9 @@
 from django.http import JsonResponse
 from rest_framework.views import APIView
 from backend.api.comm.json_loader import colours_cfg
-from backend.api.cqrs_q.portfolio import get_portfolios, get_portfolios_with_locations, delete_portfolio
-from backend.api.cqrs_c.portfolio import create_or_update
+from backend.api.cqrs_q.portfolio import get_portfolios, get_portfolios_with_locations, get_portfolio_names
+from backend.api.cqrs_c.portfolio import create_or_update, delete_portfolio
+
 
 class PortfolioView(APIView):
 
@@ -34,7 +35,8 @@ class PortfolioView(APIView):
         portfolio_new_name = request.data["newName"]
         portfolio_colour = request.data["colour"]
 
-        create_or_update(
+        # todo more descriptive message for showing in ui
+        r = create_or_update(
             request.username,
             portfolio_name,
             portfolio_new_name,
@@ -48,21 +50,25 @@ class PortfolioView(APIView):
                 "refresh-token": request.refresh_token
             },
             "payload": {
-
+                "status": r
             }
         }
         return JsonResponse(response)
 
     def get(self, request):
 
+        print(80 * "-")
+        r = get_portfolio_names(request.username)
+        print(r, "------")
+        for i in r:
+            print(i.name)
+
         print("get for user")
         username = request.username
         print(username)
 
         portfolios = get_portfolios(username)
-        print("portfolios", portfolios)
-        print(80 * "-")
-        print(type(portfolios))
+
         r = {}
         for i in portfolios:
             print(i)
@@ -70,11 +76,14 @@ class PortfolioView(APIView):
             r[i.name] = {
                 "newName": i.name,
                 "oldName": i.name,
-                "colour": i.colour
+                "colour": i.colour,
+
+                # todo log session state
+                "isExpanded": False
             }
 
         portfolio_locations = get_portfolios_with_locations(username)
-        print(f"{portfolio_locations}")
+        print(f"{portfolio_locations=}")
 
         response = {
             "auth": {
@@ -84,41 +93,8 @@ class PortfolioView(APIView):
             },
             "payload": {
                 "role": "role 1",
-                "colours": colours_cfg
-                ,
-                "portfolios":
-                    r
-                    # 0: {
-                    #     "newName": "portfolio r",
-                    #     "oldName": "portfolio r",
-                    #     "colour": "bl"
-                    # },
-                    # 1: {
-                    #     "newName": "portfolio 1fff",
-                    #     "oldName": "portfolio 1fff",
-                    #     "colour": "bdaasl"
-                    # },
-                    # 2: {
-                    #     "newName": "portfolio 1eqedw",
-                    #     "oldName": "portfolio 1eqedw",
-                    #     "colour": "bl,w,"
-                    # },
-
-                    # "portfolio 1": {
-                    #     "colour": "Black",
-                    #     # locations
-                    #     # "locations": {
-                    #     #
-                    #     # }
-                    # },
-                    # "portfolio 2": {
-                    #     "colour": "Red"
-                    # },
-                    # "portfolio 3": {
-                    #     "colour": "Maroon"
-                    # }
-
-
+                "colours": colours_cfg,
+                "portfolios":r
             }
         }
         return JsonResponse(response)
