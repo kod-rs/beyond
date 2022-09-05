@@ -1,4 +1,6 @@
 <template>
+    todo remove
+
 
     <div id="root">
         <NavigationTemplate />
