@@ -44,9 +44,17 @@ def get_actions_for_routes():
 
     return r_actions
 
-if __name__ == '__main__':
-    """"""
-    r_to_action = get_actions_for_routes()
-    print(r_to_action)
+
+import csv
+
+
+# if __name__ == '__main__':
+#     """"""
+#     # with csv.reader()
+
+    # r_to_action = get_actions_for_routes()
+    # print(r_to_action)
+
+
 
     # print(location_actions)
