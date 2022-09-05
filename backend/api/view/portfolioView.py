@@ -1,7 +1,7 @@
 from django.http import JsonResponse
 from rest_framework.views import APIView
 from backend.api.comm.json_loader import colours_cfg
-from backend.api.cqrs_q.portfolio import get_portfolio
+from backend.api.cqrs_q.portfolio import get_portfolios, get_portfolios_with_locations
 
 class PortfolioView(APIView):
 
@@ -11,8 +11,11 @@ class PortfolioView(APIView):
         username = request.username
         print(username)
 
-        portfolios = get_portfolio(username)
-        print("portfolios", portfolios)
+        # portfolios = get_portfolios(username)
+        # print("portfolios", portfolios)
+
+        portfolio_locations = get_portfolios_with_locations(username)
+        print(f"{portfolio_locations}")
 
         response = {
             "auth": {
