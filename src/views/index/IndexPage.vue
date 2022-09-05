@@ -15,9 +15,9 @@
                     <div id="info">&nbsp;</div>
                     <hr>
                     <!-- todo  -->
-                    <UserCoordinates @userCoordinates="drawUserLocation" :canSend="this.canSend"
+                    <!-- <UserCoordinates @userCoordinates="drawUserLocation" :canSend="this.canSend"
                         ref="userCoordinatesManager">
-                    </UserCoordinates>
+                    </UserCoordinates> -->
                     <button>
                         <router-link class="dropdown-item" to="/logout">Logout</router-link>
                     </button>
@@ -88,12 +88,14 @@ import userMarker from "/public/assets/markers/geolocation_marker.png"
 import countriesjson from "/public/assets/layers/countries.json";
 import { apiCalls } from '../../scripts/api';
 
-import UserCoordinates from "../../components/map/UserCoordinates.vue";
+// import UserCoordinates from "../../components/map/UserCoordinates.vue";
 import MapPopup from "../../components/map/MapPopup.vue";
 
 export default {
     components: {
-        LocationSelector, UserCoordinates, MapPopup
+        LocationSelector,
+        //  UserCoordinates, 
+        MapPopup
     },
     data() {
         return {
@@ -372,7 +374,7 @@ export default {
         this.activatePopup()
 
         // todo enable
-        this.$refs.userCoordinatesManager.enableCoordinates();
+        // this.$refs.userCoordinatesManager.enableCoordinates();
 
         // this.drawLocations(
         //     this.prepareLocationsForDrawing(
@@ -401,6 +403,37 @@ export default {
         this.createCountriesLayer()
 
         this.filterByCountry();
+
+        let res = await apiCalls.getPortoflios();
+
+        if (res["auth"]["status"]) {
+            console.log("status ok")
+
+
+            // this.colours = res["payload"]["colours"];
+            // this.role = res["payload"]["role"];
+            let portfolios = res["payload"]["portfolios"];
+
+            console.table(portfolios)
+
+
+            // const existingPortfolios = this.$store.getters.portfolios;
+
+            // for (const [portfolioName, portfolioDetails] of Object.entries(portfolios)) {
+
+
+            //     this.$store.dispatch("addPortfolio",
+            //         {
+            //             name: portfolioName,
+            //             colour: portfolioDetails["colour"]
+            //         }
+            //     );
+
+            // }
+
+
+
+        }
 
     }
 }
