@@ -187,12 +187,6 @@ function handleNewResponse(response) {
 
 async function createOrUpdatePortfolio(currentName, newName, colour) {
     // todo csrf
-    console.log(JSON.stringify({
-        currentName,
-        newName
-        , colour
-
-    }))
 
     return await handleNewResponse(
         await api.post(
@@ -206,13 +200,22 @@ async function createOrUpdatePortfolio(currentName, newName, colour) {
             get_auth_header()
         )
     );
+}
 
+async function deletePortfolio(currentName,) {
+    // todo csrf
 
+    return await handleNewResponse(
+        await api.delete(
+            "portfolio/" + currentName,
+            get_auth_header()
+        )
+    );
 }
 
 
-
 export const apiCalls = {
+    deletePortfolio,
     createOrUpdatePortfolio,
     getPortoflios,
     logout,
