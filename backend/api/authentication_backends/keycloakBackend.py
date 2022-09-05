@@ -54,12 +54,14 @@ class KeycloakBackend(BaseBackend):
             user = User.objects.get(username=username)
         except User.DoesNotExist:
             user = User(username=username)
-            user.password = None
             user.is_superuser = False
-            user.first_name = None
-            user.last_name = None
-            user.email = None
             user.is_staff = False
+
+            # todo
+            user.password = "None"
+            user.first_name = "None"
+            user.last_name = "None"
+            user.email = "None"
 
         user.last_login = timezone.now()
         user.is_active = True
