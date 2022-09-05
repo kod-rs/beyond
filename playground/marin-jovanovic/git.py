@@ -17,7 +17,7 @@ def main():
     comment = "impl: create / update portfolio"
     comment = 'ref: rewrite db scheme'
 
-    comment = "fix: add & save button edge cases"
+    comment = "wip: create location; portfolio selection"
 
     if same_comment:
         if not comment:
