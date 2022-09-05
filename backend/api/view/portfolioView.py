@@ -1,10 +1,29 @@
 from django.http import JsonResponse
 from rest_framework.views import APIView
 from backend.api.comm.json_loader import colours_cfg
-from backend.api.cqrs_q.portfolio import get_portfolios, get_portfolios_with_locations
+from backend.api.cqrs_q.portfolio import get_portfolios, get_portfolios_with_locations, delete_portfolio
 from backend.api.cqrs_c.portfolio import create_or_update
 
 class PortfolioView(APIView):
+
+    def delete(self, request, name):
+        print("PortfolioView delete")
+        print(request.data)
+        print("name to del", name)
+
+        delete_portfolio(username=request.username, portfolio_name=name)
+
+        response = {
+            "auth": {
+                "status": True,
+                "access-token": request.access_token,
+                "refresh-token": request.refresh_token
+            },
+            "payload": {
+                "status": True
+            }
+        }
+        return JsonResponse(response)
 
     def post(self, request):
         print("PortfolioView post")
