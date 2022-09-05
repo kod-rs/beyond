@@ -14,9 +14,9 @@ def main():
     comment = "fix: role validation deserializer"
     comment = "upd: rewrite select all api call"
     comment = "init: screens"
-    comment = 'ref: rewrite auth using backend'
-
     comment = "impl: update colour in portfolio"
+    comment = 'ref: rewrite db scheme'
+
 
     if same_comment:
         if not comment:
