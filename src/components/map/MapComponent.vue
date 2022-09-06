@@ -1,31 +1,42 @@
-
-
 <template>
-    <!-- <img src='marker-blue.png' /> -->
-    map
-
-    <div class="mw-100 main-container">
-
-    </div>
-
-
-    <div style="height: 15vw; background-color: rgba(255,0,0,0.1);">
-        <div class="h-25 d-inline-block" style="width: 120px; background-color: rgba(0,0,255,.1)">Height 25%</div>
-        <div class="h-50 d-inline-block" style="width: 120px; background-color: rgba(0,0,255,.1)">Height 50%</div>
-        <div class="h-75 d-inline-block" style="width: 120px; background-color: rgba(0,0,255,.1)">Height 75%</div>
-        <div class="h-100 d-inline-block" style="width: 120px; background-color: rgba(0,0,255,.1)">Height 100%
-        </div>
-    </div>
-
+    <div id="map" class="map"></div>
 </template>
 
 <script>
 
+import Map from 'ol/Map';
+import OSM from 'ol/source/OSM';
+import TileLayer from 'ol/layer/Tile';
+import View from 'ol/View';
 export default {
+    // name: "MapComponent",
     data() {
+        return {
+            map: undefined,
+            view: undefined
+        }
+    },
+    methods: {
+        initMap() {
+            this.view = new View({
+                center: [0, 0],
+                zoom: 2,
+            });
 
+            this.map = new Map({
+                layers: [
+                    new TileLayer({
+                        source: new OSM(),
+                    }),
+                ],
+                target: 'map',
+                view: this.view,
+            });
+        },
+    },
+    async mounted() {
+        this.initMap();
     }
+
 }
-
 </script>
-
