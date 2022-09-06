@@ -19,7 +19,8 @@ def main():
     comment = "impl: create / update portfolio"
     comment = 'ref: rewrite db scheme'
 
-    comment = "fix: filter markers by portfolio"
+    comment = "fix: misc"
+    # comment = 'ref: rewrite db scheme'
 
     if same_comment:
         if not comment:
