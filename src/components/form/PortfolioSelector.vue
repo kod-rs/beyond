@@ -16,8 +16,7 @@
 
 <script>
 import InputAutocomplete from './../form/InputAutocomplete.vue';
-import countryNameJson from "/public/assets/layers/country_names.json";
-import axios from 'axios';
+import { apiCalls } from '../../scripts/api';
 
 export default {
     components: {
@@ -28,6 +27,10 @@ export default {
         }
     },
     methods: {
+        getSearch() {
+            return this.$refs.inputautocompletefield.getSearch();
+
+        },
         buttonClicked() {
             let location = this.$refs.inputautocompletefield.getSearch();
             console.log("search for portfolio:", location)
@@ -37,10 +40,14 @@ export default {
             console.log("new portfolio typed", location);
         },
         async getLocations() {
-            let r = await axios.get(countryNameJson);
-            r = r.data;
-            let c = Object.keys(r);
-            this.$refs.inputautocompletefield.updateItems(c);
+            let r = await apiCalls.getPortoflios();
+
+            if (r["auth"]["status"]) {
+                let pl = r["payload"]["portfolios"];
+
+                let c = Object.keys(pl);
+                this.$refs.inputautocompletefield.updateItems(c);
+            }
         },
 
     }
