@@ -2,25 +2,29 @@
 
     <div class="container-fluid">
         <div class="row">
-            <div class="col-sm">
+            <div class="col">
+
                 <div class="row">
                     red - your
                     <br>
                     yellow - other
+
+                </div>
+
+                <div class="row">
                     <LocationSelector>
 
                     </LocationSelector>
+
+                </div>
+
+                <div class="row">
                     <hr>
                     mouse is pointing at this country:
                     <div id="info">&nbsp;</div>
                     <hr>
-                    <!-- todo  -->
-                    <!-- <UserCoordinates @userCoordinates="drawUserLocation" :canSend="this.canSend"
-                        ref="userCoordinatesManager">
-                    </UserCoordinates> -->
-                    <button>
-                        <router-link class="dropdown-item" to="/logout">Logout</router-link>
-                    </button>
+
+
                     <button @click="allowLocationAdding()">add location, when user wants to add new location to
                         map, allow location adding</button>
                     <div>
@@ -30,30 +34,12 @@
                         lat: <div id="lat_tmp">2</div>
                     </div>
                     <button>position map on user location</button>
-                    <button id="zoom-out">Zoom out</button>
-                    <button id="zoom-in">Zoom in</button>
 
-
-                    <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px"
-                        fill="#FF0000">
-                        <path d="M0 0h24v24H0z" fill="none" />
-                        <path fill="#FF0000"
-                            d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" />
-                    </svg>
+                    <hr>
+                    <br>
 
                     <div>
-
                         portfolio
-                        <!-- <select @change="onChange($event)">
-                            <option v-for="p in Object.keys(portfolios)" :key="p">{{ p }}</option>
-
-                        </select>
-                        <hr> -->
-
-
-                    </div>
-
-                    <div>
                         <div id='example-3'>
                             <div v-for="p in Object.keys(portfolios)" :key="p">
                                 <!-- {{ p }} -->
@@ -62,38 +48,52 @@
                                 <hr>
 
                             </div>
-                            <!-- <input type="checkbox" id="jack" value="Jack" v-model="checkedNames">
-                            <label for="jack">Jack</label>
-                            <hr>
-                            <input type="checkbox" id="john" value="John" v-model="checkedNames">
-                            <label for="john">John</label>
-                            <input type="checkbox" id="mike" value="Mike" v-model="checkedNames">
-                            <label for="mike">Mike</label>
-                            <br> -->
-                            <span>Checked names: {{ checkedNames }}</span>
+                            <span>Checked portfolios: {{ checkedNames }}</span>
                             <hr>
                             <button @click="onChange">click to filter</button>
                         </div>
                     </div>
 
                 </div>
-            </div>
-            <div class="col-sm">
+
+                <hr>
                 <div class="row">
-                    <div id="map" class="map" tabindex="0" style="width: 90%; height: 90%; 
-                        position:fixed; 
-                            border: 1px solid #ccc;     ">
+                    <div class="row">
+                        add location
                     </div>
 
-                    <MapPopup ref="mappopup"></MapPopup>
 
                 </div>
+
+
+                <span>Checked portfolios: {{ formData }}</span>
+
+                <h1>Finds</h1>
+                <div v-for="(find, index) in finds" :key="find">
+                    <input v-model="find.value" :key="index">
+                </div>
+                <button @click="addFind">
+                    New Find
+                </button>
+                <div class="">{{ finds }}</div>
+
             </div>
-            <div class="col-sm">
+            <div class="col">
+
+                <MapComponent ref="map" id="map"></MapComponent>
+
+                <MapPopup ref="mappopup"></MapPopup>
+
+                <UserCoordinates @userCoordinates="drawUserLocation" :canSend="this.canSend"
+                    ref="userCoordinatesManager">
+                </UserCoordinates>
+
+
             </div>
         </div>
 
     </div>
+
 
 </template>
 
@@ -101,10 +101,6 @@
 
 <script>
 
-import Map from 'ol/Map';
-import OSM from 'ol/source/OSM';
-import TileLayer from 'ol/layer/Tile';
-import View from 'ol/View';
 import { toStringHDMS } from 'ol/coordinate';
 import { fromLonLat, toLonLat } from 'ol/proj';
 import Point from 'ol/geom/Point';
@@ -118,19 +114,23 @@ import { Stroke } from 'ol/style';
 import LocationSelector from '../../components/map/LocationSelector.vue'; //Optional default CSS
 import userMarker from "/public/assets/markers/geolocation_marker.png"
 import countriesjson from "/public/assets/layers/countries.json";
-import { apiCalls } from '../../scripts/api';
-import { apiLocations } from '../../scripts/api_locations';
-// import UserCoordinates from "../../components/map/UserCoordinates.vue";
+import { apiLocation } from '../../scripts/api/location';
+import UserCoordinates from "../../components/map/UserCoordinates.vue";
 import MapPopup from "../../components/map/MapPopup.vue";
+import MapComponent from '@/components/map/MapComponent.vue';
+import { apiPortfolio } from '@/scripts/api/portfolio';
 
 export default {
     components: {
         LocationSelector,
-        //  UserCoordinates, 
-        MapPopup
+        UserCoordinates,
+        MapPopup,
+        MapComponent
     },
     data() {
         return {
+            finds: [],
+
             addLocationEnabled: false,
             userLat: undefined,
             userLon: undefined,
@@ -144,15 +144,15 @@ export default {
         }
     },
     methods: {
+        addFind: function () {
+            this.finds.push({ value: '' });
+        },
         onChange() {
             console.log("clicked", this.checkedNames)
-
-
 
             for (const [key, value] of Object.entries(this.portfolios)) {
                 console.log(key, value);
                 value["visible"] = false;
-                // console.log(value["visible"])
                 this.map.removeLayer(value["vectorLayer"]);
 
             }
@@ -170,13 +170,6 @@ export default {
                     console.log("lele")
                 }
             }
-
-            // let portfolioName = event.target.value;
-            // console.log("on change", portfolioName)
-
-            // let t = this.portfolios[portfolioName]
-            // console.log(t);
-
         },
         drawUserLocation(lat, lon) {
 
@@ -283,20 +276,6 @@ export default {
                 })
             );
         },
-        zoomSetupButtons(map) {
-
-            document.getElementById('zoom-out').onclick = function () {
-                const view = map.getView();
-                const zoom = view.getZoom();
-                view.setZoom(zoom - 1);
-            };
-
-            document.getElementById('zoom-in').onclick = function () {
-                const view = map.getView();
-                const zoom = view.getZoom();
-                view.setZoom(zoom + 1);
-            };
-        },
         activatePopup() {
 
             this.map.addOverlay(this.$refs.mappopup.getOverlay())
@@ -310,8 +289,8 @@ export default {
                     const coordinate = evt.coordinate;
                     const hdms = toStringHDMS(toLonLat(coordinate));
 
-                    console.log("log coord", hdms)
-                    console.log("set postiion,", coordinate)
+                    // console.log("log coord", hdms)
+                    // console.log("set postiion,", coordinate)
                     this.$refs.mappopup.setText(hdms);
                     this.$refs.mappopup.setPosition(coordinate);
 
@@ -325,23 +304,7 @@ export default {
             });
 
         },
-        initMap() {
-            this.view = new View({
-                center: [0, 0],
-                zoom: 2,
-            });
 
-            this.map = new Map({
-                layers: [
-                    new TileLayer({
-                        source: new OSM(),
-                    }),
-
-                ],
-                target: 'map',
-                view: this.view,
-            });
-        },
         createCountriesLayer() {
 
             this.countriesLayer = new VectorLayer({
@@ -408,69 +371,40 @@ export default {
                 displayFeatureInfo(evt.pixel);
             });
         },
-        prepareLocationsForDrawing(locations) {
+        createMarker(hexColour) {
 
-
-            // var obj = { 'a': 1, 'b': 2, 'c': 3 };
-
-            // let newObj = Object.fromEntries(Object.entries(obj).map(([k, v]) => [k, v * v]));
-
-            // console.log(newObj)
-
-
-
-
-            const featuresApi = {};
-            let c = 0;
-            // console.log("")
-            locations.forEach(i => {
-                featuresApi[c] = { lat: i.latitude, lon: i.longitude }
-                c++;
-            })
-
-            return featuresApi;
+            return `<svg width="120" height="120" version="1.1" xmlns="http://www.w3.org/2000/svg">
+            <path d="M0 0h24v24H0z" fill="none"/>
+            <path fill="%23${hexColour}" d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" />
+        </svg>`
 
         }
     },
 
     async mounted() {
-
-        let marker = '<svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="#FF0000"><path d="M0 0h24v24H0z" fill="none"/><path fill="#FF0000" d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>'
-        console.log("marker", marker);
-
-        this.initMap();
+        this.map = this.$refs.map.map;
+        this.view = this.$refs.map.view;
 
         this.activatePopup()
 
         // todo enable
-        // this.$refs.userCoordinatesManager.enableCoordinates();
+        this.$refs.userCoordinatesManager.enableCoordinates();
 
-        this.zoomSetupButtons(this.map)
+        // this.zoomSetupButtons(this.map)
 
         this.createCountriesLayer()
 
         this.filterByCountry();
 
-        function createMarker(hexColour) {
 
-            return `<svg width="120" height="120" version="1.1" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M0 0h24v24H0z" fill="none"/>
-                        <path fill="%23${hexColour}" d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" />
-                    </svg>`
-
-        }
-
-        let r = await apiCalls.getPortoflios();
+        let r = await apiPortfolio.getPortoflios();
         if (r["auth"]["status"]) {
             let pl = r["payload"]["portfolios"];
 
-            // this.portfolios = Object.keys(pl);
-
             for (const [key, value] of Object.entries(pl)) {
                 let hexColour = value["hex"];
-                let r = (await apiLocations.getLocationsFilterUsername(key)).payload.content
-                let marker = createMarker(hexColour);
-
+                let r = (await apiLocation.getLocationsFilterUsername(key)).payload.content
+                let marker = this.createMarker(hexColour);
 
                 this.drawLocations(
                     r,
@@ -488,5 +422,12 @@ export default {
 <style>
 #map:focus {
     outline: #4A74A8 solid 0.15em;
+}
+
+#map {
+    width: 45%;
+    height: 90%;
+    position: fixed;
+    border: 1px solid #ccc;
 }
 </style>
