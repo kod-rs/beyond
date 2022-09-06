@@ -4,10 +4,10 @@
         test navigation routes:
         <router-link :to="{ name: 'index' }">home</router-link> |
         <router-link :to="{ name: 'addlocation' }">Create</router-link> |
-        <router-link :to="{ name: 'viewlocation' }">View</router-link> |
+        <!-- <router-link :to="{ name: 'viewlocation' }">View</router-link> | -->
         <router-link to="/logout">Logout</router-link> |
-        <router-link :to="{ name: 'portfolio' }">manage portfolio</router-link> |
-        <router-link :to="{ name: 'locations' }">manage locations</router-link> |
+        <!-- <router-link :to="{ name: 'portfolio' }">manage portfolio</router-link> | -->
+        <!-- <router-link :to="{ name: 'locations' }">manage locations</router-link> | -->
         <router-link :to="{ name: 'test' }">test</router-link> |
         <router-link :to="{ name: 'login' }">login</router-link> |
 
