@@ -2,6 +2,9 @@ from backend.api.model.portfolio import Portfolio
 from backend.api.model.location import Location
 from django.core import serializers
 
+def get_portfolio(name):
+    return Portfolio.objects.get(name=name)
+
 
 def get_portfolios(username):
 
