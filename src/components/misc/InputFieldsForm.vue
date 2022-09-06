@@ -1,10 +1,9 @@
 <template>
 
     <div>
-        <h1>tmp</h1>
         <div v-for="(f, index) in fields" :key="f">
             <InputField v-model="f.value" :id="index" :validationMessage="f.validationMessage"
-                :showValidationMessage="f.initShowValidationMessage" :customValidationRegex="f.validationRegex" /> {{
+                :showValidationMessage="f.initShowValidationMessage" :validationRegex="f.validationRegex" /> {{
                         f.value
                 }}
         </div>
@@ -28,26 +27,26 @@ export default {
                     "value": "",
                     "validationMessage": "Only letters, numbers, spaces, commas and dots accepted in the input",
                     "showValidationMessage": false,
-                    "validationRegex": ""
+                    "validationRegex": /^(\w|,|\.| )*$/
                 },
                 "Type": {
                     "value": "",
                     "validationMessage": "Only letters, numbers, spaces, commas and dots accepted in the input",
                     "showValidationMessage": true,
-                    "validationRegex": ""
+                    "validationRegex": /^(\w|,|\.| )*$/
                 },
-                "Latitude": {
-                    "value": "",
-                    "validationMessage": "float",
-                    "showValidationMessage": false,
-                    "validationRegex": ""
-                },
-                "Longitude": {
-                    "value": "",
-                    "validationMessage": "float",
-                    "showValidationMessage": false,
-                    "validationRegex": ""
-                },
+                // "Latitude": {
+                //     "value": "",
+                //     "validationMessage": "Only coordinates (float)",
+                //     "showValidationMessage": false,
+                //     "validationRegex": /^[+-]?\d+(\.\d+)?$/
+                // },
+                // "Longitude": {
+                //     "value": "",
+                //     "validationMessage": "Only coordinates (float)",
+                //     "showValidationMessage": false,
+                //     "validationRegex": /^[+-]?\d+(\.\d+)?$/
+                // },
             },
 
 
