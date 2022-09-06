@@ -40,13 +40,13 @@ async function deleteLocation(i) {
 }
 
 
-async function addLocation(section, type, latitude, longitude, csrfToken) {
+async function addLocation(portfolio, section, type, latitude, longitude, csrfToken) {
 
     return await handleNewResponse(
         await api.post(
             "locations/",
             JSON.stringify({
-
+                portfolio,
                 type, section, latitude, longitude, synchronizer_token: csrfToken
             }),
             get_auth_header()
