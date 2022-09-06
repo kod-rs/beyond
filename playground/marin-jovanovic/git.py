@@ -18,7 +18,7 @@ def main():
     comment = "impl: create / update portfolio"
     comment = 'ref: rewrite db scheme'
 
-    comment = "upd: cleanup"
+    comment = "err: map marker zoom"
     # comment = "fix: misc"
     # comment = 'ref: rewrite db scheme'
 
