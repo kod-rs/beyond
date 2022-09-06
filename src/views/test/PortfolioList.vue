@@ -76,8 +76,7 @@
 
                         <!-- todo role check config file -->
                         <div class="col col-lg-1">
-                            <!-- todo negate -->
-                            <div v-if="this.role === 'manager'">
+                            <div v-if="this.role !== 'manager'">
 
                                 <button @click="deletePortfolio(portfolioPayload)"
                                     class="btn btn-primary">Delete</button>
@@ -102,11 +101,22 @@
 
 
                 </div>
+                <div v-show="portfolioPayload.isExpanded">
 
-                <div class="row">
+                    <div class="row"
+                        v-for="(locationPayload, portfolioNameId, index) in this.locations[portfolioPayload.oldName]"
+                        :key="portfolioNameId">
+                        {{ locationPayload }} - {{ portfolioNameId }} - {{ index }}
 
-                    <div v-show="portfolioPayload.isExpanded">
-                        bbbbbbbbbbbbbbbbbbbbbbbbb
+                        <!-- <div class="col">
+                            name
+                        </div> -->
+                        <!-- <div class="col">
+                            section
+                        </div>
+                        <div class="col">
+                            type
+                        </div> -->
                     </div>
 
                 </div>
@@ -168,8 +178,10 @@
 </style>
 
   <script>
-import { apiCalls } from '../../scripts/api';
+import { apiCalls } from '../../scripts/api/comm';
+import { apiLocations } from '../../scripts/api/location';
 import Green from './Green.vue';
+
 
 export default {
     name: "PortfolioList",
@@ -183,7 +195,8 @@ export default {
             timer: 1,
             customContent: "customContent",
             autoSave: false,
-            isContentCleared: false
+            isContentCleared: false,
+            locations: {}
         };
     },
 
@@ -216,7 +229,8 @@ export default {
                 "newName": "",
                 "oldName": "",
                 "colour": "placeholder",
-                "isExpanded": false
+                "isExpanded": false,
+                // "locations"
 
             };
             this.isTempCreated = true;
@@ -285,12 +299,22 @@ export default {
         colorClicked(portfolioName, colourName) {
             this.portfolios[portfolioName]["colour"] = colourName;
         },
-        // selectRow
-        // isExpanded(key) {
-        //     return this.expandedGroup.indexOf(key) !== -1;
-        // },
-        selectRow(portfolioPayload) {
+        async selectRow(portfolioPayload) {
             portfolioPayload.isExpanded = !portfolioPayload.isExpanded;
+
+            let r = await apiLocations.getLocationsFilterUsername(portfolioPayload.oldName);
+
+            if (r["payload"]["status"]) {
+                let p = r["payload"]["content"]
+
+                console.table(p)
+                this.locations[portfolioPayload.oldName] = p
+                // console.table(this.locations)
+            } else {
+                // alert("error fetching")
+                console.log("error fetch")
+            }
+
             // console.log("select row", p)
             // this.$store.dispatch("selectPortfolio", p);
             // const key = p.name;
