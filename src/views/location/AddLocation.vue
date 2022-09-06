@@ -8,38 +8,26 @@
                 <br>
                 <!-- <hr> -->
                 <div v-if="error" class="alert alert-danger">{{ error }}</div>
-                <InputFieldsForm></InputFieldsForm>
 
 
                 <form @submit.prevent="handleSubmit">
 
-                    csrf
+                    <h5>csrf</h5>
                     <CSRFToken />
 
-                    <div v-for="option in formData" :value="option.value" :key="option.value">
+                    <h5>input part</h5>
+                    <InputFieldsForm ref="inputFields"></InputFieldsForm>
 
-                        {{ option.key.charAt(0).toUpperCase() + option.key.slice(1) }}
-
-                        <!-- todo validate -->
-                        <!-- <span v-if="option.key == 'section' || option.key == 'type'">
-                            <span class="hint" @mouseover="option.hovered = true"
-                                @mouseleave="option.hovered = false">?</span>
-                            <span v-if="option.hovered" class="hint_text"> {{ option.msg }}</span>
-                        </span> -->
-
-                        <input type="text" v-model="option.value" :name="option.key" class="form-control   " />
-
-                        <div v-if="submitted && !option.value" class="red">
-                            {{ option.key }} is required
-                        </div>
-
-                        <br>
-
-                    </div>
-
-
-
+                    <h5>portfolio selector</h5>
                     <PortfolioSelector ref="portfolioSelector"></PortfolioSelector>
+
+                    <hr>
+                    hidden
+                    <hr>
+                    lon
+                    <input type="text" v-model="latitude">
+                    lat
+                    <input type="text" v-model="longitude">
 
                     <hr>
 
@@ -89,23 +77,11 @@ export default {
         return {
             checkedNames: [],
             hover: false,
-            formData: [
-                {
-                    key: "section",
-                    value: "A",
-                    msg: "Only letters, numbers, spaces, commas and dots accepted in the input",
-                    hovered: false
-                },
-                {
-                    key: "type",
-                    value: "B",
-                    msg: "Only letters, numbers, spaces, commas and dots accepted in the input",
-                    hovered: false
-                },
-                { key: "latitude", value: "2" },
-                { key: "longitude", value: "3" }
-            ]
-            , submitted: false,
+
+            latitude: undefined,
+            longitude: undefined,
+
+            submitted: false,
             loading: false,
             error: undefined,
         };
@@ -126,17 +102,20 @@ export default {
             // return
             this.submitted = true;
             this.error = "";
-            let formContent = {};
-            for (const element of this.formData) {
-                if (element.value) {
-                    formContent[element.key] = element.value;
-                }
-                else {
-                    this.error = "fields not filled";
-                    return;
-                }
-            }
+            // let formContent = {};
+            // for (const element of this.formData) {
+            //     if (element.value) {
+            //         formContent[element.key] = element.value;
+            //     }
+            //     else {
+            //         this.error = "fields not filled";
+            //         return;
+            //     }
+            // }
             const csrfToken = this.$store.state.synchronizerToken;
+
+            let section = this.$refs.inputFields.fields["Section"]["value"];
+            let type = this.$refs.inputFields.fields["Section"]["value"];
 
             // check if portfolio input has content and is valid
 
@@ -145,10 +124,11 @@ export default {
 
             await apiLocation.addLocation(
                 portfolio,
-                formContent["section"],
-                formContent["type"],
-                formContent["latitude"],
-                formContent["longitude"],
+                section,
+                type,
+                this.latitude,
+                this.longitude,
+
                 csrfToken
 
             ).then(r => {
@@ -163,9 +143,8 @@ export default {
                 console.log("error", error);
             });
 
-            // this.formData.forEach(i => {
-            //     i.value = "";
-            // });
+            // restart fields insted of refresh site
+
             this.$router.go();
             this.submitted = false;
         }
@@ -197,10 +176,12 @@ export default {
         map.on("singleclick", (evt) => {
             const coordinate = evt.coordinate;
             const hdms = toStringHDMS(toLonLat(coordinate));
-            this.formData[2].value = toLonLat(coordinate)[0];
-            this.formData[3].value = toLonLat(coordinate)[1];
-            console.log("log coord", hdms);
-            console.log("set postiion,", coordinate);
+
+            this.longitude = toLonLat(coordinate)[0];
+            this.latitude = toLonLat(coordinate)[1];
+
+            // console.log("log coord", hdms);
+            // console.log("set postiion,", coordinate);
             this.$refs.mappopup.setText(hdms);
             this.$refs.mappopup.setPosition(coordinate);
         });
