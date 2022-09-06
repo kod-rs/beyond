@@ -1,5 +1,6 @@
 <template>
     <form @submit.prevent="handleSubmit">
+        <div v-if="error" class="alert alert-danger">{{ error }}</div>
 
         <div class="form-outline mb-4">
             <label class="form-label" for="form2Example17">Username</label>
@@ -36,7 +37,7 @@
 
 <script>
 import { router } from '../../scripts/router';
-import { apiCalls } from '../../scripts/api';
+import { apiAuth } from '../../scripts/api/auth';
 
 export default {
     data() {
@@ -50,7 +51,7 @@ export default {
         };
     },
     created() {
-        apiCalls.logout();
+        apiAuth.logout();
         this.returnUrl = this.$route.query.returnUrl || "/";
     },
     methods: {
@@ -62,7 +63,7 @@ export default {
                 return;
             }
             this.loading = true;
-            apiCalls.login(username, password).then(() => {
+            apiAuth.login(username, password).then(() => {
                 router.push(this.returnUrl);
                 this.$store.commit("setUsername", username);
             }, error => {
