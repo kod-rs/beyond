@@ -17,7 +17,7 @@ def main():
     comment = "impl: create / update portfolio"
     comment = 'ref: rewrite db scheme'
 
-    comment = "fix: show markers diff colours on map"
+    comment = "fix: filter markers by portfolio"
 
     if same_comment:
         if not comment:
