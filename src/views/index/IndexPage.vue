@@ -24,7 +24,6 @@
                     <div id="info">&nbsp;</div>
                     <hr>
 
-
                     <button @click="allowLocationAdding()">add location, when user wants to add new location to
                         map, allow location adding</button>
                     <div>
@@ -65,28 +64,21 @@
 
                 </div>
 
+                <div class="row">
 
-                <span>Checked portfolios: {{ formData }}</span>
+                    <UserCoordinates @userCoordinates="drawUserLocation" :canSend="this.canSend"
+                        ref="userCoordinatesManager">
+                    </UserCoordinates>
 
-                <h1>Finds</h1>
-                <div v-for="(find, index) in finds" :key="find">
-                    <input v-model="find.value" :key="index">
                 </div>
-                <button @click="addFind">
-                    New Find
-                </button>
-                <div class="">{{ finds }}</div>
 
             </div>
             <div class="col">
 
                 <MapComponent ref="map" id="map"></MapComponent>
+                <!-- <div id="map" class="map"></div> -->
 
                 <MapPopup ref="mappopup"></MapPopup>
-
-                <UserCoordinates @userCoordinates="drawUserLocation" :canSend="this.canSend"
-                    ref="userCoordinatesManager">
-                </UserCoordinates>
 
 
             </div>
@@ -119,6 +111,7 @@ import UserCoordinates from "../../components/map/UserCoordinates.vue";
 import MapPopup from "../../components/map/MapPopup.vue";
 import MapComponent from '@/components/map/MapComponent.vue';
 import { apiPortfolio } from '@/scripts/api/portfolio';
+
 
 export default {
     components: {
@@ -173,10 +166,8 @@ export default {
         },
         drawUserLocation(lat, lon) {
 
-            console.log("draw user location", lat, lon)
-
             if (this.userLocationLayer) {
-                this.map.removeLayer(this.userLocationLayer)
+                this.map.removeLayer(this.userLocationLayer);
             }
 
             this.userLat = this.$store.state.latitude;
@@ -184,6 +175,13 @@ export default {
 
             let f = new Feature({
                 geometry: new Point(fromLonLat([lon, lat])),
+                // style: new Style({
+                //     image: new Icon({
+                //         src: userMarker,
+                //         scale: 0.6,
+                //     }),
+                // })
+
             });
 
             f.setStyle(
@@ -216,7 +214,7 @@ export default {
             this.view.centerOn(point.getCoordinates(), size, [500, 500]);
 
             // zoom
-            this.view.fit(point, { padding: [170, 50, 30, 150], minResolution: 50 });
+            // this.view.fit(point, { padding: [170, 50, 30, 150], minResolution: 50 });
 
         },
         allowLocationAdding() {
@@ -227,7 +225,7 @@ export default {
 
             var style = new Style({
                 image: new Icon({
-                    opacity: 1,
+                    // opacity: 1,
                     src: 'data:image/svg+xml;utf8,' + marker,
                     scale: 0.9
                 })
@@ -256,7 +254,7 @@ export default {
 
             this.portfolios[portfolioName] = {
                 "vectorLayer": vectorLayer,
-                "visible": true
+                // "visible": false
             }
             this.map.addLayer(vectorLayer)
         },
@@ -384,6 +382,7 @@ export default {
     async mounted() {
         this.map = this.$refs.map.map;
         this.view = this.$refs.map.view;
+
 
         this.activatePopup()
 
