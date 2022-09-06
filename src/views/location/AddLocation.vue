@@ -86,7 +86,8 @@
 
 import CSRFToken from "../../components/form/CSRFToken.vue"
 import MapPopup from "../../components/map/MapPopup.vue"
-import { apiCalls } from '../../scripts/api';
+// import { apiCalls } from '../../scripts/api';
+import { apiLocations } from '../../scripts/api_locations';
 import Map from 'ol/Map';
 
 import TileLayer from 'ol/layer/Tile';
@@ -139,7 +140,7 @@ export default {
             let portfolio = this.$refs.portfolioSelector.getSearch();
             console.log("port", portfolio);
 
-            await apiCalls.addLocation(
+            await apiLocations.addLocation(
                 portfolio,
                 formContent["section"],
                 formContent["type"],
