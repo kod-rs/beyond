@@ -9,7 +9,6 @@
 
         </InputAutocomplete>
 
-        <!-- <button @click="buttonClicked">search</button> -->
 
     </div>
 </template>
@@ -31,11 +30,7 @@ export default {
             return this.$refs.inputautocompletefield.getSearch();
 
         },
-        // buttonClicked() {
-        //     let location = this.$refs.inputautocompletefield.getSearch();
-        //     console.log("search for portfolio:", location)
 
-        // },
         userTypedLocation(location) {
             console.log("new portfolio typed", location);
         },
