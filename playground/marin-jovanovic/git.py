@@ -13,13 +13,13 @@ def main():
 
     comment = "fix config"
     comment = "wip: refactor role validation"
-    comment = "fix: role validation deserializer"
     comment = "upd: rewrite select all api call"
     comment = "init: screens"
     comment = "impl: create / update portfolio"
     comment = 'ref: rewrite db scheme'
 
-    comment = "fix: misc"
+    comment = "upd: cleanup"
+    # comment = "fix: misc"
     # comment = 'ref: rewrite db scheme'
 
     if same_comment:
