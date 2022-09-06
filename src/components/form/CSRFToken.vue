@@ -9,7 +9,7 @@
 
 <script>
 
-import { apiCalls } from '../../scripts/api';
+import { apiCsrf } from '../../scripts/api/csrf';
 
 export default {
     data() {
@@ -18,9 +18,7 @@ export default {
         }
     },
     async mounted() {
-        const CSRFPayload = await apiCalls.getCSRFAuthData();
-        // console.table(CSRFPayload);
-        // console.log("csrf", CSRFPayload)
+        const CSRFPayload = await apiCsrf.getCSRFAuthData();
 
         if (CSRFPayload["auth"]["status"]) {
             this.content = CSRFPayload["synchronizer_token"]
