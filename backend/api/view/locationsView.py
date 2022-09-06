@@ -138,6 +138,9 @@ class LocationsView(APIView):
         for i in username_locations:
             r[j] = {
                 # "pk": i.name,
+                "section": i.section,
+                "type": i.type,
+                # todo refactor to latitude & longitude
                 "lat": i.latitude,
                 "lon": i.longitude,
             }
