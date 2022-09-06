@@ -1,7 +1,6 @@
 <template>
     <div id="root">
 
-        <!-- <Navigation /> -->
 
         <main class="mt-5 pt-3">
             <div class="container-fluid">
@@ -36,12 +35,7 @@
 
 
 
-                        <!-- <PortfolioSelector></PortfolioSelector> -->
-                        portfolio
-                        <select>
-                            <option v-for="p in portfolios" :key="p">{{ p }}</option>
-
-                        </select>
+                        <PortfolioSelector ref="portfolioSelector"></PortfolioSelector>
 
 
 
@@ -103,7 +97,7 @@ import { toLonLat } from 'ol/proj';
 import { toStringHDMS } from 'ol/coordinate';
 
 
-// import PortfolioSelector from '../../components/form/PortfolioSelector.vue';
+import PortfolioSelector from '../../components/form/PortfolioSelector.vue';
 
 
 export default {
@@ -120,7 +114,6 @@ export default {
             , submitted: false,
             loading: false,
             error: undefined,
-            portfolios: []
         };
     },
     methods: {
@@ -141,8 +134,13 @@ export default {
             }
             const csrfToken = this.$store.state.synchronizerToken;
 
+            // check if portfolio input has content and is valid
+
+            let portfolio = this.$refs.portfolioSelector.getSearch();
+            console.log("port", portfolio);
 
             await apiCalls.addLocation(
+                portfolio,
                 formContent["section"],
                 formContent["type"],
                 formContent["latitude"],
@@ -169,23 +167,7 @@ export default {
         }
     },
     async mounted() {
-        let r = await apiCalls.getPortoflios();
 
-        if (r["auth"]["status"]) {
-            let pl = r["payload"]["portfolios"];
-            // console.log(
-
-            //     Object.keys(pl)
-            // )
-
-            this.portfolios = Object.keys(pl);
-
-            // pl.forEach(element => {
-            //     console.log(element)
-            // });
-        }
-
-        // console.log(r)
 
 
         /**
@@ -219,7 +201,7 @@ export default {
             this.$refs.mappopup.setPosition(coordinate);
         });
     },
-    components: { CSRFToken, MapPopup }
+    components: { PortfolioSelector, CSRFToken, MapPopup }
 };
 </script> 
 
