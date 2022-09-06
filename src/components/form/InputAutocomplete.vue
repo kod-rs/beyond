@@ -57,6 +57,11 @@ export default {
         },
         updateItems(newItems) {
             this.items = this.items.concat(newItems);
+
+            // todo test
+            if (this.search === "") {
+                this.search = this.items[0]
+            }
         },
         onChange() {
             // this.$emit("input", this.search);
@@ -108,11 +113,16 @@ export default {
                 this.results = val;
                 this.isLoading = false;
             }
+
+
         }
     },
     mounted() {
         this.items = this.initItems;
         document.addEventListener("click", this.handleClickOutside);
+        // this.search = this.results[0]
+        // console.log(this.results)
+        // console.log(this.items)
     },
     unmounted() {
         document.removeEventListener("click", this.handleClickOutside);
