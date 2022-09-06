@@ -42,11 +42,12 @@ class AddSingle(LocationAction):
         body_content = decode_data(request.body)
 
         status = add(
-            request.username,
+            body_content["portfolio"],
             body_content["section"],
             body_content["type"],
             body_content["latitude"],
-            body_content["longitude"])
+            body_content["longitude"]
+        )
 
         payload = {"status": status}
         return payload
