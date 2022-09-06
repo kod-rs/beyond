@@ -57,22 +57,22 @@ class PortfolioView(APIView):
 
     def get(self, request):
 
-        print(80 * "-")
+        # print(80 * "-")
         r = get_portfolio_names(request.username)
-        print(r, "------")
-        for i in r:
-            print(i.name)
+        # print(r, "------")
+        # for i in r:
+        #     print(i.name)
 
-        print("get for user")
+        # print("get for user")
         username = request.username
-        print(username)
+        # print(username)
 
         portfolios = get_portfolios(username)
 
         r = {}
         for i in portfolios:
-            print(i)
-            print(i.name)
+            # print(i)
+            # print(i.name)
             r[i.name] = {
                 "newName": i.name,
                 "oldName": i.name,
