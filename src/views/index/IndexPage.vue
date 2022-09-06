@@ -40,6 +40,19 @@
                         <path fill="#FF0000"
                             d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" />
                     </svg>
+
+                    <div>
+
+                        portfolio
+                        <select>
+                            <option v-for="p in portfolios" :key="p">{{ p }}</option>
+
+                        </select>
+
+
+
+                    </div>
+
                 </div>
             </div>
             <div class="col-sm">
@@ -81,13 +94,13 @@ import { Stroke } from 'ol/style';
 
 import LocationSelector from '../../components/map/LocationSelector.vue'; //Optional default CSS
 // import yellow_marker from "/public/assets/markers/yellow_marker.svg"
-import red_marker from "/public/assets/markers/red_marker.svg"
+// import red_marker from "/public/assets/markers/red_marker.svg"
 
 
 import userMarker from "/public/assets/markers/geolocation_marker.png"
 import countriesjson from "/public/assets/layers/countries.json";
 import { apiCalls } from '../../scripts/api';
-
+import { apiLocations } from '../../scripts/api_locations';
 // import UserCoordinates from "../../components/map/UserCoordinates.vue";
 import MapPopup from "../../components/map/MapPopup.vue";
 
@@ -107,7 +120,7 @@ export default {
             canSend: false,
             view: undefined,
             countriesLayer: undefined,
-
+            portfolios: []
         }
     },
     methods: {
@@ -165,15 +178,58 @@ export default {
         },
         drawLocations(featuresApi, marker) {
             let features = []
-            console.log("marker", marker)
+            // console.log("marker", marker)
 
-            let icon = new Icon({
-                src: marker,
-                scale: 0.9,
-            })
+            // var svg = '<svg width="120" height="120" version="1.1" xmlns="http://www.w3.org/2000/svg">'
+            //     + '<circle cx="60" cy="60" r="60"/>'
+            //     + '</svg>';
+
+            // var style = new Style({
+            //     image: new Icon({
+            //         opacity: 1,
+            //         src: svg,
+            //         scale: 0.9
+            //     })
+            // });
+
+            // console.log(red_marker)
+            var svg = '<svg width="120" height="120" version="1.1" xmlns="http://www.w3.org/2000/svg">'
+                + '<circle cx="60" cy="60" r="60"/>'
+                + '</svg>';
+
+            svg = marker;
+            console.log("svg", svg)
+            //             svg = `<svg width="120" height="120" version="1.1" xmlns="http://www.w3.org/2000/svg">
+            // 	<path d="M0 0h24v24H0z" fill="none"/>
+            // 	<path fill="%23a59344" d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" />
+            // </svg>`
+
+            //             svg = `<svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="#FF0000">
+            // 	<path d="M0 0h24v24H0z" fill="none" />
+            // 	<path fill="%23a59344" d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" />
+            // </svg> 
+            // `
+
+            var style = new Style({
+                image: new Icon({
+                    opacity: 1,
+                    src: 'data:image/svg+xml;utf8,' + svg,
+                    scale: 0.9
+                })
+            });
+
+
+
+            // let icon = new Icon({
+            //     // opacity: 1,
+            //     // src: 'data:image/svg+xml;utf8,' + svg,
+            //     // scale: 0.3
+            //     src: red_marker,
+            //     scale: 0.9,
+            // })
 
             for (const [key, value] of Object.entries(featuresApi)) {
-
+                // console.log("new ")
                 console.log(key);
 
                 let f = new Feature({
@@ -181,9 +237,10 @@ export default {
                 });
 
                 f.setStyle(
-                    new Style({
-                        image: icon
-                    })
+                    style
+                    // new Style({
+                    //     image: icon
+                    // })
                 );
 
                 features.push(f)
@@ -352,9 +409,11 @@ export default {
 
 
             const featuresApi = {};
-
+            let c = 0;
+            // console.log("")
             locations.forEach(i => {
-                featuresApi[i.pk] = { lat: i.latitude, lon: i.longitude }
+                featuresApi[c] = { lat: i.latitude, lon: i.longitude }
+                c++;
             })
 
             return featuresApi;
@@ -391,12 +450,12 @@ export default {
         //     yellow_marker
         // );
 
-        this.drawLocations(
-            this.prepareLocationsForDrawing(
-                (await apiCalls.getLocationsFilterUsername()).payload.content
-            ),
-            red_marker
-        );
+        // this.drawLocations(
+        //     this.prepareLocationsForDrawing(
+        //         (await apiLocations.getLocationsFilterUsername()).payload.content
+        //     ),
+        //     red_marker
+        // );
 
         this.zoomSetupButtons(this.map)
 
@@ -404,35 +463,86 @@ export default {
 
         this.filterByCountry();
 
-        let res = await apiCalls.getPortoflios();
+        function createMarker(hexColour) {
 
-        if (res["auth"]["status"]) {
-            console.log("status ok")
+            return `<svg width="120" height="120" version="1.1" xmlns="http://www.w3.org/2000/svg">
+	<path d="M0 0h24v24H0z" fill="none"/>
+	<path fill="%23${hexColour}" d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" />
+</svg>`
+
+            //             return `
+            //                 < svg xmlns = "http://www.w3.org/2000/svg" height = "24px" viewBox = "0 0 24 24"
+            //             width = "24px" fill = "#FF0000" >
+            // <path d="M0 0h24v24H0z" fill="none" />
+            // <path fill="${hexColour}"
+            // d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" />
+            // </svg >
+            //                 `
+        }
+
+        let r = await apiCalls.getPortoflios();
+        if (r["auth"]["status"]) {
+            let pl = r["payload"]["portfolios"];
+
+            this.portfolios = Object.keys(pl);
+            // console.log(pl);
+            console.log("--------")
 
 
-            // this.colours = res["payload"]["colours"];
-            // this.role = res["payload"]["role"];
-            let portfolios = res["payload"]["portfolios"];
-
-            console.table(portfolios)
-
-
-            // const existingPortfolios = this.$store.getters.portfolios;
-
-            // for (const [portfolioName, portfolioDetails] of Object.entries(portfolios)) {
+            for (const [key, value] of Object.entries(pl)) {
+                // console.log(key, value);
+                let hexColour = value["hex"];
+                // console.log(hexColour);
+                let r = (await apiLocations.getLocationsFilterUsername(key)).payload.content
+                // console.log(r);
+                let marker = createMarker(hexColour);
+                console.log(marker)
 
 
-            //     this.$store.dispatch("addPortfolio",
-            //         {
-            //             name: portfolioName,
-            //             colour: portfolioDetails["colour"]
-            //         }
-            //     );
+                // locations.forEach(i => {
+                //     featuresApi[c] = { lat: i.latitude, lon: i.longitude }
+                // })
 
+
+                this.drawLocations(
+                    r,
+                    // this.prepareLocationsForDrawing(
+                    //     r
+                    // ),
+                    marker
+                    // red_marker
+                );
+            }
+
+
+            // console.log(red_marker)
+            // for (const pn of this.portfolios) {
+            //     console.log(pn);
+            //     // /                console.log(pl)
+            //     let r = (await apiLocations.getLocationsFilterUsername(pn)).payload.content
+            //     console.log(r);
+            //     // console.log()
+            //     // let marker = createMarker()
+
+            //     // this.drawLocations(
+            //     //     this.prepareLocationsForDrawing(
+            //     //         (await apiLocations.getLocationsFilterUsername(pn)).payload.content
+            //     //     ),
+            //     //     red_marker
+            //     // );
             // }
 
+            // this.portfolios.forEach(pn => {
+            //     console.log(pn);
 
+            //     // this.drawLocations(
+            //     //     this.prepareLocationsForDrawing(
+            //     //         (await apiLocations.getLocationsFilterUsername(pn)).payload.content
+            //     //     ),
+            //     //     red_marker
+            //     // );
 
+            // })
         }
 
     }
