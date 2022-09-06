@@ -14,7 +14,6 @@ async function login(username, password) {
 
     const user = await apiCalls.handleNewResponse(response)
     if (user) {
-        console.log("setting user", user)
         sessionStorage.setItem('user', JSON.stringify(user));
     }
     return user
