@@ -16,7 +16,6 @@ class CSRFView(APIView):
             double_submitted_cookie=None
         )
 
-
         response = {
             "auth": {
                 "status": True,

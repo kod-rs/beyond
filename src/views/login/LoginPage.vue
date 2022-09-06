@@ -1,127 +1,26 @@
 <template>
-    <section class="vh-100" style="background-image: url('assets/login_bg.jpg');">
-        <div class="container py-5 h-100">
-            <div class="row d-flex justify-content-center align-items-center h-100">
-                <div class="col col-xl-10">
-                    <div class="card" style="border-radius: 1rem;">
-                        <div class="row g-0">
-                            <div class="col-md-6 col-lg-5 d-none d-md-block">
 
+    <PublicBase>
+        <LoginForm></LoginForm>
+        <Links></Links>
+    </PublicBase>
 
-                                <img src="assets/login_profile.jpg" alt="login form" class="img-fluid"
-                                    style="border-radius: 1rem 0 0 1rem;" />
-
-                            </div>
-                            <div class="col-md-6 col-lg-7 d-flex align-items-center">
-                                <div class="card-body p-4 p-lg-5 text-black">
-
-                                    <div class="d-flex align-items-center mb-3 pb-1">
-                                        <i class="fas fa-cubes fa-2x me-3" style="color: #ff6219;"></i>
-                                        <span class="h1 fw-bold mb-0">Logo
-                                            <!-- <img src="login_logo.png" alt=""> -->
-                                        </span>
-                                    </div>
-                                    <div v-if="error" class="alert alert-danger">{{ error }}</div>
-
-                                    <form @submit.prevent="handleSubmit">
-
-                                        <div class="form-outline mb-4">
-                                            <label class="form-label" for="form2Example17">Username</label>
-                                            <input type="text" id="form2Example17" v-model="username"
-                                                class="form-control form-control-lg"
-                                                :class="{ 'is-invalid': submitted && !username }" />
-
-                                            <div v-show="submitted && !username" class="invalid-feedback">
-                                                Username is required</div>
-                                        </div>
-
-                                        <div class="form-outline mb-4">
-                                            <label class="form-label" for="form2Example27">Password</label>
-
-                                            <input type="password" id="form2Example27" v-model="password"
-                                                :class="{ 'is-invalid': submitted && !password }"
-                                                class="form-control form-control-lg" />
-
-
-                                            <div v-show="submitted && !password" class="invalid-feedback">
-                                                Password is required</div>
-                                        </div>
-
-                                        <div class="pt-1 mb-4">
-
-                                            <button class="btn btn-dark btn-lg btn-block"
-                                                :disabled="loading">Login</button>
-
-                                            <img v-show="loading"
-                                                src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==" />
-
-                                        </div>
-
-                                    </form>
-
-                                    <div class="misc">
-                                        <a class="small text-muted" href="#!">Forgot password?</a>
-                                        <br>
-                                        <a href="#!" class="small text-muted">Terms of use</a>
-                                        <br>
-                                        <a href="#!" class="small text-muted">Privacy policy</a>
-
-                                    </div>
-
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
 </template>
 
 
-
-
 <script>
-import { router } from '../../scripts/router';
-import { apiCalls } from '../../scripts/api';
+import LoginForm from "../../components/login/LoginForm.vue";
+import PublicBase from "../../components/login/PublicBase.vue";
+import Links from "@/components/login/Links.vue";
+import { getMixedColors } from "../../scripts/common";
 
 export default {
     data() {
-        return {
-            username: 'a',
-            password: '',
-            submitted: false,
-            loading: false,
-            returnUrl: '',
-            error: ''
-        }
+        return {};
     },
-    created() {
-        apiCalls.logout();
-        this.returnUrl = this.$route.query.returnUrl || '/';
-    },
-    methods: {
-        handleSubmit() {
-            this.submitted = true;
-            const { username, password } = this;
-
-            if (!(username && password)) {
-                return;
-            }
-            this.loading = true;
-            apiCalls.login(username, password).then(
-                () => {
-                    router.push(this.returnUrl);
-                    this.$store.commit('setUsername', username);
-
-                },
-                error => {
-                    this.error = "invalid credentials"
-                    this.error = error;
-                    this.loading = false;
-                }
-            );
-        }
+    components: { LoginForm, PublicBase, Links },
+    mounted() {
+        console.log(getMixedColors(2))
     }
 };
 </script> 

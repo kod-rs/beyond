@@ -1,31 +1,24 @@
 from decouple import config
 from django.http import JsonResponse
+from backend.api.middleware.comm import DebuggableMiddleware
+from backend.api.comm.http import get_empty_response_template
 
 
-class HttpsCheckMiddleware:
+class HttpsCheckMiddleware(DebuggableMiddleware):
     def __init__(self, get_response):
-        self.get_response = get_response
-
-        self.debug = config("DEBUG") != "0"
+        super().__init__(get_response)
 
     def __call__(self, request):
 
+        if config("HTTPS_ONLY") != "0":
+            print()
+        print("HttpsCheckMiddleware")
 
         if request.is_secure() == "https":
-            pass
-        else:
+            return self.get_response(request)
 
-            if config("HTTPS_ONLY") != "0":
-
-                rejection = {
-                    "auth": {
-                        "status": False,
-                        "access-token": "",
-                        "refresh-token": ""
-                    },
-                    "payload": {},
-                    "debug": ""
-                }
-                return JsonResponse(rejection)
+        if config("HTTPS_ONLY") != "0":
+            rejection = get_empty_response_template()
+            return JsonResponse(rejection)
 
         return self.get_response(request)

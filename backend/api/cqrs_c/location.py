@@ -1,16 +1,25 @@
 from backend.api.model.location import Location
+from backend.api.cqrs_q.portfolio import get_portfolio
 
+def add(portfolio, section, location_type, latitude, longitude) -> bool:
+    print(portfolio, section, location_type, latitude, longitude)
 
-def add(section, location_type, latitude, longitude) -> bool:
-    print(section, location_type, latitude, longitude)
+    # todo if portfolio does not exist create it,
+    #  check if role is manager and how many portfolios exist
+
+    p = get_portfolio(portfolio)
 
     try:
         l = Location.objects.create(
             # device_id=device_id,
+            # username=username,
+            portfolio=p,
             section=section,
             type=location_type,
             latitude=latitude,
-            longitude=longitude)
+            longitude=longitude
+        )
+
         l.save()
         return True
     except Exception as e:

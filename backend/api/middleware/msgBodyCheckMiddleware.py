@@ -1,66 +1,45 @@
 import json
-
-from decouple import config
 from django.http import JsonResponse
+from backend.api.middleware.comm import middleware_check_params
+from backend.api.comm.http import get_empty_response_template
+from backend.api.comm.json_loader import vue_interface_cfg
+from backend.api.middleware.comm import DebuggableMiddleware
 
-from backend.api.config.main import ACTIONS
 
+class MsgBodyCheckMiddleware(DebuggableMiddleware):
 
-class MsgBodyCheckMiddleware:
     def __init__(self, get_response):
-        self.get_response = get_response
-        self.debug = config("DEBUG") != "0"
+        super().__init__(get_response)
+
+        self.vue_interface_cfg = vue_interface_cfg
 
     def __call__(self, request):
-        if self.debug:
-            print(80 * "-")
-            print("\tMsgBodyCheckMiddleware")
-        rejection = {"auth": {"status": False,
-                              "access-token": "",
-                              "refresh-token": ""},
-                     "payload": {},
-                     "debug": ""}
-        try:
-            print(f"{request.body=}")
-            body = json.loads(request.body)
-            keys = list(body.keys())
+        print("MsgBodyCheckMiddleware")
+        # rejection = get_empty_response_template()
+        #
+        # if request.environ['QUERY_STRING'] != '':
+        #     print('query string not empty')
+        #     return JsonResponse(rejection)
+        #
+        # # todo
+        # # try:
+        #
+        # body = json.loads(request.body)
+        # keys = list(body.keys())
+        #
+        # if not middleware_check_params(
+        #     action_composite=request.action,
+        #     given=keys
+        # ):
+        #     print(f"\tmissing something, {request.action=}")
+        #     print(f"\tprovided {keys}")
+        #     # return JsonResponse(rejection)
 
-            if request.environ['QUERY_STRING'] != '':
-                print('query string not empty')
-                return JsonResponse(rejection)
+        return self.get_response(request)
 
-            if request.path == '/csrf/':
-                if keys != ['access_token', 'refresh_token', 'action']:
-                    print('rejected csrf')
-                    return JsonResponse(rejection)
-
-            elif request.path == '/locations/':
-                expected_keys = ['access_token', 'refresh_token', 'action']
-                if body['action'] == ACTIONS.DELETE.value:
-                    expected_keys.append('index')
-                if body['action'] == ACTIONS.ADD.value:
-                    expected_keys += ['type',
-                                      'section',
-                                      'latitude',
-                                      'longitude',
-                                      'synchronizer_token']
-                if keys != expected_keys:
-                    print('rejected locations')
-                    return JsonResponse(rejection)
-
-            elif request.path == '/login/':
-                if keys != ['username', 'password']:
-                    print('rejected login')
-                    return JsonResponse(rejection)
-
-            elif request.path == '/logout/':
-                if list(body.keys()) != ['access_token', 'refresh_token']:
-                    print('rejected logout')
-                    return JsonResponse(rejection)
-
-            return self.get_response(request)
-        except Exception as e:
-            if self.debug:
-                print(e)
-            print('rejected because of error')
-            return JsonResponse(rejection)
+        # except Exception as e:
+        #     if self.debug:
+        #         print(e)
+        #         print('rejected because of error')
+        #
+        # return JsonResponse(rejection)

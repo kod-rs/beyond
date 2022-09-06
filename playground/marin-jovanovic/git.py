@@ -10,7 +10,17 @@ def main():
 
     same_comment = True
     comment = None
-    comment = "add command for deleting branches"
+
+    comment = "fix config"
+    comment = "wip: refactor role validation"
+    comment = "fix: role validation deserializer"
+    comment = "upd: rewrite select all api call"
+    comment = "init: screens"
+    comment = "impl: create / update portfolio"
+    comment = 'ref: rewrite db scheme'
+
+    comment = "fix: filter markers by portfolio"
+
     if same_comment:
         if not comment:
             comment = input("comment for all commits will be same:")

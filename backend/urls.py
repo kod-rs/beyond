@@ -3,18 +3,23 @@ from django.urls import path
 from rest_framework import routers
 
 from backend.api.model.testCRUD import TestCrudView
-from backend.api.startup import run_startup
 from backend.api.view.dbView import pureDjangoView
 from backend.api.view.deviceView import DeviceView
 from backend.api.view.locationsView import LocationsView
 from backend.api.view.loginView import LoginView
 from backend.api.view.logoutView import LogoutView
-from backend.api.views import IndexView
+from backend.api.view.index import IndexView
 from backend.api.view.CSRFView import CSRFView
+from backend.api.view.userInfo import UserInfoView
+from backend.api.view.portfolioView import PortfolioView
 
-# from backend.api_kc.view.LoginKCView import LoginKCView
+from backend.api.comm.json_loader import role_validation_cfg
 
-run_startup()
+from backend.api.startup import startup_configuration
+startup_configuration.init_scheme_validator(role_validation_cfg)
+startup_configuration.print_app_logo()
+
+
 
 api_router = routers.DefaultRouter()
 api_router.register('device', DeviceView, basename="device")
@@ -36,10 +41,14 @@ urlpatterns = [
     path("testcrud/", TestCrudView.as_view()),
 
     path("locations/<int:pk>", LocationsView.as_view()),
+    path("locations/<str:pn>", LocationsView.as_view()),
     path("locations/", LocationsView.as_view()),
 
     path('api/admin/', admin.site.urls),
     path("csrf/", CSRFView.as_view()),
+    path("userinfo/", UserInfoView.as_view()),
+    path("portfolio/", PortfolioView.as_view()),
+    path("portfolio/<str:name>", PortfolioView.as_view()),
 
     # path('loginkc/', LoginKCView.as_view()),
 

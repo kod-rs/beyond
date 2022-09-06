@@ -12,168 +12,87 @@ const api = axios.create({
 
 async function getCSRFAuthData() {
 
-    const r = checkTokens()
+    return await handleNewResponse(
+        await api.post(
+            "csrf/",
+            {},
+            get_auth_header()
+        )
+    );
 
-    const funRes = {
-        "status": false,
-        "synchronizer_token": undefined
-    }
-
-    if (r["status"]) {
-
-        let access_token = r["access_token"]
-        let refresh_token = r["refresh_token"];
-
-        const response = await api.post(`csrf/`, JSON.stringify({ access_token, refresh_token, action: "generate" }));
-        const responseData = await handleNewResponse(response)["payload"];
-
-        funRes["synchronizer_token"] = responseData["synchronizer_token"];
-        funRes["status"] = true;
-
-    }
-
-    return funRes;
 
 }
-
-async function deleteLocation(i) {
-
-    const r = checkTokens()
-
-    if (r["status"]) {
-
-        let access_token = r["access_token"]
-        let refresh_token = r["refresh_token"]
-
-        const response = await api.post(`locations/`, JSON.stringify({ access_token, refresh_token, action: "delete", index: i }));
-        // const response = await api.get(`locations/`, JSON.stringify({ access_token, refresh_token }));
-        return await handleNewResponse(response);
-
-    }
-
-}
-
-async function getAllLocations() {
-
-    const r = checkTokens()
-
-    if (r["status"]) {
-
-        let access_token = r["access_token"]
-        let refresh_token = r["refresh_token"]
-
-        const response = await api.post(`locations/`, JSON.stringify({ access_token, refresh_token, action: "get all" }));
-        // const response = await api.get(`locations/`, JSON.stringify({ access_token, refresh_token }));
-        return await handleNewResponse(response);
-
-    }
-
-}
-
-async function addLocation(section, type, latitude, longitude, csrfToken) {
-
-    const r = checkTokens()
-
-    if (r["status"]) {
-
-        let access_token = r["access_token"]
-        let refresh_token = r["refresh_token"]
-
-        const response = await api.post(`locations/`, JSON.stringify({
-            access_token, refresh_token, action: "add",
-            type, section, latitude, longitude, synchronizer_token: csrfToken
-        }));
-        return await handleNewResponse(response);
-
-    }
-
-}
-
 
 async function login(username, password) {
 
-    const response = await api.post(`login/`, JSON.stringify({ username, password }))
+    const response = await api.post(
+        "login/",
+        { action: "action tmp" },
+        {
+            headers: {
+                'Authorization': 'Basic ' + ((encodeURIComponent(username + ':' + password)))
+            }
+        }
+    );
+
     const user = await handleNewResponse(response)
     if (user) {
-        sessionStorage.setItem('user', JSON.stringify(user))
+        console.log("setting user", user)
+        sessionStorage.setItem('user', JSON.stringify(user));
     }
     return user
 
 }
 
-function logout() {
+function get_auth_header() {
     if (sessionStorage.getItem("user") !== null) {
         let user = JSON.parse(window.sessionStorage.getItem('user'));
         let access_token = user["auth"]["access-token"]
-        const refresh_token = user["auth"]["refresh-token"]
+        let refresh_token = user["auth"]["refresh-token"];
+
+        // console.log(access_token)
+
+        return { headers: { 'Authorization': 'Digest ' + ((encodeURIComponent(access_token + ':' + refresh_token))) } }
+    } else {
+        return { headers: { 'Authorization': 'Digest ' + ((encodeURIComponent("not" + ':' + "present_err"))) } }
+    }
+
+}
+
+function logout() {
+    if (sessionStorage.getItem("user") !== null) {
+        api.post(
+            "logout/",
+            { action: "logout;__comm" },
+            get_auth_header()
+        );
         sessionStorage.removeItem('user');
 
-        api.post(`logout/`, JSON.stringify({ access_token, refresh_token }))
-        // .then(r => {
-
-        // })
     }
 
 }
 
-function checkTokens() {
+async function getCoordinates() {
 
-
-    if (sessionStorage.getItem("user") !== null) {
-        let user = JSON.parse(window.sessionStorage.getItem('user'));
-
-        if (
-            ("auth" in user) &&
-            ("access-token" in user["auth"]) &&
-            ("refresh-token" in user["auth"])
-        ) {
-
-            const access_token = user["auth"]["access-token"]
-            const refresh_token = user["auth"]["refresh-token"]
-
-            return {
-                "status": true,
-                "access_token": access_token,
-                "refresh_token": refresh_token
-            }
-
-        }
-
-    }
+    let response = await api.get(`https://ipapi.co/json/`)["data"];
 
     return {
-        "status": false
+        latitude: response["latitude"],
+        longitude: response["longitude"]
     }
-
 
 }
 
-// async function getAllTest() {
-//     const r = checkTokens()
-//     if (r["status"]) {
-//         let access_token = r["access-token"]
-//         const refresh_token = r["refresh-token"]
+async function getPortoflios() {
 
-//         const response = await api.put(`getAll/`, JSON.stringify({ access_token, refresh_token }));
-//         let r2 = await handleNewResponse(response);
-//         return r2;
+    return await handleNewResponse(
+        await api.get(
+            "portfolio/",
+            get_auth_header()
+        )
+    );
 
-//     }
-// }
-
-// async function createOrUpdate(id, newValue) {
-//     const r = checkTokens()
-//     if (r["status"]) {
-//         let access_token = r["access-token"]
-//         let refresh_token = r["refresh-token"]
-
-//         const response = await api.put(`testcrud/`, JSON.stringify({ access_token, refresh_token, id, newValue }));
-//         return await handleNewResponse(response);
-
-//     }
-
-// }
-
+}
 
 function handleNewResponse(response) {
 
@@ -190,23 +109,46 @@ function handleNewResponse(response) {
     return response.data
 }
 
-async function getCoordinates() {
+async function createOrUpdatePortfolio(currentName, newName, colour) {
+    // todo csrf
 
-    let response = await api.get(`https://ipapi.co/json/`)
-    response = response["data"]
-    return {
-        latitude: response["latitude"],
-        longitude: response["longitude"]
-    }
+    return await handleNewResponse(
+        await api.post(
+            "portfolio/",
+            JSON.stringify({
+                currentName,
+                newName
+                , colour
 
+            }),
+            get_auth_header()
+        )
+    );
 }
 
+async function deletePortfolio(currentName,) {
+    // todo csrf
+
+    return await handleNewResponse(
+        await api.delete(
+            "portfolio/" + currentName,
+            get_auth_header()
+        )
+    );
+}
+
+
+
 export const apiCalls = {
+    api,
+    handleNewResponse,
+    get_auth_header,
+
+    deletePortfolio,
+    createOrUpdatePortfolio,
+    getPortoflios,
     logout,
     login,
-    getAllLocations,
-    deleteLocation,
     getCSRFAuthData,
-    addLocation,
-    getCoordinates
+    getCoordinates,
 }

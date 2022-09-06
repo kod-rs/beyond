@@ -1,8 +1,6 @@
 <template>
-
     <div id="root">
 
-        <Navigation />
 
         <main class="mt-5 pt-3">
             <div class="container-fluid">
@@ -14,10 +12,11 @@
                     <div v-if="error" class="alert alert-danger">{{ error }}</div>
 
                     <form @submit.prevent="handleSubmit">
-                        <CSRFToken ref="csrftokenelement" />
-                        <!-- <div v-for="post in posts" :key="post.id"> -->
+                        <CSRFToken />
                         <div v-for="option in formData" :value="option.value" :key="option.value">
+
                             {{ option.key.charAt(0).toUpperCase() + option.key.slice(1) }}
+
                             <span v-if="option.key == 'section' || option.key == 'type'">
                                 <span class="hint" @mouseover="option.hovered = true"
                                     @mouseleave="option.hovered = false">?</span>
@@ -34,6 +33,27 @@
 
                         </div>
 
+
+
+                        <PortfolioSelector ref="portfolioSelector"></PortfolioSelector>
+
+
+
+                        <!-- <div>
+                            Portfolio
+
+
+                            <input type="text" v-model="portfolio" :name="portfolio" class="form-control" />
+
+                            <div v-if="submitted && portfolio" class="red">
+                                portfolio is required
+                            </div>
+
+                            <br>
+
+                        </div> -->
+
+                        <hr>
                         <button class="btn btn-primary btn-dark btn-lg btn-block" :disabled="loading">add</button>
 
                         <img v-show="loading"
@@ -41,6 +61,10 @@
 
 
                     </form>
+
+                    <div id="map" class="map"></div>
+                    <MapPopup ref="mappopup"></MapPopup>
+
                 </div>
 
             </div>
@@ -50,65 +74,135 @@
 
 </template>
 
+    <style>
+    .map {
+        width: 100%;
+        height: 100px;
+    }
+    </style>
+
+
 <script>
-import { apiCalls } from '../../scripts/api';
+
+import CSRFToken from "../../components/form/CSRFToken.vue"
+import MapPopup from "../../components/map/MapPopup.vue"
+// import { apiCalls } from '../../scripts/api';
+import { apiLocations } from '../../scripts/api_locations';
+import Map from 'ol/Map';
+
+import TileLayer from 'ol/layer/Tile';
+import View from 'ol/View';
+
+import OSM from 'ol/source/OSM';
+import { toLonLat } from 'ol/proj';
+import { toStringHDMS } from 'ol/coordinate';
+
+
+import PortfolioSelector from '../../components/form/PortfolioSelector.vue';
+
 
 export default {
+
     data() {
         return {
             hover: false,
             formData: [
-                { key: 'section', value: 'A', msg: "Only letters, numbers, spaces, commas and dots accepted in the input", hovered: false },
-                { key: 'type', value: 'B', msg: "Only letters, numbers, spaces, commas and dots accepted in the input", hovered: false },
-                { key: 'latitude', value: '2' },
+                { key: "section", value: "A", msg: "Only letters, numbers, spaces, commas and dots accepted in the input", hovered: false },
+                { key: "type", value: "B", msg: "Only letters, numbers, spaces, commas and dots accepted in the input", hovered: false },
+                { key: "latitude", value: "2" },
                 { key: "longitude", value: "3" }
             ]
-        }
+            , submitted: false,
+            loading: false,
+            error: undefined,
+        };
     },
     methods: {
         async handleSubmit() {
+            console.log("submit for p",)
+            // return
             this.submitted = true;
-            this.error = ""
-
+            this.error = "";
             let formContent = {};
-
             for (const element of this.formData) {
-
                 if (element.value) {
-                    formContent[element.key] = element.value
-
-                } else {
-                    this.error = "fields not filled"
-                    return
+                    formContent[element.key] = element.value;
+                }
+                else {
+                    this.error = "fields not filled";
+                    return;
                 }
             }
+            const csrfToken = this.$store.state.synchronizerToken;
 
-            const csrfToken = this.$store.state.synchronizerToken
+            // check if portfolio input has content and is valid
 
-            await apiCalls.addLocation(formContent["section"], formContent["type"], formContent["latitude"], formContent["longitude"], csrfToken).then(
-                r => {
-                    if (r.payload.status) {
-                        alert("Location add successful.");
-                    } else {
-                        alert("Location add failed.");
-                    }
+            let portfolio = this.$refs.portfolioSelector.getSearch();
+            console.log("port", portfolio);
 
-                },
-                error => {
-                    alert("Location add failed.");
-                    console.log("error", error)
+            await apiLocations.addLocation(
+                portfolio,
+                formContent["section"],
+                formContent["type"],
+                formContent["latitude"],
+                formContent["longitude"],
+                csrfToken
+
+            ).then(r => {
+                if (r.payload.status) {
+                    alert("Location add successful.");
                 }
-            );
-
-            this.formData.forEach(i => {
-                i.value = ""
+                else {
+                    alert("Location add failed.");
+                }
+            }, error => {
+                alert("Location add failed.");
+                console.log("error", error);
             });
 
-            this.$router.go()
-
+            // this.formData.forEach(i => {
+            //     i.value = "";
+            // });
+            this.$router.go();
             this.submitted = false;
         }
-    }
+    },
+    async mounted() {
+
+
+
+        /**
+      * Create the map.
+      *
+     */
+        const map = new Map({
+            layers: [
+                new TileLayer({
+                    source: new OSM(),
+                }),
+            ],
+            target: "map",
+            view: new View({
+                center: [0, 0],
+                zoom: 2,
+            }),
+        });
+        map.addOverlay(this.$refs.mappopup.getOverlay());
+        /**
+         * Add a click handler to the map to render the popup.
+         */
+        map.on("singleclick", (evt) => {
+            const coordinate = evt.coordinate;
+            const hdms = toStringHDMS(toLonLat(coordinate));
+            this.formData[2].value = toLonLat(coordinate)[0];
+            this.formData[3].value = toLonLat(coordinate)[1];
+            console.log("log coord", hdms);
+            console.log("set postiion,", coordinate);
+            this.$refs.mappopup.setText(hdms);
+            this.$refs.mappopup.setPosition(coordinate);
+        });
+    },
+    components: { PortfolioSelector, CSRFToken, MapPopup }
 };
 </script> 
 

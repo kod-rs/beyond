@@ -1,20 +1,14 @@
 <template>
+    todo remove
+
 
     <div id="root">
         <NavigationTemplate />
 
-
         <main class="mt-5 pt-3">
             <div class="container-fluid">
 
-
                 <div class="row">
-
-
-
-
-
-
                     <!-- <input v-model="searchInput" @keyup.enter="search" placeholder="Enter place" /> -->
                     <button @click="refreshLocations">refresh locations, maybe someone else placed something
                         new</button>
@@ -26,12 +20,13 @@
 
                 <div class="row">
                     <div class="col-md-12 mb-3">
-
+                        only showing locations for this user
                         <div class="card">
                             <div class="card-header">
                                 <span><i class="bi bi-table me-2"></i></span> Locations
 
                             </div>
+
                             <div class="card-body">
                                 <div class="table-responsive">
                                     <table id="example" class="table table-striped data-table" style="width: 100%">
@@ -73,10 +68,6 @@
                     </div>
                 </div>
 
-
-
-
-
             </div>
         </main>
 
@@ -86,7 +77,6 @@
 
 <script>
 import { apiCalls } from '../../scripts/api';
-// import Navigation from '../../components/navigation/Navigation.vue';
 
 export default {
     name: "viewLocation",
@@ -100,44 +90,21 @@ export default {
         };
     },
     mounted() {
-        // refreshLocations()
-        apiCalls.getAllLocations().then(res => {
-            console.log("new locations");
-            console.log(res);
-            this.modelContent = res["payload"]["content"];
-            console.log(this.modelContent);
-        }, error => {
-            console.log("err", error);
-            this.error = "invalid credentials";
-            // this.error = error;
-            this.loading = false;
-        });
+        this.refreshLocations()
     },
     methods: {
         refreshLocations() {
             console.log("refreshing locations");
-            apiCalls.getAllLocations().then(res => {
-                console.log("new locations");
-                console.log(res);
-                this.modelContent = res["payload"]["content"];
-                console.log(this.modelContent);
-            }, error => {
-                console.log("err", error);
-                this.error = "invalid credentials";
-                // this.error = error;
-                this.loading = false;
-            });
+            // apiCalls.getLocationsFilterUsername().then(res => {
+            //     this.modelContent = res["payload"]["content"];
+            // }, error => {
+            //     console.log("err", error);
+            //     this.error = "invalid credentials";
+            //     // this.error = error;
+            //     this.loading = false;
+            // });
         },
-        // search() {
-        //     this.fetchData();
-        // },
-        // async fetchData() {
-        //     // const apiKey = import.meta.env.tTT;
-        //     const url = ``;
-        //     this.searchInput = "";
-        //     const res = await fetch(url);
-        //     // const jsonResponse = await res.json();
-        // },
+
         async deleteElement(i) {
             console.log("delete i", i);
             apiCalls.deleteLocation(i).then(() => {
@@ -151,17 +118,12 @@ export default {
             });
         }
     }
-    // ,
-    // components: { LocationForm }
 
-    // components: { Navigation }
 }
 
 </script>
 
 <style>
-/* @import './style.css'; */
-
 #root {
     border-style: solid;
 }
