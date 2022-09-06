@@ -41,6 +41,7 @@ urlpatterns = [
     path("testcrud/", TestCrudView.as_view()),
 
     path("locations/<int:pk>", LocationsView.as_view()),
+    path("locations/<str:pn>", LocationsView.as_view()),
     path("locations/", LocationsView.as_view()),
 
     path('api/admin/', admin.site.urls),
