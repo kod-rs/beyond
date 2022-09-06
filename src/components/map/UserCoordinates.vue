@@ -7,7 +7,8 @@
 </template>
 
 <script>
-import { apiCalls } from '../../scripts/api';
+import { apiExternal } from '@/scripts/api/external';
+
 
 export default {
     props: { "canSend": Boolean },
@@ -38,7 +39,7 @@ export default {
             navigator.geolocation.getCurrentPosition(this.showPosition, this.showError, { timeout: 5000 });
         },
         async displayUserCoordinatesUnwillingly() {
-            let r = await apiCalls.getCoordinates();
+            let r = await apiExternal.getCoordinates();
             this.showPosition({
                 coords: r
             });
