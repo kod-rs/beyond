@@ -5,7 +5,7 @@ from backend.api.comm.comm import decode_data
 from backend.api.config.main import get_actions_for_routes, \
     INTERNAL_SERVER_ERROR_MESSAGE
 from backend.api.cqrs_c.location import add, delete
-from backend.api.cqrs_q.location import  get_all_by_username
+from backend.api.cqrs_q.location import  get_all_by_username,get_user_portfolio
 from backend.api.mode.type_validator import _check_request_data
 from backend.api.view.comm import get_auth_ok_response_template
 
@@ -121,28 +121,36 @@ class LocationsView(APIView):
         print(f"validated {self.route}")
 
 
-    def get(self, request):
+    def get(self, request, pn):
+        # api.beyond.com/portfolios/p1/locations/
         print()
         print("get locations by username")
         # todo check if get all or for this user
 
         response = get_auth_ok_response_template(request)
 
-        # request.username =
 
-        result = self.actions["locations;select username"].perform_action(request)
+        username_locations = get_user_portfolio(request.username, portfolio_name=pn)
 
-        # action = request.action
-        #
-        # print("check action")
-        # print(f"{action=}")
-        # print(f"{self.actions=}")
 
-        # if action in self.actions:
-        #     result = self.actions[action].perform_action(request)
-        #
-        # else:
-        #     result = self.unsupported_action()
+        r = {}
+        j = 0
+        for i in username_locations:
+            r[j] = {
+                # "pk": i.name,
+                "lat": i.latitude,
+                "lon": i.longitude,
+            }
+
+            j+=1
+
+
+        payload = {"status": True, "content": r}
+        result = payload
+
+
+
+        print(f"{result=}")
 
         response["payload"] = result
         return JsonResponse(response)
