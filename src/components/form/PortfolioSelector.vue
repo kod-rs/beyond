@@ -9,14 +9,14 @@
 
         </InputAutocomplete>
 
-        <button @click="buttonClicked">search</button>
+        <!-- <button @click="buttonClicked">search</button> -->
 
     </div>
 </template>
 
 <script>
 import InputAutocomplete from './../form/InputAutocomplete.vue';
-import { apiCalls } from '../../scripts/api';
+import { apiPortfolio } from '../../scripts/api/portfolio';
 
 export default {
     components: {
@@ -31,16 +31,16 @@ export default {
             return this.$refs.inputautocompletefield.getSearch();
 
         },
-        buttonClicked() {
-            let location = this.$refs.inputautocompletefield.getSearch();
-            console.log("search for portfolio:", location)
+        // buttonClicked() {
+        //     let location = this.$refs.inputautocompletefield.getSearch();
+        //     console.log("search for portfolio:", location)
 
-        },
+        // },
         userTypedLocation(location) {
             console.log("new portfolio typed", location);
         },
         async getLocations() {
-            let r = await apiCalls.getPortoflios();
+            let r = await apiPortfolio.getPortoflios();
 
             if (r["auth"]["status"]) {
                 let pl = r["payload"]["portfolios"];
