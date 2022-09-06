@@ -23,7 +23,7 @@ import {
   TIME_RESOLUTION
 } from './scripts/constants';
 
-import { apiCalls } from './scripts/api';
+import { apiCalls } from './scripts/api/comm';
 import { activate_tab_name_changer } from "./scripts/tab_name_changer";
 
 export default {
