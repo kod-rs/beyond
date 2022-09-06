@@ -4,6 +4,7 @@ import json
 from django.core import serializers
 
 from backend.api.model.location import Location
+from backend.api.cqrs_q.portfolio import get_portfolio
 
 
 # def get_all():
@@ -30,6 +31,22 @@ from backend.api.model.location import Location
 #             t = [{k: v for k, v in i.items()} for i in t]
 #
 #     return t
+
+def get_user_portfolio(username, portfolio_name):
+    # print("def get_user_portfolio(username, portfolio_name):")
+    # portfolio = get_portfolio(portfolio_name)
+    print(f"{portfolio_name=}")
+
+    locations = Location.objects.filter(portfolio__username=username, portfolio__name=portfolio_name)
+    # print("locations", locations)
+    # t = serializers.serialize('json', locations)
+    # print(t)
+    # print("---")
+    # for i in t:
+    #     print(i)
+    return locations
+    # return Portfolio.objects.filter(username=username)
+
 
 def get_all_by_username(username):
 
