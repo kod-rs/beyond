@@ -57,27 +57,34 @@ class PortfolioView(APIView):
 
     def get(self, request):
 
-        # print(80 * "-")
-        r = get_portfolio_names(request.username)
-        # print(r, "------")
-        # for i in r:
-        #     print(i.name)
-
-        # print("get for user")
         username = request.username
-        # print(username)
-
         portfolios = get_portfolios(username)
 
+        print(colours_cfg)
+
         r = {}
+        print(80 * "-")
+        print(80 * "-")
+        print(80 * "-")
         for i in portfolios:
-            # print(i)
-            # print(i.name)
+            hex_colour = "a59344"
+            try:
+                # print("for name", i.colour)
+                print(colours_cfg[i.colour]["hex"])
+                hex_colour = colours_cfg[i.colour]["hex"]
+                print()
+                # todo only for testing, utf encode
+                # hex_colour = "%23"+ \
+                hex_colour = hex_colour[1:]
+                # print("found")
+            except KeyError:
+                pass
+
             r[i.name] = {
                 "newName": i.name,
                 "oldName": i.name,
                 "colour": i.colour,
-
+                "hex": hex_colour,
                 # todo log session state
                 "isExpanded": False
             }
