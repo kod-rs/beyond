@@ -114,7 +114,8 @@ def is_valid(access_token, refresh_token):
             "is_valid": True,
             "access_token": access_token,
             "refresh_token": refresh_token,
-            "test is_current_valid": True
+            "test is_current_valid": True,
+            "preferred_username": res["preferred_username"]
         }
     else:
 
@@ -126,7 +127,8 @@ def is_valid(access_token, refresh_token):
                 "is_valid": True,
                 "access_token": res["access_token"],
                 "refresh_token": res["refresh_token"],
-                "test is_current_valid": False
+                "test is_current_valid": False,
+                "preferred_username": get_user_info(res["access_token"])["preferred_username"]
             }
 
         else:

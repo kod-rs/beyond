@@ -9,7 +9,7 @@
 
 <style>
 @import "https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css";
-@import "//cdn.datatables.net/1.12.1/css/jquery.dataTables.min.css";
+/* @import "//cdn.datatables.net/1.12.1/css/jquery.dataTables.min.css"; */
 @import "https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css";
 </style>
 
@@ -40,7 +40,7 @@ export default {
     this.importScript("https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js");
     this.importScript("https://cdn.jsdelivr.net/npm/chart.js@3.0.2/dist/chart.min.js");
     this.importScript("https://code.jquery.com/jquery-3.5.1.slim.min.js");
-    this.importScript("https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js");
+    // this.importScript("https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js");
 
 
     activate_tab_name_changer();

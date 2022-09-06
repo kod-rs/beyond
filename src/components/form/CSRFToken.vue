@@ -18,10 +18,11 @@ export default {
         }
     },
     async mounted() {
-
         const CSRFPayload = await apiCalls.getCSRFAuthData();
+        // console.table(CSRFPayload);
+        // console.log("csrf", CSRFPayload)
 
-        if (CSRFPayload["status"]) {
+        if (CSRFPayload["auth"]["status"]) {
             this.content = CSRFPayload["synchronizer_token"]
             this.$store.commit('setSynchronizerToken', this.content)
 
@@ -29,7 +30,7 @@ export default {
             this.content = ""
             this.$store.commit('setSynchronizerToken', '')
 
-            alert("error generating, you will not be able to submit form, contact admin")
+            alert("error generating SynchronizerToken, you will not be able to submit form, contact admin")
         }
     },
     methods: {

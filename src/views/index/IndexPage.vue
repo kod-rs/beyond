@@ -1,11 +1,12 @@
 <template>
 
     <div class="container-fluid">
-
-
         <div class="row">
             <div class="col-sm">
                 <div class="row">
+                    red - your
+                    <br>
+                    yellow - other
                     <LocationSelector>
 
                     </LocationSelector>
@@ -13,9 +14,10 @@
                     mouse is pointing at this country:
                     <div id="info">&nbsp;</div>
                     <hr>
-                    <UserCoordinates @userCoordinates="drawUserLocation" :canSend="this.canSend"
+                    <!-- todo  -->
+                    <!-- <UserCoordinates @userCoordinates="drawUserLocation" :canSend="this.canSend"
                         ref="userCoordinatesManager">
-                    </UserCoordinates>
+                    </UserCoordinates> -->
                     <button>
                         <router-link class="dropdown-item" to="/logout">Logout</router-link>
                     </button>
@@ -30,18 +32,61 @@
                     <button>position map on user location</button>
                     <button id="zoom-out">Zoom out</button>
                     <button id="zoom-in">Zoom in</button>
+
+
+                    <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px"
+                        fill="#FF0000">
+                        <path d="M0 0h24v24H0z" fill="none" />
+                        <path fill="#FF0000"
+                            d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" />
+                    </svg>
+
+                    <div>
+
+                        portfolio
+                        <!-- <select @change="onChange($event)">
+                            <option v-for="p in Object.keys(portfolios)" :key="p">{{ p }}</option>
+
+                        </select>
+                        <hr> -->
+
+
+                    </div>
+
+                    <div>
+                        <div id='example-3'>
+                            <div v-for="p in Object.keys(portfolios)" :key="p">
+                                <!-- {{ p }} -->
+                                <input type="checkbox" :id="p" :value="p" v-model="checkedNames">
+                                <label :for="p">{{ p }}</label>
+                                <hr>
+
+                            </div>
+                            <!-- <input type="checkbox" id="jack" value="Jack" v-model="checkedNames">
+                            <label for="jack">Jack</label>
+                            <hr>
+                            <input type="checkbox" id="john" value="John" v-model="checkedNames">
+                            <label for="john">John</label>
+                            <input type="checkbox" id="mike" value="Mike" v-model="checkedNames">
+                            <label for="mike">Mike</label>
+                            <br> -->
+                            <span>Checked names: {{ checkedNames }}</span>
+                            <hr>
+                            <button @click="onChange">click to filter</button>
+                        </div>
+                    </div>
+
                 </div>
             </div>
             <div class="col-sm">
                 <div class="row">
                     <div id="map" class="map" tabindex="0" style="width: 90%; height: 90%; 
-                position:fixed; 
-                border: 1px solid #ccc;">
+                        position:fixed; 
+                            border: 1px solid #ccc;     ">
                     </div>
 
-                    <div style="display: none;">
-                        <div id="popup" title="Selected location"></div>
-                    </div>
+                    <MapPopup ref="mappopup"></MapPopup>
+
                 </div>
             </div>
             <div class="col-sm">
@@ -52,13 +97,14 @@
 
 </template>
 
+
+
 <script>
 
 import Map from 'ol/Map';
 import OSM from 'ol/source/OSM';
 import TileLayer from 'ol/layer/Tile';
 import View from 'ol/View';
-import Overlay from 'ol/Overlay';
 import { toStringHDMS } from 'ol/coordinate';
 import { fromLonLat, toLonLat } from 'ol/proj';
 import Point from 'ol/geom/Point';
@@ -69,17 +115,19 @@ import { Vector as VectorLayer } from 'ol/layer';
 import GeoJSON from 'ol/format/GeoJSON';
 import { Stroke } from 'ol/style';
 
-import $ from 'jquery'
 import LocationSelector from '../../components/map/LocationSelector.vue'; //Optional default CSS
-
-import marker2 from "/public/assets/markers/baseline_place_black_24dp.png"
+import userMarker from "/public/assets/markers/geolocation_marker.png"
 import countriesjson from "/public/assets/layers/countries.json";
-
-
+import { apiCalls } from '../../scripts/api';
+import { apiLocations } from '../../scripts/api_locations';
+// import UserCoordinates from "../../components/map/UserCoordinates.vue";
+import MapPopup from "../../components/map/MapPopup.vue";
 
 export default {
     components: {
-        LocationSelector
+        LocationSelector,
+        //  UserCoordinates, 
+        MapPopup
     },
     data() {
         return {
@@ -90,17 +138,46 @@ export default {
             userLocationLayer: undefined,
             canSend: false,
             view: undefined,
-            vectorSource: undefined,
             countriesLayer: undefined,
-
+            portfolios: {},
+            checkedNames: []
         }
     },
     methods: {
-        userTypedLocation() {
-            console.log("user location")
+        onChange() {
+            console.log("clicked", this.checkedNames)
+
+
+
+            for (const [key, value] of Object.entries(this.portfolios)) {
+                console.log(key, value);
+                value["visible"] = false;
+                // console.log(value["visible"])
+                this.map.removeLayer(value["vectorLayer"]);
+
+            }
+            this.checkedNames.forEach(i => {
+                console.log("portf", i)
+                this.portfolios[i]["visible"] = true
+            })
+            for (const [key, value] of Object.entries(this.portfolios)) {
+                console.log(key, value);
+                // value["visible"] = false;
+                console.log(value["visible"])
+                if (value["visible"]) {
+                    this.map.addLayer(value["vectorLayer"]);
+                } else {
+                    console.log("lele")
+                }
+            }
+
+            // let portfolioName = event.target.value;
+            // console.log("on change", portfolioName)
+
+            // let t = this.portfolios[portfolioName]
+            // console.log(t);
+
         },
-
-
         drawUserLocation(lat, lon) {
 
             console.log("draw user location", lat, lon)
@@ -119,11 +196,8 @@ export default {
             f.setStyle(
                 new Style({
                     image: new Icon({
-
-                        src: marker2,
-
-                        scale: 0.5,
-
+                        src: userMarker,
+                        scale: 0.6,
                     }),
                 })
             );
@@ -156,67 +230,42 @@ export default {
             this.addLocationEnabled = true
             console.log("enabled", this.addLocationEnabled)
         },
-        getExistingLocations() {
+        drawLocations(featuresApi, marker, portfolioName) {
 
-            // todo extract as api
-            const featuresApi = {};
+            var style = new Style({
+                image: new Icon({
+                    opacity: 1,
+                    src: 'data:image/svg+xml;utf8,' + marker,
+                    scale: 0.9
+                })
+            });
 
-            [
-                { name: "n 1", lat: 1, lon: 2 },
-                { name: "n 2", lat: 3, lon: 4 },
-                { name: "a", lat: 1, lon: 21 },
-                { name: "b 2", lat: 3, lon: 25 },
-                { name: "d 1", lat: 7, lon: 11 },
-                { name: "f 2", lat: 5, lon: 5 },
-                { name: "g 1", lat: 6, lon: 3 },
-                { name: "w 2", lat: 12, lon: 4 },
-                { name: "d 1", lat: 63, lon: 3 },
-                { name: "a 2", lat: 1, lon: 25 }
-
-            ].forEach(i => {
-                featuresApi[i.name] = { lat: i.lat, lon: i.lon }
-            })
-
-            return featuresApi;
-        },
-        drawLocations(map, featuresApi) {
             let features = []
 
             for (const [key, value] of Object.entries(featuresApi)) {
                 console.log(key);
+
                 let f = new Feature({
                     geometry: new Point(fromLonLat([value.lat, value.lon])),
                 });
 
-                let icon = new Icon({
-
-                    src: marker2,
-
-                    scale: 0.2,
-
-                })
-
-
-                f.setStyle(
-                    new Style({
-                        image: icon
-                    })
-                );
+                f.setStyle(style);
 
                 features.push(f)
 
-
             }
 
-            this.vectorSource = new VectorSource({
-                features: features,
-            });
-
             const vectorLayer = new VectorLayer({
-                source: this.vectorSource,
+                source: new VectorSource({
+                    features: features,
+                })
             });
 
-            map.addLayer(vectorLayer)
+            this.portfolios[portfolioName] = {
+                "vectorLayer": vectorLayer,
+                "visible": true
+            }
+            this.map.addLayer(vectorLayer)
         },
         addLocationPoint() {
             const london = new Feature({
@@ -248,34 +297,24 @@ export default {
                 view.setZoom(zoom + 1);
             };
         },
-        activatePopup(map,) {
+        activatePopup() {
 
-            const popup = new Overlay({
-                element: document.getElementById('popup'),
-            });
-            map.addOverlay(popup);
+            this.map.addOverlay(this.$refs.mappopup.getOverlay())
 
-
-            map.on('click', (evt) => {
+            /**
+             * Add a click handler to the map to render the popup.
+             */
+            this.map.on('singleclick', (evt) => {
 
                 if (this.addLocationEnabled) {
-                    const element = popup.getElement();
                     const coordinate = evt.coordinate;
                     const hdms = toStringHDMS(toLonLat(coordinate));
 
-                    $(element).popover('dispose');
-                    popup.setPosition(coordinate);
-                    $(element).popover({
-                        container: element,
-                        placement: 'top',
-                        animation: false,
-                        html: true,
-                        content: '<p>Selected:</p><code>' + hdms + '</code>',
-                    });
-                    $(element).popover('show');
+                    console.log("log coord", hdms)
+                    console.log("set postiion,", coordinate)
+                    this.$refs.mappopup.setText(hdms);
+                    this.$refs.mappopup.setPosition(coordinate);
 
-                    console.log("clicked", hdms, coordinate)
-                    console.log(toLonLat(coordinate))
                     document.querySelector("#lat_tmp").innerHTML = coordinate[0]
                     document.querySelector("#lon_tmp").innerHTML = coordinate[1]
 
@@ -292,7 +331,7 @@ export default {
                 zoom: 2,
             });
 
-            return new Map({
+            this.map = new Map({
                 layers: [
                     new TileLayer({
                         source: new OSM(),
@@ -368,31 +407,79 @@ export default {
             this.map.on('click', (evt) => {
                 displayFeatureInfo(evt.pixel);
             });
+        },
+        prepareLocationsForDrawing(locations) {
+
+
+            // var obj = { 'a': 1, 'b': 2, 'c': 3 };
+
+            // let newObj = Object.fromEntries(Object.entries(obj).map(([k, v]) => [k, v * v]));
+
+            // console.log(newObj)
+
+
+
+
+            const featuresApi = {};
+            let c = 0;
+            // console.log("")
+            locations.forEach(i => {
+                featuresApi[c] = { lat: i.latitude, lon: i.longitude }
+                c++;
+            })
+
+            return featuresApi;
+
         }
     },
 
-    mounted() {
+    async mounted() {
 
-        const map = this.initMap();
-        this.map = map;
+        let marker = '<svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="#FF0000"><path d="M0 0h24v24H0z" fill="none"/><path fill="#FF0000" d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>'
+        console.log("marker", marker);
 
-        this.$refs.userCoordinatesManager.enableCoordinates();
+        this.initMap();
 
-        // ----------------------------------------------------------------------------------------------
-        this.activatePopup(this.map)
+        this.activatePopup()
 
-        // ----------------------------------------------------------------------------------------------
+        // todo enable
+        // this.$refs.userCoordinatesManager.enableCoordinates();
 
-        const featuresApi = this.getExistingLocations();
-
-        this.drawLocations(this.map, featuresApi);
-
-        // ----------------------------------------------------------------------------------------------
         this.zoomSetupButtons(this.map)
 
         this.createCountriesLayer()
 
-        this.filterByCountry()
+        this.filterByCountry();
+
+        function createMarker(hexColour) {
+
+            return `<svg width="120" height="120" version="1.1" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M0 0h24v24H0z" fill="none"/>
+                        <path fill="%23${hexColour}" d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" />
+                    </svg>`
+
+        }
+
+        let r = await apiCalls.getPortoflios();
+        if (r["auth"]["status"]) {
+            let pl = r["payload"]["portfolios"];
+
+            // this.portfolios = Object.keys(pl);
+
+            for (const [key, value] of Object.entries(pl)) {
+                let hexColour = value["hex"];
+                let r = (await apiLocations.getLocationsFilterUsername(key)).payload.content
+                let marker = createMarker(hexColour);
+
+
+                this.drawLocations(
+                    r,
+                    marker,
+                    key
+                );
+            }
+
+        }
 
     }
 }

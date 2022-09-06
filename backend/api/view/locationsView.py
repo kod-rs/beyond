@@ -1,171 +1,186 @@
-import enum
-import re
-
 from django.http import JsonResponse
 from rest_framework.views import APIView
 
 from backend.api.comm.comm import decode_data
-from backend.api.config.main import ROLES, ACTIONS
+from backend.api.config.main import get_actions_for_routes, \
+    INTERNAL_SERVER_ERROR_MESSAGE
 from backend.api.cqrs_c.location import add, delete
-from backend.api.cqrs_q.location import get_all
+from backend.api.cqrs_q.location import  get_all_by_username,get_user_portfolio
+from backend.api.mode.type_validator import _check_request_data
+from backend.api.view.comm import get_auth_ok_response_template
 
 
-permissions = {
-    ROLES.AGGREGATOR_AND_MANAGER.value: [
-        ACTIONS.ADD, ACTIONS.GET_ALL, ACTIONS.DELETE],
-    ROLES.AGGREGATOR.value: [
-        ACTIONS.ADD, ACTIONS.GET_ALL, ACTIONS.DELETE],
-    ROLES.BUILDING_MANAGER.value: [
-        ACTIONS.ADD, ACTIONS.GET_ALL]}
+import collections
+
+class LocationAction:
+
+    def __init__(self):
+        """"""
+
+    def perform_action(self, request):
+        raise Exception("action not implemented")
+
+
+class AddSingle(LocationAction):
+
+    def perform_action(self, request):
+
+        print(f"{_check_request_data(request.data)=}")
+        print(f"{request.synchronizer_token_match=}")
+        print(f"{request.body=}")
+
+        if (
+                not _check_request_data(request.data)
+                or not request.synchronizer_token_match
+                or not request.body
+        ):
+            print('add not valid')
+            payload = {"status": False}
+            print(request)
+            return payload
+
+        body_content = decode_data(request.body)
+
+        status = add(
+            body_content["portfolio"],
+            body_content["section"],
+            body_content["type"],
+            body_content["latitude"],
+            body_content["longitude"]
+        )
+
+        payload = {"status": status}
+        return payload
+
+
+class SelectUsername(LocationAction):
+
+    def perform_action(self, request):
+        print("select by username")
+
+        # ip_obj = Location.objects.filter(portfolio__username=username)
+
+        username_locations = get_all_by_username(request.username)
+        payload = {"status": True, "content": username_locations}
+        return payload
+        # return {"status": False, "f": "todo"}
+
+class SelectAll(LocationAction):
+
+    def perform_action(self, request):
+        print("select all")
+
+        # all_locatio/ns = get_all()
+        payload = {"status": False, "content": "all_locations"}
+        return payload
+
+
+class DeleteSingle(LocationAction):
+    """"""
+
+    def perform_action(self, request):
+        print("delete single")
+
+        body_content = decode_data(request.body)
+
+        return {
+            "status": delete(body_content["index"])
+        }
+
+
+
+def validate_actions(correct_actions, to_check_actions):
+
+    return collections.Counter(correct_actions) == collections.Counter(
+        to_check_actions)
+
+
+def serialize(route, action):
+    return route + ";" + action
 
 
 class LocationsView(APIView):
-    # create rename update delete
 
-    def put(self, request):
-        """update by editing existing"""
-        print("put locations")
+    def __init__(self):
 
-    # def patch(self, request):
-    #     """update by replacing"""
+        self.route = "locations"
 
-    def delete(self, request, pk=None):
-        print("delete locations")
+        self.actions = {
+            serialize(self.route, "create single"): AddSingle(),
+            serialize(self.route, "select_all"): SelectAll(),
+            serialize(self.route, "select username"): SelectUsername(),
+            serialize(self.route, "delete single"): DeleteSingle()
+        }
 
-        roles = request.roles
-        response = {"auth": {"status": True,
-                             "access-token": request.access_token,
-                             "refresh-token": request.refresh_token}}
+        if not validate_actions(
+                correct_actions=get_actions_for_routes()[self.route],
+                to_check_actions=list(self.actions)
+        ):
+            raise Exception(INTERNAL_SERVER_ERROR_MESSAGE)
 
-        if not _has_permission(roles, ACTIONS.DELETE) or not pk:
-            response["payload"] = {"status": False}
-            return JsonResponse(response)
+        print(f"validated {self.route}")
 
-        print("pk present", pk)
 
-        status = delete(pk)
+    def get(self, request, pn):
+        # api.beyond.com/portfolios/p1/locations/
+        print()
+        print("get locations by username")
+        # todo check if get all or for this user
 
-        if not status:
-            response["payload"] = {"status": False}
-            return JsonResponse(response)
+        response = get_auth_ok_response_template(request)
 
-        response["payload"] = {"page": "put device"}
+
+        username_locations = get_user_portfolio(request.username, portfolio_name=pn)
+
+
+        r = {}
+        j = 0
+        for i in username_locations:
+            r[j] = {
+                # "pk": i.name,
+                "lat": i.latitude,
+                "lon": i.longitude,
+            }
+
+            j+=1
+
+
+        payload = {"status": True, "content": r}
+        result = payload
+
+
+
+        print(f"{result=}")
+
+        response["payload"] = result
         return JsonResponse(response)
 
+
+    # todo add type & section
     def post(self, request):
-        """create"""
+        print()
         print("post locations")
 
-        response = {"auth": {"status": True,
-                             "access-token": request.access_token,
-                             "refresh-token": request.refresh_token}}
-        roles = request.roles
-        action = request.action
+        response = get_auth_ok_response_template(request)
 
-        print(action)
+        result = self.actions["locations;create single"].perform_action(request)
 
-        if action == ACTIONS.ADD.value:
-            if (not _has_permission(roles, ACTIONS.ADD)
-                    or not _check_request_data(request.data)
-                    or not request.synchronizer_token_match
-                    or not request.body):
-                print('add not valid')
-                response["payload"] = {"status": False}
-                return JsonResponse(response)
+        # action = request.action
+        #
+        # print("check action")
+        # print(f"{action=}")
+        # print(f"{self.actions=}")
 
-            body_content = decode_data(request.body)
+        # if action in self.actions:
+        #     result = self.actions[action].perform_action(request)
+        #
+        # else:
+        #     result = self.unsupported_action()
 
-            status = add(body_content["section"],
-                         body_content["type"],
-                         body_content["latitude"],
-                         body_content["longitude"])
+        response["payload"] = result
+        return JsonResponse(response)
 
-            response["payload"] = {"status": status}
-
-            return JsonResponse(response)
-
-        if action == ACTIONS.GET_ALL.value:
-            print("get locations")
-            if not _has_permission(roles, ACTIONS.GET_ALL):
-                response["payload"] = {"status": False}
-                return JsonResponse(response)
-
-            print("access granted, getting roles")
-            all_locations = get_all()
-            [print(i) for i in all_locations]
-
-            response["payload"] = {"status": True, "content": all_locations}
-            print("returning location, everything ok")
-            return JsonResponse(response)
-
-        elif action == ACTIONS.DELETE.value:
-            print(f"delete\n{roles=}")
-            if not _has_permission(roles, ACTIONS.DELETE) or not request.body:
-                response["payload"] = {"status": False}
-                return JsonResponse(response)
-
-            body_content = decode_data(request.body)
-            print(f"{body_content=}")
-            index = body_content["index"]
-            status = delete(index)
-            response["payload"] = {"status": status}
-            return JsonResponse(response)
-
+    @staticmethod
+    def unsupported_action():
         print('unsupported action')
-        response["payload"] = {"status": False}
-        return JsonResponse(response)
-
-    def get(self, request):
-        print("get locations")
-
-        response = {"auth": {"status": True,
-                             "access-token": request.access_token,
-                             "refresh-token": request.refresh_token}}
-
-        roles = request.roles
-
-        if not _has_permission(roles, ACTIONS.GET_ALL):
-            response["payload"] = {"status": False}
-            return JsonResponse(response)
-
-        print("access granted, getting roles")
-        all_locations = get_all()
-        [print(i) for i in all_locations]
-        response["payload"] = {"status": True, "content": all_locations}
-        return JsonResponse(response)
-
-
-def _check_request_data(request_data):
-    if not _string_check(request_data['section']):
-        return False
-
-    if not _string_check(request_data['type']):
-        return False
-
-    return True
-
-
-def _type_check(value, expected_type):
-    try:
-        expected_type(value)
-        return True
-    except ValueError:
-        print(f'value={value} is not the expected type')
-        return False
-
-
-def _string_check(input_string):
-    pattern = re.compile('^[čćžšđČĆŽŠĐA-Za-z0-9.,\\s]+$')
-
-    if re.search(pattern, input_string):
-        return True
-    else:
-        return False
-
-
-def _has_permission(roles, action):
-    roles = set(roles).intersection(set(permissions.keys()))
-    for role in roles:
-        if action in permissions[role]:
-            return True
-    return False
+        return {"status": False}
