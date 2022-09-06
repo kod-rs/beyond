@@ -10,7 +10,8 @@
         </label>
         <br>
 
-        <input :value="modelValue" :key="id" :name="id" @input="$emit('update:modelValue', $event.target.value)" />
+        <input class="form-control" :value="modelValue" :key="id" :name="id"
+            @input="$emit('update:modelValue', $event.target.value)" />
         <br>
 
         <div v-if="showValidationMessage">
@@ -19,6 +20,12 @@
                 {{ validationMessage }}
             </div>
         </div>
+
+        <!-- todo -->
+        <!-- <div v-if="submitted && !option.value" class="red">
+            {{ option.key }} is required
+        </div> -->
+
 
     </div>
 
@@ -29,20 +36,19 @@ export default {
     data() {
         return {
             showValidationMessage: false,
+            re: undefined
         }
     },
     props: {
         modelValue: String,
         id: String,
         validationMessage: String,
-        validationRegex: String,
+        validationRegex: RegExp,
 
         initShowValidationMessage: Boolean,
     },
     mounted() {
-
-        this.showValidationMessage = this.initShowValidationMessage
-
+        this.re = new RegExp(this.validationRegex, "g");
     },
     watch: {
         modelValue(newValue) {
@@ -59,8 +65,7 @@ export default {
                 return false;
             }
 
-            let re = /^(\w|,|\.| )*$/;
-            return re.test(content);
+            return this.validationRegex.test(content);
 
         },
     },
