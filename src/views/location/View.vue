@@ -95,14 +95,14 @@ export default {
     methods: {
         refreshLocations() {
             console.log("refreshing locations");
-            apiCalls.getLocationsFilterUsername().then(res => {
-                this.modelContent = res["payload"]["content"];
-            }, error => {
-                console.log("err", error);
-                this.error = "invalid credentials";
-                // this.error = error;
-                this.loading = false;
-            });
+            // apiCalls.getLocationsFilterUsername().then(res => {
+            //     this.modelContent = res["payload"]["content"];
+            // }, error => {
+            //     console.log("err", error);
+            //     this.error = "invalid credentials";
+            //     // this.error = error;
+            //     this.loading = false;
+            // });
         },
 
         async deleteElement(i) {
