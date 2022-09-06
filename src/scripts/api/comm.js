@@ -27,9 +27,16 @@ function get_auth_header() {
 function handleNewResponse(response) {
 
     if (!response.data.auth.status) {
+
+        // todo api response codes
         if (response.data.status === 401) {
             apiAuth.logout();
             location.reload(true);
+        } else {
+            // todo check 
+            // apiAuth.logout();
+            // location.reload(true);
+
         }
 
         const error = "username password combination mismatchrr"
