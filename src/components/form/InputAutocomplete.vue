@@ -1,5 +1,5 @@
 <template>
-
+    <!-- rewrite with watch -->
     <div class="autocomplete">
         <input type="text" @input="onChange" v-model="search" @keyup.down="onArrowDown" @keyup.up="onArrowUp"
             @keyup.enter="onEnter" />
