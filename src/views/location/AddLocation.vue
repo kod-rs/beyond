@@ -1,93 +1,73 @@
+<!-- todo no reloading -->
+
 <template>
-    <div id="root">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col">
+                <!-- add new -->
+                <br>
+                <!-- <hr> -->
+                <div v-if="error" class="alert alert-danger">{{ error }}</div>
+                <InputFieldsForm></InputFieldsForm>
 
 
-        <main class="mt-5 pt-3">
-            <div class="container-fluid">
+                <form @submit.prevent="handleSubmit">
 
-                <div class="row">
-                    add new
-                    <br>
-                    <hr>
-                    <div v-if="error" class="alert alert-danger">{{ error }}</div>
+                    csrf
+                    <CSRFToken />
 
-                    <form @submit.prevent="handleSubmit">
-                        <CSRFToken />
-                        <div v-for="option in formData" :value="option.value" :key="option.value">
+                    <div v-for="option in formData" :value="option.value" :key="option.value">
 
-                            {{ option.key.charAt(0).toUpperCase() + option.key.slice(1) }}
+                        {{ option.key.charAt(0).toUpperCase() + option.key.slice(1) }}
 
-                            <span v-if="option.key == 'section' || option.key == 'type'">
-                                <span class="hint" @mouseover="option.hovered = true"
-                                    @mouseleave="option.hovered = false">?</span>
-                                <span v-if="option.hovered" class="hint_text"> {{ option.msg }}</span>
-                            </span>
+                        <!-- todo validate -->
+                        <!-- <span v-if="option.key == 'section' || option.key == 'type'">
+                            <span class="hint" @mouseover="option.hovered = true"
+                                @mouseleave="option.hovered = false">?</span>
+                            <span v-if="option.hovered" class="hint_text"> {{ option.msg }}</span>
+                        </span> -->
 
-                            <input type="text" v-model="option.value" :name="option.key" class="form-control" />
+                        <input type="text" v-model="option.value" :name="option.key" class="form-control   " />
 
-                            <div v-if="submitted && !option.value" class="red">
-                                {{ option.key }} is required
-                            </div>
-
-                            <br>
-
+                        <div v-if="submitted && !option.value" class="red">
+                            {{ option.key }} is required
                         </div>
 
+                        <br>
+
+                    </div>
 
 
-                        <PortfolioSelector ref="portfolioSelector"></PortfolioSelector>
 
+                    <PortfolioSelector ref="portfolioSelector"></PortfolioSelector>
 
+                    <hr>
 
-                        <!-- <div>
-                            Portfolio
+                    <button class="btn btn-primary btn-dark btn-lg btn-block" :disabled="loading">add</button>
 
+                    <LoadingComponent></LoadingComponent>
 
-                            <input type="text" v-model="portfolio" :name="portfolio" class="form-control" />
-
-                            <div v-if="submitted && portfolio" class="red">
-                                portfolio is required
-                            </div>
-
-                            <br>
-
-                        </div> -->
-
-                        <hr>
-                        <button class="btn btn-primary btn-dark btn-lg btn-block" :disabled="loading">add</button>
-
-                        <img v-show="loading"
-                            src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==" />
-
-
-                    </form>
-
-                    <div id="map" class="map"></div>
-                    <MapPopup ref="mappopup"></MapPopup>
-
-                </div>
+                </form>
+            </div>
+            <div class="col">
+                <div id="map" class="map"></div>
+                <MapPopup ref="mappopup"></MapPopup>
 
             </div>
-        </main>
-
+        </div>
     </div>
+
 
 </template>
 
-    <style>
-    .map {
-        width: 100%;
-        height: 100px;
-    }
-    </style>
+    
 
 
 <script>
 
 import CSRFToken from "../../components/form/CSRFToken.vue"
 import MapPopup from "../../components/map/MapPopup.vue"
-// import { apiCalls } from '../../scripts/api';
-import { apiLocations } from '../../scripts/api_locations';
+import { apiLocation } from '../../scripts/api/location';
 import Map from 'ol/Map';
 
 import TileLayer from 'ol/layer/Tile';
@@ -99,16 +79,29 @@ import { toStringHDMS } from 'ol/coordinate';
 
 
 import PortfolioSelector from '../../components/form/PortfolioSelector.vue';
+import LoadingComponent from "@/components/misc/LoadingComponent.vue";
+import InputFieldsForm from "@/components/misc/InputFieldsForm.vue";
 
 
 export default {
 
     data() {
         return {
+            checkedNames: [],
             hover: false,
             formData: [
-                { key: "section", value: "A", msg: "Only letters, numbers, spaces, commas and dots accepted in the input", hovered: false },
-                { key: "type", value: "B", msg: "Only letters, numbers, spaces, commas and dots accepted in the input", hovered: false },
+                {
+                    key: "section",
+                    value: "A",
+                    msg: "Only letters, numbers, spaces, commas and dots accepted in the input",
+                    hovered: false
+                },
+                {
+                    key: "type",
+                    value: "B",
+                    msg: "Only letters, numbers, spaces, commas and dots accepted in the input",
+                    hovered: false
+                },
                 { key: "latitude", value: "2" },
                 { key: "longitude", value: "3" }
             ]
@@ -117,7 +110,17 @@ export default {
             error: undefined,
         };
     },
+    watch: {
+        // whenever question changes, this function will run
+        // question(newQuestion, oldQuestion) {
+        //     if (newQuestion.includes('?')) {
+        //         this.getAnswer()
+        //     }
+        // }
+    },
     methods: {
+
+
         async handleSubmit() {
             console.log("submit for p",)
             // return
@@ -140,7 +143,7 @@ export default {
             let portfolio = this.$refs.portfolioSelector.getSearch();
             console.log("port", portfolio);
 
-            await apiLocations.addLocation(
+            await apiLocation.addLocation(
                 portfolio,
                 formContent["section"],
                 formContent["type"],
@@ -202,7 +205,7 @@ export default {
             this.$refs.mappopup.setPosition(coordinate);
         });
     },
-    components: { PortfolioSelector, CSRFToken, MapPopup }
+    components: { PortfolioSelector, CSRFToken, MapPopup, LoadingComponent, InputFieldsForm }
 };
 </script> 
 
