@@ -19,7 +19,7 @@ def main():
     comment = 'ref: rewrite db scheme'
 
     comment = "err: map marker zoom"
-    # comment = "fix: misc"
+    comment = "fix: marker image"
     # comment = 'ref: rewrite db scheme'
 
     if same_comment:
