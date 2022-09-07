@@ -22,7 +22,7 @@ def main():
     comment = "fix: marker image"
     # comment = 'ref: rewrite db scheme'
     comment = "fix: marker zoom error"
-    comment = "upd: clear instead of refresh location creation"
+    comment = "#10: todo rewrite all api calls using prev interface"
 
     if same_comment:
         if not comment:
