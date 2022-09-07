@@ -7,10 +7,13 @@
 
             {{ id.charAt(0).toUpperCase() + id.slice(1) }}
 
+
         </label>
         <br>
+        <input hidden :placeholder="reset" class="form-control" :value="reset"
+            @input="$emit('update:reset', $event.target.value)" />
 
-        <input class="form-control" :value="modelValue" :key="id" :name="id"
+        <input :placeholder="placeholder" class="form-control" :value="modelValue" :key="id" :name="id"
             @input="$emit('update:modelValue', $event.target.value)" />
         <br>
 
@@ -40,6 +43,8 @@ export default {
         }
     },
     props: {
+        reset: Boolean,
+        placeholder: String,
         modelValue: String,
         id: String,
         validationMessage: String,
@@ -51,13 +56,21 @@ export default {
         this.re = new RegExp(this.validationRegex, "g");
     },
     watch: {
+        reset(newValue) {
+            if (newValue) {
+                this.showValidationMessage = false;
+
+            }
+        },
         modelValue(newValue) {
+
             this.showValidationMessage = !this.validateInput(newValue)
         }
     },
 
     emits: ['update:modelValue'],
     methods: {
+
 
         validateInput(content) {
 
