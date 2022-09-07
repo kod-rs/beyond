@@ -82,10 +82,7 @@
             <div class="col">
 
                 <MapComponent ref="map" id="map"></MapComponent>
-                <!-- <div id="map" class="map"></div> -->
-
                 <MapPopup ref="mappopup"></MapPopup>
-
 
             </div>
         </div>
@@ -112,9 +109,9 @@ import { Stroke } from 'ol/style';
 import LocationSelector from '../../components/map/LocationSelector.vue'; //Optional default CSS
 import userMarker from "/public/assets/markers/geolocation_marker.png"
 
-import yellowMarker from "/public/assets/markers/img.png";
+import yellowMarker from "/public/assets/markers/m.png";
 
-import templateMarker from "/public/assets/markers/m.png"
+// import templateMarker from "/public/assets/markers/n.svg"
 import countriesjson from "/public/assets/layers/countries.json";
 import { apiLocation } from '../../scripts/api/location';
 import UserCoordinates from "../../components/map/UserCoordinates.vue";
@@ -225,8 +222,26 @@ export default {
 
         drawSingleLocation(lat, lon) {
 
-            const point = new Point(fromLonLat([lon, lat]));
+            let templateMarker = `<svg version="1.1" widht="50" xmlns="http://www.w3.org/2000/svg" viewBox="5 2 14 20"><path d="M0 0h24v24H0z" fill="none"></path><path fill="#F1FA2B" d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"></path></svg>`
+            let marker = '<svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="#FF0000"><path d="M0 0h24v24H0z" fill="none"/><path fill="#FF0000" d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>'
+            function createMarker(hexColour) {
 
+
+                return `
+<svg viewBox="5 2 14 20" width="50" height="50" version="1.1" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" fill="none"/>
+<path fill="%23${hexColour}" d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" />
+</svg>
+`
+
+
+            }
+
+            console.log("marker", marker)
+
+            console.log(yellowMarker)
+            const point = new Point(fromLonLat([lon, lat]));
+            // console.log(marker)
             let feature = new Feature({
                 geometry: point
             });
@@ -234,8 +249,15 @@ export default {
             feature.setStyle(
                 new Style({
                     image: new Icon({
-                        src: yellowMarker,
+                        // src: 'data:image/svg+xml;utf8,' + templateMarker,
+                        // src: templateMarker,
+                        src: 'data:image/svg+xml;utf8,' + createMarker("F1FA2B"),
                         scale: 0.4,
+
+                        // src: yellowMarker,
+                        // scale: 0.005,
+
+                        // scale: 0.4,
                     }),
                 })
             );
@@ -253,7 +275,7 @@ export default {
         drawLocations(featuresApi, marker, portfolioName) {
 
 
-            console.log(yellowMarker, templateMarker, marker, portfolioName)
+            console.log(marker, portfolioName)
 
             // let features = []
 
@@ -445,11 +467,17 @@ export default {
             });
         },
         createMarker(hexColour) {
+            console.log(hexColour)
 
-            return `<svg width="120" height="120" version="1.1" xmlns="http://www.w3.org/2000/svg">
-            <path d="M0 0h24v24H0z" fill="none"/>
-            <path fill="%23${hexColour}" d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" />
-        </svg>`
+            return `<svg version="1.1" widht="50" xmlns="http://www.w3.org/2000/svg" viewBox="5 2 14 20"><path d="M0 0h24v24H0z" fill="none"></path><path fill="#F1FA2B" d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"></path></svg>`
+            // return `<svg width="50" height="50" version="1.1" xmlns="http://www.w3.org/2000/svg"><path d="M0 0h24v24H0z" fill="none"/><path fill="#F1FA2B" d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" /></svg>`
+
+            // return `<svg version="1.1" widht="50" height="50" xmlns="http://www.w3.org/2000/svg" viewBox="5 2 14 20">            <path d="M0 0h24v24H0z" fill="none"></path>            <path fill="#F1FA2B" d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"></path>        </svg>`
+
+            // return `<svg width="120" height="120" version="1.1" xmlns="http://www.w3.org/2000/svg">
+            //     <path d="M0 0h24v24H0z" fill="none"/>
+            //     <path fill="%23${hexColour}" d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" />
+            // </svg>`
 
 
         }
