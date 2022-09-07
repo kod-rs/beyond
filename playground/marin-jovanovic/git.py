@@ -21,7 +21,7 @@ def main():
     comment = "err: map marker zoom"
     comment = "fix: marker image"
     # comment = 'ref: rewrite db scheme'
-    comment = "fix: "
+    comment = "fix: marker zoom error"
 
     if same_comment:
         if not comment:
