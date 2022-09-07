@@ -5,6 +5,8 @@
         <portfolio-list />
         <hr>
         <portfolio-details />
+
+        <hr>
     </div>
 
 </template>
