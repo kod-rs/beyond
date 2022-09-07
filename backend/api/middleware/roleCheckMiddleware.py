@@ -35,11 +35,16 @@ class RoleCheckMiddleware:
         # print(request.method, type(request.method))
         # print(request.path, type(request.method))
 
+        # todo
         t = check(role=roles,
                   path=request.path,
                   method=request.method
                   )
         print(t)
+
+        # t =
+
+
 
         # if (hasattr(request.META, "REQUEST_METHOD")):
         #     print(80 * "-")
