@@ -18,13 +18,14 @@ export default {
         }
     },
     async mounted() {
-        const CSRFPayload = await apiCsrf.getCSRFAuthData();
+        const r = await apiCsrf.getCSRFAuthData();
+        if (r["auth"]["status"]) {
 
-        if (CSRFPayload["auth"]["status"]) {
-            this.content = CSRFPayload["synchronizer_token"]
+            this.content = r["payload"]["synchronizer_token"]
             this.$store.commit('setSynchronizerToken', this.content)
 
         } else {
+
             this.content = ""
             this.$store.commit('setSynchronizerToken', '')
 
@@ -32,6 +33,23 @@ export default {
         }
     },
     methods: {
+        async refresh() {
+            const r = await apiCsrf.getCSRFAuthData();
+            if (r["auth"]["status"]) {
+
+                this.content = r["payload"]["synchronizer_token"]
+                this.$store.commit('setSynchronizerToken', this.content)
+
+            } else {
+
+                this.content = ""
+                this.$store.commit('setSynchronizerToken', '')
+
+                alert("error generating SynchronizerToken, you will not be able to submit form, contact admin")
+            }
+
+        },
+
         updateMyValue(event) {
             this.content = event.target.value.trim()
             this.$store.commit('setSynchronizerToken', this.content)
