@@ -70,6 +70,12 @@
                         ref="userCoordinatesManager">
                     </UserCoordinates>
 
+                    <svg id="svgid" width="120" height="120" version="1.1" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M0 0h24v24H0z" fill="none" />
+                        <path fill="#F1FA2B"
+                            d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" />
+                    </svg>
+
                 </div>
 
             </div>
@@ -105,6 +111,10 @@ import { Stroke } from 'ol/style';
 
 import LocationSelector from '../../components/map/LocationSelector.vue'; //Optional default CSS
 import userMarker from "/public/assets/markers/geolocation_marker.png"
+
+import yellowMarker from "/public/assets/markers/img.png";
+
+import templateMarker from "/public/assets/markers/m.png"
 import countriesjson from "/public/assets/layers/countries.json";
 import { apiLocation } from '../../scripts/api/location';
 import UserCoordinates from "../../components/map/UserCoordinates.vue";
@@ -166,25 +176,16 @@ export default {
         },
         drawUserLocation(lat, lon) {
 
-            if (this.userLocationLayer) {
-                this.map.removeLayer(this.userLocationLayer);
-            }
-
             this.userLat = this.$store.state.latitude;
             this.userLon = this.$store.state.longitude;
 
-            let f = new Feature({
-                geometry: new Point(fromLonLat([lon, lat])),
-                // style: new Style({
-                //     image: new Icon({
-                //         src: userMarker,
-                //         scale: 0.6,
-                //     }),
-                // })
+            const point = new Point(fromLonLat([lon, lat]));
 
+            let feature = new Feature({
+                geometry: point
             });
 
-            f.setStyle(
+            feature.setStyle(
                 new Style({
                     image: new Icon({
                         src: userMarker,
@@ -193,25 +194,25 @@ export default {
                 })
             );
 
-            const vectorSource = new VectorSource({
-                features: [f],
+
+
+            if (this.userLocationLayer) {
+                this.map.removeLayer(this.userLocationLayer);
+            }
+
+            this.userLocationLayer = new VectorLayer({
+                source: new VectorSource({
+                    features: [feature],
+                }),
             });
 
-            const vectorLayer = new VectorLayer({
-                source: vectorSource,
-            });
+            this.map.addLayer(this.userLocationLayer);
 
-            this.map.addLayer(vectorLayer);
-
-            this.userLocationLayer = vectorLayer
-
-            console.log(this.map.getView().getCenter())
-
-            // center
-            const feature = vectorSource.getFeatures()[0];
-            const point = feature.getGeometry();
-            const size = this.map.getSize();
-            this.view.centerOn(point.getCoordinates(), size, [500, 500]);
+            // this.view.centerOn(
+            //     point.getCoordinates(),
+            //     this.map.getSize(),
+            //     [500, 500]
+            // );
 
             // zoom
             // this.view.fit(point, { padding: [170, 50, 30, 150], minResolution: 50 });
@@ -221,59 +222,133 @@ export default {
             this.addLocationEnabled = true
             console.log("enabled", this.addLocationEnabled)
         },
-        drawLocations(featuresApi, marker, portfolioName) {
 
-            var style = new Style({
-                image: new Icon({
-                    // opacity: 1,
-                    src: 'data:image/svg+xml;utf8,' + marker,
-                    scale: 0.9
+        drawSingleLocation(lat, lon) {
+
+            const point = new Point(fromLonLat([lon, lat]));
+
+            let feature = new Feature({
+                geometry: point
+            });
+            console.log(templateMarker)
+            feature.setStyle(
+                new Style({
+                    image: new Icon({
+                        src: yellowMarker,
+                        scale: 0.4,
+                    }),
                 })
+            );
+
+            let userLocationLayer = new VectorLayer({
+                source: new VectorSource({
+                    features: [feature],
+                }),
             });
 
-            let features = []
+            this.map.addLayer(userLocationLayer);
+
+        },
+
+        drawLocations(featuresApi, marker, portfolioName) {
+
+
+            console.log(yellowMarker, templateMarker, marker, portfolioName)
+
+            // let features = []
 
             for (const [key, value] of Object.entries(featuresApi)) {
                 console.log(key);
 
-                let f = new Feature({
-                    geometry: new Point(fromLonLat([value.lat, value.lon])),
-                });
+                this.drawSingleLocation(value.lat, value.lon);
 
-                f.setStyle(style);
+                // let f = new Feature({
+                //     geometry: new Point(fromLonLat([value.lat, value.lon])),
+                // });
 
-                features.push(f)
+                // f.setStyle(style);
+
+                // features.push(f)
 
             }
 
-            const vectorLayer = new VectorLayer({
-                source: new VectorSource({
-                    features: features,
-                })
-            });
-
-            this.portfolios[portfolioName] = {
-                "vectorLayer": vectorLayer,
-                // "visible": false
-            }
-            this.map.addLayer(vectorLayer)
         },
-        addLocationPoint() {
-            const london = new Feature({
-                geometry: new Point(fromLonLat([-0.12755, 51.507222])),
-            });
 
-            london.setStyle(
-                new Style({
-                    image: new Icon({
-                        color: 'rgba(255, 0, 0, .5)',
-                        crossOrigin: 'anonymous',
-                        src: 'marker-blue.png',
-                        scale: 1,
-                    }),
-                })
-            );
-        },
+        // drawLocationsOld(featuresApi, marker, portfolioName) {
+
+        //     // src: userMarker,
+        //     console.log(userMarker)
+        //     var style = new Style({
+        //         image: new Icon({
+        //             // anchor: [0, 0], 
+        //             // src: 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(marker),
+        //             // src: 'data:image/svg+xml;utf8,' + marker,
+        //             src: yellowMarker,
+        //             // src: templateMarker,
+        //             scale: 0.9
+        //         })
+        //     });
+        //     console.log(templateMarker)
+        //     // console.log(style);
+        //     // console.log(style.getImage());
+
+        //     // console.log(
+        //     //     new Style({
+        //     //         image: new Icon({
+        //     //             src: userMarker,
+        //     //             scale: 0.9
+        //     //         })
+        //     //     }).getImage()
+
+        //     // )
+
+
+        //     console.log("--")
+
+        //     // t = "div.row:nth-child(6) > svg:nth-child(2) > path:nth-child(2)"
+        //     // const canvas = `<canvas id="canvas" width="5" height="5"></canvas>`;
+        //     // const dataURL = canvas.toDataURL();
+        //     // console.log(dataURL);
+        //     const canvas = document.getElementById('svgid');
+        //     var dataUrl = 'data:image/svg+xml,' + encodeURIComponent(canvas);
+        //     console.log(dataUrl)
+        //     // console.log(canvas)
+        //     // const dataURL = canvas.toDataURL();
+        //     // console.log(dataURL);
+        //     // "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNby
+        //     // blAAAADElEQVQImWNgoBMAAABpAAFEI8ARAAAAAElFTkSuQmCC"
+
+        //     let features = []
+
+        //     for (const [key, value] of Object.entries(featuresApi)) {
+        //         console.log(key);
+
+        //         let f = new Feature({
+        //             geometry: new Point(fromLonLat([value.lat, value.lon])),
+        //         });
+
+        //         f.setStyle(style);
+
+        //         features.push(f)
+
+        //     }
+
+        //     const vectorLayer = new VectorLayer({
+        //         source: new VectorSource({
+        //             features: features,
+        //         })
+        //     });
+        //     this.portfolios[portfolioName] = {
+        //         "vectorLayer": vectorLayer,
+        //         // "visible": false
+        //     }
+        //     this.map.addLayer(vectorLayer)
+
+
+
+
+
+        // },
         activatePopup() {
 
             this.map.addOverlay(this.$refs.mappopup.getOverlay())
@@ -375,6 +450,7 @@ export default {
             <path d="M0 0h24v24H0z" fill="none"/>
             <path fill="%23${hexColour}" d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" />
         </svg>`
+
 
         }
     },
