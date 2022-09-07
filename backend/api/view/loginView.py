@@ -11,6 +11,8 @@ class LoginView(APIView):
     def post(self, request):
         print("login post")
 
+        # print(request.username)
+
         response = get_auth_ok_response_template(request)
         response["payload"]["status"] = True
 
