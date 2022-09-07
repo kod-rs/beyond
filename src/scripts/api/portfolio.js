@@ -8,9 +8,8 @@ async function createOrUpdatePortfolio(currentName, newName, colour) {
             "portfolio/",
             JSON.stringify({
                 currentName,
-                newName
-                , colour
-
+                newName,
+                colour
             }),
             apiCalls.get_auth_header()
         )
