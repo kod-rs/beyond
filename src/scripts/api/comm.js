@@ -51,11 +51,3 @@ export const apiCalls = {
     handleNewResponse,
     get_auth_header,
 }
-
-
-// import { apiCalls } from './comm';
-// apiCalls.
-
-// export const extermnalApi = {
-//     getCoordinates
-// }
