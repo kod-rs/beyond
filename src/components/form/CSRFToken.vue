@@ -1,7 +1,12 @@
 <template>
-
+    <!-- <div v-if="this.$store.state.appMode == 'development'">
+        csrf
+    </div>
     <input v-if="this.$store.state.appMode == 'development'" :value="content" @change="updateMyValue" />
-    <input v-else type="hidden" :value="content" @change="updateMyValue" />
+    <input v-else type="hidden" :value="content" @change="updateMyValue" /> -->
+
+
+    <input hidden :value="content" @change="updateMyValue" />
 
     <br>
 
