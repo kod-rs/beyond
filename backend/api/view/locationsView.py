@@ -36,7 +36,7 @@ class LocationsView(APIView):
         else:
             # api.beyond.com/portfolios/p1/locations/
             print()
-            print("get locations by username")
+            # print("get locations by username")
             # todo check if get all or for this user
 
             response = get_auth_ok_response_template(request)
@@ -61,7 +61,6 @@ class LocationsView(APIView):
             payload = {"status": True, "content": r}
             result = payload
 
-        print(f"{result=}")
 
         response["payload"] = result
         return JsonResponse(response)
