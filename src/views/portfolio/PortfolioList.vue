@@ -39,8 +39,34 @@
                         <input class="form-control" type="text" v-model="portfolioPayload.newName">
                     </div>
 
-                    <!-- todo set modified for this also -->
+                    <!-- <div class="row">
+                        <label for="exampleColorInput" class="form-label">Color picker</label>
+
+                    </div> -->
                     <div class="col">
+                        {{portfolioPayload.colourHex}}
+
+                    </div>
+                    <div class="col">
+
+                        <!-- <input type="color" class="form-control form-control-color" id="exampleColorInput"
+                            value="#a59344"> -->
+
+
+                        <!-- <input type="color" class="form-control form-control-color" id="exampleColorInput"
+                            :value="portfolioPayload.colourHex"> -->
+
+                        <input type="color" class="form-control form-control-color" id="exampleColorInput"
+                            v-model="portfolioPayload.colourHex">
+
+
+                        <!-- v-model="portfolioPayload.colourHex"> -->
+
+
+                    </div>
+
+                    <!-- todo set modified for this also -->
+                    <!-- <div class="col">
                         <div class="dropdown">
                             <button class="dropbtn">
                                 {{ portfolioPayload.colour }}
@@ -60,7 +86,7 @@
 
                             </div>
                         </div>
-                    </div>
+                    </div> -->
 
 
                     <div class="col">
@@ -177,7 +203,7 @@
 }
 </style>
 
-  <script>
+<script>
 import { apiPortfolio } from '@/scripts/api/portfolio';
 import { apiLocation } from '../../scripts/api/location';
 import Green from './Green.vue';
@@ -189,7 +215,7 @@ export default {
         return {
             role: "",
             expandedGroup: [],
-            colours: {},
+            // colours: {},
             portfolios: {},
             isTempCreated: false,
             timer: 1,
@@ -205,7 +231,7 @@ export default {
         let res = await apiPortfolio.getPortoflios();
         if (res["auth"]["status"]) {
             console.log("status ok");
-            this.colours = res["payload"]["colours"];
+            // this.colours = res["payload"]["colours"];
             this.role = res["payload"]["role"];
             this.portfolios = res["payload"]["portfolios"];
         }
@@ -250,12 +276,7 @@ export default {
                 this.isTempCreated = false;
             }
 
-            console.log("todo save changes for", portfolioPayload);
-
-            // trigger confirmation box
-            let newColour = portfolioPayload.colour;
-            let r = await apiPortfolio.createOrUpdatePortfolio(currentName, newName, newColour);
-            console.log("saved or created", r);
+            let r = await apiPortfolio.createOrUpdatePortfolio(currentName, newName, portfolioPayload.colourHex);
 
             if (r["payload"]["status"]) {
                 this.$refs.green.setContent("saved changes for " + newName);
