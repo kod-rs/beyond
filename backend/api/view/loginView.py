@@ -1,6 +1,8 @@
 from django.http import JsonResponse
 from rest_framework.views import APIView
 
+from backend.api.view.comm import get_auth_ok_response_template
+
 
 class LoginView(APIView):
 
@@ -9,15 +11,7 @@ class LoginView(APIView):
     def post(self, request):
         print("login post")
 
-        response = {
-            "auth": {
-                "status": True,
-                "access-token": request.access_token,
-                "refresh-token": request.refresh_token
-            },
-            "payload": {
-                "page": "index"
-            }
-        }
+        response = get_auth_ok_response_template(request)
+        response["payload"]["status"] = True
 
         return JsonResponse(response)
