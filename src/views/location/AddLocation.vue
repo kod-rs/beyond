@@ -1,5 +1,3 @@
-<!-- todo no reloading -->
-
 <template>
     <div class="container-fluid">
         <div class="row">
@@ -9,24 +7,12 @@
 
                 <form @submit.prevent="handleSubmit">
 
-                    <h5>csrf</h5>
                     <CSRFToken ref="csrf" />
 
-                    <h5>input part</h5>
                     <InputFieldsForm ref="inputFields"></InputFieldsForm>
 
-                    <h5>portfolio selector</h5>
-                    <PortfolioSelector ref="portfolioSelector"></PortfolioSelector>
-
-                    <hr>
-                    hidden
-                    <hr>
-                    lon
-                    <input type="text" v-model="latitude">
-                    lat
-                    <input type="text" v-model="longitude">
-
-                    <hr>
+                    <input hidden type="text" v-model="latitude">
+                    <input hidden type="text" v-model="longitude">
 
                     <button class="btn btn-primary btn-dark btn-lg btn-block" :disabled="loading">add</button>
 
@@ -57,7 +43,6 @@ import { toLonLat } from 'ol/proj';
 import { toStringHDMS } from 'ol/coordinate';
 
 
-import PortfolioSelector from '../../components/form/PortfolioSelector.vue';
 import LoadingComponent from "@/components/misc/LoadingComponent.vue";
 import InputFieldsForm from "@/components/misc/InputFieldsForm.vue";
 import MapComponent from "@/components/map/MapComponent.vue";
@@ -84,14 +69,16 @@ export default {
         async handleSubmit() {
             this.$refs.inputFields.fields["Section"]["reset"] = false;
             this.$refs.inputFields.fields["Type"]["reset"] = false;
+            this.$refs.inputFields.fields["Portfolio"]["reset"] = false;
 
             this.submitted = true;
             this.error = "";
 
             let section = this.$refs.inputFields.fields["Section"]["value"];
             let type = this.$refs.inputFields.fields["Type"]["value"];
+            let portfolio = this.$refs.inputFields.fields["Portfolio"]["value"];
 
-            if (!(section && type)) {
+            if (!(section && type && portfolio)) {
                 this.error += "fill all fields"
             }
             if (!(this.latitude && this.longitude)) {
@@ -106,8 +93,8 @@ export default {
                 this.$router.go();
             }
 
-            let portfolio = this.$refs.portfolioSelector.getSearch();
-
+            //   let portfolio = this.$refs.portfolioSelector.getSearch();
+            console.log("portfolio", portfolio)
             if (this.error) {
                 return
             }
@@ -137,9 +124,11 @@ export default {
             // restart
             this.$refs.inputFields.fields["Section"]["value"] = "";
             this.$refs.inputFields.fields["Type"]["value"] = "";
+            this.$refs.inputFields.fields["Portfolio"]["value"] = "";
 
             this.$refs.inputFields.fields["Section"]["reset"] = true;
             this.$refs.inputFields.fields["Type"]["reset"] = true;
+            this.$refs.inputFields.fields["Portfolio"]["reset"] = true;
 
             await this.$refs.csrf.refresh();
 
@@ -171,6 +160,6 @@ export default {
             this.$refs.mappopup.setPosition(coordinate);
         });
     },
-    components: { PortfolioSelector, CSRFToken, MapPopup, LoadingComponent, InputFieldsForm, MapComponent }
+    components: { CSRFToken, MapPopup, LoadingComponent, InputFieldsForm, MapComponent }
 };
 </script> 
