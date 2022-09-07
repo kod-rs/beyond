@@ -3,19 +3,26 @@
 
     <div>
 
-        <label :for="id">
+        <!-- <label :for="id">
 
             {{ id.charAt(0).toUpperCase() + id.slice(1) }}
 
 
-        </label>
-        <br>
+        </label> -->
+        <!-- <br> -->
+
+
         <input hidden :placeholder="reset" class="form-control" :value="reset"
             @input="$emit('update:reset', $event.target.value)" />
 
-        <input :placeholder="placeholder" class="form-control" :value="modelValue" :key="id" :name="id"
-            @input="$emit('update:modelValue', $event.target.value)" />
+        <input :list="id" :placeholder="placeholder" class="form-control" :value="modelValue" :key="id" :name="id"
+            @input="$emit('update:modelValue', $event.target.value)" autocomplete="off" />
         <br>
+
+        <datalist :id="id">
+            <option v-for="i in autocompleteContent" :key="i" :value="i" />
+
+        </datalist>
 
         <div v-if="showValidationMessage">
             <br>
@@ -51,6 +58,7 @@ export default {
         validationRegex: RegExp,
 
         initShowValidationMessage: Boolean,
+        autocompleteContent: Set
     },
     mounted() {
         this.re = new RegExp(this.validationRegex, "g");
