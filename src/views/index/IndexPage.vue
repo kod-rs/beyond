@@ -219,6 +219,7 @@ export default {
         createMarker(hexColour) {
 
 
+
             return `
 <svg viewBox="5 2 14 20" width="50" height="50" version="1.1" xmlns="http://www.w3.org/2000/svg">
 <path d="M0 0h24v24H0z" fill="none"/>
@@ -228,33 +229,33 @@ export default {
 
 
         },
-        drawSingleLocation(lat, lon) {
+        // drawSingleLocation(lat, lon) {
 
-            const point = new Point(fromLonLat([lon, lat]));
+        //     const point = new Point(fromLonLat([lon, lat]));
 
-            let feature = new Feature({
-                geometry: point
-            });
+        //     let feature = new Feature({
+        //         geometry: point
+        //     });
 
-            feature.setStyle(
-                new Style({
-                    image: new Icon({
-                        src: 'data:image/svg+xml;utf8,' + this.createMarker("F1FA2B"),
-                        scale: 0.4,
+        //     feature.setStyle(
+        //         new Style({
+        //             image: new Icon({
+        //                 src: 'data:image/svg+xml;utf8,' + this.createMarker("F1FA2B"),
+        //                 scale: 0.4,
 
-                    }),
-                })
-            );
+        //             }),
+        //         })
+        //     );
 
-            let userLocationLayer = new VectorLayer({
-                source: new VectorSource({
-                    features: [feature],
-                }),
-            });
+        //     let userLocationLayer = new VectorLayer({
+        //         source: new VectorSource({
+        //             features: [feature],
+        //         }),
+        //     });
 
-            this.map.addLayer(userLocationLayer);
+        //     this.map.addLayer(userLocationLayer);
 
-        },
+        // },
 
         drawLocations(featuresApi, marker, portfolioName) {
 
@@ -410,7 +411,7 @@ export default {
             let pl = r["payload"]["portfolios"];
 
             for (const [key, value] of Object.entries(pl)) {
-                let hexColour = value["hex"];
+                let hexColour = value["colourHexEncoded"];
                 let r = (await apiLocation.getLocationsFilterUsername(key)).payload.content
                 let marker = this.createMarker(hexColour);
 
