@@ -17,7 +17,8 @@ export default {
     data() {
         return {
             content: undefined,
-            overlay: undefined
+            overlay: undefined,
+            closer: undefined
         }
     },
     methods: {
@@ -31,6 +32,11 @@ export default {
         },
         getOverlay() {
             return this.overlay;
+        },
+        closePopup() {
+            this.overlay.setPosition(undefined);
+            this.closer.blur();
+            return false;
         }
     },
 
@@ -40,7 +46,7 @@ export default {
       */
         const container = document.getElementById('popup');
         this.content = document.getElementById('popup-content');
-        const closer = document.getElementById('popup-closer');
+        this.closer = document.getElementById('popup-closer');
 
         /**
          * Create an overlay to anchor the popup to the map.
@@ -58,9 +64,9 @@ export default {
          * Add a click handler to hide the popup.
          * @return {boolean} Don't follow the href.
          */
-        closer.onclick = function () {
+        this.closer.onclick = function () {
             this.overlay.setPosition(undefined);
-            closer.blur();
+            this.closer.blur();
             return false;
         };
     }
