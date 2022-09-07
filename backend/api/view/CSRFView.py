@@ -1,7 +1,10 @@
 from django.http import JsonResponse
 from rest_framework.views import APIView
-from backend.api.csrf.main import get_synchronizer_token
+
 from backend.api.cqrs_c.csrf import create
+from backend.api.csrf.main import get_synchronizer_token
+from backend.api.view.comm import get_auth_ok_response_template
+
 
 class CSRFView(APIView):
 
@@ -9,6 +12,7 @@ class CSRFView(APIView):
         print("csrf post")
 
         synchronizer_token = get_synchronizer_token()
+
         create(
             ip=request.ip,
             synchronizer_token=synchronizer_token,
@@ -16,15 +20,8 @@ class CSRFView(APIView):
             double_submitted_cookie=None
         )
 
-        response = {
-            "auth": {
-                "status": True,
-                "access-token": request.access_token,
-                "refresh-token": request.refresh_token
-            },
-            "payload": {
-                "synchronizer_token": synchronizer_token
-            }
-        }
+        response = get_auth_ok_response_template(request)
+        response["payload"]["status"] = True
+        response["payload"]["synchronizer_token"] = synchronizer_token
 
         return JsonResponse(response)
