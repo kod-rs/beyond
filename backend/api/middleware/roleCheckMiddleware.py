@@ -1,5 +1,7 @@
 from decouple import config
+from django.http import JsonResponse
 
+from backend.api.comm.http import get_empty_response_template
 from backend.api.keycloak.keycloak_manager import get_roles
 from backend.api.config.main import MIDDLEWARE_NO_ACTION, INTERNAL_SERVER_ERROR_MESSAGE
 from backend.api.startup import startup_configuration
@@ -40,7 +42,13 @@ class RoleCheckMiddleware:
                   path=request.path,
                   method=request.method
                   )
+        print(80 * "-")
         print(t)
+
+        if not t:
+
+            rejection = get_empty_response_template()
+            return JsonResponse(rejection)
 
         # t =
 
