@@ -2,9 +2,10 @@
 
     <div>
         <div v-for="(f, index) in fields" :key="f">
-            <InputField v-model="f.value" :id="index" :validationMessage="f.validationMessage"
-                :showValidationMessage="f.initShowValidationMessage" :validationRegex="f.validationRegex" /> {{
-                        f.value
+            <InputField :reset="f.reset" :placeholder="index" v-model="f.value" :id="index"
+                :validationMessage="f.validationMessage" :showValidationMessage="f.initShowValidationMessage"
+                :validationRegex="f.validationRegex" /> {{
+                f.value
                 }}
         </div>
 
@@ -27,13 +28,15 @@ export default {
                     "value": "",
                     "validationMessage": "Only letters, numbers, spaces, commas and dots accepted in the input",
                     "showValidationMessage": false,
-                    "validationRegex": /^(\w|,|\.| )*$/
+                    "validationRegex": /^(\w|,|\.| )*$/,
+                    "reset": false
                 },
                 "Type": {
                     "value": "",
                     "validationMessage": "Only letters, numbers, spaces, commas and dots accepted in the input",
                     "showValidationMessage": true,
-                    "validationRegex": /^(\w|,|\.| )*$/
+                    "validationRegex": /^(\w|,|\.| )*$/,
+                    "reset": false
                 },
                 // "Latitude": {
                 //     "value": "",
