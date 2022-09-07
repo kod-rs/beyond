@@ -5,8 +5,8 @@
 <script>
 
 import Map from 'ol/Map';
-// import OSM from 'ol/source/OSM';
-// import TileLayer from 'ol/layer/Tile';
+import OSM from 'ol/source/OSM';
+import TileLayer from 'ol/layer/Tile';
 import View from 'ol/View';
 export default {
     data() {
@@ -24,11 +24,11 @@ export default {
         });
 
         this.map = new Map({
-            // layers: [
-            //     new TileLayer({
-            //         source: new OSM(),
-            //     }),
-            // ],
+            layers: [
+                new TileLayer({
+                    source: new OSM(),
+                }),
+            ],
             target: 'map',
             view: this.view,
         });
