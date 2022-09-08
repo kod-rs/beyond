@@ -28,10 +28,10 @@ role_validation_path = pathlib.Path(__file__).parent.parent / "role_action_valid
 
 role_validation_cfg = _get_config(role_validation_path)
 vue_interface_cfg = _get_config(vue_interface_path, curr_dir=False)
-
-for route, actions in vue_interface_cfg.items():
-    for a, k in actions.items():
-        actions[a] = list(k)
+#
+# for route, actions in vue_interface_cfg.items():
+#     for a, k in actions.items():
+#         actions[a] = list(k)
 
 # colours_cfg = _get_config("../config/colours.csv", curr_dir=True, json_or_csv=False)
 #
