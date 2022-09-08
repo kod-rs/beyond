@@ -62,7 +62,7 @@ class RoleCheckMiddleware:
         # print(request.META)
 
         roles = request.roles
-        print(f"{roles=}")
+        # print(f"{roles=}")
 
         # action = request.action
             # print(f"{roles=} {action=} {request}")
