@@ -33,7 +33,7 @@ class RoleCheckMiddleware:
         request.roles = roles
         # print(request.META)
         # print(80 * "-")
-        print()
+        # print()
         # print(request.method, type(request.method))
         # print(request.path, type(request.method))
 
@@ -42,8 +42,8 @@ class RoleCheckMiddleware:
                   path=request.path,
                   method=request.method
                   )
-        print(80 * "-")
-        print(t)
+        # print(80 * "-")
+        # print(t)
 
         if not t:
 
