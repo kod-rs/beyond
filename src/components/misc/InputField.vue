@@ -19,6 +19,8 @@
             @input="$emit('update:modelValue', $event.target.value)" autocomplete="off" />
         <br>
 
+        <!-- todo if autocomplete then show in right corner dropdown option, fill with first value -->
+
         <datalist :id="id">
             <option v-for="i in autocompleteContent" :key="i" :value="i" />
 
