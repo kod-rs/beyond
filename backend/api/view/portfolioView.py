@@ -47,8 +47,8 @@ class PortfolioView(APIView):
         r = {}
 
         for i in portfolios:
-            hex_colour = i.colour[1:]
-            pre_hex_colour = i.colour
+            hex_colour = i.colour_tmp[1:]
+            pre_hex_colour = i.colour_tmp
 
             query = hex_colour
             t = urllib.parse.quote(query)
@@ -56,7 +56,7 @@ class PortfolioView(APIView):
             r[i.name] = {
                 "newName": i.name,
                 "oldName": i.name,
-                "colourName": i.colour,
+                "colourName": "deleted",
                 "colourHex": pre_hex_colour,
                 "colourHexEncoded": t,
                 # todo log session state
