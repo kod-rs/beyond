@@ -12,10 +12,12 @@ def create_or_update(username, current_name, new_name, colour):
     try:
         i, _ = Portfolio.objects.update_or_create(
             username=username, name=current_name,
-            defaults={"name": new_name, "colour": colour}
+            defaults={"name": new_name, "colour_tmp": colour}
         )
         print(i)
         i.save()
+
+        # i, _ = Colour.objects.
 
         return True
     except utils.IntegrityError:
