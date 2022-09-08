@@ -3,7 +3,7 @@ import collections
 from django.http import JsonResponse
 from rest_framework.views import APIView
 
-from backend.api.comm.comm import decode_data
+from backend.api.comm.comm import bytes_to_json
 from backend.api.cqrs_c.location import add, delete
 from backend.api.cqrs_q.location import get_user_portfolio
 from backend.api.mode.type_validator import _check_request_data
@@ -21,7 +21,7 @@ class LocationsView(APIView):
     def delete(self, request):
         print("delete single")
 
-        body_content = decode_data(request.body)
+        body_content = bytes_to_json(request.body)
 
         return {
             "status": delete(body_content["index"])
@@ -87,7 +87,7 @@ class LocationsView(APIView):
             result = payload
 
         else:
-            body_content = decode_data(request.body)
+            body_content = bytes_to_json(request.body)
 
             status = add(
                 body_content["portfolio"],
