@@ -1,7 +1,7 @@
 from django.http import JsonResponse
 from rest_framework.views import APIView
 
-from backend.api.comm.comm import decode_data
+from backend.api.comm.comm import bytes_to_json
 from backend.api.config.main import get_actions_for_routes, \
     INTERNAL_SERVER_ERROR_MESSAGE
 from backend.api.cqrs_c.location import add, delete
@@ -39,7 +39,7 @@ class AddSingle(LocationAction):
             print(request)
             return payload
 
-        body_content = decode_data(request.body)
+        body_content = bytes_to_json(request.body)
 
         status = add(
             body_content["portfolio"],
@@ -81,7 +81,7 @@ class DeleteSingle(LocationAction):
     def perform_action(self, request):
         print("delete single")
 
-        body_content = decode_data(request.body)
+        body_content = bytes_to_json(request.body)
 
         return {
             "status": delete(body_content["index"])
