@@ -4,7 +4,7 @@ from ipware import get_client_ip
 
 from backend.api.cqrs_c.ip import log_user_auth_attempt
 from backend.api.cqrs_q.ip import check_max_count
-from backend.api.comm.http import get_empty_response_template
+from backend.api.comm.comm import get_empty_response_template
 
 
 class IpCheckMiddleware:
