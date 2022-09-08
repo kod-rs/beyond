@@ -24,6 +24,7 @@ def main():
     comment = "fix: marker zoom error"
     comment = "#10: todo rewrite all api calls using prev interface"
     comment = "upd: add body & headers keys config"
+    comment = "merge fix: #10"
 
     if same_comment:
         if not comment:
