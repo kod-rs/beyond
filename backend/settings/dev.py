@@ -1,15 +1,16 @@
 MIDDLEWARE = [
     "corsheaders.middleware.CorsMiddleware",
 
-    "backend.api.middleware.ipCheckMiddleware.IpCheckMiddleware",
-    "backend.api.middleware.bodyCheckMiddleware.BodyCheckMiddleware",
-    "backend.api.middleware.httpsCheckMiddleware.HttpsCheckMiddleware",
-    "backend.api.middleware.loginMiddleware.LoginMiddleware",
-    "backend.api.middleware.authCheckMiddleware.AuthCheckMiddleware",
-    "backend.api.middleware.actionCheckMiddleware.ActionCheckMiddleware",
-    "backend.api.middleware.roleCheckMiddleware.RoleCheckMiddleware",
-    "backend.api.middleware.msgBodyCheckMiddleware.MsgBodyCheckMiddleware",
-    "backend.api.middleware.CSRFCheckMiddleware.CSRFCheckMiddleware",
+    # "backend.api.middleware.ipCheckMiddleware.IpCheckMiddleware",
+    # "backend.api.middleware.bodyCheckMiddleware.BodyCheckMiddleware",
+    # "backend.api.middleware.httpsCheckMiddleware.HttpsCheckMiddleware",
+    # "backend.api.middleware.loginMiddleware.LoginMiddleware",
+    # "backend.api.middleware.authCheckMiddleware.AuthCheckMiddleware",
+    # "backend.api.middleware.roleCheckMiddleware.RoleCheckMiddleware",
+    # "backend.api.middleware.msgBodyCheckMiddleware.MsgBodyCheckMiddleware",
+    # "backend.api.middleware.CSRFCheckMiddleware.CSRFCheckMiddleware",
+
+    "backend.api.middleware.jumperMiddleware.JumperMiddleware",
 
     'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
