@@ -1,37 +1,38 @@
 import re
 
 from django.urls.converters import DEFAULT_CONVERTERS
-
+from backend.api.comm.json_loader import role_validation_cfg
 
 def t(role, path, method):
-    print(role, path, method)
+    # print(role, path, method)
+    config = role_validation_cfg
 
-    config = {
-        "aggregator": {
-            "logout": {
-                "POST": True
-            },
-
-            "locations": {
-                "POST": True,
-
-                "<str>": {
-                    "GET": True,
-                }
-            },
-            "csrf": {
-                "POST": True
-            },
-            "portfolio": {
-                "GET": True,
-                "POST": True
-            },
-            "login": {
-                "POST": True
-            },
-
-        }
-    }
+    # config = {
+    #     "aggregator": {
+    #         "logout": {
+    #             "POST": True
+    #         },
+    #
+    #         "locations": {
+    #             "POST": True,
+    #
+    #             "<str>": {
+    #                 "GET": True,
+    #             }
+    #         },
+    #         "csrf": {
+    #             "POST": True
+    #         },
+    #         "portfolio": {
+    #             "GET": True,
+    #             "POST": True
+    #         },
+    #         "login": {
+    #             "POST": True
+    #         },
+    #
+    #     }
+    # }
     if role not in config:
         return False
 
