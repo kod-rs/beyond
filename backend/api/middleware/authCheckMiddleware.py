@@ -5,9 +5,8 @@ from django.http import JsonResponse
 from ipware import get_client_ip
 
 from backend.api.authenticate import login, check_tokens
-from backend.api.comm.comm import decode_data
+from backend.api.comm.comm import bytes_to_json, get_empty_response_template
 from backend.api.cqrs_c.ip import auth_user
-from backend.api.comm.http import get_empty_response_template
 
 
 class AuthCheckMiddleware:
