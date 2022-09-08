@@ -1,58 +1,54 @@
 {
 	"portfolio":{
-		"select username":{
-			"access_token":true,
-			"refresh_token":true,
-			"action":true
+		"GET":{
+			"headers": {
+				"access_token":true,
+				"refresh_token":true
+			},
+			"body": {
+			}
 		}
 	},
 	"locations":{
-		"create single":{
-			"access_token":true,
-			"refresh_token":true,
-			"action":true,
+		"POST":{
+			"headers": {
+				"access_token":true,
+				"refresh_token":true
+			},
+			"body": {
 			"type":true,
 			"section":true,
 			"latitude":true,
 			"longitude":true,
 			"synchronizer_token":true
+			}
 		},
-		"delete single":{
+		"DELETE":{
 			"access_token":true,
 			"refresh_token":true,
-			"action":true,
 			"index":true
 		},
-		"select_all":{
+		"GET":{
 			"access_token":true,
-			"refresh_token":true,
-			"action":true
-		},
-		"select username":{
-			"access_token":true,
-			"refresh_token":true,
-			"action":true
+			"refresh_token":true
 		}
 	},
 	"csrf":{
-		"select synchronizer_token":{
+		"GET":{
 			"access_token":true,
-			"refresh_token":true,
-			"action":true
+			"refresh_token":true
 		}
 	},
 	"login":{
-		"__comm":{
+		"POST":{
 			"username":true,
-			"password":true,
-			"action":true
+			"password":true
 		}
 	},
 	"logout":{
-		"__comm":{
+		"POST":{
 			"access_token":true,
-			"refresh_token":true,
-			"action":true
+			"refresh_token":true
 		}
 	}
 }
