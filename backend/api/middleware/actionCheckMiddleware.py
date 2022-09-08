@@ -13,7 +13,7 @@ class ActionCheckMiddleware:
         self.debug = config("DEBUG") != "0"
 
     def __call__(self, request):
-        print("ActionCheckMiddleware")
+        # print("ActionCheckMiddleware")
 
         # if "action" not in decode_data(request.body):
         #     if self.debug:
