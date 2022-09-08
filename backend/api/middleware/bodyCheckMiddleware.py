@@ -1,5 +1,5 @@
 from decouple import config
-from backend.api.comm.http import get_empty_response_template
+from backend.api.comm.comm import get_empty_response_template
 from django.http import JsonResponse
 
 class BodyCheckMiddleware:
