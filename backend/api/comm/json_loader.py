@@ -24,7 +24,7 @@ def _get_config(config_name, curr_dir=True, json_or_csv=True):
 
 
 vue_interface_path = pathlib.Path(__file__).parent.parent.parent.parent / "public" / "api_scheme" / "params.json"
-role_validation_path = pathlib.Path(__file__).parent.parent / "role_action_validation" / "role_validation.json"
+role_validation_path = pathlib.Path(__file__).parent.parent / "config" / "role_validation.json"
 
 role_validation_cfg = _get_config(role_validation_path)
 vue_interface_cfg = _get_config(vue_interface_path, curr_dir=False)

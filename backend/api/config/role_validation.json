@@ -1,0 +1,26 @@
+{
+        "aggregator": {
+            "logout": {
+                "POST": true
+            },
+
+            "locations": {
+                "POST": true,
+
+                "<str>": {
+                    "GET": true
+                }
+            },
+            "csrf": {
+                "POST": true
+            },
+            "portfolio": {
+                "GET": true,
+                "POST": true
+            },
+            "login": {
+                "POST": true
+            }
+
+        }
+    }
