@@ -1,73 +1,10 @@
-import json
-
-
-def bytes_to_json(content):
-    return json.loads(content.decode("utf-8"))
-
 import re
-
 from django.urls.converters import DEFAULT_CONVERTERS
-
-# request_body=b'{"portfolio":"a","type":"a","section":"a","latitude":47.989921667414166,"longitude":-101.6015625,"synchronizer_token":"0c6e313ff72e2e8bde54f0661a3e5d3feb1f8524753ec4738467db73dd838c9bf56fc7ca0ccd54f1dff6d9ba669d98f8c8e34ea286d1d6ab1ca25f8f62bbbf93a54f2d25decc333d565b9b2e11d2ebb59fc687a20adc28a3e6fe9fa7609270247b16fce2052349ca2a1d5433ce1ceac08438070410189d3b4201729f84d62ef0115142cadea5180dc94c7c72437bfc47b57080c18ae33228b0c96e2ae4326854171bd3a0652b0ec6a6b3693d0cea2245845ae1a931ffee79556b0af857ecac8f805b9dfcb3feb7c2e92701a631960fb465ecaef34063ef528b9bc3d9ff8c7e934dd60b8be238cd9ffbf01377de780b2147504a381e208b3a730bafad85aabf1a"}'
-#
-# print(request_body)
-#
-# t = request_body.decode("utf-8")
-# print(t)
-# t = json.loads(t)
-# print(t)
-#
-# print(bytes_to_json(request_body))
-
 from backend.api.comm.json_loader import vue_interface_cfg
 
-def is_subset(this, in_this):
-    return this.issubset(in_this)
-
-# print("-")
-# print(is_subset(["a"], ["a", "b"]))
-# print(is_subset([], ["a", "b"]))
-# print(is_subset(["a", "b", "c"], ["a", "b"]))
-# print(is_subset({"a"}, {"b"}))
 def check_params(path, method, headers_got, body_got):
-    p = {
-            "logout": {
-                "POST": {
-                    "headers": {
-                        "access_token": True,
-                        "refresh_token": True
-                    },
-                    "body": {"latitude": True,
-                             "longitude": True,
-                             }
-                }
-            },
-
-            "locations": {
-                "POST": {
-                    "headers": {
-                        "access_token": True,
-                        "refresh_token": True
-                    },
-                    "body": {"latitude": True,
-                             "longitude": True,
-                             }
-                },
-
-                "<str>": {
-                    "GET": {
-                        "headers": {
-                            "access_token": True,
-                            "refresh_token": True
-                        },
-                        "body": {"latitude": True,
-                                 "longitude": True,
-                                 }
-                    },
-                }
-            },
-
-    }
+    print(path, method, headers_got, body_got)
+    p  = vue_interface_cfg
 
     path_as_list = [i for i in path.split("/") if i]
 
@@ -103,14 +40,19 @@ def check_params(path, method, headers_got, body_got):
         return False
     p = p[method]
 
+    # todo maybe not safe, configurator skips this not on purpose ?
+    if "body" not in p:
+        body_expected = set()
+    else:
+        body_expected = {k for k,v in p["body"].items() if v}
+    if "headers" not in p:
+        headers_expected = set()
+    else:
+        headers_expected = {k for k, v in p["headers"].items() if v}
 
-    body_expected = {k for k,v in p["body"].items() if v}
-    headers_expected = {k for k, v in p["headers"].items() if v}
+    headers_test =  set(headers_expected) <= set(headers_got)
 
-
-    headers_test =   set(headers_got) <= set(headers_expected)
-
-    body_test =  set(body_got) <= set(body_expected)
+    body_test = set(body_expected) <= set(body_got)
 
     if not headers_test:
         print(f"headers missing {headers_expected - headers_got}")
