@@ -46,7 +46,7 @@ def get_one(id_val):
     return TestCRUD.objects.get(id_val=id_val)
 
 
-from backend.api.comm.comm import decode_data
+from backend.api.comm.comm import bytes_to_json
 
 
 class TestCrudView(APIView):
@@ -58,7 +58,7 @@ class TestCrudView(APIView):
 
         print(request.body)
 
-        body_content = decode_data(request.body)
+        body_content = bytes_to_json(request.body)
         data_id = body_content["id"][0]
         new_value = body_content["newValue"][0]
 
