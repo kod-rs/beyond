@@ -3,8 +3,6 @@ import { createRouter, createWebHistory } from 'vue-router';
 import IndexPage from '../views/index/IndexPage';
 import LoginPage from '../views/login/LoginPage';
 import LocationAdd from "../views/location/AddLocation.vue";
-import LocationView from "../views/location/View.vue";
-import Location from "../views/location/Home.vue";
 import LogoutPage from '../views/logout/LogoutPage';
 import PortfolioPage from '../views/portfolio/Index.vue';
 import TestPage from '../views/test/TestPage.vue';
@@ -35,19 +33,9 @@ export const router = createRouter({
       component: LocationAdd
     },
     {
-      path: '/viewlocation',
-      name: "viewlocation",
-      component: LocationView
-    },
-    {
       path: '/portfolio',
       name: "portfolio",
       component: PortfolioPage
-    },
-    {
-      path: "/locations",
-      name: "locations",
-      component: Location
     },
     {
       path: "/test",

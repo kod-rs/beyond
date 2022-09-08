@@ -1,0 +1,80 @@
+<template>
+
+    <div id="map" class="map"></div>
+</template>
+
+
+<script>
+
+import Feature from 'ol/Feature';
+import Map from 'ol/Map';
+import Point from 'ol/geom/Point';
+// import TileJSON from 'ol/source/TileJSON';
+
+import OSM from 'ol/source/OSM';
+import TileLayer from 'ol/layer/Tile';
+import VectorSource from 'ol/source/Vector';
+import View from 'ol/View';
+import { Icon, Style } from 'ol/style';
+import {
+    // Tile as TileLayer, 
+    Vector as VectorLayer
+} from 'ol/layer';
+import { fromLonLat } from 'ol/proj';
+import userMarker from "/public/assets/markers/geolocation_marker.png"
+
+
+
+const london = new Feature({
+    geometry: new Point(fromLonLat([-0.12755, 51.507222])),
+});
+
+london.setStyle(
+    new Style({
+        image: new Icon({
+            color: 'rgba(255, 0, 0, .5)',
+            crossOrigin: 'anonymous',
+            src: userMarker,
+            scale: 0.9
+            ,
+        }),
+    })
+);
+
+const vectorSource = new VectorSource({
+    features: [london],
+});
+
+const vectorLayer = new VectorLayer({
+    source: vectorSource,
+});
+
+const rasterLayer = new TileLayer({
+    source: new OSM(),
+});
+
+export default {
+    name: "TestPag",
+    data() {
+        return {
+        }
+    },
+    components: {
+    },
+    mounted() {
+        const map = new Map({
+            layers: [
+                rasterLayer,
+                vectorLayer],
+            target: document.getElementById('map'),
+            view: new View({
+                center: fromLonLat([2.896372, 44.6024]),
+                zoom: 3,
+            }),
+        });
+
+        console.log(map);
+    }
+};
+
+</script> 

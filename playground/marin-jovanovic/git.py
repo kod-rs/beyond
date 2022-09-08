@@ -13,14 +13,17 @@ def main():
 
     comment = "fix config"
     comment = "wip: refactor role validation"
-    comment = "fix: role validation deserializer"
     comment = "upd: rewrite select all api call"
     comment = "init: screens"
     comment = "impl: create / update portfolio"
     comment = 'ref: rewrite db scheme'
 
-    comment = "fix: misc"
+    comment = "err: map marker zoom"
+    comment = "fix: marker image"
     # comment = 'ref: rewrite db scheme'
+    comment = "fix: marker zoom error"
+    comment = "#10: todo rewrite all api calls using prev interface"
+    comment = "upd: add body & headers keys config"
 
     if same_comment:
         if not comment:

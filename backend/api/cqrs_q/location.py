@@ -35,7 +35,7 @@ from backend.api.cqrs_q.portfolio import get_portfolio
 def get_user_portfolio(username, portfolio_name):
     # print("def get_user_portfolio(username, portfolio_name):")
     # portfolio = get_portfolio(portfolio_name)
-    print(f"{portfolio_name=}")
+    # print(f"{portfolio_name=}")
 
     locations = Location.objects.filter(portfolio__username=username, portfolio__name=portfolio_name)
     # print("locations", locations)
@@ -58,12 +58,12 @@ def get_all_by_username(username):
         return False
 
 
-    print("q--------------------------")
-    print(f"{q=}")
+    # print("q--------------------------")
+    # print(f"{q=}")
 
     t = serializers.serialize('json', q)
     t = json.loads(t)
-    print(t)
+    # print(t)
 
     n = []
     for i in t:
@@ -76,6 +76,7 @@ def get_all_by_username(username):
 
     t = n
 
+    # fixme not safe
     try:
         t = [{k: ast.literal_eval(v)[0] for k, v in i.items()} for i in t]
     except ValueError:

@@ -19,14 +19,14 @@
 <script>
 import PublicBase from "../../components/login/PublicBase.vue";
 import { router } from '../../scripts/router';
-import { apiCalls } from '../../scripts/api';
+import { apiAuth } from '../../scripts/api/auth';
 
 export default {
     data() {
         return {};
     },
     async created() {
-        apiCalls.logout();
+        apiAuth.logout();
         this.returnUrl = this.$route.query.returnUrl || '/';
         await new Promise(r => setTimeout(r, 2000)).then(() => {
             router.push(this.returnUrl);

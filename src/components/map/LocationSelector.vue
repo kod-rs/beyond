@@ -16,8 +16,7 @@
 
 <script>
 import InputAutocomplete from './../form/InputAutocomplete.vue';
-import countryNameJson from "/public/assets/layers/country_names.json";
-import axios from 'axios';
+import { jsonManager } from "../../scripts/json_manager";
 
 export default {
     components: {
@@ -37,15 +36,13 @@ export default {
             console.log("new location typed", location)
         },
         async getLocations() {
-            let r = await axios.get(countryNameJson);
-            r = r.data;
-            let c = Object.keys(r);
+            let c = await jsonManager.getLocations();
             this.$refs.inputautocompletefield.updateItems(c);
         },
 
     }
     ,
-    mounted() {
+    async mounted() {
         this.getLocations();
 
         this.$refs.inputautocompletefield.setPlaceholder("type location");

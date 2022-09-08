@@ -1,58 +1,87 @@
 {
-	"portfolio":{
-		"select username":{
-			"access_token":true,
-			"refresh_token":true,
-			"action":true
+	"logout":{
+		"POST":{
+			"headers":{
+				"Authorization":true
+			},
+			"body":{
+
+			}
 		}
 	},
 	"locations":{
-		"create single":{
-			"access_token":true,
-			"refresh_token":true,
-			"action":true,
-			"type":true,
-			"section":true,
-			"latitude":true,
-			"longitude":true,
-			"synchronizer_token":true
+		"POST":{
+			"headers":{
+				"Authorization":true
+			},
+			"body":{
+				"portfolio":true,
+				"type":true,
+				"section":true,
+				"latitude":true,
+				"longitude":true,
+				"synchronizer_token":true
+			}
 		},
-		"delete single":{
-			"access_token":true,
-			"refresh_token":true,
-			"action":true,
-			"index":true
+		"<str>":{
+			"GET":{
+				"headers":{
+					"Authorization":true
+				},
+				"body":{
+
+				}
+			}
+		}
+	},
+	"portfolio":{
+		"<str>":{
+			"DELETE":{
+				"headers":{
+					"Authorization":true
+				},
+				"body":{
+
+				}
+			}
 		},
-		"select_all":{
-			"access_token":true,
-			"refresh_token":true,
-			"action":true
+		"POST":{
+			"headers":{
+				"Authorization":true
+			},
+			"body":{
+				"currentName":true,
+				"newName":true,
+				"colour":true
+			}
 		},
-		"select username":{
-			"access_token":true,
-			"refresh_token":true,
-			"action":true
+		"GET":{
+			"headers":{
+				"Authorization":true
+			},
+			"body":{
+
+			}
 		}
 	},
 	"csrf":{
-		"select synchronizer_token":{
-			"access_token":true,
-			"refresh_token":true,
-			"action":true
+		"POST":{
+			"headers":{
+				"Authorization":true
+			},
+			"body":{
+
+			}
 		}
 	},
 	"login":{
-		"__comm":{
-			"username":true,
-			"password":true,
-			"action":true
-		}
-	},
-	"logout":{
-		"__comm":{
-			"access_token":true,
-			"refresh_token":true,
-			"action":true
+		"POST":{
+			"headers":{
+				"Authorization":true
+			},
+			"body":{
+
+			}
 		}
 	}
 }

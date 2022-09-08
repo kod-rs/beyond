@@ -23,8 +23,8 @@ import {
   TIME_RESOLUTION
 } from './scripts/constants';
 
-import { apiCalls } from './scripts/api';
 import { activate_tab_name_changer } from "./scripts/tab_name_changer";
+import { apiAuth } from './scripts/api/auth';
 
 export default {
   name: 'app',
@@ -95,7 +95,7 @@ export default {
       if (window.location.href.endsWith('login')) {
         return;
       }
-      apiCalls.logout();
+      apiAuth.logout();
       router.push('login');
       this.isInactive = true;
     }

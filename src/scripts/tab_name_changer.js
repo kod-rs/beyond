@@ -1,47 +1,148 @@
+// function getRandomNumber(min, max) {
+//     return Math.floor(Math.random() * (max - min)) + min;
+// }
+
+const appName = "beyond";
+
+function setIntervalDriver(params) {
+    return setInterval(function () {
+        if (params["titles"].length === params["index"]) {
+            params["index"] = 0;
+        }
+        document.title = params["titles"][params["index"]];
+        params["index"]++;
+    }, params["countdown"]);
+
+}
+
+
+function tabChangedDriver(
+    visible,
+    hidden
+) {
+
+    let visibleDriver = setIntervalDriver(
+        visible)
+
+    let hiddenDriver = null;
+
+    document.addEventListener("visibilitychange", function () {
+
+        if (document.hidden) {
+            clearInterval(visibleDriver);
+
+            hiddenDriver = setIntervalDriver(
+                hidden
+            )
+
+        } else {
+
+            clearInterval(hiddenDriver);
+
+            visibleDriver = setIntervalDriver(
+                visible
+            )
+
+        }
+
+    });
+
+}
+
+// function shuffle(prev, wordArray) {
+
+//     if (!wordArray.includes(prev)) {
+//         throw "previous title not in array"
+//     }
+
+//     if (wordArray.length === 1) {
+//         throw "only one element in array, previous title will always be equal current"
+//     }
+
+//     shuffleDriver(wordArray);
+
+//     fixFirstElement(wordArray, prev);
+
+//     return wordArray;
+
+// }
+
+// function shuffleDriver(wordArray) {
+//     let currentIndex = wordArray.length, randomIndex;
+
+//     while (currentIndex != 0) {
+
+//         randomIndex = Math.floor(Math.random() * currentIndex);
+//         currentIndex--;
+
+//         [wordArray[currentIndex], wordArray[randomIndex]] = [
+//             wordArray[randomIndex], wordArray[currentIndex]
+//         ];
+//     }
+// }
+
+// function fixFirstElement(wordArray, prev) {
+//     let firstIndex = 0;
+
+//     while (wordArray[firstIndex] === prev) {
+//         // swap first element
+//         let otherIndex = Math.floor(Math.random() * wordArray.length);
+//         let temp = wordArray[firstIndex];
+//         wordArray[firstIndex] = wordArray[otherIndex];
+//         wordArray[otherIndex] = temp;
+//     }
+// }
+
+function oneUp(word) {
+
+    return Array(word.length).fill(word.toLowerCase()).map((e, i) => {
+        return e.slice(0, i) + e.charAt(i).toUpperCase() + e.slice(i + 1)
+    });
+
+}
+
+function oneDown(word) {
+
+    return Array(word.length).fill(word.toUpperCase()).map((e, i) => {
+        return e.slice(0, i) + e.charAt(i).toLowerCase() + e.slice(i + 1)
+    });
+
+}
+
+function letters(word) {
+    return word.split("");
+}
 
 export const activate_tab_name_changer = () => {
 
-    function randomChange() {
-        var title = document.title;
+    let visibleTitles = oneDown(appName)
+    visibleTitles.push(...oneUp(appName));
 
-        var titles = [
-            "beyond",
-            "BEYOND"
-        ];
-        var driver = null;
+    let hiddenTitles = letters(appName);
 
-        function getRandomNumber(min, max) {
-            return Math.floor(Math.random() * (max - min)) + min;
-        }
-
-        document.addEventListener("visibilitychange", function () {
-
-            if (document.hidden) {
-                driver = setInterval(function () {
-                    var prev_title = document.title;
-                    var num = getRandomNumber(0, titles.length - 1);
-                    document.title = titles[num];
-
-                    if (prev_title === document.title) {
-                        if (num === titles.length - 1) {
-                            document.title = titles[0]
-                        } else {
-                            document.title = titles[num + 1];
-                        }
-                    }
-
-                }, 200);
-            } else {
-                document.title = title;
-                clearInterval(driver);
-            }
-
-        });
-
-    }
+    let visibleCountdown = 1000;
+    let hiddenCountdown = 200;
 
     onload = () => {
-        randomChange()
+
+        let visible = {
+            "index": 0,
+            "titles": visibleTitles,
+            "countdown": visibleCountdown
+        };
+
+        let hidden = {
+            "index": 0,
+            "titles": hiddenTitles,
+            "countdown": hiddenCountdown
+        };
+
+
+        tabChangedDriver(
+            visible,
+            hidden
+
+        );
     };
 
 }

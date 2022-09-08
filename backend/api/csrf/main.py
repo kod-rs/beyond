@@ -1,5 +1,5 @@
-import Crypto.Random.random
 from datetime import datetime
+from secrets import token_hex
 
 
 def get_synchronizer_token():
@@ -16,13 +16,8 @@ def get_synchronizer_token():
     token is generated for every form
     """
 
-    from secrets import token_hex
-    t = token_hex(256)
-    return t
-    # print(token_hex(256))
-    # r = Crypto.Random.get_random_bytes(256)
-    # print(r)
-    # return r
+    return token_hex(256)
+
 
 def get_encrypted_token():
     """

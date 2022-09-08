@@ -1,13 +1,15 @@
 <template>
-    your coordinates
-    <input type="text" v-model="lat" :name="lat" class="form-control" />
-    <input type="text" v-model="lon" :name="lon" class="form-control" />
+    <div></div>
+    <!-- your coordinates -->
+    <!-- <input type="text" v-model="lat" :name="lat" class="form-control" /> -->
+    <!-- <input type="text" v-model="lon" :name="lon" class="form-control" /> -->
     <!-- <button @click="$emit('userCoordinates', this.lat, this.lon)">click me</button> -->
-    <button @click="emitCoordinates()">zoom on my location</button>
+    <!-- <button @click="emitCoordinates()">zoom on my location</button> -->
 </template>
 
 <script>
-import { apiCalls } from '../../scripts/api';
+import { apiExternal } from '@/scripts/api/external';
+
 
 export default {
     props: { "canSend": Boolean },
@@ -22,14 +24,11 @@ export default {
     methods: {
         enableCoordinates() {
 
-            console.log("now i can emit")
             this.canEmit = true;
         },
         emitCoordinates() {
-            console.log("try to emit")
             if (this.canEmit) {
                 this.$emit('userCoordinates', this.lat, this.lon);
-
             }
         }
         ,
@@ -38,7 +37,7 @@ export default {
             navigator.geolocation.getCurrentPosition(this.showPosition, this.showError, { timeout: 5000 });
         },
         async displayUserCoordinatesUnwillingly() {
-            let r = await apiCalls.getCoordinates();
+            let r = await apiExternal.getCoordinates();
             this.showPosition({
                 coords: r
             });
@@ -51,21 +50,7 @@ export default {
             this.lon = this.$store.state.longitude;
             this.emitCoordinates();
         },
-        showError(error) {
-            switch (error.code) {
-                case error.PERMISSION_DENIED:
-                    // alert("User denied the request for Geolocation.");
-                    break;
-                case error.POSITION_UNAVAILABLE:
-                    // alert("Location information is unavailable.");
-                    break;
-                case error.TIMEOUT:
-                    // alert("The request to get user location timed out.");
-                    break;
-                case error.UNKNOWN_ERROR:
-                    // alert("An unknown error occurred.");
-                    break;
-            }
+        showError() {
             this.displayUserCoordinatesUnwillingly();
         }
     },
