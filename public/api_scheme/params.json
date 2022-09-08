@@ -1,54 +1,87 @@
 {
-	"portfolio":{
-		"GET":{
-			"headers": {
-				"access_token":true,
-				"refresh_token":true
+	"logout":{
+		"POST":{
+			"headers":{
+				"Authorization":true
 			},
-			"body": {
+			"body":{
+
 			}
 		}
 	},
 	"locations":{
 		"POST":{
-			"headers": {
-				"access_token":true,
-				"refresh_token":true
+			"headers":{
+				"Authorization":true
 			},
-			"body": {
-			"type":true,
-			"section":true,
-			"latitude":true,
-			"longitude":true,
-			"synchronizer_token":true
+			"body":{
+				"portfolio":true,
+				"type":true,
+				"section":true,
+				"latitude":true,
+				"longitude":true,
+				"synchronizer_token":true
 			}
 		},
-		"DELETE":{
-			"access_token":true,
-			"refresh_token":true,
-			"index":true
+		"<str>":{
+			"GET":{
+				"headers":{
+					"Authorization":true
+				},
+				"body":{
+
+				}
+			}
+		}
+	},
+	"portfolio":{
+		"<str>":{
+			"DELETE":{
+				"headers":{
+					"Authorization":true
+				},
+				"body":{
+
+				}
+			}
+		},
+		"POST":{
+			"headers":{
+				"Authorization":true
+			},
+			"body":{
+				"currentName":true,
+				"newName":true,
+				"colour":true
+			}
 		},
 		"GET":{
-			"access_token":true,
-			"refresh_token":true
+			"headers":{
+				"Authorization":true
+			},
+			"body":{
+
+			}
 		}
 	},
 	"csrf":{
-		"GET":{
-			"access_token":true,
-			"refresh_token":true
+		"POST":{
+			"headers":{
+				"Authorization":true
+			},
+			"body":{
+
+			}
 		}
 	},
 	"login":{
 		"POST":{
-			"username":true,
-			"password":true
-		}
-	},
-	"logout":{
-		"POST":{
-			"access_token":true,
-			"refresh_token":true
+			"headers":{
+				"Authorization":true
+			},
+			"body":{
+
+			}
 		}
 	}
 }
