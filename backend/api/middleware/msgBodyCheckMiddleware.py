@@ -1,4 +1,6 @@
 import json
+import sys
+
 from django.http import JsonResponse
 
 from backend.api.comm.comm import decode_data
@@ -54,6 +56,12 @@ class MsgBodyCheckMiddleware(DebuggableMiddleware):
             body_got=got_body
 
                          )
+
+        if not t:
+            print(80 * "-")
+            sys.exit(-1)
+            rejection = get_empty_response_template()
+            return JsonResponse(rejection)
 
         # rejection = get_empty_response_template()
         #
