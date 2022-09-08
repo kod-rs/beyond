@@ -1,17 +1,11 @@
-import json
 import sys
 
 from django.http import JsonResponse
 
-from backend.api.comm.comm import decode_data
-from backend.api.comm.http import get_empty_response_template
+from backend.api.comm.comm import bytes_to_json, get_empty_response_template
 from backend.api.comm.json_loader import vue_interface_cfg
 from backend.api.middleware.comm import DebuggableMiddleware
 from backend.api.role_action_validation.args_check import check_params
-import json
-
-def bytes_to_json(content):
-    return json.loads(content.decode("utf-8"))
 
 
 class MsgBodyCheckMiddleware(DebuggableMiddleware):
@@ -30,45 +24,35 @@ class MsgBodyCheckMiddleware(DebuggableMiddleware):
 
         # fixme use meta?
         if request.headers:
-            # print(f"{request.headers=}")
             got_headers = request.headers
-            # if not got_headers:
-            #     got_headers = set()
-            # else:
-            got_headers = {k for k,v in got_headers.items()}
-            # got_headers = set(got_headers)
+
+            got_headers = {k for k, v in got_headers.items()}
         if request.body:
             got_body = bytes_to_json(request.body)
-            # if not got_body:
-            #     got_body = set()
-            # else:
-            got_body = {k for k,v in got_body.items()}
 
-            # got_body = set(got_body)
-            # body_content = decode_data(request.body)
-            # print(f"{body_content=}")
+            got_body = {k for k, v in got_body.items()}
 
-        # print(f"{got_method=} {got_headers=} {got_body=}")
-        t = check_params(
-            path =                   request.path,
-            method=got_method,
-            headers_got=got_headers,
-            body_got=got_body
-
-                         )
-
-        if not t:
-            print(80 * "-")
-            sys.exit(-1)
-            rejection = get_empty_response_template()
-            return JsonResponse(rejection)
+        # todo uncomment,
+        # t = check_params(
+        #     path=request.path,
+        #     method=got_method,
+        #     headers_got=got_headers,
+        #     body_got=got_body
+        #
+        # )
+        #
+        # if not t:
+        #     print(80 * "-")
+        #     sys.exit(-1)
+        #     rejection = get_empty_response_template()
+        #     return JsonResponse(rejection)
 
         # rejection = get_empty_response_template()
         #
         # if request.environ['QUERY_STRING'] != '':
         #     print('query string not empty')
         #     return JsonResponse(rejection)
-        #
+
         # # todo
         # # try:
         #
