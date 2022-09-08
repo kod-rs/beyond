@@ -23,7 +23,7 @@ def main():
     # comment = 'ref: rewrite db scheme'
     comment = "fix: marker zoom error"
     comment = "#10: todo rewrite all api calls using prev interface"
-    comment = "fix: body & headers keys check"
+    comment = "upd: add body & headers keys config"
 
     if same_comment:
         if not comment:
