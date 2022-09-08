@@ -26,9 +26,8 @@
 
         <div>
             <br>
-            <!-- @click="selectRow(portofolioName)" -->
-            <div v-for="(portfolioPayload, id, index) in this.portfolios" :key="id"
-                @click="selectRow(portfolioPayload)">
+            <!--  @click="selectRow(portfolioPayload)" -->
+            <div v-for="(portfolioPayload, id, index) in this.portfolios" :key="id">
                 {{ portfolioPayload }} : {{ id }} : {{ index }}
 
                 <br>
@@ -39,54 +38,17 @@
                         <input class="form-control" type="text" v-model="portfolioPayload.newName">
                     </div>
 
-                    <!-- <div class="row">
-                        <label for="exampleColorInput" class="form-label">Color picker</label>
-
-                    </div> -->
                     <div class="col">
                         {{portfolioPayload.colourHex}}
-
                     </div>
+
                     <div class="col">
-
-                        <!-- <input type="color" class="form-control form-control-color" id="exampleColorInput"
-                            value="#a59344"> -->
-
-
-                        <!-- <input type="color" class="form-control form-control-color" id="exampleColorInput"
-                            :value="portfolioPayload.colourHex"> -->
-
                         <input type="color" class="form-control form-control-color" id="exampleColorInput"
                             v-model="portfolioPayload.colourHex">
-
-
-                        <!-- v-model="portfolioPayload.colourHex"> -->
-
-
                     </div>
-
-                    <!-- todo set modified for this also -->
-                    <!-- <div class="col">
-                        <div class="dropdown">
-                            <button class="dropbtn">
-                                {{ portfolioPayload.colour }}
-                            </button>
-
-                            <div class="dropdown-content">
-                                <a @click="colorClicked(id, colourName)" href="#"
-                                    v-for="(colourPayload, colourName) in this.colours" :key="colourName">
-
-                                    <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24"
-                                        width="24px" fill="#FF0000">
-                                        <path d="M0 0h24v24H0z" fill="none" />
-                                        <path :fill="colourPayload.hex"
-                                            d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" />
-                                    </svg> {{ colourName }}
-                                </a>
-
-                            </div>
-                        </div>
-                    </div> -->
+                    <div class="col">
+                        <button @click="revertcolourshow(portfolioPayload.oldName)">revert</button>
+                    </div>
 
 
                     <div class="col">
@@ -132,17 +94,17 @@
                     <div class="row"
                         v-for="(locationPayload, portfolioNameId, index) in this.locations[portfolioPayload.oldName]"
                         :key="portfolioNameId">
-                        {{ locationPayload }} - {{ portfolioNameId }} - {{ index }}
+                        <div class="col">
+                            {{locationPayload}}
+                        </div>
 
-                        <!-- <div class="col">
-                            name
-                        </div> -->
-                        <!-- <div class="col">
-                            section
+                        <div class="col">
+                            {{portfolioNameId}}
                         </div>
                         <div class="col">
-                            type
-                        </div> -->
+                            {{index}}
+                        </div>
+
                     </div>
 
                 </div>
@@ -159,54 +121,12 @@
     </div>
 </template>
   
-<style>
-.dropbtn {
-    background-color: #4CAF50;
-    color: white;
-    padding: 16px;
-    font-size: 16px;
-    border: none;
-    cursor: pointer;
-}
-
-.dropdown {
-    position: relative;
-    display: inline-block;
-}
-
-.dropdown-content {
-    display: none;
-    position: absolute;
-    background-color: #f9f9f9;
-    min-width: 160px;
-    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
-    z-index: 1;
-}
-
-.dropdown-content a {
-    color: black;
-    padding: 12px 16px;
-    text-decoration: none;
-    display: block;
-}
-
-.dropdown-content a:hover {
-    background-color: #f1f1f1
-}
-
-.dropdown:hover .dropdown-content {
-    display: block;
-}
-
-.dropdown:hover .dropbtn {
-    background-color: #3e8e41;
-}
-</style>
 
 <script>
 import { apiPortfolio } from '@/scripts/api/portfolio';
 import { apiLocation } from '../../scripts/api/location';
 import Green from './Green.vue';
+import { apiColour } from '../../scripts/api/colour';
 
 
 export default {
@@ -215,7 +135,6 @@ export default {
         return {
             role: "",
             expandedGroup: [],
-            // colours: {},
             portfolios: {},
             isTempCreated: false,
             timer: 1,
@@ -231,12 +150,23 @@ export default {
         let res = await apiPortfolio.getPortoflios();
         if (res["auth"]["status"]) {
             console.log("status ok");
-            // this.colours = res["payload"]["colours"];
             this.role = res["payload"]["role"];
             this.portfolios = res["payload"]["portfolios"];
         }
     },
     methods: {
+        async revertcolourshow(portfolioName) {
+            console.log("revert colour, show history");
+
+            let res = await apiColour.getColourHistory(portfolioName);
+            if (res["auth"]["status"]) {
+                console.log("status ok");
+                let colourHistory = res["payload"]["colourHistory"];
+                console.log("ch", colourHistory);
+                // this.portfolios = res["payload"]["portfolios"];
+            }
+
+        },
         clearContentPortfolio(portfolioPayload) {
             console.log("clear content", portfolioPayload)
         },
@@ -335,14 +265,6 @@ export default {
                 console.log("error fetch")
             }
 
-            // console.log("select row", p)
-            // this.$store.dispatch("selectPortfolio", p);
-            // const key = p.name;
-            // if (this.isExpanded(key)) {
-            //     this.expandedGroup.splice(this.expandedGroup.indexOf(key), 1);
-            // } else {
-            //     this.expandedGroup.push(key);
-            // }
         },
     },
     components: { Green }
