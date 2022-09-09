@@ -163,7 +163,6 @@ export default {
                 console.log("status ok");
                 let colourHistory = res["payload"]["value"];
                 console.table(colourHistory);
-                // this.portfolios = res["payload"]["portfolios"];
             }
 
         },
