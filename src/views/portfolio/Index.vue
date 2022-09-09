@@ -29,7 +29,7 @@ export default {
     name: "TestPag",
     data() {
         return {
-            colourHex: "#3584e4"
+            colourHex: "#p"
         }
     },
     components: {
