@@ -161,8 +161,8 @@ export default {
             let res = await apiColour.getColourHistory(portfolioName);
             if (res["auth"]["status"]) {
                 console.log("status ok");
-                let colourHistory = res["payload"]["colourHistory"];
-                console.log("ch", colourHistory);
+                let colourHistory = res["payload"]["value"];
+                console.table(colourHistory);
                 // this.portfolios = res["payload"]["portfolios"];
             }
 
