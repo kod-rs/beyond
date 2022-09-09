@@ -25,8 +25,6 @@ def get_auth_err_response_template(request):
     response = {
         "auth": {
             "status": False,
-            # "access-token": request.access_token,
-            # "refresh-token": request.refresh_token
         }
     }
     return response
