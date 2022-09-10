@@ -3,39 +3,61 @@ import urllib.parse
 from django.http import JsonResponse
 from rest_framework.views import APIView
 
-from backend.api.cqrs_c.portfolio import create_or_update, delete_portfolio
+from backend.api.cqrs_c.portfolio import create_or_update, delete_portfolio, \
+    update_portfolio, update_portfolio_colour, update_portfolio_name, update
 from backend.api.cqrs_q.portfolio import get_portfolios
 from backend.api.view.comm import get_auth_ok_response_template
+
+#
+# def update_portfolio_name(username, portfolio_name, portfolio_new_name):
+#     pass
 
 
 class PortfolioView(APIView):
 
 
     def patch(self, request, name):
+
         print("LocationsView patch", name)
 
-        portfolio_new_name = request.data["name"]
-        portfolio_colour = request.data["colour"]
+        # portfolio_new_name = request.data["name"]
+        # portfolio_colour = request.data["colour"]
 
-        if "name" in request.data:
-            print("name in data")
-            portfolio_new_name = request.data["name"]
+        # print(request.data)
 
-        if "colour" in request.data:
-            print("has new colour")
-            portfolio_colour = request.data["colour"]
+        p = {k:v for k,v in request.data.items() if k in ["name", "colour"]}
 
-        portfolio_name = name
 
-        r = create_or_update(
-            request.username,
-            portfolio_name,
-            portfolio_new_name,
-            portfolio_colour
-        )
+        update(request.username, name, p)
+
+        # if "name" in request.data and "colour" in request.data:
+        #     print("name, colour in data")
+        #     portfolio_new_name = request.data["name"]
+        #     portfolio_new_colour = request.data["colour"]
+        #
+        #     update_portfolio(request.username, name, portfolio_new_name, portfolio_new_colour)
+        #
+        # elif "name" in request.data:
+        #     print("name in data")
+        #     portfolio_new_name = request.data["name"]
+        #
+        #     update_portfolio_name(request.username, name, portfolio_new_name)
+        #
+        # elif "colour" in request.data:
+        #     print("has new colour")
+        #     portfolio_new_colour = request.data["colour"]
+        #
+        #     update_portfolio_colour(request.username, name, portfolio_new_colour)
+
+        # r = update_portfolio(
+        #     request.username,
+        #     portfolio_name,
+        #     portfolio_new_name,
+        #     portfolio_colour
+        # )
 
         response = get_auth_ok_response_template(request)
-        response["payload"]["status"] = r
+        # response["payload"]["status"] = r
         return JsonResponse(response)
 
 
@@ -50,19 +72,15 @@ class PortfolioView(APIView):
 
         return JsonResponse(response)
 
-    def post(self, request):
+    def post(self, request, name):
         print("PortfolioView post")
-
-        portfolio_name = request.data["currentName"]
-        portfolio_new_name = request.data["newName"]
-        portfolio_colour = request.data["colour"]
 
         # todo more descriptive message for showing in ui
         r = create_or_update(
             request.username,
-            portfolio_name,
-            portfolio_new_name,
-            portfolio_colour
+            name,
+            name,
+            request.data["colour"]
         )
 
         response = get_auth_ok_response_template(request)
@@ -76,16 +94,19 @@ class PortfolioView(APIView):
         r = {}
 
         for i in portfolios:
-            hex_colour = i.colour_tmp[1:]
-            pre_hex_colour = i.colour_tmp
+            hex_colour = i.colour[1:]
+            pre_hex_colour = i.colour
 
             query = hex_colour
             t = urllib.parse.quote(query)
 
             r[i.name] = {
-                "newName": i.name,
-                "oldName": i.name,
-                "colourName": "deleted",
+                "name": i.name,
+                "colour": pre_hex_colour,
+
+                # "newName": i.name,
+                # "oldName": i.name,
+                # "colourName": "deleted",
                 "colourHex": pre_hex_colour,
                 "colourHexEncoded": t,
                 # todo log session state
