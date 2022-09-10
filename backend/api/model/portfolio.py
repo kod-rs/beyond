@@ -17,5 +17,9 @@ alter table api_portfolio add constraint table_pkey primary key (username, name)
 
 class Portfolio(models.Model):
     username = models.CharField(max_length=200,unique=False)
+
+    # current
     name = models.CharField(max_length=200,unique=False)
-    colour_tmp = models.CharField(max_length=200)
+    colour = models.CharField(max_length=200)
+
+    # history in PortfolioHistoryAdapter
