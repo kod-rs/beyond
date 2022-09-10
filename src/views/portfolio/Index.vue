@@ -8,11 +8,29 @@
 
         <hr>
 
-        <button @click="addColour">add colour</button>
 
 
         <div class="col">
-            <input type="color" class="form-control form-control-color" v-model="colourHex">
+            <div class="row">
+                <input type="text" v-model="colourHex">
+                <button @click="addColour">add colour</button>
+                <hr>
+            </div>
+
+            <div class="row">
+                <button @click="refresh">refresh</button>
+                current state
+                <br>
+                <div v-for="i in colours" :key="i">
+                    {{i}}
+                </div>
+                <hr>
+            </div>
+
+            <div class="row">
+                <button @click="deleteAll">clear list</button>
+                <hr>
+            </div>
         </div>
     </div>
 
@@ -29,7 +47,8 @@ export default {
     name: "TestPag",
     data() {
         return {
-            colourHex: "#p"
+            colourHex: "#p",
+            colours: ["a", "b"]
         }
     },
     components: {
@@ -37,6 +56,23 @@ export default {
         "portfolio-details": PortfolioDetails
     },
     methods: {
+        async deleteAll() {
+            console.log("delete all");
+            let r = await apiColour.deleteColour("a");
+            console.log(r)
+        },
+
+        async refresh() {
+            let r = await apiColour.getColourHistory("a");
+            console.table(r["payload"]["value"])
+
+            this.colours = [];
+            for (const [key, value] of Object.entries(r["payload"]["value"])) {
+                console.log(key, value, typeof (key));
+                this.colours.push(value);
+            }
+        },
+
         async addColour() {
             console.log(this.colourHex)
             console.log("add c")
