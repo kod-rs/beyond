@@ -16,5 +16,6 @@ class JumperMiddleware:
         request.access_token = "tmp"
         request.refresh_token = "tmp"
         request.username = "a"
+        request.ip = "127.0.0.1"
 
         return self.get_response(request)
