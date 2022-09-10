@@ -26,6 +26,7 @@ def main():
     comment = "upd: add body & headers keys config"
     comment = "merge fix: #10"
     comment = "wip: colour log"
+    comment = "impl: colour log"
 
     if same_comment:
         if not comment:
