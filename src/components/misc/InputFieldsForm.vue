@@ -66,8 +66,6 @@ export default {
                 //     "validationRegex": /^[+-]?\d+(\.\d+)?$/
                 // },
             },
-
-
         }
     },
     async created() {
@@ -80,51 +78,14 @@ export default {
             if (r["auth"]["status"]) {
                 let pl = r["payload"]["portfolios"];
 
-                let c = new Set(Object.keys(pl));
-                console.log(c);
-
-                return c;
-                // this.$refs.inputautocompletefield.updateItems(c);
+                return new Set(Object.keys(pl));
             }
 
             return undefined;
 
-            // let t = new Set();
-            // t.add("aaa");
-            // t.add("bvvv");
-            // t.add("cccc");
-            // console.log(typeof (t));
-            // return t;
 
-            // this.loading = true
-            // axios.get('/youApiUrl')
-            //     .then(response => {
-            //         this.loading = false
-            //         this.rows = response.data
-            //     })
-            //     .catch(error => {
-            //         this.loading = false
-            //         console.log(error)
-            //     })
         }
     },
-    mounted() {
-        // let t = new Set();
-        // t.add("aaa");
-        // t.add("bvvv");
-        // t.add("cccc");
-
-    },
-
-    // methods: {
-    //     async getPortfolioAutocomplete() {
-
-    //     }
-
-
-    // },
-
-
 }
 </script>
 
