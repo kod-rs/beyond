@@ -28,6 +28,7 @@ class ColourView(APIView):
 
     def post(self, request):
         print("colour post")
+        print(request.data)
         response = get_auth_ok_response_template(request)
 
         portfolio = request.data["portfolio"]
