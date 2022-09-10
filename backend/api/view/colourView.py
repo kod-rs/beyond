@@ -7,6 +7,7 @@ from backend.api.view.comm import get_auth_ok_response_template
 class ColourView(APIView):
 
     def delete(self, request, abc):
+        print("colour delete")
         clear_history(request.username, abc)
         response = get_auth_ok_response_template(request)
         return JsonResponse(response)
@@ -31,23 +32,6 @@ class ColourView(APIView):
 
         portfolio = request.data["portfolio"]
         colour_hex = request.data["colourHex"]
-        r = add_colour_to_log(request.username, portfolio, colour_hex)
-        print(r)
-        print("")
-
-        """
-        history
-        user 
-        timestamp
-        name
-        
-        triger on insert  brisi starije
-        
-        -u1,0,a
-        u1,1,a
-        u1,2,a
-        u1,3,a
-        
-        """
+        add_colour_to_log(request.username, portfolio, colour_hex)
 
         return JsonResponse(response)
