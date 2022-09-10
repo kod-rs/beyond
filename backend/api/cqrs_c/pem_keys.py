@@ -1,4 +1,4 @@
-from backend.api.model.pem_keys import PemKeys
+from backend.api.model_security.pem_keys import PemKeys
 
 
 def add_jwt_public_key(key_type, key):
