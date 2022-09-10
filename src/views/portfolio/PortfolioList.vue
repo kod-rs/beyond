@@ -14,10 +14,6 @@
 
         </div>
 
-        <div v-for="t in tmp" :key="t">
-            {{t}}
-        </div>
-
         <hr>
         notifications
 
@@ -31,30 +27,53 @@
             <br>
             <!--  @click="selectRow(portfolioPayload)" -->
             <div v-for="portfolioPayload in this.portfolios" :key="portfolioPayload">
-                {{portfolioPayload}}
-                <br>
+
+                <div class="row">
+                    {{portfolioPayload}}
+                </div>
 
                 <div class="row">
 
                     <div class="col">
-                        <input class="form-control" type="text" v-model="portfolioPayload.newName">
+                        <input type="text" class="form-control" v-model="portfolioPayload.newName"
+                            placeholder="Portfolio name">
+                        <!-- @input="" -->
                     </div>
 
                     <div class="col">
-                        {{portfolioPayload.colourHex}}
+                        <input type="color" class="form-control form-control-color"
+                            v-model="portfolioPayload.newColour">
                     </div>
 
-                    <div class="col">
-                        <input type="color" class="form-control form-control-color" id="exampleColorInput"
-                            v-model="portfolioPayload.colourHex" @change="updateEditorColor(portfolioPayload)">
+
+                    <div v-if="portfolioPayload.isInDb" class="col">
+                        <button v-if="isNewName(portfolioPayload) || isNewColour(portfolioPayload)"
+                            @click="updatePortfolio(portfolioPayload)" class="btn btn-primary">
+                            Update
+
+                        </button>
+
+                        <button v-else class="btn btn-secondary" disabled>
+                            Update
+                        </button>
+
+
+                    </div>
+                    <div v-else class="col">
+                        <button v-if="isNewName(portfolioPayload) && isNewColour(portfolioPayload)"
+                            @click="createPortfolio(portfolioPayload)" class="btn btn-primary">
+                            Create
+
+                        </button>
+
+                        <button v-else class="btn btn-secondary" disabled>
+                            Create
+                        </button>
+
                     </div>
 
-                    <div class="col">
-                        <button
-                            v-if="portfolioPayload.newName !== portfolioPayload.oldName || portfolioPayload.metaUpdated"
-                            @click="savePortfolio(portfolioPayload)" class="btn btn-primary">Save</button>
-                        <button v-else class="btn btn-secondary" disabled>Save</button>
-                    </div>
+
+
 
                     <div class="col">
                         <router-link :to="{ name: 'history' }">History</router-link>
@@ -67,31 +86,22 @@
                     <div class="col">
 
 
-                        <!-- todo role check config file -->
-                        <div class="col col-lg-1">
-                            <div v-if="this.role !== 'manager'">
+                        <div v-if="this.role !== roleBuildingManagerString">
 
-                                <button @click="deletePortfolio(portfolioPayload)"
-                                    class="btn btn-primary">Delete</button>
-
-                            </div>
-                            <div v-else>
-
-                                <button v-if="!this.isContentCleared" class="btn btn-primary"
-                                    @click="clearContentPortfolio(portfolioPayload)">
-                                    Clear content
-                                </button>
-                                <button v-else class="btn btn-secondary" disabled>Clear content</button>
-
-
-                            </div>
+                            <button @click="deletePortfolio(portfolioPayload)" class="btn btn-primary">Delete</button>
 
                         </div>
+                        <div v-else>
+
+                            <button v-if="!this.isContentCleared" class="btn btn-primary"
+                                @click="clearContentPortfolio(portfolioPayload)">
+                                Clear content
+                            </button>
+                            <button v-else class="btn btn-secondary" disabled>Clear content</button>
 
 
-
+                        </div>
                     </div>
-
 
                 </div>
                 <div v-show="portfolioPayload.isExpanded">
@@ -137,12 +147,8 @@ export default {
     name: "PortfolioList",
     data() {
         return {
-            expandedGroup: [],
             portfolios: {},
             isTempCreated: false,
-            timer: 1,
-            customContent: "customContent",
-            autoSave: false,
             isContentCleared: false,
             locations: {},
 
@@ -150,33 +156,33 @@ export default {
             portfolioColourPlaceholder: "todo",
 
             role: "",
+
             roleBuildingManagerString: process.env.VUE_APP_ROLE_BUILDING_MANAGER,
+            autoSave: false,
 
 
-            tmp: ["a", "b", "c"]
         };
     },
+
+
 
     async mounted() {
         await this.loadPortfolios();
     },
     methods: {
-        async updateEditorColor(portfolioPayload) {
-            // .oldName, portfolioPayload.colourHex
-            // let r = await apiColour.getColourHistory(portfolioPayload.oldName);
-            // let lastVal = undefined;
-            // for (const [key, value] of Object.entries(r["payload"]["value"])) {
-            //     console.log(key, value, typeof (key));
-            //     lastVal = value;
-            //     break;
-            // }
+        castPortfolio(name, colour, isExpanded, isInDb) {
+            return {
 
-            // if (lastVal === portfolioPayload.colourHex) {
-            //     console.log("same colour picked")
-            // } else {
-            // console.log("new colour")
-            portfolioPayload.metaUpdated = true
-            // }
+                "newName": name,
+                "oldName": name,
+
+                "newColour": colour,
+                "oldColour": colour,
+
+                "isExpanded": isExpanded,
+                "isInDb": isInDb,
+
+            }
 
         },
         async loadPortfolios() {
@@ -186,93 +192,97 @@ export default {
 
                 this.portfolios = Object.values(res["payload"]["portfolios"]);
 
-                this.portfolios.forEach(item => {
-                    return { ...item, "isCreated": true }
+                this.portfolios = this.portfolios.map(item => {
+
+                    return this.castPortfolio(
+                        item.name, item.colour, item.isExpanded, true
+                    )
+
                 });
 
             }
         },
         clearContentPortfolio(portfolioPayload) {
-            console.log("clear content", portfolioPayload)
+            console.log("todo clear content", portfolioPayload)
         },
-        // getAdditionalPortfolioFields() {
-        //     return {
-        //         "isCreated": false
-        //     }
-        // },
+        isNewColour(portfolioPayload) {
+            return portfolioPayload.oldColour !== portfolioPayload.newColour;
+        },
+        isNewName(portfolioPayload) {
+            return portfolioPayload.oldName !== portfolioPayload.newName;
+        },
         createRow() {
-            // todo  append row to top
+            // todo check if append row to top
 
-            // if (this.isTempCreated) {
-            //     return
-            // }
+            this.portfolios.push(
+                this.castPortfolio(
+                    this.portfolioNamePlaceholder,
+                    this.portfolioColourPlaceholder,
+                    false,
+                    false
+                )
+            );
 
-            // let currentSize = Object.keys(this.portfolios).length;
-
-            this.portfolios.push({
-                "newName": this.portfolioNamePlaceholder,
-                "oldName": this.portfolioNamePlaceholder,
-                "colour": this.portfolioColourPlaceholder,
-                "isExpanded": false,
-                "isCreated": false
-            });
             this.isTempCreated = true;
 
         },
-        // async patchPortfolio(portfolioPayload) {
+        isPortfolioNameValid(name) {
 
-        // }
-        async trueSavePortfolio(portfolioPayload) {
-            console.log("save");
+            return name && name.trim() !== ""
+        },
+        showMessage(content) {
+            this.$refs.green.setContent(content);
+            this.$refs.green.show();
 
-            let currentName = portfolioPayload.oldName;
-            let newName = portfolioPayload.newName;
-            console.log(newName === "")
-            if (newName === "") {
-                console.log("new name is empty")
-                return
+        },
+
+        async createPortfolio(portfolioPayload) {
+            console.log("creating portfolio");
+
+            // todo check in backend if newname != oldname && newcolour != old
+
+            if (!this.isPortfolioNameValid(portfolioPayload.newName)) {
+                console.log("portfolio name is not valid")
+                return false
             }
 
-            if (!currentName && newName !== "") {
-                // can create new
-                this.isTempCreated = false;
-            }
+            // can create new
+            this.isTempCreated = false;
 
-            let r = await apiPortfolio.createOrUpdatePortfolio(currentName, newName, portfolioPayload.colourHex);
+            let r = await apiPortfolio.createPortfolio(portfolioPayload.newName, portfolioPayload.newColour);
 
             if (r["payload"]["status"]) {
-                this.$refs.green.setContent("saved changes for " + newName);
-                this.$refs.green.show();
-
+                this.showMessage("new portfolio created " + portfolioPayload.newName);
             } else {
                 console.log("error saving")
             }
 
+
+            portfolioPayload.isInDb = true;
+
         },
-        async trueUpdatePortfolio(portfolioPayload) {
+        async updatePortfolio(portfolioPayload) {
             console.log("update");
 
-            let r = await apiPortfolio.patchPortoflios(portfolioPayload.oldName, portfolioPayload.newName, portfolioPayload.colourHex);
+            let params = {};
+
+            if (this.isNewName(portfolioPayload)) {
+                params["name"] = portfolioPayload.newName;
+            }
+
+            if (this.isNewColour(portfolioPayload)) {
+                params["colour"] = portfolioPayload.newColour;
+            }
+
+            console.log(params)
+            let r = await apiPortfolio.patchPortoflios(portfolioPayload.oldName, params);
 
             if (r["payload"]["status"]) {
-                this.$refs.green.setContent("saved changes for " + portfolioPayload.newName);
-                this.$refs.green.show();
+                this.showMessage("updated changes for " + portfolioPayload.newName);
 
             } else {
                 console.log("error saving")
             }
-        },
-        async savePortfolio(portfolioPayload) {
-            console.table("is cre", portfolioPayload.isCreated)
-
-            if (!portfolioPayload.isCreated) {
-                await this.trueSavePortfolio(portfolioPayload);
-                portfolioPayload.isCreated = true;
-
-            } else {
-                await this.trueUpdatePortfolio(portfolioPayload);
-            }
-
         },
         async deletePortfolio(portfolioPayload) {
 
@@ -307,10 +317,6 @@ export default {
                 alert("error deleting")
                 console.log("error delete")
             }
-
-        },
-        colorClicked(portfolioName, colourName) {
-            this.portfolios[portfolioName]["colour"] = colourName;
 
         },
         async selectRow(portfolioPayload) {
