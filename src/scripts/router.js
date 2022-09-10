@@ -9,10 +9,16 @@ import TestPage from '../views/test/TestPage.vue';
 import ForgotPassword from '../views/login/ForgotPassword.vue';
 import TermsOfUse from '../views/login/TermsOfUse.vue';
 import PrivacyPolicy from '../views/login/PrivacyPolicy.vue';
+import HistoryView from '../views/history/HistoryView.vue';
 
 export const router = createRouter({
   history: createWebHistory(),
   routes: [
+    {
+      path: '/history',
+      name: 'history',
+      component: HistoryView
+    },
     {
       path: '/login',
       name: 'login',
