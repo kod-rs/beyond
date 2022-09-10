@@ -1,18 +1,18 @@
 import { apiCalls } from './comm';
 
 
-// async function deleteLocation(i) {
+async function deleteColour(i) {
 
-//     return await apiCalls.handleNewResponse(
-//         await apiCalls.api.delete(
-//             "locations/" + i,
-//             JSON.stringify({
-//             }),
-//             apiCalls.get_auth_header()
-//         )
-//     );
+    return await apiCalls.handleNewResponse(
+        await apiCalls.api.delete(
+            "colour/" + i,
+            JSON.stringify({
+            }),
+            apiCalls.get_auth_header()
+        )
+    );
 
-// }
+}
 
 async function addColour(portfolio, colourHex) {
     /**
@@ -63,7 +63,7 @@ async function getColourHistory(portfolioName) {
 }
 
 export const apiColour = {
-    // deleteLocation,
+    deleteColour,
     addColour,
     getColourHistory
     // getLocationsFilterUsername
