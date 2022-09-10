@@ -38,8 +38,31 @@ async function getPortoflios() {
 
 }
 
+async function patchPortoflios(portfolioOldName, portfolioNewName, portfolioNewColour) {
+    console.log(portfolioOldName, portfolioNewName, portfolioNewColour)
+
+    return await apiCalls.handleNewResponse(
+        await apiCalls.api.patch(
+            `portfolio/${portfolioOldName}`,
+            // {
+            //     'name': portfolioNewName,
+            //     "colour": portfolioNewColour
+            // },
+            {
+                ...apiCalls.get_auth_header(),
+
+                'name': portfolioNewName,
+                "colour": portfolioNewColour
+            }
+        )
+    );
+
+}
+
+
 export const apiPortfolio = {
     createOrUpdatePortfolio,
     deletePortfolio,
-    getPortoflios
+    getPortoflios,
+    patchPortoflios
 }
