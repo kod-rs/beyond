@@ -15,20 +15,6 @@ async function deleteColour(i) {
 }
 
 async function addColour(portfolio, colourHex) {
-    /**
-     * for user
-     * for portfolio
-     * add to history
-     * 
-     * colours
-     *  portfolio [FK]
-     *  colours_log
-     *  
-     * 
-     */
-
-
-
     return await apiCalls.handleNewResponse(
         await apiCalls.api.post(
             "colour/",
@@ -40,17 +26,6 @@ async function addColour(portfolio, colourHex) {
     );
 
 }
-
-// async function getLocationsFilterUsername(pn) {
-
-//     return await apiCalls.handleNewResponse(
-//         await apiCalls.api.get(
-//             "locations/" + pn,
-//             apiCalls.get_auth_header()
-//         )
-//     );
-
-// }
 
 async function getColourHistory(portfolioName) {
     console.log("portfolio name", portfolioName)
@@ -66,5 +41,4 @@ export const apiColour = {
     deleteColour,
     addColour,
     getColourHistory
-    // getLocationsFilterUsername
 }
