@@ -15,6 +15,9 @@ def add_colour_to_user(portfolio, username, history_colour_id,timestamp_colour_c
     i.save()
     print("saved")
 
+def clear_history(username, portfolio):
+    User.objects.filter(username=username, portfolio=portfolio).delete()
+
 def add_colour_to_log(username, portfolio, colour_hex):
     # select * from api_user where username='a' and portfolio='a' order by timestamp_colour_change asc
 
@@ -32,16 +35,30 @@ def add_colour_to_log(username, portfolio, colour_hex):
     )
     ch.save()
 
-    u = User\
-        .objects\
-        .filter(portfolio=portfolio,username=username)\
-        .order_by('-timestamp_colour_change')\
-        .first()
+    if User.objects\
+        .filter(portfolio=portfolio,username=username).exists():
 
-    if ch.id == u.history_colour_id_id:
-        print("this is last entry in db, nothing is changed")
-        # todo
-        # return
+        u = User\
+            .objects\
+            .filter(portfolio=portfolio,username=username)\
+            .order_by('-timestamp_colour_change')\
+            .first()
+
+        if ch.id == u.history_colour_id_id:
+            print("this is last entry in db, nothing is changed")
+            return
+
+    print("cleanup")
+
+    User\
+        .objects\
+        .filter(
+            username=username,
+            portfolio=portfolio,
+            history_colour_id=ch.id
+        )\
+        .delete()
+
 
     print("new selected, changing")
     u = User.objects.create(
@@ -52,10 +69,6 @@ def add_colour_to_log(username, portfolio, colour_hex):
     )
     u.save()
 
-    print("cleanup")
-    #
-    # def get_colour_log(user, portfolio):
-
     count = User \
         .objects \
         .filter(portfolio=portfolio, username=username)\
@@ -64,11 +77,21 @@ def add_colour_to_log(username, portfolio, colour_hex):
         .count()
     print(f"{count=}")
 
+    if count > 10:
+        print("delete last")
+        User\
+            .objects\
+            .filter(portfolio=portfolio,username=username)\
+            .order_by('timestamp_colour_change')\
+            .first().delete()
+    # print(count.query)
 
 
-    if count == 11:
-        print("deleting last")
-        # .select_related("history_colour_id")
+
+
+    # if count == 11:
+    #     print("deleting last")
+    #     # .select_related("history_colour_id")
 
         # return t
 
