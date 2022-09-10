@@ -1,12 +1,12 @@
 from django.utils import timezone
 
 from backend.api.model.colourHistory import ColourHistory
-from backend.api.model.user import User
+from backend.api.model.portfoliocolouradapter import PortfolioColourAdapter
 
 
 def add_colour_to_user(
         portfolio, username, history_colour_id, timestamp_colour_change):
-    i = User.objects.create(
+    i = PortfolioColourAdapter.objects.create(
         portfolio=portfolio,
         username=username,
         history_colour_id=history_colour_id,
@@ -16,7 +16,7 @@ def add_colour_to_user(
 
 
 def clear_history(username, portfolio):
-    User.objects.filter(username=username, portfolio=portfolio).delete()
+    PortfolioColourAdapter.objects.filter(username=username, portfolio=portfolio).delete()
 
 
 def add_colour_to_log(username, portfolio, colour_hex):
@@ -31,10 +31,10 @@ def add_colour_to_log(username, portfolio, colour_hex):
     )
     ch.save()
 
-    if User.objects \
+    if PortfolioColourAdapter.objects \
             .filter(portfolio=portfolio, username=username).exists():
 
-        u = User \
+        u = PortfolioColourAdapter \
             .objects \
             .filter(portfolio=portfolio, username=username) \
             .order_by('-timestamp_colour_change') \
@@ -44,7 +44,7 @@ def add_colour_to_log(username, portfolio, colour_hex):
             print("this is last entry in db, nothing is changed")
             return
 
-    User \
+    PortfolioColourAdapter \
         .objects \
         .filter(
         username=username,
@@ -53,7 +53,7 @@ def add_colour_to_log(username, portfolio, colour_hex):
     ) \
         .delete()
 
-    u = User.objects.create(
+    u = PortfolioColourAdapter.objects.create(
         portfolio=portfolio,
         username=username,
         history_colour_id=ch,
@@ -61,7 +61,7 @@ def add_colour_to_log(username, portfolio, colour_hex):
     )
     u.save()
 
-    count = User \
+    count = PortfolioColourAdapter \
         .objects \
         .filter(portfolio=portfolio, username=username) \
         .values("history_colour_id_id") \
@@ -69,7 +69,7 @@ def add_colour_to_log(username, portfolio, colour_hex):
         .count()
 
     if count > 10:
-        User \
+        PortfolioColourAdapter \
             .objects \
             .filter(portfolio=portfolio, username=username) \
             .order_by('timestamp_colour_change') \
