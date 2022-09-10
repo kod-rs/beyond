@@ -10,6 +10,35 @@ from backend.api.view.comm import get_auth_ok_response_template
 
 class PortfolioView(APIView):
 
+
+    def patch(self, request, name):
+        print("LocationsView patch", name)
+
+        portfolio_new_name = request.data["name"]
+        portfolio_colour = request.data["colour"]
+
+        if "name" in request.data:
+            print("name in data")
+            portfolio_new_name = request.data["name"]
+
+        if "colour" in request.data:
+            print("has new colour")
+            portfolio_colour = request.data["colour"]
+
+        portfolio_name = name
+
+        r = create_or_update(
+            request.username,
+            portfolio_name,
+            portfolio_new_name,
+            portfolio_colour
+        )
+
+        response = get_auth_ok_response_template(request)
+        response["payload"]["status"] = r
+        return JsonResponse(response)
+
+
     def delete(self, request, name):
         print("PortfolioView delete")
 
