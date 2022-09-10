@@ -25,8 +25,8 @@ def main():
     comment = "#10: todo rewrite all api calls using prev interface"
     comment = "upd: add body & headers keys config"
     comment = "merge fix: #10"
-    comment = "wip: colour log"
     comment = "impl: colour log"
+    comment = "wip: colour log"
 
     if same_comment:
         if not comment:
