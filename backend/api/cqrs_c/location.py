@@ -11,8 +11,6 @@ def add(portfolio, section, location_type, latitude, longitude) -> bool:
 
     try:
         l = Location.objects.create(
-            # device_id=device_id,
-            # username=username,
             portfolio=p,
             section=section,
             type=location_type,
