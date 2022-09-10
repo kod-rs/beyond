@@ -1,4 +1,4 @@
-from backend.api.model.ip import IpCounter
+from backend.api.model_security.ip import IpCounter
 
 
 def log_user_auth_attempt(ip):
