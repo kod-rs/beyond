@@ -1,10 +1,15 @@
 from django.http import JsonResponse
 from rest_framework.views import APIView
 
-from backend.api.cqrs_c.colour import add_colour_to_log
+from backend.api.cqrs_c.colour import add_colour_to_log, clear_history
 from backend.api.cqrs_q.user import get_colour_log
 from backend.api.view.comm import get_auth_ok_response_template
 class ColourView(APIView):
+
+    def delete(self, request, abc):
+        clear_history(request.username, abc)
+        response = get_auth_ok_response_template(request)
+        return JsonResponse(response)
 
     def get(self, request, abc):
         print("colour get")
