@@ -1,13 +1,13 @@
 from backend.api.model.location import Location
 from backend.api.cqrs_q.portfolio import get_portfolio
 
-def add(portfolio, section, location_type, latitude, longitude) -> bool:
+def add(username, portfolio, section, location_type, latitude, longitude) -> bool:
     print(portfolio, section, location_type, latitude, longitude)
 
     # todo if portfolio does not exist create it,
     #  check if role is manager and how many portfolios exist
 
-    p = get_portfolio(portfolio)
+    p = get_portfolio(username, portfolio)
 
     try:
         l = Location.objects.create(
