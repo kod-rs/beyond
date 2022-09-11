@@ -30,9 +30,7 @@ class LocationsView(APIView):
     def get(self, request, pn):
 
         if not pn:
-            # all_locatio/ns = get_all()
-            payload = {"status": False, "content": "all_locations"}
-            result = payload
+            result = {"status": False, "content": "all_locations"}
         else:
             # api.beyond.com/portfolios/p1/locations/
             print()
@@ -61,25 +59,23 @@ class LocationsView(APIView):
             payload = {"status": True, "content": r}
             result = payload
 
-
         response["payload"] = result
         return JsonResponse(response)
 
-    # todo add type & section
+    # todo add type & section as param
     def post(self, request):
-        print()
         print("post locations")
 
         response = get_auth_ok_response_template(request)
 
-        print(f"{_check_request_data(request.data)=}")
-        print(f"{request.synchronizer_token_match=}")
-        print(f"{request.body=}")
+        # print(f"{_check_request_data(request.data)=}")
+        # print(f"{request.synchronizer_token_match=}")
 
+        # todo
         if (
-                not _check_request_data(request.data)
-                or not request.synchronizer_token_match
-                or not request.body
+                # not _check_request_data(request.data) or
+                not request.synchronizer_token_match
+                # or not request.body
         ):
             print('add not valid')
             payload = {"status": False}
@@ -87,14 +83,14 @@ class LocationsView(APIView):
             result = payload
 
         else:
-            body_content = bytes_to_json(request.body)
 
             status = add(
-                body_content["portfolio"],
-                body_content["section"],
-                body_content["type"],
-                body_content["latitude"],
-                body_content["longitude"]
+                request.username,
+                request.data["portfolio"],
+                request.data["section"],
+                request.data["type"],
+                request.data["latitude"],
+                request.data["longitude"]
             )
 
             payload = {"status": status}
