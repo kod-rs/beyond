@@ -1,52 +1,46 @@
 <template>
-    <div>
-        <div>
-            enter location
+  <div>
+    <div>enter location</div>
 
-        </div>
+    <InputAutocomplete
+      @input="userTypedLocation"
+      ref="inputautocompletefield"
+      :initItems="[]"
+    >
+    </InputAutocomplete>
 
-        <InputAutocomplete @input="userTypedLocation" ref="inputautocompletefield" :initItems="[]">
-
-        </InputAutocomplete>
-
-        <button @click="buttonClicked">search</button>
-
-    </div>
+    <button @click="buttonClicked">search</button>
+  </div>
 </template>
 
 <script>
-import InputAutocomplete from './../form/InputAutocomplete.vue';
+import InputAutocomplete from "./../form/InputAutocomplete.vue";
 import { jsonManager } from "../../scripts/json_manager";
 
 export default {
-    components: {
-        InputAutocomplete
+  components: {
+    InputAutocomplete,
+  },
+  data() {
+    return {};
+  },
+  methods: {
+    buttonClicked() {
+      let location = this.$refs.inputautocompletefield.getSearch();
+      console.log("search for location:", location);
     },
-    data() {
-        return {
-        }
+    userTypedLocation(location) {
+      console.log("new location typed", location);
     },
-    methods: {
-        buttonClicked() {
-            let location = this.$refs.inputautocompletefield.getSearch();
-            console.log("search for location:", location)
+    async getLocations() {
+      let c = await jsonManager.getLocations();
+      this.$refs.inputautocompletefield.updateItems(c);
+    },
+  },
+  async mounted() {
+    this.getLocations();
 
-        },
-        userTypedLocation(location) {
-            console.log("new location typed", location)
-        },
-        async getLocations() {
-            let c = await jsonManager.getLocations();
-            this.$refs.inputautocompletefield.updateItems(c);
-        },
-
-    }
-    ,
-    async mounted() {
-        this.getLocations();
-
-        this.$refs.inputautocompletefield.setPlaceholder("type location");
-
-    }
-}
+    this.$refs.inputautocompletefield.setPlaceholder("type location");
+  },
+};
 </script>
