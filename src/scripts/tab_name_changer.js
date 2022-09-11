@@ -15,21 +15,17 @@ function setIntervalDriver(params) {
 
 }
 
-
-function tabChangedDriver(
+function visibleDefaultHiddenCustom(
     visible,
     hidden
-) {
-
-    let visibleDriver = setIntervalDriver(
-        visible)
+){
 
     let hiddenDriver = null;
 
     document.addEventListener("visibilitychange", function () {
 
         if (document.hidden) {
-            clearInterval(visibleDriver);
+            // clearInterval(visibleDriver);
 
             hiddenDriver = setIntervalDriver(
                 hidden
@@ -38,16 +34,51 @@ function tabChangedDriver(
         } else {
 
             clearInterval(hiddenDriver);
+            document.title = visible;
 
-            visibleDriver = setIntervalDriver(
-                visible
-            )
+            // visibleDriver = setIntervalDriver(
+            //     visible
+            // )
 
         }
 
     });
 
 }
+
+
+// function tabChangedDriver(
+//     visible,
+//     hidden
+// ) {
+
+//     let visibleDriver = setIntervalDriver(
+//         visible)
+
+//     let hiddenDriver = null;
+
+//     document.addEventListener("visibilitychange", function () {
+
+//         if (document.hidden) {
+//             clearInterval(visibleDriver);
+
+//             hiddenDriver = setIntervalDriver(
+//                 hidden
+//             )
+
+//         } else {
+
+//             clearInterval(hiddenDriver);
+
+//             visibleDriver = setIntervalDriver(
+//                 visible
+//             )
+
+//         }
+
+//     });
+
+// }
 
 // function shuffle(prev, wordArray) {
 
@@ -93,21 +124,21 @@ function tabChangedDriver(
 //     }
 // }
 
-function oneUp(word) {
+// function oneUp(word) {
 
-    return Array(word.length).fill(word.toLowerCase()).map((e, i) => {
-        return e.slice(0, i) + e.charAt(i).toUpperCase() + e.slice(i + 1)
-    });
+//     return Array(word.length).fill(word.toLowerCase()).map((e, i) => {
+//         return e.slice(0, i) + e.charAt(i).toUpperCase() + e.slice(i + 1)
+//     });
 
-}
+// }
 
-function oneDown(word) {
+// function oneDown(word) {
 
-    return Array(word.length).fill(word.toUpperCase()).map((e, i) => {
-        return e.slice(0, i) + e.charAt(i).toLowerCase() + e.slice(i + 1)
-    });
+//     return Array(word.length).fill(word.toUpperCase()).map((e, i) => {
+//         return e.slice(0, i) + e.charAt(i).toLowerCase() + e.slice(i + 1)
+//     });
 
-}
+// }
 
 function letters(word) {
     return word.split("");
@@ -115,21 +146,21 @@ function letters(word) {
 
 export const activate_tab_name_changer = () => {
 
-    let visibleTitles = oneDown(appName)
-    visibleTitles.push(...oneUp(appName));
+    // let visibleTitles = oneDown(appName)
+    // visibleTitles.push(...oneUp(appName));
 
     let hiddenTitles = letters(appName);
 
-    let visibleCountdown = 1000;
+    // let visibleCountdown = 1000;
     let hiddenCountdown = 200;
 
     onload = () => {
 
-        let visible = {
-            "index": 0,
-            "titles": visibleTitles,
-            "countdown": visibleCountdown
-        };
+        // let visible = {
+        //     "index": 0,
+        //     "titles": visibleTitles,
+        //     "countdown": visibleCountdown
+        // };
 
         let hidden = {
             "index": 0,
@@ -137,12 +168,14 @@ export const activate_tab_name_changer = () => {
             "countdown": hiddenCountdown
         };
 
+        visibleDefaultHiddenCustom("Beyond", hidden)
 
-        tabChangedDriver(
-            visible,
-            hidden
 
-        );
+        // tabChangedDriver(
+        //     visible,
+        //     hidden
+
+        // );
     };
 
 }
