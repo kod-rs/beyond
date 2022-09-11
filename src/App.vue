@@ -1,9 +1,18 @@
 <template>
 
+
+<w-app>
   <TestNavigation></TestNavigation>
 
   <router-view>
   </router-view>
+
+  <!-- All your app content goes here. -->
+
+  <!-- Also try to add a button! -->
+  <!-- <w-button>My Button</w-button> -->
+</w-app>
+
 
 </template>
 
@@ -11,13 +20,17 @@
 @import "https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css";
 /* @import "//cdn.datatables.net/1.12.1/css/jquery.dataTables.min.css"; */
 @import "https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css";
+
+/* html {
+  filter: invert(100%);
+} */
 </style>
 
 <script>
 
 import TestNavigation from './components/navigation/TestNavigation.vue';
 
-import { router } from './scripts/router';
+import { router } from './router/router';
 import {
   INACTIVE_THRESHOLD,
   TIME_RESOLUTION
