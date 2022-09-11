@@ -1,22 +1,22 @@
 <template>
 
-    <PublicBase>
+    <BasePublicTemplate>
         <LoginForm></LoginForm>
-        <Links></Links>
-    </PublicBase>
+        <TheLinks></TheLinks>
+    </BasePublicTemplate>
 
 </template>
 
 
 <script>
-import LoginForm from "../../components/login/LoginForm.vue";
-import PublicBase from "../../components/login/PublicBase.vue";
-import Links from "@/components/login/Links.vue";
+import LoginForm from "@/components/LoginForm.vue";
+import BasePublicTemplate from "@/components/BasePublicTemplate.vue";
+import TheLinks from "@/components/TheLinks.vue";
 
 export default {
     data() {
         return {};
     },
-    components: { LoginForm, PublicBase, Links }
+    components: { LoginForm, BasePublicTemplate, TheLinks }
 };
 </script> 
