@@ -4,6 +4,18 @@
 
 const { defineConfig } = require('@vue/cli-service')
 module.exports = defineConfig({
+  // https://antoniandre.github.io/wave-ui/getting-started#standard-installation
+  // transpileDependencies: ['wave-ui'], // ! \\
+
+  // // You don't need this part if you haven't done step 2.
+  // // ----------------------------------------------------
+  // css: {
+  //   loaderOptions: {
+  //     // `additionalData` was called `prependData` prior sass-loader 9.
+  //     sass: { additionalData: '@import "@/scss/variables.scss";' }
+  //   }
+  // },
+
   transpileDependencies: true,
   //  devServer: {
   //    proxy: 'http://localhost:8000/'
