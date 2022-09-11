@@ -27,6 +27,7 @@ def main():
     comment = "merge fix: #10"
     comment = "impl: colour log"
     comment = "wip: colour log"
+    comment = 'ref: map'
 
     if same_comment:
         if not comment:
