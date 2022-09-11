@@ -36,7 +36,8 @@
     "vue-router": "^4.1.2",
     "vue3-openlayers": "^0.1.68",
     "vue3-simple-typeahead": "^1.0.9",
-    "vuex": "^4.0.2"
+    "vuex": "^4.0.2",
+    "wave-ui": "^2.42.2"
   },
   "devDependencies": {
     "@babel/core": "^7.12.16",
@@ -67,6 +68,10 @@
     "json-loader": "^0.5.4",
     "merge-stream": "2.0.0",
     "path": "^0.12.7",
+    "pug": "^3.0.2",
+    "pug-plain-loader": "^1.1.0",
+    "sass": "^1.54.9",
+    "sass-loader": "^10.3.1",
     "style-loader": "^3.3.1",
     "vue-cli-plugin-vuetify": "~2.5.5",
     "vue-loader": "^17.0.0",
