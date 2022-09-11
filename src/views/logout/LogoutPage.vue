@@ -1,6 +1,6 @@
 <template>
 
-    <PublicBase>
+    <BasePublicTemplate>
 
         <div class="d-flex align-items-center mb-3 pb-1">
             <i class="fas fa-cubes fa-2x me-3" style="color: #ff6219;"></i>
@@ -11,14 +11,14 @@
             </div>
         </div>
 
-    </PublicBase>
+    </BasePublicTemplate>
 
 </template>
 
 
 <script>
-import PublicBase from "../../components/login/PublicBase.vue";
-import { router } from '../../scripts/router';
+import BasePublicTemplate from "@/components/BasePublicTemplate.vue";
+import { router } from '../../router/router';
 import { apiAuth } from '../../scripts/api/auth';
 
 export default {
@@ -34,7 +34,7 @@ export default {
         });
 
     },
-    components: { PublicBase }
+    components: { BasePublicTemplate }
 
 };
 </script> 
