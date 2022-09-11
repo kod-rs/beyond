@@ -17,5 +17,7 @@ class JumperMiddleware:
         request.refresh_token = "tmp"
         request.username = "a"
         request.ip = "127.0.0.1"
+        request.synchronizer_token_match = True
+        request.role = "role 1"
 
         return self.get_response(request)
