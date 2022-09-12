@@ -28,6 +28,7 @@ def main():
     comment = "impl: colour log"
     comment = "wip: colour log"
     comment = 'ref: map'
+    comment = "wip: master detail"
 
     if same_comment:
         if not comment:
