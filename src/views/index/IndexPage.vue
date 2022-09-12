@@ -221,8 +221,9 @@ export default {
 
         for (const [key, value] of Object.entries(pl)) {
           let hexColour = value["colourHexEncoded"];
-          let r = (await apiLocation.getLocationsFilterUsername(key)).payload
-            .content;
+
+          let r = (await apiLocation.getAllLocationsInPortfolio(value.name))
+            .payload.content;
           let marker = this.createMarker(hexColour);
 
           this.drawLocations(r, marker, key);
