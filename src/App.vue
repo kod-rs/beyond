@@ -1,19 +1,14 @@
 <template>
+  <w-app>
+    <TestNavigation></TestNavigation>
 
+    <router-view> </router-view>
 
-<w-app>
-  <TestNavigation></TestNavigation>
+    <!-- All your app content goes here. -->
 
-  <router-view>
-  </router-view>
-
-  <!-- All your app content goes here. -->
-
-  <!-- Also try to add a button! -->
-  <!-- <w-button>My Button</w-button> -->
-</w-app>
-
-
+    <!-- Also try to add a button! -->
+    <!-- <w-button>My Button</w-button> -->
+  </w-app>
 </template>
 
 <style>
@@ -21,50 +16,49 @@
 /* @import "//cdn.datatables.net/1.12.1/css/jquery.dataTables.min.css"; */
 @import "https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css";
 
-/* html {
+@import "https://cdn.jsdelivr.net/npm/@mdi/font@5.8.55/css/materialdesignicons.min.css";
+@import "https://use.fontawesome.com/releases/v5.2.0/css/all.css"; /* html {
   filter: invert(100%);
 } */
 </style>
 
 <script>
+import TestNavigation from "./components/navigation/TestNavigation.vue";
 
-import TestNavigation from './components/navigation/TestNavigation.vue';
-
-import { router } from './router/router';
-import {
-  INACTIVE_THRESHOLD,
-  TIME_RESOLUTION
-} from './scripts/constants';
+import { router } from "./router/router";
+import { INACTIVE_THRESHOLD, TIME_RESOLUTION } from "./scripts/constants";
 
 import { activate_tab_name_changer } from "./scripts/tab_name_changer";
-import { apiAuth } from './scripts/api/auth';
+import { apiAuth } from "./scripts/api/auth";
 
 export default {
-  name: 'app',
+  name: "app",
   components: { TestNavigation },
   data() {
     return {
       isInactive: false,
       userActivityThrottlerTimeout: null,
-      userActivityTimeout: null
+      userActivityTimeout: null,
     };
   },
   mounted() {
-    this.importScript("https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js");
-    this.importScript("https://cdn.jsdelivr.net/npm/chart.js@3.0.2/dist/chart.min.js");
+    this.importScript(
+      "https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+    );
+    this.importScript(
+      "https://cdn.jsdelivr.net/npm/chart.js@3.0.2/dist/chart.min.js"
+    );
     this.importScript("https://code.jquery.com/jquery-3.5.1.slim.min.js");
     // this.importScript("https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js");
-
 
     activate_tab_name_changer();
   },
 
   methods: {
     importScript(path) {
-      let scriptElement = document.createElement('script')
-      scriptElement.setAttribute('src', path)
+      let scriptElement = document.createElement("script");
+      scriptElement.setAttribute("src", path);
       document.head.appendChild(scriptElement);
-
     },
 
     activateActivityTracker() {
@@ -105,13 +99,13 @@ export default {
     },
 
     inactiveUserAction() {
-      if (window.location.href.endsWith('login')) {
+      if (window.location.href.endsWith("login")) {
         return;
       }
       apiAuth.logout();
-      router.push('login');
+      router.push("login");
       this.isInactive = true;
-    }
+    },
   },
 
   beforeMount() {
@@ -122,7 +116,7 @@ export default {
     this.deactivateActivityTracker();
     clearTimeout(this.userActivityTimeout);
     clearTimeout(this.userActivityThrottlerTimeout);
-    window.sessionStorage.removeItem('user');
-  }
+    window.sessionStorage.removeItem("user");
+  },
 };
 </script>
