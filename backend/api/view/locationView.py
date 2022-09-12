@@ -4,7 +4,7 @@ from django.http import JsonResponse
 from rest_framework.views import APIView
 
 from backend.api.comm.comm import bytes_to_json
-from backend.api.cqrs_c.location import add, delete
+from backend.api.cqrs_c.location import add, delete, update
 from backend.api.cqrs_q.location import get_user_portfolio
 from backend.api.mode.type_validator import _check_request_data
 from backend.api.view.comm import get_auth_ok_response_template
@@ -17,47 +17,47 @@ def validate_actions(correct_actions, to_check_actions):
 
 
 class LocationsView(APIView):
+    def patch(self, request, portfolio, section, _type):
+        print("LocationsView patch")
 
-    def delete(self, request):
-        print("delete single")
+        response = get_auth_ok_response_template(request)
+        response["payload"]["status"] = update(request.username, portfolio, section, _type, request.data)
+        return JsonResponse(response)
 
-        body_content = bytes_to_json(request.body)
+    # path("location/<str:portfolio>/<str:section>/<str:type>", LocationsView.as_view()),
 
-        return {
-            "status": delete(body_content["index"])
-        }
+    def delete(self, request, portfolio, section, _type):
+        print("delete single", portfolio, section, _type)
 
-    def get(self, request, pn):
+        response = get_auth_ok_response_template(request)
 
-        if not pn:
-            result = {"status": False, "content": "all_locations"}
-        else:
-            # api.beyond.com/portfolios/p1/locations/
-            print()
-            # print("get locations by username")
-            # todo check if get all or for this user
+        r = delete(request.username,portfolio, section, _type)
 
-            response = get_auth_ok_response_template(request)
+        response["payload"]["status"] = r
+        return JsonResponse(response)
 
-            username_locations = get_user_portfolio(request.username,
-                                                    portfolio_name=pn)
+    def get(self, request, portfolio,section, _type):
+        print(f"locations get {portfolio=} {section=} {_type=}")
 
-            r = {}
-            j = 0
-            for i in username_locations:
-                r[j] = {
-                    # "pk": i.name,
-                    "section": i.section,
-                    "type": i.type,
-                    # todo refactor to latitude & longitude
-                    "lat": i.latitude,
-                    "lon": i.longitude,
-                }
+        response = get_auth_ok_response_template(request)
 
-                j += 1
+        username_locations = get_user_portfolio(request.username,portfolio)
 
-            payload = {"status": True, "content": r}
-            result = payload
+        r = {}
+        j = 0
+        for i in username_locations:
+            r[j] = {
+                "section": i.section,
+                "type": i.type,
+                # todo refactor to latitude & longitude
+                "lat": i.latitude,
+                "lon": i.longitude,
+            }
+
+            j += 1
+
+        payload = {"status": True, "content": r}
+        result = payload
 
         response["payload"] = result
         return JsonResponse(response)
@@ -93,7 +93,9 @@ class LocationsView(APIView):
                 request.data["longitude"]
             )
 
-            payload = {"status": status}
+            r = status == "created"
+
+            payload = {"status": r, "reason": status}
             result = payload
 
         response["payload"] = result
