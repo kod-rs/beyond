@@ -36,7 +36,7 @@ export default {
 
 <style>
 #map {
-  width: 45%;
+  width: 90%;
   height: 90%;
   position: fixed;
   border: 1px solid #ccc;
