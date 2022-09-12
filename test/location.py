@@ -27,6 +27,7 @@ def create():
     headers = get_valid_credentials()
 
     t = requests.post(url, headers=headers, data={
+        "portfolio": "a",
         "section": str(random.randint(1,10)),
         "type": str(random.randint(1,10)),
         "latitude": str(random.randint(1,10)),
@@ -36,22 +37,41 @@ def create():
 
     print(json.dumps(json.loads(t.text), indent=4, sort_keys=True))
 
+def patch():
+    url = "http://localhost:8000/location/a/4/2"
+    # headers = get_valid_credentials()
+
+    t = requests.patch(url, headers={
+
+    }, data={
+        "portfolio": "b",
+        # "section": str(random.randint(1, 10)),
+        # "type": str(random.randint(1, 10)),
+        "latitude": 2,
+        "longitude": 1111111
+    }, verify=False)
+    print(t)
+    print(json.dumps(json.loads(t.text), indent=4, sort_keys=True))
+
 
 def delete():
-    # url = "http://localhost:8000/locations/"
-    url = "http://localhost:8000/locations/2"
-    headers = get_valid_credentials()
+    url = "http://localhost:8000/location/a/7/7"
+    # headers = get_valid_credentials()
 
-    t = requests.delete(url, headers=headers, data={
+    t = requests.delete(url, headers={
+
+    }, data={
 
     }, verify=False)
-
+    print(t)
     print(json.dumps(json.loads(t.text), indent=4, sort_keys=True))
+
 
 def main():
     # get_all_locations()
     # create()
-    delete()
+    # delete()
+    patch()
 
 if __name__ == '__main__':
     main()
