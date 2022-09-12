@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.urls import path
 from rest_framework import routers
 
-from backend.api.view.locationsView import LocationsView
+from backend.api.view.locationView import  LocationView
 from backend.api.view.loginView import LoginView
 from backend.api.view.logoutView import LogoutView
 from backend.api.view.indexView import IndexView
@@ -34,8 +34,11 @@ urlpatterns = [
     path("colour/", ColourView.as_view()),
     path("colour/<str:abc>", ColourView.as_view()),
 
-    path("locations/<str:pn>", LocationsView.as_view()),
-    path("locations/", LocationsView.as_view()),
+    path("location/<str:portfolio>", LocationView.as_view()),
+    path("location/<str:portfolio>/<str:section>/<str:_type>", LocationView.as_view()),
+
+    # path("location/<str:pn>", LocationsView.as_view()),
+    path("location/", LocationView.as_view()),
 
     path('api/admin/', admin.site.urls),
 
