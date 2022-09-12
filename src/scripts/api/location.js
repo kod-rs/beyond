@@ -1,24 +1,48 @@
 import { apiCalls } from './comm';
 
+async function patchLocation(
+    portfolioName,
+    section,
+    type
+    
+    , params) {
+    console.log({
+        ...apiCalls.get_auth_header(),
+        ...params
+    })
+    return await apiCalls.handleNewResponse(
+        await apiCalls.api.patch(
+            `location/${portfolioName}/${section}/${type}`,
+            {
+                ...apiCalls.get_auth_header(),
+                ...params
 
-// async function deleteLocation(i) {
+            }
+        )
+    );
 
-//     return await apiCalls.handleNewResponse(
-//         await apiCalls.api.delete(
-//             "locations/" + i,
-//             JSON.stringify({
-//             }),
-//             apiCalls.get_auth_header()
-//         )
-//     );
+}
 
-// }
+async function deleteLocation(
+    portfolioName,
+    section,
+    type,
+    ) {
+    // todo csrf
+
+    return await apiCalls.handleNewResponse(
+        await apiCalls.api.delete(
+            `location/${portfolioName}/${section}/${type}`,
+            apiCalls.get_auth_header()
+        )
+    );
+}
 
 async function addLocation(portfolio, section, type, latitude, longitude, csrfToken) {
 
     return await apiCalls.handleNewResponse(
         await apiCalls.api.post(
-            "locations/",
+            "location/",
             JSON.stringify({
                 portfolio,
                 type, section, latitude, longitude, synchronizer_token: csrfToken
@@ -29,11 +53,31 @@ async function addLocation(portfolio, section, type, latitude, longitude, csrfTo
 
 }
 
-async function getLocationsFilterUsername(pn) {
+async function getLocation(
+    portfolioName,
+    section,
+    type
+) {
 
     return await apiCalls.handleNewResponse(
         await apiCalls.api.get(
-            "locations/" + pn,
+            // "location/" + pn,
+            `location/${portfolioName}/${section}/${type}`,
+            apiCalls.get_auth_header()
+        )
+    );
+
+}
+
+
+async function getAllLocationsInPortfolio(
+    portfolioName,
+) {
+
+    return await apiCalls.handleNewResponse(
+        await apiCalls.api.get(
+            // "location/" + pn,
+            `location/${portfolioName}`,
             apiCalls.get_auth_header()
         )
     );
@@ -43,7 +87,10 @@ async function getLocationsFilterUsername(pn) {
 export const apiLocation = {
     // deleteLocation,
     addLocation,
-    getLocationsFilterUsername
+    getLocation,
+    getAllLocationsInPortfolio,
+    patchLocation,
+    deleteLocation
 }
 
 
