@@ -16,7 +16,7 @@ def validate_actions(correct_actions, to_check_actions):
         to_check_actions)
 
 
-class LocationsView(APIView):
+class LocationView(APIView):
     def patch(self, request, portfolio, section, _type):
         print("LocationsView patch")
 
@@ -36,7 +36,36 @@ class LocationsView(APIView):
         response["payload"]["status"] = r
         return JsonResponse(response)
 
-    def get(self, request, portfolio,section, _type):
+    def get(self, request, portfolio=None,section=None, _type=None):
+        print("location get")
+        response = get_auth_ok_response_template(request)
+
+        if portfolio and not section and not _type:
+            print(f"get all locations for {portfolio=}")
+
+            username_locations = get_user_portfolio(request.username, portfolio)
+
+            r = {}
+            j = 0
+            for i in username_locations:
+                r[j] = {
+                    "section": i.section,
+                    "type": i.type,
+                    # todo refactor to latitude & longitude
+                    "lat": i.latitude,
+                    "lon": i.longitude,
+                }
+
+                j += 1
+
+            payload = {"status": True, "content": r}
+            result = payload
+
+            response["payload"] = result
+            return JsonResponse(response)
+
+        print("todo")
+
         print(f"locations get {portfolio=} {section=} {_type=}")
 
         response = get_auth_ok_response_template(request)
