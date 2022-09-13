@@ -1,38 +1,57 @@
 from django.http import JsonResponse
 from rest_framework.views import APIView
 
-from backend.api.cqrs_c.colour import add_colour_to_log, clear_history
+from backend.api.cqrs_c.colour import add_colour_to_log, \
+    delete_portfolio_colour_entries, get_all_colours, get_last_colour
 from backend.api.cqrs_q.user import get_colour_log
 from backend.api.view.comm import get_auth_ok_response_template
+
+# from backend.api.model.portfoliocolouradapter import PortfolioColourAdapter
+# from backend.api.model.colourHistory import ColourHistory
+# from backend.api.model.c
+
 class ColourView(APIView):
 
-    def delete(self, request, abc):
-        print("colour delete")
-        clear_history(request.username, abc)
+    def delete(self, request, name):
+        print(f"colour delete {name=}", request.data)
+        # de
+        # portfolio = request.data["portfolio"]
         response = get_auth_ok_response_template(request)
+        response["payload"] = delete_portfolio_colour_entries(request.username, name)
         return JsonResponse(response)
 
-    def get(self, request, abc):
-        print("colour get")
-
-        t = get_colour_log(request.username, abc)
-
-        r = {
-            str(i.timestamp_colour_change): i.history_colour_id.colour_hex_value for i in t
-        }
-
+    def get(self, request, name):
+        print(f"colour get {name=} {request.data=}")
         response = get_auth_ok_response_template(request)
-        response["payload"]["status"] = True
-        response["payload"]["value"] = r
+
+        if not request.data:
+            response["payload"] = get_all_colours(request.username, name)
+
+        elif request.data["options"] == "last":
+            print("last")
+            response["payload"] = get_last_colour(request.username, name)
+
+        print(response)
+
+
+        # t = get_colour_log(request.username, name)
+        #
+        # r = {
+        #     str(i.timestamp):
+        #         i.colour.colour for i in t
+        # }
+
+        # response["payload"]["status"] = True
         return JsonResponse(response)
 
-    def post(self, request):
-        print("colour post")
-        print(request.data)
+    def post(self, request, name):
+        print(f"colour post {name=}")
+        # print(request.data)
         response = get_auth_ok_response_template(request)
 
         portfolio = request.data["portfolio"]
-        colour_hex = request.data["colourHex"]
-        add_colour_to_log(request.username, portfolio, colour_hex)
+        # colour_hex = request.data["colourHex"]
+        response["payload"] =add_colour_to_log(request.username, portfolio, name)
+         # response
 
         return JsonResponse(response)
