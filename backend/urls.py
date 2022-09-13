@@ -32,11 +32,10 @@ urlpatterns = [
     path('logout/', LogoutView.as_view()),
 
     path("colour/", ColourView.as_view()),
-    path("colour/<str:abc>", ColourView.as_view()),
+    path("colour/<str:name>", ColourView.as_view()),
 
     path("location/<str:portfolio>", LocationView.as_view()),
     path("location/<str:portfolio>/<str:section>/<str:_type>", LocationView.as_view()),
-
     # path("location/<str:pn>", LocationsView.as_view()),
     path("location/", LocationView.as_view()),
 
