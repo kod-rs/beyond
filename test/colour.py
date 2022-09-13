@@ -2,12 +2,15 @@ import json
 import random
 import requests
 
-url = "http://localhost:8000/colour"
+url = "http://localhost:8000/temperature"
 
-def get_last(portfolio):
+def get_last():
     t = requests.get(
-        f"{url}/{portfolio}",
+        f"{url}/",
         data={
+            "section": "section_1",
+            "type": "type_1",
+            "portfolio": "portfolio_1",
             "options": "last"
         },
         verify=False
@@ -15,20 +18,29 @@ def get_last(portfolio):
 
     print(json.dumps(json.loads(t.text), indent=4, sort_keys=True))
 
-def get_all(portfolio):
+def get_all():
     t = requests.get(
-        f"{url}/{portfolio}",
+        f"{url}/",
+        data={
+            "section": "section_1",
+            "type": "type_1",
+            "portfolio": "portfolio_1"
+        },
         verify=False
     )
 
     print(json.dumps(json.loads(t.text), indent=4, sort_keys=True))
 
-def post(portfolio, colour):
+def post(colour,portfolio_name, section, _type):
 
     t = requests.post(
         f"{url}/{colour}",
         data={
-            "portfolio": portfolio
+            "portfolio": portfolio_name,
+            "section": section,
+            "type": _type,
+
+            # "portfolio": portfolio
         },
         verify=False
     )
@@ -62,11 +74,11 @@ def delete(portfolio):
     print(json.dumps(json.loads(t.text), indent=4, sort_keys=True))
 
 def main():
-    # for i in range(15):
-    #     post(portfolio="portfolio_1", colour=str(i))
-    # delete("portfolio_1")
-    # get_all("portfolio_1")
-    get_last("portfolio_1")
+    # for i in range(10):
+    #     post(str(i * 7.5), "portfolio_1", "section_1", "type_1")
+
+    get_all()
+    get_last()
 
 if __name__ == '__main__':
     main()
