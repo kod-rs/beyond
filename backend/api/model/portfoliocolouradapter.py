@@ -1,15 +1,17 @@
 from django.db import models
 
 from backend.api.model.colourHistory import ColourHistory
+from backend.api.model.portfolio import Portfolio
 
 
 class PortfolioColourAdapter(models.Model):
     # alternative primary key
-    portfolio = models.CharField(max_length=200, blank=True, null=True)
-    username = models.CharField(max_length=200, blank=True, null=True)
+    portfolio = models.ForeignKey(Portfolio, on_delete=models.CASCADE)
+    # portfolio = models.CharField(max_length=200, blank=True, null=True)
+    # username = models.CharField(max_length=200, blank=True, null=True)
 
     # foreign key
-    history_colour_id = models.ForeignKey(
+    colour = models.ForeignKey(
         ColourHistory,
         blank=True,
         null=True,
@@ -17,4 +19,4 @@ class PortfolioColourAdapter(models.Model):
     )
 
     # value
-    timestamp_colour_change = models.DateTimeField(auto_now_add=True)
+    timestamp = models.DateTimeField(auto_now_add=True)
