@@ -1,14 +1,11 @@
 from django.http import JsonResponse
 from rest_framework.views import APIView
 
-from backend.api.cqrs_c.colour import add_colour_to_log, \
-    delete_portfolio_colour_entries, get_all_colours, get_last_colour
-from backend.api.cqrs_q.user import get_colour_log
+from backend.api.cqrs_c.portfolio_colour_adapter import \
+    delete_portfolio_colour_entries, get_all_colours, get_last_colour, \
+    add_colour_to_log
 from backend.api.view.comm import get_auth_ok_response_template
 
-# from backend.api.model.portfoliocolouradapter import PortfolioColourAdapter
-# from backend.api.model.colourHistory import ColourHistory
-# from backend.api.model.c
 
 class ColourView(APIView):
 

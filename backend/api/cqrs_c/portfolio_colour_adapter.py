@@ -7,22 +7,23 @@ from backend.api.model.portfolio import Portfolio
 from backend.api.model.portfoliocolouradapter import PortfolioColourAdapter
 from backend.api.comm.constants import EXISTS, CREATED, NOT_EXISTS
 
+
 def is_portfolio_colour_entry_present(username, portfolio):
     if not PortfolioColourAdapter.objects.filter(portfolio__username=username, portfolio__name=portfolio).exists():
         return False
     return True
 
+
 def get_portfolio_colour_adapter(username, portfolio):
     print(f"{username=} {portfolio=}")
     if not PortfolioColourAdapter.objects.filter(portfolio__username=username, portfolio__name=portfolio).exists():
         return NOT_EXISTS
-    # print(PortfolioColourAdapter.objects.filter(portfolio__username=username, portfolio__name=portfolio).query)
-    # print(PortfolioColourAdapter.objects.filter(portfolio__username=username, portfolio__name=portfolio))
     return PortfolioColourAdapter.objects.filter(portfolio__username=username, portfolio__name=portfolio)
 
 
-# def clear_history(username, portfolio):
-#     get_portfolio_colour_adapter(username, portfolio).delete()
+def clear_history(username, portfolio):
+    get_portfolio_colour_adapter(username, portfolio).delete()
+
 
 def get_last_colour(username, portfolio):
 
@@ -31,8 +32,6 @@ def get_last_colour(username, portfolio):
         u = get_portfolio_colour_adapter(username, portfolio) \
             .order_by('-timestamp') \
             .first()
-        # print(u.timestamp, u.colour.colour)
-        # print(str(u.timestamp), u.colour.colour)
 
     else:
         print(f"portfolio-colour not present for {username=} {portfolio=}")
@@ -41,31 +40,20 @@ def get_last_colour(username, portfolio):
     return {"status": True, "colour_timestamp": str(u.timestamp), "colour_hex": u.colour.colour }
 
 
-from django.core import serializers
-import json
-from django.core.serializers.json import DjangoJSONEncoder
-
-
 def get_all_colours(username, portfolio):
 
     if is_portfolio_colour_entry_present(username, portfolio):
 
         u = get_portfolio_colour_adapter(username, portfolio) \
             .order_by('-timestamp')
-            # .only("timestamp", "colour")
 
-        # serialized_q = json.dumps(list(u), cls=DjangoJSONEncoder)
-        # print(serialized_q)
         values = {str(i.timestamp): i.colour.colour for i in u}
 
         return {"status": True, "values": values, "order": "descending"}
     return {"status":False}
 
 
-
 def delete_portfolio_colour_entries(username, portfolio):
-    # print(f"{username=} {portfolio=}")
-    # p = get_single_portfolio(username, portfolio)
     if is_portfolio_colour_entry_present(username, portfolio):
 
         get_portfolio_colour_adapter(username, portfolio) \
@@ -79,7 +67,6 @@ def add_colour_to_log(username, portfolio, colour_hex):
     if str(colour_hex).startswith("#"):
         colour_hex = colour_hex[1:]
 
-    # print(f"{username=} {portfolio=} {colour_hex=}")
     max_log = 10
 
     # todo rewrite with this
@@ -99,13 +86,7 @@ def add_colour_to_log(username, portfolio, colour_hex):
     )
     ch.save()
 
-    # t =  PortfolioColourAdapter.objects\
-    #     .filter(portfolio__username=username, portfolio__name=portfolio)
-    # print(t)
-    # return {"a": "b"}
-
     if is_portfolio_colour_entry_present(username, portfolio):
-        # if get_portfolio_colour_adapter(username, portfolio).exists():
 
         u = get_portfolio_colour_adapter(username, portfolio) \
             .order_by('-timestamp') \
@@ -115,8 +96,6 @@ def add_colour_to_log(username, portfolio, colour_hex):
             print("this is last entry in db, nothing is changed")
             return {"status": False, "description" : EXISTS}
 
-    # p = Portfolio.objects.
-
     if is_portfolio_colour_entry_present(username, portfolio):
         # remove current colour from log
         get_portfolio_colour_adapter(username, portfolio) \
@@ -125,34 +104,12 @@ def add_colour_to_log(username, portfolio, colour_hex):
             ) \
             .delete()
 
-    # PortfolioColourAdapter \
-    #     .objects \
-    #
-    #     .filter(
-    #     portfolio__username=username, portfolio__name=portfolio,
-    #     colour=ch.id
-    # ) \
-    #     .delete()
-
-    # try:
-
-
-    # p = Portfolio.objects.get(username=username, name=portfolio)
-    # except
-
     u = PortfolioColourAdapter.objects.create(
         portfolio=p,
-        # portfolio__username=username,
-        # portfolio__name=portfolio,
         colour=ch,
         timestamp=timezone.now()
     )
     u.save()
-
-    # PortfolioColourAdapter \
-    # .objects \
-    # .filter(        portfolio__username=username, portfolio__name=portfolio)\
-    # .filter(portfolio=portfolio, username=username) \
 
     count = get_portfolio_colour_adapter(username, portfolio)\
         .values("colour") \
