@@ -20,7 +20,7 @@ jedna lokacija moze bit u vise portfolia (od istog menadera, u jednom portfoliu 
 lokacija
 	CRUD
 	podaci o pojedinoj lokaciji
-	temperatura / + timestamp
+	@ / + timestamp
 		samo dohvacanje (api)
 	potrosnja - vati ili vat sati / timestamp uz svaku vrijednost
 		samo dohvacanje (api)
