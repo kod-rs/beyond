@@ -29,6 +29,7 @@ def main():
     comment = "wip: colour log"
     comment = 'ref: map'
     comment = "wip: master detail"
+    comment = "fix: remove colour from portfolio model"
 
     if same_comment:
         if not comment:
