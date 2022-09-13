@@ -10,7 +10,8 @@ class JumperMiddleware:
         self.debug = config("DEBUG") != "0"
 
     def __call__(self, request):
-        print("auto middleware")
+        print()
+        # print("auto middleware")
 
         # fixme only for testing
         request.access_token = "tmp"
