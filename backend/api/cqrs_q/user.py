@@ -5,7 +5,7 @@ def get_colour_log(user, portfolio):
 
     t = PortfolioColourAdapter\
         .objects\
-        .filter(portfolio=portfolio, username=user)\
+        .filter(portfolio__username=user, portfolio__name=portfolio)\
         .select_related("history_colour_id")\
-        .order_by('-timestamp_colour_change')
+        .order_by('-timestamp')
     return t
