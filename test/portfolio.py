@@ -8,10 +8,11 @@ url = "http://localhost:8000/portfolio/"
 def get():
 
     t = requests.get(
-        url,
-        data={
-        },
-        verify=False
+        url
+        # f"{url}{portfolio}",
+        # data={
+        # },
+        # verify=False
     )
 
     print(json.dumps(json.loads(t.text), indent=4, sort_keys=True))
@@ -19,7 +20,7 @@ def get():
 def post():
 
     t = requests.post(
-        url + "d",
+        url + "portfolio_1",
         data={
             "colour": "clr1"
         },
@@ -73,6 +74,7 @@ def main():
     # patch()
     # post()
     get()
+    # post()
 
 if __name__ == '__main__':
     main()
