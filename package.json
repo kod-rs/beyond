@@ -6,7 +6,10 @@
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint"
   },
-  "dependencies": {
+  "dependencies": {   
+     "@coreui/vue-chartjs": "2.0.0",
+
+    "datalib": "1.9.2",
     "@ag-grid-enterprise/all-modules": "^27.3.0",
     "@ag-grid-enterprise/core": "^28.1.1",
     "@ag-grid-enterprise/master-detail": "^28.1.1",
@@ -20,7 +23,6 @@
     "balm-core": "^3.26.2",
     "balm-ui": "^10.11.0",
     "bootstrap": "^4.6.0",
-    "chart.js": "2.9.4",
     "core-js": "^3.8.3",
     "datatables.net-bs4": "1.12.1",
     "hsts": "^2.2.0",
@@ -28,6 +30,7 @@
     "jquery": "^3.6.0",
     "jquery.easing": "^1.4.1",
     "js-cookie": "^3.0.1",
+    "mixins.js": "^2.0.0",
     "npm": "^8.15.0",
     "ol": "^6.15.1",
     "popper.js": "^1.16.1",
