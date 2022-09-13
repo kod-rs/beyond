@@ -19,7 +19,3 @@ class Portfolio(models.Model):
     # alt composite key
     username = models.CharField(max_length=200,unique=False)
     name = models.CharField(max_length=200,unique=False)
-
-    # colour = models.CharField(max_length=200)
-
-    # history in PortfolioHistoryAdapter
