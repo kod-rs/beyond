@@ -9,7 +9,7 @@ from backend.api.view.indexView import IndexView
 from backend.api.view.CSRFView import CSRFView
 from backend.api.view.portfolioView import PortfolioView
 from backend.api.view.colourView import ColourView
-
+from backend.api.view.temperatureView import TemperatureView
 from backend.api.comm.json_loader import role_validation_cfg
 
 from backend.api.startup import startup_configuration
@@ -42,6 +42,10 @@ urlpatterns = [
     path('api/admin/', admin.site.urls),
 
     path("csrf/", CSRFView.as_view()),
+
+    path("temperature/", TemperatureView.as_view()),
+    # todo add resolver for float
+    path("temperature/<str:value>", TemperatureView.as_view()),
 
     path("portfolio/", PortfolioView.as_view()),
     path("portfolio/<str:name>", PortfolioView.as_view()),
