@@ -1,6 +1,7 @@
+from backend.api.cqrs_c.portfolio_colour_adapter import add_colour_to_log
 from backend.api.model.portfolio import Portfolio
 from backend.api.comm.constants import EXISTS,CREATED,NOT_EXISTS
-from backend.api.cqrs_c.colour import add_colour_to_log
+# from backend.api.cqrs_c.colour import add_colour_to_log
 
 def create_portfolio(username, portfolio_name, colour=None):
     print(username, portfolio_name, colour)
