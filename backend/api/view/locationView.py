@@ -24,7 +24,6 @@ class LocationView(APIView):
         response["payload"]["status"] = update(request.username, portfolio, section, _type, request.data)
         return JsonResponse(response)
 
-    # path("location/<str:portfolio>/<str:section>/<str:type>", LocationsView.as_view()),
 
     def delete(self, request, portfolio, section, _type):
         print("delete single", portfolio, section, _type)
@@ -40,7 +39,11 @@ class LocationView(APIView):
         print("location get")
         response = get_auth_ok_response_template(request)
 
-        if portfolio and not section and not _type:
+        if portfolio and section and _type:
+            """fetch data for graphs"""
+
+
+        elif portfolio and not section and not _type:
             print(f"get all locations for {portfolio=}")
 
             username_locations = get_user_portfolio(request.username, portfolio)
@@ -68,27 +71,27 @@ class LocationView(APIView):
 
         print(f"locations get {portfolio=} {section=} {_type=}")
 
-        response = get_auth_ok_response_template(request)
+        # response = get_auth_ok_response_template(request)
+        #
+        # username_locations = get_user_portfolio(request.username,portfolio)
+        #
+        # r = {}
+        # j = 0
+        # for i in username_locations:
+        #     r[j] = {
+        #         "section": i.section,
+        #         "type": i.type,
+        #         # todo refactor to latitude & longitude
+        #         "lat": i.latitude,
+        #         "lon": i.longitude,
+        #     }
+        #
+        #     j += 1
+        #
+        # payload = {"status": True, "content": r}
+        # result = payload
 
-        username_locations = get_user_portfolio(request.username,portfolio)
-
-        r = {}
-        j = 0
-        for i in username_locations:
-            r[j] = {
-                "section": i.section,
-                "type": i.type,
-                # todo refactor to latitude & longitude
-                "lat": i.latitude,
-                "lon": i.longitude,
-            }
-
-            j += 1
-
-        payload = {"status": True, "content": r}
-        result = payload
-
-        response["payload"] = result
+        # response["payload"] = result
         return JsonResponse(response)
 
     # todo add type & section as param
