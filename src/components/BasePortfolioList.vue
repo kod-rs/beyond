@@ -168,7 +168,7 @@ export default {
 
         this.portfolios = Object.values(res["payload"]["portfolios"]).map(
           (i) => {
-            return this.castPortfolio(i.name, i.colour, i.isExpanded, true);
+            return this.castPortfolio(i.name, i.colour_hex, i.isExpanded, true);
           }
         );
       }
@@ -183,8 +183,8 @@ export default {
       return {
         newName: name,
         oldName: name,
-        newColour: colour,
-        oldColour: colour,
+        newColour: "#" + colour,
+        oldColour: "#" + colour,
         isExpanded: isExpanded,
         isInDb: isInDb,
 
