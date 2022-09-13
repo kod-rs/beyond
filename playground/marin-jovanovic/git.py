@@ -30,6 +30,7 @@ def main():
     comment = 'ref: map'
     comment = "wip: master detail"
     comment = "fix: remove colour from portfolio model"
+    comment = "impl: colour api"
 
     if same_comment:
         if not comment:
