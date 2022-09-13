@@ -6,10 +6,10 @@ async function patchLocation(
     type
     
     , params) {
-    console.log({
-        ...apiCalls.get_auth_header(),
-        ...params
-    })
+    // console.log({
+    //     ...apiCalls.get_auth_header(),
+    //     ...params
+    // })
     return await apiCalls.handleNewResponse(
         await apiCalls.api.patch(
             `location/${portfolioName}/${section}/${type}`,
