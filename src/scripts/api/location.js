@@ -61,7 +61,6 @@ async function getLocation(
 
     return await apiCalls.handleNewResponse(
         await apiCalls.api.get(
-            // "location/" + pn,
             `location/${portfolioName}/${section}/${type}`,
             apiCalls.get_auth_header()
         )
@@ -76,7 +75,6 @@ async function getAllLocationsInPortfolio(
 
     return await apiCalls.handleNewResponse(
         await apiCalls.api.get(
-            // "location/" + pn,
             `location/${portfolioName}`,
             apiCalls.get_auth_header()
         )
