@@ -75,6 +75,19 @@
         </button>
       </div>
 
+      <div class="col">
+        <button
+          class="btn btn-primary"
+          @click="selectLocation(locationPayload)"
+        >
+          Select
+        </button>
+      </div>
+
+      <div class="col">
+        <button @click="testClick(locationPayload)">test</button>
+      </div>
+
       <hr />
       <br />
     </div>
@@ -83,6 +96,8 @@
 
 <script>
 import { apiLocation } from "@/scripts/api/location";
+import { apiTemperature } from "@/scripts/api/temperature";
+
 export default {
   props: {
     t: Object,
@@ -93,6 +108,37 @@ export default {
     return {};
   },
   methods: {
+    async testClick(locationPayload) {
+      let r = await apiTemperature.getAllTemperature(
+        this.portfolio,
+        // this.location.portfolio,
+        locationPayload.oldSection,
+        locationPayload.oldType
+      );
+
+      console.log(r);
+
+      // if (r["payload"]["status"]) {
+      //       console.log(r["payload"]["result"]);
+      //       // this.locations[portfolioPayload.oldName] = Object.values(
+      //       //   r["payload"]["content"]
+      //       // ).map((item) => {
+      //       //   return this.castLocation(item.section, item.type, item.lat, item.lon);
+      //       // });
+      //     } else {
+      //       this.showMessage(false, "", "Error fetching data, contact admin");
+      //     }
+    },
+
+    selectLocation(locationPayload) {
+      this.$store.commit("selectLocation", {
+        type: locationPayload.oldType,
+        section: locationPayload.oldSection,
+        portfolio: this.portfolio,
+      });
+      // this.$store.selectLocation(locationPayload);
+    },
+
     mapClicked(locationPayload) {
       console.log("map clicked", locationPayload);
     },
