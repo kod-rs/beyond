@@ -38,15 +38,15 @@ async function getPortoflios() {
 
 async function patchPortoflios(portfolioOldName, params) {
     console.log(portfolioOldName, params)
-    console.log({
-        ...apiCalls.get_auth_header(),
-        ...params
-    })
+ 
     return await apiCalls.handleNewResponse(
         await apiCalls.api.patch(
             `portfolio/${portfolioOldName}`,
             {
                 ...apiCalls.get_auth_header(),
+                // "params": {
+                //     params
+                // }
                 ...params
 
                 // 'name': portfolioNewName,
