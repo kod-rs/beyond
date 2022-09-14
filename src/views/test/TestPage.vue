@@ -19,7 +19,6 @@
 <script>
 import { CChartLine } from "@coreui/vue-chartjs";
 export default {
-  name: "CChartLineExample",
   components: { CChartLine },
   computed: {
     defaultData() {
