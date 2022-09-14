@@ -98,8 +98,12 @@ class TemperatureView(APIView):
     #     return JsonResponse(response)
 
     def get(self, request):
+        print("temperature get")
+        print(request.data)
         response = get_auth_ok_response_template(request)
         # todo extract last to constant
+
+        # print(request.body)
 
         section = request.data["section"]
         _type = request.data["type"]
