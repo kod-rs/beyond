@@ -16,6 +16,16 @@
     <div class="row" v-for="locationPayload in t" :key="locationPayload">
       <div class="col">
         <input
+          class="form-check-input"
+          type="checkbox"
+          id="checkboxNoLabel"
+          aria-label="..."
+          v-model="locationPayload.isSelected"
+        />
+      </div>
+
+      <div class="col">
+        <input
           type="text"
           class="form-control"
           v-model="locationPayload.newSection"
@@ -42,14 +52,14 @@
         />
       </div>
 
-      <div class="col">
+      <!-- <div class="col">
         <button
           class="btn btn-primary"
           @click="updateLocation(locationPayload)"
         >
           Update
         </button>
-      </div>
+      </div> -->
 
       <div class="col">
         <button
@@ -75,22 +85,30 @@
         </button>
       </div>
 
-      <div class="col">
-        <button
-          class="btn btn-primary"
-          @click="selectLocation(locationPayload)"
-        >
-          Select
-        </button>
-      </div>
+      <!-- <div class="col">
+        <button @click="testClick(locationPayload)">test</button>
+      </div> -->
 
       <div class="col">
-        <button @click="testClick(locationPayload)">test</button>
+        <router-link
+          :to="{
+            name: `chart`,
+            params: {
+              portfolio: portfolio,
+              section: locationPayload.oldSection,
+              type: locationPayload.oldType,
+            },
+          }"
+          target="_blank"
+        >
+          Show charts
+        </router-link>
       </div>
 
       <hr />
       <br />
     </div>
+    <!-- <button @click="getSelected">show selected</button> -->
   </div>
 </template>
 
@@ -105,9 +123,41 @@ export default {
     // portfolioPayload: Object,
   },
   data() {
-    return {};
+    return {
+      selected: {},
+    };
   },
   methods: {
+    getSelected() {
+      console.log("selected");
+      // let se
+
+      // todo rewrite as selected is dictionary, key = portfolio, value = list of section, type tuples
+      this.selected = [];
+
+      this.t.forEach((element) => {
+        if (element.isSelected) {
+          // todo what if names are updated for portfolio, section or type
+
+          this.selected.push({
+            portfolio: this.portfolio,
+            section: this.oldSection,
+            type: this.oldType,
+          });
+          console.log(this.portfolio, element.oldSection, element.oldType);
+        }
+      });
+
+      console.table(this.selected);
+
+      return this.selected;
+    },
+
+    updateSelected(locationPayload) {
+      console.log("update selected", locationPayload);
+      // this.selected.
+    },
+
     async testClick(locationPayload) {
       let r = await apiTemperature.getAllTemperature(
         this.portfolio,
@@ -116,7 +166,7 @@ export default {
         locationPayload.oldType
       );
 
-      console.log(r);
+      console.table(r["payload"]["result"]);
 
       // if (r["payload"]["status"]) {
       //       console.log(r["payload"]["result"]);
@@ -186,8 +236,6 @@ export default {
         locationPayload.newSection !== locationPayload.oldSection ||
         locationPayload.oldType !== locationPayload.newType
       );
-      //  ||
-      // locationPayload.
     },
     async updateLocation(locationPayload) {
       console.log("update");
@@ -196,7 +244,6 @@ export default {
       let params = {};
 
       //   todo click and drag drop UI
-      //   params["portfolio"] = locationPayload;
       params["section"] = locationPayload.newSection;
       params["type"] = locationPayload.newType;
       params["latitude"] = locationPayload.lat;
