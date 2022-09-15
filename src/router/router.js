@@ -10,6 +10,7 @@ import ForgotPassword from '../views/login/ForgotPassword.vue';
 import TermsOfUse from '../views/login/TermsOfUse.vue';
 import PrivacyPolicy from '../views/login/PrivacyPolicy.vue';
 import HistoryView from '../views/history/HistoryView.vue';
+import ChartView from '../views/graph/Index.vue';
 
 export const router = createRouter({
   history: createWebHistory(),
@@ -23,6 +24,12 @@ export const router = createRouter({
       path: '/login',
       name: 'login',
       component: LoginPage
+    },
+    {
+      path: '/chart/:portfolio/:section/:type',
+      name: "chart",
+      component: ChartView,
+      params: true
     },
     {
       path: '/logout',
@@ -90,8 +97,9 @@ export const router = createRouter({
 
 router.beforeEach((to, from, next) => {
 
+  // fixme chart should not be public
 
-  const publicPages = ['/login', '/forgotpassword', '/termsofuse', '/privacypolicy', '/logout'];
+  const publicPages = ['/login', '/forgotpassword', '/termsofuse', '/privacypolicy', '/logout', "/chart"];
   const authRequired = !publicPages.includes(to.path);
   const loggedIn = sessionStorage.getItem('user');
 
