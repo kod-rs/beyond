@@ -23,7 +23,9 @@ export const store = createStore({
             portfolios: {},
             map: undefined,
 
-            location: undefined
+            location: undefined,
+
+            charts: [],
         }
     },
     actions: {
@@ -85,7 +87,14 @@ export const store = createStore({
         selectLocation(state, location) {
             console.log("selecting location", location)
             state.location = location;
+        },
+
+        addChart(state, chart) {
+            console.log("adding chart")
+            state.charts.push(chart);
         }
+
+
 
         // ADD_PORTFOLIO(state, portfolio) {
         //     // portfolio.id = state.nextId++;
@@ -115,8 +124,10 @@ export const store = createStore({
 
         location(state){
             return state.location;
-        }
-
+        },
+charts(state) {
+    return state.charts;
+},
         // selectedPortfolio(state) {
         //     return state.selectedPortfolio;
         // }
