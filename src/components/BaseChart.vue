@@ -4,7 +4,7 @@
   <!-- <div class="col"> -->
 
   <div class="row">
-    <CChartLine :data="defaultData" />
+    <CChartLine :data="temperatures" />
   </div>
 
   <div class="row">
@@ -34,6 +34,17 @@ export default {
   data() {
     return {
       location: undefined,
+      temperatures: {
+        // labels: [],
+        labels: ["timestamp", "a", "b", "c", "d", "e", "f", "g"],
+        datasets: [
+          {
+            label: "temperature",
+            // backgroundColor: "rgb(0,216,255,0.9)",
+            data: [39, 80, 40, 35, 40, 20, 45],
+          },
+        ],
+      },
     };
   },
 
@@ -73,7 +84,12 @@ export default {
 
     async fetchTemperature() {
       this.location = this.$store.state.location;
+
       console.log(this.location);
+      if (!this.location) {
+        console.log("undefined");
+        return;
+      }
 
       console.log("get temp");
 
@@ -84,7 +100,37 @@ export default {
       );
 
       if (r["payload"]["status"]) {
-        console.log(r["payload"]["result"]);
+        let values = r["payload"]["result"];
+        if (!values) {
+          console.log("no values for this location");
+          return;
+        }
+
+        console.log("have values");
+
+        console.table(values);
+
+        // let timestamps = [];
+        // let values =
+
+        //         for (const [key, value] of Object.entries(object)) {
+        //     console.log(key, value);
+        // }
+
+        console.log();
+
+        this.temperatures = {
+          // labels: [],
+          labels: ["months", ...Object.keys(values)],
+          datasets: [
+            {
+              label: "Data Two",
+              data: Object.values(values),
+            },
+          ],
+        };
+
+        // console.log(r["payload"]["result"]);
         // this.locations[portfolioPayload.oldName] = Object.values(
         //   r["payload"]["content"]
         // ).map((item) => {
