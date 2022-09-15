@@ -3,7 +3,8 @@
     <BaseNotification ref="notification"></BaseNotification>
     <BaseMapOverlay ref=""></BaseMapOverlay>
 
-    <div class="row align-items-center">
+    <div>
+      <!-- <div class="row align-items-center"> -->
       <div class="col">
         <h1>Portfolio manager</h1>
       </div>
@@ -17,12 +18,13 @@
         </button>
         <button v-else class="btn btn-secondary" disabled>Add</button>
       </div>
-    </div>
 
-    <hr />
+      <div class="col">selected: {{ selected }}</div>
 
-    <div>
+      <hr />
+
       <br />
+
       <div v-for="portfolioPayload in this.portfolios" :key="portfolioPayload">
         <div class="row">
           {{ portfolioPayload }}
@@ -130,6 +132,11 @@
         <br />
       </div>
     </div>
+    <div class="row">
+      <button @click="optimize">Optimize selected</button>
+    </div>
+
+    <!-- fffffffffff -->
   </div>
 </template>
   
@@ -142,7 +149,6 @@ import BaseMapOverlay from "./BaseMapOverlay.vue";
 import BaseNotification from "./BaseNotification.vue";
 
 export default {
-  // name: "PortfolioList",
   data() {
     return {
       tmp: "#e01b24",
@@ -155,12 +161,29 @@ export default {
       role: "",
       roleBuildingManagerString: process.env.VUE_APP_ROLE_BUILDING_MANAGER,
       autoSave: false,
+      selected: {},
     };
   },
   async mounted() {
     await this.loadPortfolios();
   },
   methods: {
+    optimize() {
+      console.log("optimize clicked");
+      // console.log(this.locations);
+
+      for (const [key, value] of Object.entries(this.locations)) {
+        // console.log(key);
+        for (const vals of Object.values(value)) {
+          if (vals.isSelected) {
+            console.log("selected", key, vals.oldSection, vals.oldType);
+          }
+          // console.log(p_k, p_v);
+        }
+      }
+
+      // todo make api call for this optimization and show message if optimization
+    },
     async loadPortfolios() {
       let res = await apiPortfolio.getPortoflios();
       if (res["auth"]["status"]) {
@@ -208,6 +231,7 @@ export default {
         newType: type,
         lat: lat,
         lon: lon,
+        isSelected: false,
       };
     },
     clearContentPortfolio(portfolioPayload) {
