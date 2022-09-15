@@ -20,6 +20,8 @@
 @import "https://use.fontawesome.com/releases/v5.2.0/css/all.css"; /* html {
   filter: invert(100%);
 } */
+
+@import "balm-ui/dist/balm-ui.css";
 </style>
 
 <script>
