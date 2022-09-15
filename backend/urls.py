@@ -11,6 +11,7 @@ from backend.api.view.portfolioView import PortfolioView
 from backend.api.view.colourView import ColourView
 from backend.api.view.temperatureView import TemperatureView
 from backend.api.comm.json_loader import role_validation_cfg
+from backend.api.view.consumptionView import ConsumptionView
 
 from backend.api.startup import startup_configuration
 startup_configuration.init_scheme_validator(role_validation_cfg)
@@ -43,9 +44,16 @@ urlpatterns = [
 
     path("csrf/", CSRFView.as_view()),
 
+    path("temperature/<str:portfolio>/<str:section>/<str:_type>", TemperatureView.as_view()),
     path("temperature/", TemperatureView.as_view()),
     # todo add resolver for float
     path("temperature/<str:value>", TemperatureView.as_view()),
+
+    path("consumption/<str:portfolio>/<str:section>/<str:_type>",
+         ConsumptionView.as_view()),
+    path("consumption/", ConsumptionView.as_view()),
+    # todo add resolver for float
+    path("consumption/<str:value>", ConsumptionView.as_view()),
 
     path("portfolio/", PortfolioView.as_view()),
     path("portfolio/<str:name>", PortfolioView.as_view()),
