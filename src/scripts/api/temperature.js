@@ -16,46 +16,27 @@ section, type,
 }
 
 async function getAllTemperature(portfolio, section, type) {
-console.log("get all temp")
-console.log({
-    ...apiCalls.get_auth_header(),
-    params: {
-        portfolio, section, type
-    }
-    // ...{portfolio, section, type}
-}
-)   
+
 
     return await apiCalls.handleNewResponse(
         await apiCalls.api.get(
-            "temperature/",
-            {
-                ...apiCalls.get_auth_header(),
-                params: {
-                    portfolio, section, type
-                }
-            }
-            // {
-            //     ...apiCalls.get_auth_header(),
-            //     ...params
-            // }
+            `temperature/${portfolio}/${section}/${type}`,
+       
+                apiCalls.get_auth_header(),
+
         )
     );
+
 }
 
-async function getLastTemperature(portfolioName, section, type) {
-    // console.log("portfolio name", portfolioName)
+async function getLastTemperature(portfolio, section, type) {
 
-let params = {"options": "last", "section": section, "type": type, "portfolio": portfolioName};
 
     return await apiCalls.handleNewResponse(
         await apiCalls.api.get(
-            "temperature/",
-            {
-                ...apiCalls.get_auth_header(),
-                ...params
-            }
-        )
+            `temperature/${portfolio}/${section}/${type}/${"last"}`,
+            apiCalls.get_auth_header()
+            )
     );
 }
 
