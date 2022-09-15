@@ -20,100 +20,23 @@ def validate_actions(correct_actions, to_check_actions):
 
 
 class TemperatureView(APIView):
-    # def patch(self, request, portfolio, section, _type):
-    #     print("LocationsView patch")
-    #
-    #     response = get_auth_ok_response_template(request)
-    #     response["payload"]["status"] = update(request.username, portfolio, section, _type, request.data)
-    #     return JsonResponse(response)
-    #
-    #
-    # def delete(self, request, portfolio, section, _type):
-    #     print("delete single", portfolio, section, _type)
-    #
-    #     response = get_auth_ok_response_template(request)
-    #
-    #     r = delete(request.username,portfolio, section, _type)
-    #
-    #     response["payload"]["status"] = r
-    #     return JsonResponse(response)
 
-    # def get(self, request, portfolio=None,section=None, _type=None):
-    #     print("location get")
-    #     response = get_auth_ok_response_template(request)
-    #
-    #     if portfolio and section and _type:
-    #         """fetch data for graphs"""
-    #
-    #
-    #     elif portfolio and not section and not _type:
-    #         print(f"get all locations for {portfolio=}")
-    #
-    #         username_locations = get_user_portfolio(request.username, portfolio)
-    #
-    #         r = {}
-    #         j = 0
-    #         for i in username_locations:
-    #             r[j] = {
-    #                 "section": i.section,
-    #                 "type": i.type,
-    #                 # todo refactor to latitude & longitude
-    #                 "lat": i.latitude,
-    #                 "lon": i.longitude,
-    #             }
-    #
-    #             j += 1
-    #
-    #         payload = {"status": True, "content": r}
-    #         result = payload
-    #
-    #         response["payload"] = result
-    #         return JsonResponse(response)
-    #
-    #     print("todo")
-    #
-    #     print(f"locations get {portfolio=} {section=} {_type=}")
-    #
-    #     # response = get_auth_ok_response_template(request)
-    #     #
-    #     # username_locations = get_user_portfolio(request.username,portfolio)
-    #     #
-    #     # r = {}
-    #     # j = 0
-    #     # for i in username_locations:
-    #     #     r[j] = {
-    #     #         "section": i.section,
-    #     #         "type": i.type,
-    #     #         # todo refactor to latitude & longitude
-    #     #         "lat": i.latitude,
-    #     #         "lon": i.longitude,
-    #     #     }
-    #     #
-    #     #     j += 1
-    #     #
-    #     # payload = {"status": True, "content": r}
-    #     # result = payload
-    #
-    #     # response["payload"] = result
-    #     return JsonResponse(response)
 
-    def get(self, request):
+    def get(self, request, portfolio, section, _type, options=None):
         print("temperature get")
         print(request.data)
+        print(request.body)
         response = get_auth_ok_response_template(request)
         # todo extract last to constant
 
-        # print(request.body)
 
-        section = request.data["section"]
-        _type = request.data["type"]
-        portfolio = request.data["portfolio"]
+        # section = request.data["section"]
+        # _type = request.data["type"]
+        # portfolio = request.data["portfolio"]
 
-        if not "options" in request.data:
-            # portfolio = request.data["portfolio"]
-
+        if not options:
             response["payload"] =get_temperature_log(request.username, portfolio, section, _type)
-        elif request.data["options"] == "last":
+        elif options == "last":
             response["payload"] =get_temperature_last(request.username, portfolio, section, _type)
         # mperature_last(username, portfolio, section, _type)
 
