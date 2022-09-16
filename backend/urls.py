@@ -45,11 +45,13 @@ urlpatterns = [
     path("csrf/", CSRFView.as_view()),
 
     path("temperature/<str:portfolio>/<str:section>/<str:_type>", TemperatureView.as_view()),
+    path("temperature/<str:portfolio>/<str:section>/<str:_type>/<str:options>", TemperatureView.as_view()),
     path("temperature/", TemperatureView.as_view()),
     # todo add resolver for float
     path("temperature/<str:value>", TemperatureView.as_view()),
 
-    path("consumption/<str:portfolio>/<str:section>/<str:_type>",
+    path("consumption/<str:portfolio>/<str:section>/<str:_type>", ConsumptionView.as_view()),
+    path("consumption/<str:portfolio>/<str:section>/<str:_type>/<str:options>",
          ConsumptionView.as_view()),
     path("consumption/", ConsumptionView.as_view()),
     # todo add resolver for float
