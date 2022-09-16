@@ -6,7 +6,7 @@ url = "http://localhost:8000/consumption"
 
 def get_last():
     t = requests.get(
-        f"{url}/",
+        f"{url}/{'portfolio_1'}/{'section_1'}/{'type_1'}/last",
         data={
             "section": "section_1",
             "type": "type_1",
@@ -20,11 +20,11 @@ def get_last():
 
 def get_all():
     t = requests.get(
-        f"{url}/",
+        f"{url}/{'portfolio_1'}/{'section_1'}/{'type_1'}",
         data={
-            "section": "section_1",
-            "type": "type_1",
-            "portfolio": "portfolio_1"
+            # "section": "section_1",
+            # "type": "type_1",
+            # "portfolio": "portfolio_1"
         },
         verify=False
     )
@@ -50,10 +50,12 @@ def post(colour,portfolio_name, section, _type):
 
 
 def main():
-    for i in range(10):
-        post(str(i * 7.5), "portfolio_1", "section_1", "type_1")
+    post(str(4 * 2.3), "portfolio_1", "section_1", "type_1")
 
-    get_all()
+    # for i in range(10):
+    #     post(str(i * 2.3), "portfolio_1", "section_1", "type_1")
+
+    # get_all()
     get_last()
 
 if __name__ == '__main__':
