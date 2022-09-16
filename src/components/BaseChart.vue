@@ -3,52 +3,56 @@
   <!-- <div class="row"> -->
   <!-- <div class="col"> -->
 
-  <div class="row">
-    <CChartLine :data="temperatures" />
-  </div>
-
-  <div class="row">
-    <CChartLine :data="defaultData" />
-  </div>
-
-  <div class="row">
-    <button @click="refreshCharts">refresh</button>
-  </div>
-
-  <!-- left -->
-  <!-- </div> -->
-  <!-- <div class="col"> -->
-  <!-- <CChartLine :data="defaultData" /> -->
-
-  <!-- right -->
-  <!-- </div>
+  <div class="col">
+    <apexchart
+      width="500"
+      type="area"
+      :options="chartOptions"
+      :series="series"
+    ></apexchart>
+    <div>
+      <button @click="updateChart">Update</button>
     </div>
-  </div> -->
+  </div>
 </template>
-
-<script>
+  
+  <script>
 import { apiTemperature } from "@/scripts/api/temperature";
-
-import { CChartLine } from "@coreui/vue-chartjs";
+import VueApexCharts from "vue3-apexcharts";
 export default {
+  props: {
+    portfolio: String,
+    p: Object,
+    // section: String,
+    // type: String,
+  },
+  name: "GraphIndex",
   data() {
     return {
-      location: undefined,
-      temperatures: {
-        // labels: [],
-        labels: ["timestamp", "a", "b", "c", "d", "e", "f", "g"],
-        datasets: [
-          {
-            label: "temperature",
-            // backgroundColor: "rgb(0,216,255,0.9)",
-            data: [39, 80, 40, 35, 40, 20, 45],
-          },
-        ],
+      chartOptions: {
+        chart: {
+          id: "vuechart-example",
+        },
+        xaxis: {
+          categories: [1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998],
+        },
       },
+      series: [
+        {
+          name: "series-1",
+          data: [30, 40, 35, 50, 49, 60, 70, 91],
+        },
+      ],
+
+      // portfolio: "",
+      section: "",
+      type: "",
+
+      location: undefined,
+      // temperatures: undefined,
     };
   },
-
-  components: { CChartLine },
+  components: { apexchart: VueApexCharts },
   computed: {
     defaultData() {
       return {
@@ -58,7 +62,7 @@ export default {
           {
             label: "Data One",
             backgroundColor: "rgb(228,102,81,0.9)",
-            data: [30, 39, 10, 50, 30, 70, 35],
+            data: [10, 10, 10, 50, 30, 70, 35],
           },
           {
             label: "Data Two",
@@ -69,34 +73,35 @@ export default {
       };
     },
   },
-  mounted() {
+  async mounted() {
     console.log("mounted");
-    // this.location = this.$store.state.location;
-    // console.log(this.location);
+    this.chartOptions = this.p;
+    console.log(this.portfolio, this.section, this.type);
+    // console.log(this.$route.params);
+    // this.portfolio = "portfolio_1";
+    this.section = "section_1";
+    this.type = "type_1";
+
+    // console.log(this.portfolio, this.section, this.type);
+    // await this.fetchTemperature();
   },
 
   methods: {
-    async refreshCharts() {
-      console.log("refresh");
-
-      await this.fetchTemperature();
-    },
-
     async fetchTemperature() {
-      this.location = this.$store.state.location;
+      // this.location = this.$store.state.location;
 
-      console.log(this.location);
-      if (!this.location) {
-        console.log("undefined");
-        return;
-      }
+      // console.log(this.location);
+      // if (!this.location) {
+      //   console.log("undefined");
+      //   return;
+      // }
 
       console.log("get temp");
 
       let r = await apiTemperature.getAllTemperature(
-        this.location.portfolio,
-        this.location.section,
-        this.location.type
+        this.portfolio,
+        this.section,
+        this.type
       );
 
       if (r["payload"]["status"]) {
@@ -106,40 +111,26 @@ export default {
           return;
         }
 
-        console.log("have values");
-
-        console.table(values);
-
-        // let timestamps = [];
-        // let values =
-
-        //         for (const [key, value] of Object.entries(object)) {
-        //     console.log(key, value);
-        // }
-
-        console.log();
-
-        this.temperatures = {
-          // labels: [],
-          labels: ["months", ...Object.keys(values)],
-          datasets: [
-            {
-              label: "Data Two",
-              data: Object.values(values),
-            },
-          ],
+        this.chartOptions = {
+          chart: {
+            id: "temperature",
+          },
+          xaxis: {
+            categories: Object.keys(values),
+          },
         };
 
-        // console.log(r["payload"]["result"]);
-        // this.locations[portfolioPayload.oldName] = Object.values(
-        //   r["payload"]["content"]
-        // ).map((item) => {
-        //   return this.castLocation(item.section, item.type, item.lat, item.lon);
-        // });
+        this.series = [
+          {
+            data: Object.values(values),
+          },
+        ];
       } else {
-        this.showMessage(false, "", "Error fetching data, contact admin");
+        console.log("error fetching");
+        // this.showMessage(false, "", "Error fetching data, contact admin");
       }
     },
   },
 };
 </script>
+  
