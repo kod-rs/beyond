@@ -17,12 +17,15 @@
 </template>
   
   <script>
+import { apiConsumption } from "@/scripts/api/consumption";
 import { apiTemperature } from "@/scripts/api/temperature";
 import VueApexCharts from "vue3-apexcharts";
 export default {
   props: {
     portfolio: String,
-    p: Object,
+    // p: Object,
+    section: String,
+    type: String,
     // section: String,
     // type: String,
   },
@@ -45,8 +48,8 @@ export default {
       ],
 
       // portfolio: "",
-      section: "",
-      type: "",
+      // section: "",
+      // type: "",
 
       location: undefined,
       // temperatures: undefined,
@@ -74,20 +77,20 @@ export default {
     },
   },
   async mounted() {
-    console.log("mounted");
-    this.chartOptions = this.p;
-    console.log(this.portfolio, this.section, this.type);
+    console.log("mounted base chart");
+    // this.chartOptions = this.p;
+    // console.log(this.portfolio, this.section, this.type);
     // console.log(this.$route.params);
     // this.portfolio = "portfolio_1";
-    this.section = "section_1";
-    this.type = "type_1";
+    // this.section = "section_1";
+    // this.type = "type_1";
 
     // console.log(this.portfolio, this.section, this.type);
     // await this.fetchTemperature();
   },
 
   methods: {
-    async fetchTemperature() {
+    async fetchConsumption(portfolio, section, type) {
       // this.location = this.$store.state.location;
 
       // console.log(this.location);
@@ -98,11 +101,46 @@ export default {
 
       console.log("get temp");
 
-      let r = await apiTemperature.getAllTemperature(
-        this.portfolio,
-        this.section,
-        this.type
-      );
+      let r = await apiConsumption.getAllConsumption(portfolio, section, type);
+
+      if (r["payload"]["status"]) {
+        let values = r["payload"]["result"];
+        if (!values) {
+          console.log("no values for this location");
+          return;
+        }
+
+        this.chartOptions = {
+          chart: {
+            id: "temperature",
+          },
+          xaxis: {
+            categories: Object.keys(values),
+          },
+        };
+
+        this.series = [
+          {
+            data: Object.values(values),
+          },
+        ];
+      } else {
+        console.log("error fetching");
+        // this.showMessage(false, "", "Error fetching data, contact admin");
+      }
+    },
+    async fetchTemperature(portfolio, section, type) {
+      // this.location = this.$store.state.location;
+
+      // console.log(this.location);
+      // if (!this.location) {
+      //   console.log("undefined");
+      //   return;
+      // }
+
+      console.log("get temp");
+
+      let r = await apiTemperature.getAllTemperature(portfolio, section, type);
 
       if (r["payload"]["status"]) {
         let values = r["payload"]["result"];
