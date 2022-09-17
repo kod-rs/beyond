@@ -6,14 +6,24 @@ https://openlayers.org/en/latest/examples/popup.html
 <template>
   <div id="popup" class="ol-popup">
     <a href="#" id="popup-closer" class="ol-popup-closer"></a>
-    <div id="popup-content"></div>
+    <div id="popup-content">
+      <button @click="openDialog" class="btn btn-primary">
+        Add this location
+      </button>
+      <div>
+        {{ hdms }}
+      </div>
+    </div>
   </div>
+  <TheDialogAddLocation ref="dialogBox"></TheDialogAddLocation>
+  <!-- TheDialogAddLocation -->
 </template>
 
 <script>
 import Overlay from "ol/Overlay";
 import { toLonLat } from "ol/proj";
 import { toStringHDMS } from "ol/coordinate";
+import TheDialogAddLocation from "./TheDialogAddLocation.vue";
 
 export default {
   data() {
@@ -21,14 +31,16 @@ export default {
       content: undefined,
       overlay: undefined,
       closer: undefined,
+      hdms: undefined,
     };
   },
   methods: {
+    openDialog() {
+      console.log("dialog opened");
+      this.$refs.dialogBox.showDialog();
+    },
     setText(hdms) {
-      this.content.innerHTML =
-        "<p><button >Click to add this location</button></p><code>" +
-        hdms +
-        "</code>";
+      this.hdms = hdms;
     },
     setPosition(coordinate) {
       this.overlay.setPosition(coordinate);
@@ -44,17 +56,14 @@ export default {
     clickEvent(evt) {
       const coordinate = evt.coordinate;
       const hdms = toStringHDMS(toLonLat(coordinate));
-
       this.setText(hdms);
       this.setPosition(coordinate);
-
       this.$store.dispatch("setClickedLocation", {
         longitude: toLonLat(coordinate)[0],
         latitude: toLonLat(coordinate)[1],
       });
     },
   },
-
   mounted() {
     /**
      * Elements that make up the popup.
@@ -62,7 +71,6 @@ export default {
     const container = document.getElementById("popup");
     this.content = document.getElementById("popup-content");
     this.closer = document.getElementById("popup-closer");
-
     /**
      * Create an overlay to anchor the popup to the map.
      */
@@ -74,7 +82,6 @@ export default {
         },
       },
     });
-
     /**
      * Add a click handler to hide the popup.
      * @return {boolean} Don't follow the href.
@@ -85,6 +92,7 @@ export default {
       return false;
     };
   },
+  components: { TheDialogAddLocation },
 };
 </script>
 
