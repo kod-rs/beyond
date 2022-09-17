@@ -115,26 +115,36 @@ export default {
         return;
       }
 
-      await apiLocation
-        .addLocation(portfolio, section, type, latitude, longitude, csrfToken)
-        .then(
-          (r) => {
-            if (r.payload.status) {
-              console.log("add ok");
-              this.$waveui.notify("Location added successfully!", "success");
-            } else {
-              this.$waveui.notify("Location adding failed!", "error");
-              console.log("add err");
-            }
-          },
-          (error) => {
-            console.log("Location adding failed");
+      let r = await apiLocation.addLocation(
+        portfolio,
+        section,
+        type,
+        latitude,
+        longitude,
+        csrfToken
+      );
+      // if
+      // .then(
+      //   (r) => {
+      if (r.payload.status) {
+        console.log("add ok, notify");
+        this.$waveui.notify("Location added successfully!", "success");
+        this.$emit("added");
+      } else {
+        this.$waveui.notify("Location adding failed!", "error");
+        console.log("add err");
+        this.error =
+          "adding error, try new section/portfolio, maybe this exist";
+      }
+      //   },
+      //   (error) => {
+      //     console.log("Location adding failed");
 
-            this.$waveui.notify("Location adding failed!", "error");
+      //     this.$waveui.notify("Location adding failed!", "error");
 
-            console.log("error", error);
-          }
-        );
+      //     console.log("error", error);
+      //   }
+      // );
 
       //   await this.restartForm();
       this.clearForm();
