@@ -121,6 +121,8 @@
 
         <div v-show="portfolioPayload.isExpanded">
           <TheLocationTable
+            @selectUpdate="updateSelectedList"
+            @increase-by="updateSelectedForChart"
             :portfolio="portfolioPayload.oldName"
             :t="this.locations[portfolioPayload.oldName]"
           >
@@ -132,11 +134,6 @@
         <br />
       </div>
     </div>
-    <div class="row">
-      <button @click="optimize">Optimize selected</button>
-    </div>
-
-    <!-- fffffffffff -->
   </div>
 </template>
   
@@ -149,9 +146,11 @@ import BaseMapOverlay from "./BaseMapOverlay.vue";
 import BaseNotification from "./BaseNotification.vue";
 
 export default {
+  props: {
+    selectedForChart: Object,
+  },
   data() {
     return {
-      tmp: "#e01b24",
       portfolios: {},
       isTempCreated: false,
       isContentCleared: false,
@@ -161,28 +160,20 @@ export default {
       role: "",
       roleBuildingManagerString: process.env.VUE_APP_ROLE_BUILDING_MANAGER,
       autoSave: false,
-      selected: {},
+      selected: undefined,
+      selectedSet: undefined,
     };
   },
+
   async mounted() {
     await this.loadPortfolios();
   },
   methods: {
-    optimize() {
-      console.log("optimize clicked");
-      // console.log(this.locations);
-
-      for (const [key, value] of Object.entries(this.locations)) {
-        // console.log(key);
-        for (const vals of Object.values(value)) {
-          if (vals.isSelected) {
-            console.log("selected", key, vals.oldSection, vals.oldType);
-          }
-          // console.log(p_k, p_v);
-        }
-      }
-
-      // todo make api call for this optimization and show message if optimization
+    updateSelectedList(pl) {
+      this.$emit("selectUpdate", pl);
+    },
+    updateSelectedForChart(pl) {
+      this.$emit("increaseBy", pl);
     },
     async loadPortfolios() {
       let res = await apiPortfolio.getPortoflios();
