@@ -70,7 +70,7 @@ html,
 body {
   margin: 0;
   height: 100%;
-  overflow: hidden;
+  /* overflow: hidden; */
 }
 
 /* Show it is fixed to the top */
