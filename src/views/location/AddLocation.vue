@@ -4,7 +4,13 @@
       <div class="col">
         <br />
 
-        <TheLocationAddForm @closePopup="closePopup"></TheLocationAddForm>
+        <div class="row">
+          <AddContent></AddContent>
+        </div>
+
+        <div class="row">
+          <TheDialogAddLocation></TheDialogAddLocation>
+        </div>
       </div>
 
       <div class="col">
@@ -21,7 +27,8 @@
 <script>
 import MapPopup from "../../components/MapPopup.vue";
 import MapComponent from "@/components/MapComponent.vue";
-import TheLocationAddForm from "@/components/TheLocationAddForm.vue";
+import AddContent from "@/components/AddContent.vue";
+import TheDialogAddLocation from "@/components/TheDialogAddLocation.vue";
 
 export default {
   data() {
@@ -33,33 +40,20 @@ export default {
     closePopup() {
       this.$refs.mappopup.closePopup();
     },
-    initMapPopup() {
-      /**
-       * Add a click handler to the map to render the popup.
-       */
-      // this.map.on("singleclick", (evt) => {
-      //   const coordinate = evt.coordinate;
-      //   const hdms = toStringHDMS(toLonLat(coordinate));
-      //   this.$refs.mappopup.setText(hdms);
-      //   this.$refs.mappopup.setPosition(coordinate);
-      //   this.$store.dispatch("setClickedLocation", {
-      //     longitude: toLonLat(coordinate)[0],
-      //     latitude: toLonLat(coordinate)[1],
-      //   });
-      // });
+    bindPopupToMap(map) {
+      map.addOverlay(this.$refs.mappopup.getOverlay());
+      map.on("singleclick", this.$refs.mappopup.clickEvent);
     },
   },
   async mounted() {
-    this.map = this.$refs.map.map;
-
-    this.map.addOverlay(this.$refs.mappopup.getOverlay());
-
-    this.map.on("singleclick", this.$refs.mappopup.clickEvent);
+    let map = this.$refs.map.map;
+    this.bindPopupToMap(map);
   },
   components: {
     MapPopup,
     MapComponent,
-    TheLocationAddForm,
+    AddContent,
+    TheDialogAddLocation,
   },
 };
 </script> 
