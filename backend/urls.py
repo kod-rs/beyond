@@ -12,6 +12,7 @@ from backend.api.view.colourView import ColourView
 from backend.api.view.temperatureView import TemperatureView
 from backend.api.comm.json_loader import role_validation_cfg
 from backend.api.view.consumptionView import ConsumptionView
+from backend.api.view.settingsView import SettingsView
 
 from backend.api.startup import startup_configuration
 startup_configuration.init_scheme_validator(role_validation_cfg)
@@ -27,6 +28,8 @@ api_router = routers.DefaultRouter()
 
 urlpatterns = [
     path('', IndexView.as_view()),
+
+    path("settings/", SettingsView.as_view()),
 
     path('login/', LoginView.as_view()),
 
