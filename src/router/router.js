@@ -2,7 +2,6 @@ import { createRouter, createWebHistory } from 'vue-router';
 
 import IndexPage from '../views/index/IndexPage';
 import LoginPage from '../views/login/LoginPage';
-import LocationAdd from "../views/location/AddLocation.vue";
 import LogoutPage from '../views/logout/LogoutPage';
 import PortfolioPage from '../views/portfolio/Index.vue';
 import TestPage from '../views/test/TestPage.vue';
@@ -46,11 +45,7 @@ export const router = createRouter({
       name: "index",
       component: IndexPage
     },
-    {
-      path: '/addlocation',
-      name: "addlocation",
-      component: LocationAdd
-    },
+
     {
       path: '/portfolio',
       name: "portfolio",
