@@ -1,5 +1,5 @@
 <template>
-  <w-button class="px4" @click="dialog.show = true"> Open dialog </w-button>
+  <w-button @click="showDialog"> Open dialog </w-button>
 
   <w-dialog
     v-model="dialog.show"
@@ -9,7 +9,7 @@
     :persistent-no-animation="dialog.persistentNoAnimation"
     title-class="primary-light1--bg white"
   >
-    <AddContent></AddContent>
+    <AddContent @added="addOk"></AddContent>
   </w-dialog>
 </template>
 
@@ -26,6 +26,15 @@ export default {
         width: 300,
       },
     };
+  },
+  methods: {
+    addOk() {
+      console.log("addd ok");
+      this.dialog.show = false;
+    },
+    showDialog() {
+      this.dialog.show = true;
+    },
   },
   components: { AddContent },
 };
