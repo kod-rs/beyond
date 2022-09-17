@@ -35,7 +35,6 @@
 
           <router-link :to="{ name: 'login' }">login</router-link> |
           <router-link :to="{ name: 'index' }">home</router-link> |
-          <router-link :to="{ name: 'addlocation' }">Create</router-link> |
           <router-link :to="{ name: 'portfolio' }"
             >manage portfolio</router-link
           >
