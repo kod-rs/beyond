@@ -2,7 +2,12 @@
   <div class="container-fluid">
     <div class="row">
       <div class="col">
+        <button @click="activateLD">click</button>
+
+        <div v-if="ld">console.log("ld act")</div>
+
         <br />
+
         <div v-if="error" class="alert alert-danger">{{ error }}</div>
 
         <form @submit.prevent="handleSubmit">
@@ -26,9 +31,6 @@
           >
             clear
           </button>
-
-          <!-- <BaseMapOverlay></BaseMapOverlay> -->
-
           <LoadingComponent></LoadingComponent>
         </form>
       </div>
@@ -44,31 +46,37 @@
 
 
 <script>
-import MapPopup from "../../components/map/MapPopup.vue";
+import MapPopup from "../../components/MapPopup.vue";
 import { apiLocation } from "../../scripts/api/location";
 import { toLonLat } from "ol/proj";
 import { toStringHDMS } from "ol/coordinate";
 
-import LoadingComponent from "@/components/misc/LoadingComponent.vue";
-import InputFieldsForm from "@/components/misc/InputFieldsForm.vue";
-import MapComponent from "@/components/map/MapComponent.vue";
+import LoadingComponent from "@/components/LoadingComponent.vue";
+import InputFieldsForm from "@/components/InputFieldsForm.vue";
+import MapComponent from "@/components/MapComponent.vue";
 import CSRFToken from "@/components/CSRFToken.vue";
 
 export default {
   data() {
     return {
+      valid: null,
+      validators: {
+        required: (value) => !!value || "This field is required",
+      },
       latitude: undefined,
       longitude: undefined,
 
       submitted: false,
       loading: false,
       error: undefined,
-
+      ld: false,
       map: undefined,
-      view: undefined,
     };
   },
   methods: {
+    activateLD() {
+      this.ld = true;
+    },
     async restartForm() {
       this.$refs.inputFields.fields["Section"]["value"] = "";
       this.$refs.inputFields.fields["Type"]["value"] = "";
@@ -146,26 +154,28 @@ export default {
 
       await this.restartForm();
     },
+    initMapPopup() {
+      /**
+       * Add a click handler to the map to render the popup.
+       */
+      this.map.on("singleclick", (evt) => {
+        const coordinate = evt.coordinate;
+        const hdms = toStringHDMS(toLonLat(coordinate));
+
+        this.longitude = toLonLat(coordinate)[0];
+        this.latitude = toLonLat(coordinate)[1];
+
+        this.$refs.mappopup.setText(hdms);
+        this.$refs.mappopup.setPosition(coordinate);
+      });
+    },
   },
   async mounted() {
     this.map = this.$refs.map.map;
-    this.view = this.$refs.map.view;
 
     this.map.addOverlay(this.$refs.mappopup.getOverlay());
 
-    /**
-     * Add a click handler to the map to render the popup.
-     */
-    this.map.on("singleclick", (evt) => {
-      const coordinate = evt.coordinate;
-      const hdms = toStringHDMS(toLonLat(coordinate));
-
-      this.longitude = toLonLat(coordinate)[0];
-      this.latitude = toLonLat(coordinate)[1];
-
-      this.$refs.mappopup.setText(hdms);
-      this.$refs.mappopup.setPosition(coordinate);
-    });
+    this.initMapPopup();
   },
   components: {
     MapPopup,
