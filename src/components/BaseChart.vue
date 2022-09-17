@@ -23,11 +23,8 @@ import VueApexCharts from "vue3-apexcharts";
 export default {
   props: {
     portfolio: String,
-    // p: Object,
     section: String,
     type: String,
-    // section: String,
-    // type: String,
   },
   name: "GraphIndex",
   data() {
@@ -47,12 +44,7 @@ export default {
         },
       ],
 
-      // portfolio: "",
-      // section: "",
-      // type: "",
-
       location: undefined,
-      // temperatures: undefined,
     };
   },
   components: { apexchart: VueApexCharts },
@@ -78,29 +70,10 @@ export default {
   },
   async mounted() {
     console.log("mounted base chart");
-    // this.chartOptions = this.p;
-    // console.log(this.portfolio, this.section, this.type);
-    // console.log(this.$route.params);
-    // this.portfolio = "portfolio_1";
-    // this.section = "section_1";
-    // this.type = "type_1";
-
-    // console.log(this.portfolio, this.section, this.type);
-    // await this.fetchTemperature();
   },
 
   methods: {
     async fetchConsumption(portfolio, section, type) {
-      // this.location = this.$store.state.location;
-
-      // console.log(this.location);
-      // if (!this.location) {
-      //   console.log("undefined");
-      //   return;
-      // }
-
-      console.log("get temp");
-
       let r = await apiConsumption.getAllConsumption(portfolio, section, type);
 
       if (r["payload"]["status"]) {
@@ -131,12 +104,6 @@ export default {
     },
     async fetchTemperature(portfolio, section, type) {
       // this.location = this.$store.state.location;
-
-      // console.log(this.location);
-      // if (!this.location) {
-      //   console.log("undefined");
-      //   return;
-      // }
 
       console.log("get temp");
 
