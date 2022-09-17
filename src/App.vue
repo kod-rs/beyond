@@ -59,37 +59,25 @@
       </div>
     </nav>
 
-    <main class="container">
+    <div class="nonscrollable">
       <router-view> </router-view>
-
-      <!-- <div class="bg-light p-5 rounded">
-        <h1>Navbar example</h1>
-        <p class="lead">
-          This example is a quick exercise to illustrate how fixed to top navbar
-          works. As you scroll, it will remain fixed to the top of your
-          browser’s viewport.
-        </p>
-        <a
-          class="btn btn-lg btn-primary"
-          href="../components/navbar/"
-          role="button"
-          >View navbar docs &raquo;</a
-        >
-      </div> -->
-    </main>
+    </div>
   </div>
-
-  <!-- <div>
-    <TestNavigation></TestNavigation>
-    <router-view> </router-view>
-  </div> -->
 </template>
 
 <style>
+html,
+body {
+  margin: 0;
+  height: 100%;
+  overflow: hidden;
+}
+
 /* Show it is fixed to the top */
 body {
   min-height: 75rem;
-  padding-top: 4.5rem;
+  /* padding-top: 4.5rem; */
+  padding-top: 3.5rem;
 }
 
 @import "https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css";
