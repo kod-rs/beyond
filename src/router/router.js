@@ -11,10 +11,16 @@ import TermsOfUse from '../views/login/TermsOfUse.vue';
 import PrivacyPolicy from '../views/login/PrivacyPolicy.vue';
 import HistoryView from '../views/history/HistoryView.vue';
 import ChartView from '../views/graph/Index.vue';
+import SetttingsView from '../views/settings/SettingsView.vue';
 
 export const router = createRouter({
   history: createWebHistory(),
   routes: [
+    {
+      path: '/settings',
+      name: 'settings',
+      component: SetttingsView
+    },
     {
       path: '/history',
       name: 'history',
