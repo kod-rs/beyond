@@ -2,7 +2,6 @@
   <button @click="openLeft">click</button>
 
   <TheMapFullSize ref="map"></TheMapFullSize>
-  <!-- <MapPopup ref="mappopup"></MapPopup> -->
   <TheAddLocationPopup ref="mappopup"></TheAddLocationPopup>
   <w-drawer v-model="openDrawer" left>
     <hr />
@@ -11,20 +10,17 @@
     <br />
     <br />
     <br />
-    <!-- <TheLocationAddForm @closePopup="closePopup"></TheLocationAddForm> -->
   </w-drawer>
 </template>
 
 <script>
 import TheMapFullSize from "@/components/TheMapFullSize.vue";
-// import TheLocationAddForm from "@/components/TheLocationAddForm.vue";
 import TheAddLocationPopup from "../../components/TheAddLocationPopup.vue";
 
 export default {
   components: {
     TheMapFullSize,
-    // TheLocationAddForm,
-    // MapPopup,
+
     TheAddLocationPopup,
   },
   data() {
