@@ -30,10 +30,13 @@ export default {
   methods: {
     addOk() {
       console.log("addd ok");
-      this.dialog.show = false;
+      this.closeDialog();
     },
     showDialog() {
       this.dialog.show = true;
+    },
+    closeDialog() {
+      this.dialog.show = false;
     },
   },
   components: { AddContent },
