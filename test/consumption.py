@@ -50,13 +50,13 @@ def post(colour,portfolio_name, section, _type):
 
 
 def main():
-    post(str(4 * 2.3), "portfolio_1", "section_1", "type_1")
+    # post(str(4 * 2.3), "portfolio_1", "section_1", "type_1")
 
     # for i in range(10):
     #     post(str(i * 2.3), "portfolio_1", "section_1", "type_1")
 
-    # get_all()
-    get_last()
+    get_all()
+    # get_last()
 
 if __name__ == '__main__':
     main()
