@@ -1,5 +1,5 @@
 <template>
-  <div id="mapelement"></div>
+  <div id="map"></div>
 </template>
 
 <script>
@@ -21,7 +21,7 @@ export default {
           source: new OSM(),
         }),
       ],
-      target: "mapelement",
+      target: "map",
       view: new View({
         center: [0, 0],
         zoom: 2,
@@ -39,14 +39,9 @@ export default {
 
 
 <style>
-#mapelement {
+#map {
   width: 100%;
   height: 100%;
-  /* border: 5px solid Tomato; */
   position: absolute;
 }
-
-/* #map:focus {
-    outline: #4A74A8 solid 0.15em;
-} */
 </style>
