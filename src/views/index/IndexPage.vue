@@ -56,9 +56,9 @@ import { Vector as VectorLayer } from "ol/layer";
 import userMarker from "/public/assets/markers/geolocation_marker.png";
 
 import { apiLocation } from "../../scripts/api/location";
-import UserCoordinates from "../../components/map/UserCoordinates.vue";
-import MapPopup from "../../components/map/MapPopup.vue";
-import MapComponent from "@/components/map/MapComponent.vue";
+import UserCoordinates from "@/components/UserCoordinates.vue";
+import MapPopup from "@/components/MapPopup.vue";
+import MapComponent from "@/components/MapComponent.vue";
 import { apiPortfolio } from "@/scripts/api/portfolio";
 
 export default {
@@ -83,29 +83,25 @@ export default {
   },
   methods: {
     onChange() {
-      console.log("clicked", this.checkedNames);
-
-      for (const [key, value] of Object.entries(this.portfolios)) {
-        console.log(key, value);
+      for (const value of Object.values(this.portfolios)) {
         value["visible"] = false;
         this.map.removeLayer(value["vectorLayer"]);
       }
+
       this.checkedNames.forEach((i) => {
-        console.log("portf", i);
         this.portfolios[i]["visible"] = true;
       });
-      for (const [key, value] of Object.entries(this.portfolios)) {
-        console.log(key, value);
+
+      for (const value of Object.values(this.portfolios)) {
         // value["visible"] = false;
-        console.log(value["visible"]);
         if (value["visible"]) {
           this.map.addLayer(value["vectorLayer"]);
-        } else {
-          console.log("lele");
         }
       }
     },
     drawUserLocation(lat, lon) {
+      console.log(lat, lon);
+
       this.userLat = this.$store.state.latitude;
       this.userLon = this.$store.state.longitude;
 
@@ -136,21 +132,40 @@ export default {
 
       this.map.addLayer(this.userLocationLayer);
 
-      // this.view.centerOn(
-      //     point.getCoordinates(),
-      //     this.map.getSize(),
-      //     [500, 500]
-      // );
+      let userZoom = this.$store.getters["zoomUserLocation"];
 
-      // zoom
-      // this.view.fit(point, { padding: [170, 50, 30, 150], minResolution: 50 });
+      console.log("user zoom", userZoom);
+      if (userZoom) {
+        this.view.centerOn(
+          point.getCoordinates(),
+          this.map.getSize(),
+          [500, 500]
+        );
+
+        // zoom;
+        this.view.fit(point, {
+          padding: [170, 50, 30, 150],
+          minResolution: 50,
+        });
+
+        // this.view.centerOn(
+        //   point.getCoordinates(),
+        //   this.map.getSize(),
+        //   [500, 500]
+        // );
+
+        // // zoom;
+        // this.view.fit(point, {
+        //   padding: [170, 50, 30, 150],
+        //   minResolution: 50,
+        // });
+      }
     },
     allowLocationAdding() {
       this.addLocationEnabled = true;
       console.log("enabled", this.addLocationEnabled);
     },
     createMarker(hexColour) {
-      console.log("hex colour", hexColour);
       return `
                 <svg viewBox="5 2 14 20" width="50" height="50" version="1.1" xmlns="http://www.w3.org/2000/svg">
                 <path d="M0 0h24v24H0z" fill="none"/>
@@ -199,8 +214,6 @@ export default {
           const coordinate = evt.coordinate;
           const hdms = toStringHDMS(toLonLat(coordinate));
 
-          // console.log("log coord", hdms)
-          // console.log("set postiion,", coordinate)
           this.$refs.mappopup.setText(hdms);
           this.$refs.mappopup.setPosition(coordinate);
 
