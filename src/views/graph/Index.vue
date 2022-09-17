@@ -1,20 +1,14 @@
 <template>
-  <!-- <div class="container-fluid"> -->
   <div class="row">
     <div class="col">
       <BaseChart :portfolio="portfolio" :p="chartOptions"></BaseChart>
     </div>
-    <!-- <div class="col">
-      <BaseChart></BaseChart>
-    </div> -->
   </div>
 </template>
   
   <script>
 import BaseChart from "@/components/BaseChart.vue";
-// import { apiTemperature } from "@/scripts/api/temperature";
-// import VueApexCharts from "vue3-apexcharts";
-// import BaseChart from "@/components/BaseChart.vue";
+
 export default {
   name: "GraphIndex",
   data() {
@@ -31,9 +25,6 @@ export default {
       portfolio: undefined,
       section: undefined,
       type: undefined,
-      // portfolio_1: "portfolio_1",
-      // section_1: "section_1",
-      // type_1: "type_1",
     };
   },
   mounted() {
