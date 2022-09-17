@@ -24,8 +24,8 @@ class TemperatureView(APIView):
 
     def get(self, request, portfolio, section, _type, options=None):
         print("temperature get")
-        print(request.data)
-        print(request.body)
+        # print(request.data)
+        # print(request.body)
         response = get_auth_ok_response_template(request)
         # todo extract last to constant
 
