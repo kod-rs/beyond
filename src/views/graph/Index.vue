@@ -4,9 +4,9 @@
     <div class="col">
       <BaseChart :portfolio="portfolio" :p="chartOptions"></BaseChart>
     </div>
-    <div class="col">
+    <!-- <div class="col">
       <BaseChart></BaseChart>
-    </div>
+    </div> -->
   </div>
 </template>
   
