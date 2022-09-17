@@ -1,5 +1,9 @@
 import { createStore } from 'vuex'
 
+// this.$store.dispatch(action, value);
+// let curr = this.$store.getters[variable];
+
+
 export const store = createStore({
     state() {
         return {
@@ -11,14 +15,12 @@ export const store = createStore({
             longitude: 0,
 
             // todo where is this used? navbar?
-            username: "",
+            username: "username_template",
 
             // todo, this is in .env
             appMode: "development",
 
-            // selectedPortfolio: { "id": -1 },
-            // selectedPortfolio: createEmptyPortfolio(),
-            // nextId: 1
+          
 
             portfolios: {},
             map: undefined,
@@ -26,34 +28,30 @@ export const store = createStore({
             location: undefined,
 
             charts: [],
+
+            zoomUserLocation: false,
         }
     },
     actions: {
+        // this.$store.dispatch("setZoomUserLocation", isSelected);
+
         setMap(context, map) {
             context.commit("setMap", map);
         },
         setPortfolios(context, portfolios) {
             context.commit("setPortfolios", portfolios);
         },
+        setZoomUserLocation(context, zoomUserLocation) {
+            context.commit("SET_ZOOM_USER_LOCATION", zoomUserLocation);
+        }
 
-        // updatePortfolioColour(context, pl) {
-        //     context.commit("UPDATE_PORTFOLIO_COLOUR", pl);
-        // },
-        // addPortfolio(context, portfolio) {
-        //     context.commit("ADD_PORTFOLIO", portfolio);
-        // },
-        // selectPortfolio(context, portfolio) {
-        //     context.commit("SELECT_PORTFOLIO", portfolio);
-        // },
-        // deletePortfolio(context, name) {
-        //     context.commit("DELETE_PORTFOLIO", name);
-
-        // },
-        // updatePortfolio(context, portfolio) {
-        //     context.commit("UPDATE_PORTFOLIO", portfolio);
-        // }
     },
     mutations: {
+        SET_ZOOM_USER_LOCATION(state, zoomUserLocation) {
+            state.zoomUserLocation = zoomUserLocation
+
+            // console.log("todo", state, zoomUserLocation)
+        },
         // increment(state) {
         //     state.count++;
         // },
@@ -95,23 +93,6 @@ export const store = createStore({
         }
 
 
-
-        // ADD_PORTFOLIO(state, portfolio) {
-        //     // portfolio.id = state.nextId++;
-        //     state.portfolios[portfolio.name] = portfolio;
-        //     // state.portfolios.push(portfolio);
-        //     state.selectedPortfolio = portfolio;
-        // },
-        // SELECT_PORTFOLIO(state, portfolio) {
-        //     state.selectedPortfolio = portfolio;
-        // },
-        // DELETE_PORTFOLIO(state, id) {
-        //     delete state.portfolios[id];
-        // },
-        // UPDATE_PORTFOLIO(state, portfolio) {
-        //     console.log("todo", state, portfolio)
-        // }
-
     },
     getters: {
         map(state) {
@@ -125,9 +106,12 @@ export const store = createStore({
         location(state){
             return state.location;
         },
-charts(state) {
-    return state.charts;
-},
+        charts(state) {
+            return state.charts;
+        },
+        zoomUserLocation(state) {
+            return state.zoomUserLocation;
+        } 
         // selectedPortfolio(state) {
         //     return state.selectedPortfolio;
         // }
