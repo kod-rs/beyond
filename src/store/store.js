@@ -20,6 +20,7 @@ export const store = createStore({
             // todo, this is in .env
             appMode: "development",
 
+            clickedLocation: undefined,
           
 
             portfolios: {},
@@ -43,15 +44,22 @@ export const store = createStore({
         },
         setZoomUserLocation(context, zoomUserLocation) {
             context.commit("SET_ZOOM_USER_LOCATION", zoomUserLocation);
+        },
+        setClickedLocation(context, clickedLocation) {
+            context.commit("SET_CLICKED_LOCATION", clickedLocation);
+
         }
 
     },
     mutations: {
         SET_ZOOM_USER_LOCATION(state, zoomUserLocation) {
             state.zoomUserLocation = zoomUserLocation
-
-            // console.log("todo", state, zoomUserLocation)
         },
+        SET_CLICKED_LOCATION(state, clickedLocation) {
+            state.clickedLocation = clickedLocation;
+        },
+
+
         // increment(state) {
         //     state.count++;
         // },
@@ -111,7 +119,10 @@ export const store = createStore({
         },
         zoomUserLocation(state) {
             return state.zoomUserLocation;
-        } 
+        } ,
+        clickedLocation(state) {
+            return state.clickedLocation;
+        }
         // selectedPortfolio(state) {
         //     return state.selectedPortfolio;
         // }
