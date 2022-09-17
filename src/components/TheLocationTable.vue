@@ -2,17 +2,6 @@
   <div>
     <br />
 
-    {{ t }}
-
-    <div class="row">
-      <div class="col">Section</div>
-      <div class="col">Type</div>
-      <div class="col"></div>
-      <div class="col"></div>
-      <div class="col"></div>
-      <div class="col"></div>
-    </div>
-
     <div class="row" v-for="locationPayload in t" :key="locationPayload">
       <div class="col">
         <input
@@ -21,6 +10,7 @@
           id="checkboxNoLabel"
           aria-label="..."
           v-model="locationPayload.isSelected"
+          @change="checkboxChanged($event, locationPayload)"
         />
       </div>
 
@@ -52,15 +42,6 @@
         />
       </div>
 
-      <!-- <div class="col">
-        <button
-          class="btn btn-primary"
-          @click="updateLocation(locationPayload)"
-        >
-          Update
-        </button>
-      </div> -->
-
       <div class="col">
         <button
           v-if="isChanged(locationPayload)"
@@ -73,9 +54,6 @@
         <button v-else class="btn btn-secondary" disabled>Update</button>
       </div>
 
-      <!-- <div v-if="portfolioPayload.isInDb" class="col"> -->
-      <!-- </div> -->
-
       <div class="col">
         <button
           class="btn btn-primary"
@@ -84,10 +62,6 @@
           Delete
         </button>
       </div>
-
-      <!-- <div class="col">
-        <button @click="testClick(locationPayload)">test</button>
-      </div> -->
 
       <div class="col">
         <router-link
@@ -105,29 +79,70 @@
         </router-link>
       </div>
 
+      <div class="col">
+        <button @click="showGraph(locationPayload)">show graph</button>
+      </div>
+
       <hr />
       <br />
     </div>
-    <!-- <button @click="getSelected">show selected</button> -->
   </div>
 </template>
 
 <script>
 import { apiLocation } from "@/scripts/api/location";
-import { apiTemperature } from "@/scripts/api/temperature";
 
 export default {
   props: {
     t: Object,
     portfolio: String,
-    // portfolioPayload: Object,
   },
   data() {
     return {
       selected: {},
+      selectedList: new Set(),
     };
   },
   methods: {
+    checkboxChanged(e, locationPayload) {
+      console.log("fire");
+      let o = {
+        section: locationPayload.oldSection,
+        type: locationPayload.oldType,
+      };
+
+      if (locationPayload.isSelected) {
+        console.log("add if not present");
+        // add if not present
+        if (!this.selectedList.has(o)) {
+          console.log("not present");
+
+          this.selectedList.add(o);
+        }
+      } else {
+        console.log("remove if present");
+        // remove if present
+        if (this.selectedList.has(o)) {
+          console.log(" present");
+
+          this.selectedList.delete(o);
+        }
+      }
+
+      console.log(this.selectedList);
+
+      this.$emit("selectUpdate", {
+        portfolio: this.portfolio,
+        locationPayload: locationPayload,
+      });
+    },
+    showGraph(locationPayload) {
+      this.$emit("increaseBy", {
+        portfolio: this.portfolio,
+        section: locationPayload.oldSection,
+        type: locationPayload.oldType,
+      });
+    },
     getSelected() {
       console.log("selected");
       // let se
@@ -155,38 +170,6 @@ export default {
 
     updateSelected(locationPayload) {
       console.log("update selected", locationPayload);
-      // this.selected.
-    },
-
-    async testClick(locationPayload) {
-      let r = await apiTemperature.getAllTemperature(
-        this.portfolio,
-        // this.location.portfolio,
-        locationPayload.oldSection,
-        locationPayload.oldType
-      );
-
-      console.table(r["payload"]["result"]);
-
-      // if (r["payload"]["status"]) {
-      //       console.log(r["payload"]["result"]);
-      //       // this.locations[portfolioPayload.oldName] = Object.values(
-      //       //   r["payload"]["content"]
-      //       // ).map((item) => {
-      //       //   return this.castLocation(item.section, item.type, item.lat, item.lon);
-      //       // });
-      //     } else {
-      //       this.showMessage(false, "", "Error fetching data, contact admin");
-      //     }
-    },
-
-    selectLocation(locationPayload) {
-      this.$store.commit("selectLocation", {
-        type: locationPayload.oldType,
-        section: locationPayload.oldSection,
-        portfolio: this.portfolio,
-      });
-      // this.$store.selectLocation(locationPayload);
     },
 
     mapClicked(locationPayload) {
