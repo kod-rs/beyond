@@ -6,7 +6,7 @@ https://openlayers.org/en/latest/examples/popup.html
 <template>
   <div id="popup" class="ol-popup">
     <a href="#" id="popup-closer" class="ol-popup-closer"></a>
-    <div id="popup-content">
+    <div v-if="visible" id="popup-content">
       <button @click="openDialog" class="btn btn-primary">
         Add this location
       </button>
@@ -15,8 +15,8 @@ https://openlayers.org/en/latest/examples/popup.html
       </div>
     </div>
   </div>
+
   <TheDialogAddLocation ref="dialogBox"></TheDialogAddLocation>
-  <!-- TheDialogAddLocation -->
 </template>
 
 <script>
@@ -28,7 +28,7 @@ import TheDialogAddLocation from "./TheDialogAddLocation.vue";
 export default {
   data() {
     return {
-      content: undefined,
+      visible: true,
       overlay: undefined,
       closer: undefined,
       hdms: undefined,
@@ -69,7 +69,6 @@ export default {
      * Elements that make up the popup.
      */
     const container = document.getElementById("popup");
-    this.content = document.getElementById("popup-content");
     this.closer = document.getElementById("popup-closer");
     /**
      * Create an overlay to anchor the popup to the map.
@@ -87,9 +86,12 @@ export default {
      * @return {boolean} Don't follow the href.
      */
     this.closer.onclick = function () {
-      this.overlay.setPosition(undefined);
-      this.closer.blur();
-      return false;
+      console.log("close window");
+      this.$emit("closeAddingWindow");
+      // this.visible = false;
+      // this.overlay.setPosition(undefined);
+      // this.closer.blur();
+      // return false;
     };
   },
   components: { TheDialogAddLocation },
