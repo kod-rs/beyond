@@ -1,46 +1,122 @@
 <template>
-  <w-app>
+  <div>
+    <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="#">Beyond</a>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarCollapse"
+          aria-controls="navbarCollapse"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarCollapse">
+          <ul class="navbar-nav me-auto mb-2 mb-md-0">
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="#">Home</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">Link</a>
+            </li>
+            <li class="nav-item">
+              <a
+                class="nav-link disabled"
+                href="#"
+                tabindex="-1"
+                aria-disabled="true"
+                >Disabled</a
+              >
+            </li>
+          </ul>
+
+          <router-link :to="{ name: 'login' }">login</router-link> |
+          <router-link :to="{ name: 'index' }">home</router-link> |
+          <router-link :to="{ name: 'addlocation' }">Create</router-link> |
+          <router-link :to="{ name: 'portfolio' }"
+            >manage portfolio</router-link
+          >
+          | <router-link :to="{ name: 'test' }">test</router-link> |
+          <router-link :to="{ name: 'history' }">history</router-link> |
+          <router-link :to="{ name: 'settings' }">settings</router-link> |
+          <router-link to="/logout">Logout</router-link> |
+
+          <form class="d-flex">
+            <input
+              class="form-control me-2"
+              type="search"
+              placeholder="Search"
+              aria-label="Search"
+            />
+            <button class="btn btn-outline-success" type="submit">
+              Search
+            </button>
+          </form>
+        </div>
+      </div>
+    </nav>
+
+    <main class="container">
+      <router-view> </router-view>
+
+      <!-- <div class="bg-light p-5 rounded">
+        <h1>Navbar example</h1>
+        <p class="lead">
+          This example is a quick exercise to illustrate how fixed to top navbar
+          works. As you scroll, it will remain fixed to the top of your
+          browser’s viewport.
+        </p>
+        <a
+          class="btn btn-lg btn-primary"
+          href="../components/navbar/"
+          role="button"
+          >View navbar docs &raquo;</a
+        >
+      </div> -->
+    </main>
+  </div>
+
+  <!-- <div>
     <TestNavigation></TestNavigation>
-
     <router-view> </router-view>
-
-    <!-- All your app content goes here. -->
-
-    <!-- Also try to add a button! -->
-    <!-- <w-button>My Button</w-button> -->
-  </w-app>
+  </div> -->
 </template>
 
 <style>
+/* Show it is fixed to the top */
+body {
+  min-height: 75rem;
+  padding-top: 4.5rem;
+}
+
 @import "https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css";
-/* @import "//cdn.datatables.net/1.12.1/css/jquery.dataTables.min.css"; */
 @import "https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css";
-
 @import "https://cdn.jsdelivr.net/npm/@mdi/font@5.8.55/css/materialdesignicons.min.css";
-@import "https://use.fontawesome.com/releases/v5.2.0/css/all.css"; /* html {
-  filter: invert(100%);
-} */
-
+@import "https://use.fontawesome.com/releases/v5.2.0/css/all.css";
 @import "balm-ui/dist/balm-ui.css";
 </style>
 
 <script>
-import TestNavigation from "./components/navigation/TestNavigation.vue";
-
 import { router } from "./router/router";
 import { INACTIVE_THRESHOLD, TIME_RESOLUTION } from "./scripts/constants";
 
 import { activate_tab_name_changer } from "./scripts/tab_name_changer";
 import { apiAuth } from "./scripts/api/auth";
+// import TestNavigation from "./components/TestNavigation.vue";
 
 export default {
   name: "app",
-  components: { TestNavigation },
+  // components: { TestNavigation },
   data() {
     return {
+      isPublic: sessionStorage.getItem("user") !== null,
       isInactive: false,
       userActivityThrottlerTimeout: null,
       userActivityTimeout: null,
+      type: 1,
     };
   },
   mounted() {
@@ -57,6 +133,7 @@ export default {
   },
 
   methods: {
+    setIsPublic() {},
     importScript(path) {
       let scriptElement = document.createElement("script");
       scriptElement.setAttribute("src", path);
