@@ -60,14 +60,12 @@ import UserCoordinates from "../../components/map/UserCoordinates.vue";
 import MapPopup from "../../components/map/MapPopup.vue";
 import MapComponent from "@/components/map/MapComponent.vue";
 import { apiPortfolio } from "@/scripts/api/portfolio";
-// import FilterLocations from './FilterLocations.vue';
 
 export default {
   components: {
     UserCoordinates,
     MapPopup,
     MapComponent,
-    // FilterLocations
   },
   data() {
     return {
@@ -152,6 +150,7 @@ export default {
       console.log("enabled", this.addLocationEnabled);
     },
     createMarker(hexColour) {
+      console.log("hex colour", hexColour);
       return `
                 <svg viewBox="5 2 14 20" width="50" height="50" version="1.1" xmlns="http://www.w3.org/2000/svg">
                 <path d="M0 0h24v24H0z" fill="none"/>
@@ -169,9 +168,7 @@ export default {
 
       let features = [];
 
-      for (const [key, value] of Object.entries(featuresApi)) {
-        console.log(key);
-
+      for (const value of Object.values(featuresApi)) {
         let f = new Feature({
           geometry: new Point(fromLonLat([value.lon, value.lat])),
         });
@@ -220,7 +217,7 @@ export default {
         let pl = r["payload"]["portfolios"];
 
         for (const [key, value] of Object.entries(pl)) {
-          let hexColour = value["colourHexEncoded"];
+          let hexColour = value["colour_hex"];
 
           let r = (await apiLocation.getAllLocationsInPortfolio(value.name))
             .payload.content;
