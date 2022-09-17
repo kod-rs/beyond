@@ -57,15 +57,15 @@ import userMarker from "/public/assets/markers/geolocation_marker.png";
 
 import { apiLocation } from "../../scripts/api/location";
 import UserCoordinates from "@/components/UserCoordinates.vue";
-import MapPopup from "@/components/MapPopup.vue";
-import MapComponent from "@/components/MapComponent.vue";
+// import MapPopup from "@/components/MapPopup.vue";
+// import MapComponent from "@/components/MapComponent.vue";
 import { apiPortfolio } from "@/scripts/api/portfolio";
 
 export default {
   components: {
     UserCoordinates,
-    MapPopup,
-    MapComponent,
+    // MapPopup,
+    // MapComponent,
   },
   data() {
     return {
