@@ -25,6 +25,12 @@ def main():
     comment = "#10: todo rewrite all api calls using prev interface"
     comment = "upd: add body & headers keys config"
     comment = "merge fix: #10"
+    comment = "impl: colour log"
+    comment = "wip: colour log"
+    comment = 'ref: map'
+    comment = "wip: master detail"
+    comment = "fix: remove colour from portfolio model"
+    comment = "fix: delete locations and portfolios"
 
     if same_comment:
         if not comment:

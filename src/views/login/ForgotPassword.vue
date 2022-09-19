@@ -1,22 +1,22 @@
 <template>
 
-    <PublicBase>
+    <BasePublicTemplate>
         <ForgotPasswordForm></ForgotPasswordForm>
-        <Links></Links>
-    </PublicBase>
+        <TheLinks></TheLinks>
+    </BasePublicTemplate>
 
 </template>
 
 
 <script>
-import PublicBase from "../../components/login/PublicBase.vue";
-import ForgotPasswordForm from "@/components/login/ForgotPasswordForm.vue";
-import Links from "@/components/login/Links.vue";
+import BasePublicTemplate from "@/components/BasePublicTemplate.vue";
+import ForgotPasswordForm from "@/components/ForgotPasswordForm.vue";
+import TheLinks from "@/components/TheLinks.vue";
 
 export default {
     data() {
         return {};
     },
-    components: { PublicBase, ForgotPasswordForm, Links }
+    components: { BasePublicTemplate, ForgotPasswordForm, TheLinks }
 };
 </script> 

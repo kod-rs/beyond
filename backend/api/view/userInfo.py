@@ -12,7 +12,8 @@ class UserInfoView(APIView):
                 "refresh-token": request.refresh_token
             },
             "payload": {
-                "role": "role 1"
+                "status": True,
+                "role": request.role
             }
         }
 

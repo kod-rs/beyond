@@ -1,7 +1,7 @@
 from decouple import config
 
 from backend.api.cqrs_q.csrf import get_by_ip
-from backend.api.comm.comm import decode_data
+from backend.api.comm.comm import bytes_to_json
 
 class CSRFCheckMiddleware:
     def __init__(self, get_response):
@@ -33,7 +33,7 @@ class CSRFCheckMiddleware:
                     auth_credentials[k] = request.headers[k]
 
         if request.body:
-            body_content = decode_data(request.body)
+            body_content = bytes_to_json(request.body)
 
             for k, v in auth_credentials.items():
                 if k in body_content:

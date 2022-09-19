@@ -1,21 +1,21 @@
 <template>
 
-    <PublicBase>
+    <BasePublicTemplate>
         terms of use
-        <Links></Links>
-    </PublicBase>
+        <TheLinks></TheLinks>
+    </BasePublicTemplate>
 
 </template>
 
 
 <script>
-import PublicBase from "../../components/login/PublicBase.vue";
-import Links from "@/components/login/Links.vue";
+import BasePublicTemplate from "@/components/BasePublicTemplate.vue";
+import TheLinks from "@/components/TheLinks.vue";
 
 export default {
     data() {
         return {};
     },
-    components: { PublicBase, Links }
+    components: { BasePublicTemplate, TheLinks }
 };
 </script> 

@@ -1,4 +1,4 @@
-from backend.api.config.main import INTERNAL_SERVER_ERROR_MESSAGE
+from backend.api.config.constants import INTERNAL_SERVER_ERROR_MESSAGE
 
 
 def get_auth_ok_response_template(request):
@@ -25,8 +25,6 @@ def get_auth_err_response_template(request):
     response = {
         "auth": {
             "status": False,
-            # "access-token": request.access_token,
-            # "refresh-token": request.refresh_token
         }
     }
     return response

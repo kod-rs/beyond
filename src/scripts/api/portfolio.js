@@ -1,14 +1,12 @@
 import { apiCalls } from './comm';
 
-async function createOrUpdatePortfolio(currentName, newName, colour) {
+async function createPortfolio(name, colour) {
     // todo csrf
-
+    console.log("adding", name, colour)
     return await apiCalls.handleNewResponse(
         await apiCalls.api.post(
-            "portfolio/",
+            `portfolio/${name}`,
             JSON.stringify({
-                currentName,
-                newName,
                 colour
             }),
             apiCalls.get_auth_header()
@@ -16,7 +14,7 @@ async function createOrUpdatePortfolio(currentName, newName, colour) {
     );
 }
 
-async function deletePortfolio(currentName,) {
+async function deletePortfolio(currentName) {
     // todo csrf
 
     return await apiCalls.handleNewResponse(
@@ -38,8 +36,31 @@ async function getPortoflios() {
 
 }
 
+async function patchPortoflios(portfolioOldName, params) {
+    console.log(portfolioOldName, params)
+ 
+    return await apiCalls.handleNewResponse(
+        await apiCalls.api.patch(
+            `portfolio/${portfolioOldName}`,
+            {
+                ...apiCalls.get_auth_header(),
+                // "params": {
+                //     params
+                // }
+                ...params
+
+                // 'name': portfolioNewName,
+                // "colour": portfolioNewColour
+            }
+        )
+    );
+
+}
+
+
 export const apiPortfolio = {
-    createOrUpdatePortfolio,
+    createPortfolio,
     deletePortfolio,
-    getPortoflios
+    getPortoflios,
+    patchPortoflios
 }

@@ -1,3 +1,5 @@
+https://vueschool.io/articles/vuejs-tutorials/how-to-structure-a-large-scale-vue-js-application/
+
 menader jedan portfolio
 agregator vise portfolio
 
@@ -18,7 +20,7 @@ jedna lokacija moze bit u vise portfolia (od istog menadera, u jednom portfoliu 
 lokacija
 	CRUD
 	podaci o pojedinoj lokaciji
-	temperatura / + timestamp
+	@ / + timestamp
 		samo dohvacanje (api)
 	potrosnja - vati ili vat sati / timestamp uz svaku vrijednost
 		samo dohvacanje (api)
@@ -53,3 +55,69 @@ location_vals_type
 
 
 provjeri jel jedan user moze mjenjat tude podatke u bazi
+
+
+
+
+
+
+///////////////////////////////////////////////////////////////////////////
+colour
+    username - fk
+    portfolio - fk
+    hex_log - json / list
+
+ select username, name
+
+get portfolio/
+    vraca select (username, name) -> vraca id
+get portfolio/x
+
+person
+    username
+    name
+
+portfolio
+    id - pk
+    username - fk - zamisljeni userq
+    name
+    colour
+
+location
+    portfolio - fk
+    section
+    type
+    latitude
+    longitude
+
+csrf
+    ip
+    synchronizer_token
+    encrypted_token
+    double_submitted_cookie
+
+ip
+    ip
+    counter
+
+pem_key
+    key_type
+    key_value
+
+
+building manager
+on gleda
+
+agregator
+nesto radi
+
+
+section
+    stan
+    prostor s upralvjivim uredajima
+
+type
+    industrijski/obicni/kucanstvo
+
+ime lokacije
+section, type, portfolio nije id

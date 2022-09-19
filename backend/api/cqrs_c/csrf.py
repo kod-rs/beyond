@@ -1,5 +1,5 @@
 
-from backend.api.model.csrf import CSRF
+from backend.api.model_security.csrf import CSRF
 
 
 # get_or_create

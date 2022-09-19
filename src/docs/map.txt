@@ -1,0 +1,4 @@
+init map in one file
+map_popup
+enable map_popup on map
+display marker on map
