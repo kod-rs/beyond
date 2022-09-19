@@ -6,10 +6,7 @@ async function patchLocation(
     type
     
     , params) {
-    // console.log({
-    //     ...apiCalls.get_auth_header(),
-    //     ...params
-    // })
+
     return await apiCalls.handleNewResponse(
         await apiCalls.api.patch(
             `location/${portfolioName}/${section}/${type}`,
@@ -38,11 +35,12 @@ async function deleteLocation(
     );
 }
 
-async function addLocation(portfolio, section, type, latitude, longitude, csrfToken) {
+async function addLocation(portfolio, name, section, type, latitude, longitude, csrfToken) {
 
     return await apiCalls.handleNewResponse(
         await apiCalls.api.post(
-            "location/",
+            // "location/",
+            `location/${portfolio}/${name}`,
             JSON.stringify({
                 portfolio,
                 type, section, latitude, longitude, synchronizer_token: csrfToken
