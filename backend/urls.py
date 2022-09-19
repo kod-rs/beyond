@@ -39,6 +39,7 @@ urlpatterns = [
     path("colour/<str:name>", ColourView.as_view()),
 
     path("location/<str:portfolio>", LocationView.as_view()),
+    path("location/<str:portfolio>/<str:name>", LocationView.as_view()),
     path("location/<str:portfolio>/<str:section>/<str:_type>", LocationView.as_view()),
     # path("location/<str:pn>", LocationsView.as_view()),
     path("location/", LocationView.as_view()),
