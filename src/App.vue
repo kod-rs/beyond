@@ -1,38 +1,5 @@
 <template>
-  <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
-    <div class="container-fluid">
-      <a class="navbar-brand" href="#">Beyond</a>
-      <button
-        class="navbar-toggler"
-        type="button"
-        data-bs-toggle="collapse"
-        data-bs-target="#navbarCollapse"
-        aria-controls="navbarCollapse"
-        aria-expanded="false"
-        aria-label="Toggle navigation"
-      >
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse" id="navbarCollapse">
-        <ul class="navbar-nav me-auto mb-2 mb-md-0">
-          <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="#">Home</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">Link</a>
-          </li>
-        </ul>
-
-        <router-link :to="{ name: 'login' }">login</router-link> |
-        <router-link :to="{ name: 'index' }">home</router-link> |
-        <router-link :to="{ name: 'portfolio' }">manage portfolio</router-link>
-        | <router-link :to="{ name: 'test' }">test</router-link> |
-        <router-link :to="{ name: 'history' }">history</router-link> |
-        <router-link :to="{ name: 'settings' }">settings</router-link> |
-        <router-link to="/logout">Logout</router-link> |
-      </div>
-    </div>
-  </nav>
+  <TopNavigationBar></TopNavigationBar>
   <w-app>
     <!-- <w-button @click="$waveui.notify('Information.')" bg-color="info">
       Notify info
@@ -73,6 +40,7 @@ import { INACTIVE_THRESHOLD, TIME_RESOLUTION } from "./scripts/constants";
 
 import { activate_tab_name_changer } from "./scripts/tab_name_changer";
 import { apiAuth } from "./scripts/api/auth";
+import TopNavigationBar from "./components/TopNavigationBar.vue";
 // import TestNavigation from "./components/TestNavigation.vue";
 
 export default {
@@ -154,5 +122,6 @@ export default {
     clearTimeout(this.userActivityThrottlerTimeout);
     window.sessionStorage.removeItem("user");
   },
+  components: { TopNavigationBar },
 };
 </script>
