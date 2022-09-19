@@ -76,7 +76,7 @@ export default {
       apiAuth.login(username, password).then(
         () => {
           router.push(this.returnUrl);
-          this.$store.commit("setUsername", username);
+          this.$store.dispatch("setUsername", username);
         },
         (error) => {
           this.error = "invalid credentials";
