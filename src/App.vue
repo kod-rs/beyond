@@ -1,67 +1,48 @@
 <template>
-  <div>
-    <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
-      <div class="container-fluid">
-        <a class="navbar-brand" href="#">Beyond</a>
-        <button
-          class="navbar-toggler"
-          type="button"
-          data-bs-toggle="collapse"
-          data-bs-target="#navbarCollapse"
-          aria-controls="navbarCollapse"
-          aria-expanded="false"
-          aria-label="Toggle navigation"
-        >
-          <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarCollapse">
-          <ul class="navbar-nav me-auto mb-2 mb-md-0">
-            <li class="nav-item">
-              <a class="nav-link active" aria-current="page" href="#">Home</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#">Link</a>
-            </li>
-            <li class="nav-item">
-              <a
-                class="nav-link disabled"
-                href="#"
-                tabindex="-1"
-                aria-disabled="true"
-                >Disabled</a
-              >
-            </li>
-          </ul>
+  <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="#">Beyond</a>
+      <button
+        class="navbar-toggler"
+        type="button"
+        data-bs-toggle="collapse"
+        data-bs-target="#navbarCollapse"
+        aria-controls="navbarCollapse"
+        aria-expanded="false"
+        aria-label="Toggle navigation"
+      >
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarCollapse">
+        <ul class="navbar-nav me-auto mb-2 mb-md-0">
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="#">Home</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">Link</a>
+          </li>
+        </ul>
 
-          <router-link :to="{ name: 'login' }">login</router-link> |
-          <router-link :to="{ name: 'index' }">home</router-link> |
-          <router-link :to="{ name: 'portfolio' }"
-            >manage portfolio</router-link
-          >
-          | <router-link :to="{ name: 'test' }">test</router-link> |
-          <router-link :to="{ name: 'history' }">history</router-link> |
-          <router-link :to="{ name: 'settings' }">settings</router-link> |
-          <router-link to="/logout">Logout</router-link> |
-
-          <form class="d-flex">
-            <input
-              class="form-control me-2"
-              type="search"
-              placeholder="Search"
-              aria-label="Search"
-            />
-            <button class="btn btn-outline-success" type="submit">
-              Search
-            </button>
-          </form>
-        </div>
+        <router-link :to="{ name: 'login' }">login</router-link> |
+        <router-link :to="{ name: 'index' }">home</router-link> |
+        <router-link :to="{ name: 'portfolio' }">manage portfolio</router-link>
+        | <router-link :to="{ name: 'test' }">test</router-link> |
+        <router-link :to="{ name: 'history' }">history</router-link> |
+        <router-link :to="{ name: 'settings' }">settings</router-link> |
+        <router-link to="/logout">Logout</router-link> |
       </div>
-    </nav>
-
-    <div class="nonscrollable">
-      <router-view> </router-view>
     </div>
-  </div>
+  </nav>
+  <w-app>
+    <!-- <w-button @click="$waveui.notify('Information.')" bg-color="info">
+      Notify info
+    </w-button> -->
+    <div>
+      <div class="nonscrollable">
+        <router-view> </router-view>
+      </div>
+    </div>
+  </w-app>
 </template>
 
 <style>
@@ -115,10 +96,8 @@ export default {
     );
     this.importScript("https://code.jquery.com/jquery-3.5.1.slim.min.js");
     // this.importScript("https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js");
-
     activate_tab_name_changer();
   },
-
   methods: {
     setIsPublic() {},
     importScript(path) {
@@ -126,35 +105,29 @@ export default {
       scriptElement.setAttribute("src", path);
       document.head.appendChild(scriptElement);
     },
-
     activateActivityTracker() {
       window.addEventListener("mousemove", this.userActivityThrottler);
       window.addEventListener("scroll", this.userActivityThrottler);
       window.addEventListener("keydown", this.userActivityThrottler);
       window.addEventListener("resize", this.userActivityThrottler);
     },
-
     deactivateActivityTracker() {
       window.removeEventListener("mousemove", this.userActivityThrottler);
       window.removeEventListener("scroll", this.userActivityThrottler);
       window.removeEventListener("keydown", this.userActivityThrottler);
       window.removeEventListener("resize", this.userActivityThrottler);
     },
-
     resetUserActivityTimeout() {
       clearTimeout(this.userActivityTimeout);
-
       this.userActivityTimeout = setTimeout(() => {
         this.userActivityThrottler();
         this.inactiveUserAction();
       }, INACTIVE_THRESHOLD);
     },
-
     userActivityThrottler() {
       if (this.isInactive) {
         this.isInactive = false;
       }
-
       if (!this.userActivityThrottlerTimeout) {
         this.userActivityThrottlerTimeout = setTimeout(() => {
           this.resetUserActivityTimeout();
@@ -163,7 +136,6 @@ export default {
         }, TIME_RESOLUTION);
       }
     },
-
     inactiveUserAction() {
       if (window.location.href.endsWith("login")) {
         return;
@@ -173,11 +145,9 @@ export default {
       this.isInactive = true;
     },
   },
-
   beforeMount() {
     this.activateActivityTracker();
   },
-
   beforeUnmount() {
     this.deactivateActivityTracker();
     clearTimeout(this.userActivityTimeout);
