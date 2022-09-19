@@ -25,12 +25,12 @@ class LocationView(APIView):
         return JsonResponse(response)
 
 
-    def delete(self, request, portfolio, section, _type):
-        print("delete single", portfolio, section, _type)
+    def delete(self, request, portfolio, name):
+        # print("delete single", portfolio, section, _type)
 
         response = get_auth_ok_response_template(request)
 
-        r = delete(request.username,portfolio, section, _type)
+        r = delete(request.username,portfolio, name)
 
         response["payload"]["status"] = r
         return JsonResponse(response)
