@@ -8,14 +8,14 @@ export const store = createStore({
     state() {
         return {
             // count: 0,
-            synchronizerToken: "",
+            // synchronizerToken: "",
 
             // user lon lat
-            latitude: 0,
-            longitude: 0,
+            // latitude: 0,
+            // longitude: 0,
 
             // todo where is this used? navbar?
-            username: "username_template",
+            // username: "username_template",
 
             // todo, this is in .env
             appMode: "development",
@@ -31,11 +31,24 @@ export const store = createStore({
             charts: [],
 
             zoomUserLocation: false,
+
+            // user coordinates
+            userCoordiantes: {},
+     synchronizerToken: "",
+ username: "",
         }
     },
     actions: {
-        // this.$store.dispatch("setZoomUserLocation", isSelected);
-
+setUserCoordinates(context, userCoordiantes) {
+    context.commit("SET_USER_COORDINATES", userCoordiantes);
+  
+},
+setSynchronizerToken(context, synchronizerToken) {
+    context.commit("SET_SYNCHRONIZER_TOKEN", synchronizerToken); 
+},
+setUsername(context, username) {
+    context.commit("SET_USERNAME", username);
+},
         setMap(context, map) {
             context.commit("setMap", map);
         },
@@ -52,6 +65,18 @@ export const store = createStore({
 
     },
     mutations: {
+        SET_USER_COORDINATES(context, userCoordiantes) {
+            context.userCoordiantes = userCoordiantes;
+        },
+        SET_USERNAME(context, username){
+            context.username = username;
+
+        },
+
+
+        SET_SYNCHRONIZER_TOKEN(state, synchronizerToken) {
+state.synchronizerToken = synchronizerToken;
+        },
         SET_ZOOM_USER_LOCATION(state, zoomUserLocation) {
             state.zoomUserLocation = zoomUserLocation
         },
@@ -60,26 +85,14 @@ export const store = createStore({
         },
 
 
-        // increment(state) {
-        //     state.count++;
+   
+        // setLatitude(state, newValue) {
+        //     state.latitude = newValue
         // },
-        // UPDATE_PORTFOLIO_COLOUR(state, pl) {
-        //     state.portfolios[pl.portfolioName]["colour"] = pl.colourName
+        // setLongitude(state, newValue) {
+        //     state.longitude = newValue
         // },
-
-        setSynchronizerToken(state, newValue) {
-            state.synchronizerToken = newValue;
-        },
-        setLatitude(state, newValue) {
-            state.latitude = newValue
-        },
-        setLongitude(state, newValue) {
-            state.longitude = newValue
-        },
-        setUsername(state, username) {
-            state.username = username
-        },
-
+    
 
         setMap(state, map) {
             state.map = map;
@@ -103,6 +116,16 @@ export const store = createStore({
 
     },
     getters: {
+coordiantes(state) {
+return state.coordiantes
+},
+synchronizerToken(state) {
+    return state.synchronizerToken;
+},
+username(state) {
+return state.username;
+},
+
         map(state) {
             return state.map;
         },
