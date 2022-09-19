@@ -23,16 +23,14 @@ def get_all_locations():
     print(json.dumps(json.loads(t.text), indent=4, sort_keys=True))
 
 def create():
-    url = "http://localhost:8000/locations/"
+    url = f"http://localhost:8000/location/portfolio_1/name_{str(random.randint(1,10))}"
     headers = get_valid_credentials()
 
     t = requests.post(url, headers=headers, data={
-        "portfolio": "a",
         "section": str(random.randint(1,10)),
         "type": str(random.randint(1,10)),
         "latitude": str(random.randint(1,10)),
         "longitude": str(random.randint(1,10))
-
     }, verify=False)
 
     print(json.dumps(json.loads(t.text), indent=4, sort_keys=True))
@@ -69,9 +67,10 @@ def delete():
 
 def main():
     # get_all_locations()
-    # create()
+    for _ in range(10):
+        create()
     # delete()
-    patch()
+    # patch()
 
 if __name__ == '__main__':
     main()
