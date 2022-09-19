@@ -21,6 +21,7 @@ class SettingsView(APIView):
             response["payload"] = {
                 "status": True,
                 "zoomUserLocation": s.zoomUserLocation,
+                "username": request.username
             }
 
         else:
