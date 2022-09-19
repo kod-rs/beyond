@@ -103,8 +103,6 @@ export default {
       }
     },
     async fetchTemperature(portfolio, section, type) {
-      // this.location = this.$store.state.location;
-
       console.log("get temp");
 
       let r = await apiTemperature.getAllTemperature(portfolio, section, type);
