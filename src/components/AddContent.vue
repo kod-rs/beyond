@@ -1,4 +1,5 @@
 <template>
+  <BaseNotification ref="notification"></BaseNotification>
   <div>
     <form @submit.prevent="addLocation">
       <CSRFToken ref="csrf"></CSRFToken>
@@ -44,16 +45,16 @@
       <button class="btn btn-primary" @click="clearForm">Clear</button>
     </div>
   </div>
-
-  <!-- </div> -->
 </template>
 
 <script>
 import { apiPortfolio } from "@/scripts/api/portfolio";
 import { apiLocation } from "../scripts/api/location";
 import CSRFToken from "@/components/CSRFToken.vue";
+import BaseNotification from "./BaseNotification.vue";
 
 export default {
+  emits: ["added", "closePopup"],
   data() {
     return {
       options: [],
@@ -79,7 +80,11 @@ export default {
       if (!t) {
         console.log("no t", t);
         this.error = "Select location";
-        // this.$waveui.notify("Select location", "warning");
+        this.$refs.notification.showMessage(
+          false,
+          undefined,
+          "Select location"
+        );
 
         return;
       }
@@ -106,7 +111,11 @@ export default {
 
       if (!csrfToken) {
         alert("error with auth, reloading");
-        this.$waveui.notify("Authentication failed! Reloading", "warning");
+        this.$refs.notification.showMessage(
+          false,
+          undefined,
+          "Authentication failed! Reloading"
+        );
 
         this.$router.go();
       }
@@ -128,19 +137,22 @@ export default {
       //   (r) => {
       if (r.payload.status) {
         console.log("add ok, notify");
-        this.$waveui.notify("Location added successfully!", "success");
         this.$emit("added");
       } else {
-        this.$waveui.notify("Location adding failed!", "error");
         console.log("add err");
         this.error =
           "adding error, try new section/portfolio, maybe this exist";
       }
+
+      this.$refs.notification.showMessage(
+        r.payload.status,
+        "Location added successfully!",
+        "Location adding failed!"
+      );
+
       //   },
       //   (error) => {
       //     console.log("Location adding failed");
-
-      //     this.$waveui.notify("Location adding failed!", "error");
 
       //     console.log("error", error);
       //   }
@@ -184,6 +196,7 @@ export default {
   },
   components: {
     CSRFToken,
+    BaseNotification,
   },
 };
 </script>
