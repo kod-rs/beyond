@@ -123,6 +123,7 @@
           <TheLocationTable
             @selectUpdate="updateSelectedList"
             @increase-by="updateSelectedForChart"
+            @deleteLocation="deleteLocation"
             :portfolio="portfolioPayload.oldName"
             :t="this.locations[portfolioPayload.oldName]"
           >
@@ -169,6 +170,12 @@ export default {
     await this.loadPortfolios();
   },
   methods: {
+    deleteLocation(pl) {
+      // delete this.por
+      console.log(pl);
+      delete this.locations[pl.portfolio.oldName];
+    },
+
     updateSelectedList(pl) {
       this.$emit("selectUpdate", pl);
     },
@@ -214,7 +221,7 @@ export default {
       portfolio.isInDb = isInDb;
       portfolio.isUpdated = false;
     },
-    castLocation(section, type, lat, lon) {
+    castLocation(section, type, lat, lon, name) {
       return {
         oldSection: section,
         newSection: section,
@@ -223,6 +230,8 @@ export default {
         lat: lat,
         lon: lon,
         isSelected: false,
+        oldName: name,
+        newName: name,
       };
     },
     clearContentPortfolio(portfolioPayload) {
@@ -355,7 +364,13 @@ export default {
         this.locations[portfolioPayload.oldName] = Object.values(
           r["payload"]["content"]
         ).map((item) => {
-          return this.castLocation(item.section, item.type, item.lat, item.lon);
+          return this.castLocation(
+            item.section,
+            item.type,
+            item.lat,
+            item.lon,
+            item.name
+          );
         });
       } else {
         this.showMessage(false, "", "Error fetching data, contact admin");
