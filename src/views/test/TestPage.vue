@@ -1,79 +1,68 @@
 <template>
-  <button @click="openLeft">click</button>
+  <div>
+    <TheMap ref="map"></TheMap>
+    <TheAddLocationPopup ref="mappopup"></TheAddLocationPopup>
 
-  <TheMapFullSize ref="map"></TheMapFullSize>
-  <TheAddLocationPopup ref="mappopup"></TheAddLocationPopup>
+    <w-button class="ma1" @click="openBottom" outline>
+      Transparent overlay
+    </w-button>
 
-  <w-button
-    class="ma1"
-    @click="
-      noOverlay = false;
-      overlayColor = 'transparent';
-      openDrawer = !openDrawer;
-    "
-    outline
-  >
-    Transparent overlay
-  </w-button>
-
-  <w-drawer v-model="openDrawer" bottom>
-    <div class="container-fluid">
-      <div class="row">
-        <div class="col">
-          <div class="row">
-            <div>
-              portfolio
-              <div id="example-3">
-                <div v-for="p in Object.keys(portfolios)" :key="p">
-                  <input
-                    type="checkbox"
-                    :id="p"
-                    :value="p"
-                    v-model="checkedNames"
-                  />
-                  <label :for="p">{{ p }}</label>
+    <w-drawer v-model="isOpened" bottom>
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col">
+            <div class="row">
+              <div>
+                portfolio
+                <div id="example-3">
+                  <div v-for="p in Object.keys(portfolios)" :key="p">
+                    <input
+                      type="checkbox"
+                      :id="p"
+                      :value="p"
+                      v-model="checkedNames"
+                    />
+                    <label :for="p">{{ p }}</label>
+                    <hr />
+                  </div>
+                  <span>Checked portfolios: {{ checkedNames }}</span>
                   <hr />
+                  <button @click="onChange">click to filter</button>
                 </div>
-                <span>Checked portfolios: {{ checkedNames }}</span>
-                <hr />
-                <button @click="onChange">click to filter</button>
               </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
-  </w-drawer>
+    </w-drawer>
+
+    <BaseBottomDrawer ref="bottomDrawer"></BaseBottomDrawer>
+  </div>
 </template>
   
   <script>
-import TheMapFullSize from "@/components/TheMap.vue";
 import TheAddLocationPopup from "../../components/TheAddLocationPopup.vue";
-// import { toStringHDMS } from "ol/coordinate";
 import { apiPortfolio } from "@/scripts/api/portfolio";
 import { apiLocation } from "@/scripts/api/location";
-// import { toLonLat } from "ol/proj";
 import { fromLonLat } from "ol/proj";
 import Point from "ol/geom/Point";
 import Feature from "ol/Feature";
 import { Icon, Style } from "ol/style";
 import VectorSource from "ol/source/Vector";
 import { Vector as VectorLayer } from "ol/layer";
-
-// import userMarker from "/public/assets/markers/geolocation_marker.png";
-
-// import UserCoordinates from "@/components/UserCoordinates.vue";
+import BaseBottomDrawer from "@/components/BaseBottomDrawer.vue";
+import TheMap from "@/components/TheMap.vue";
 
 export default {
   components: {
-    TheMapFullSize,
-
     TheAddLocationPopup,
+    BaseBottomDrawer,
+    TheMap,
   },
   data() {
     return {
       openDrawer: false,
-
+      isOpened: false,
       addLocationEnabled: false,
       userLat: undefined,
       userLon: undefined,
@@ -96,6 +85,11 @@ export default {
     await this.fetchLocations();
   },
   methods: {
+    openBottom() {
+      console.log("open");
+      this.isOpened = true;
+      // this.$refs.bottomDrawer.openDrawer();
+    },
     onChange() {
       for (const value of Object.values(this.portfolios)) {
         value["visible"] = false;
@@ -173,10 +167,6 @@ export default {
     },
     closePopup() {
       this.$refs.mappopup.closePopup();
-    },
-    openLeft() {
-      console.log("left");
-      this.openDrawer = !this.openDrawer;
     },
   },
 };
