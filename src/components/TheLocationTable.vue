@@ -4,6 +4,10 @@
 
     <div class="row" v-for="locationPayload in t" :key="locationPayload">
       <div class="col">
+        {{ locationPayload.oldName }}
+      </div>
+
+      <div class="col">
         <input
           class="form-check-input"
           type="checkbox"
@@ -189,26 +193,19 @@ export default {
       //   }
       let r = await apiLocation.deleteLocation(
         this.portfolio,
-        locationPayload.section,
-        locationPayload.type
+        locationPayload.oldName
       );
-      console.table(r);
-      let l = this.locations || this.t;
-      console.log(l);
+
       if (r["payload"]["status"]) {
-        // delete this.t[currentName];
-        // this.locations = l.filter(
-        //   (data) =>
-        //     data.section == locationPayload.section &&
-        //     data.type == locationPayload.type
-        // );
-        // let index = this.portfolios.indexOf(currentName);
-        // if (index !== -1) {
-        //   this.portfolios.splice(index, 1);
-        // }
         console.log("deleted, refresh site");
-        // this.$refs.green.setContent("deleted " + currentName);
-        // this.$refs.green.show();
+
+        // todo
+        this.$emit("deleteLocation", {
+          portfolio: this.portfolio,
+          locationPayload: locationPayload,
+        });
+
+        // todo notify deleted
       } else {
         alert("error deleting");
         console.log("error delete");
