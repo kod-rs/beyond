@@ -1,64 +1,54 @@
 <template>
-  <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+  <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
     <div class="container-fluid">
-      <button
-        class="navbar-toggler"
-        type="button"
-        data-bs-toggle="offcanvas"
-        data-bs-target="#sidebar"
-        aria-controls="offcanvasExample"
-      >
-        <span class="navbar-toggler-icon" data-bs-target="#sidebar"></span>
-      </button>
-      <a
-        class="navbar-brand me-auto ms-lg-0 ms-3 text-uppercase fw-bold"
-        href="#"
-        >Beyond</a
-      >
+      <TopNavigationBarName></TopNavigationBarName>
       <button
         class="navbar-toggler"
         type="button"
         data-bs-toggle="collapse"
-        data-bs-target="#topNavBar"
-        aria-controls="topNavBar"
+        data-bs-target="#navbarCollapse"
+        aria-controls="navbarCollapse"
         aria-expanded="false"
         aria-label="Toggle navigation"
       >
         <span class="navbar-toggler-icon"></span>
       </button>
-      <div class="collapse navbar-collapse" id="topNavBar">
-        <form class="d-flex ms-auto my-3 my-lg-0"></form>
-        <ul class="navbar-nav">
-          <li class="nav-item dropdown">
-            <a
-              class="nav-link dropdown-toggle ms-2"
-              href="#"
-              role="button"
-              data-bs-toggle="dropdown"
-              aria-expanded="false"
+      <div class="collapse navbar-collapse" id="navbarCollapse">
+        <ul class="navbar-nav me-auto mb-2 mb-md-0">
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="#">Home</a>
+          </li>
+          <li class="nav-item">
+            <router-link class="nav-link" :to="{ name: 'portfolio' }"
+              >Portfolio</router-link
             >
-              {{ this.$store.state.username }}
-              <i class="bi bi-person-fill"></i>
-            </a>
-            <ul class="dropdown-menu dropdown-menu-end">
-              <li>
-                <router-link class="dropdown-item" to="/logout"
-                  >Logout</router-link
-                >
-              </li>
-            </ul>
+            <!-- <a class="nav-link" href="#">Link</a> -->
           </li>
         </ul>
+
+        <router-link class="nav-link" :to="{ name: 'portfolio' }"
+          >Portfolio</router-link
+        >
+
+        <router-link :to="{ name: 'login' }">test_login</router-link> |
+        <!-- <router-link :to="{ name: 'portfolio' }">manage portfolio</router-link> -->
+        | <router-link :to="{ name: 'test' }">test_test</router-link> |
+        <router-link :to="{ name: 'history' }">todo_history</router-link> |
       </div>
+
+      <TopNavigationBarUser></TopNavigationBarUser>
     </div>
   </nav>
 </template>
 
 <script>
+import TopNavigationBarName from "./TopNavigationBarName.vue";
+import TopNavigationBarUser from "./TopNavigationBarUser.vue";
 export default {
   data() {
     return {};
   },
+  components: { TopNavigationBarName, TopNavigationBarUser },
 };
 </script>
 
