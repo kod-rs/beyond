@@ -63,6 +63,10 @@ export default {
         latitude: toLonLat(coordinate)[1],
       });
     },
+    closeWindow() {
+      console.log("close window");
+      this.$emit("closeAddingWindow");
+    },
   },
   mounted() {
     /**
@@ -85,14 +89,7 @@ export default {
      * Add a click handler to hide the popup.
      * @return {boolean} Don't follow the href.
      */
-    this.closer.onclick = function () {
-      console.log("close window");
-      this.$emit("closeAddingWindow");
-      // this.visible = false;
-      // this.overlay.setPosition(undefined);
-      // this.closer.blur();
-      // return false;
-    };
+    this.closer.onclick = this.closeWindow;
   },
   components: { TheDialogAddLocation },
 };
