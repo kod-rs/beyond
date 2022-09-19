@@ -1,6 +1,4 @@
 <template>
-  <button @click="openLeft">click</button>
-
   <TheMapFullSize ref="map"></TheMapFullSize>
   <TheAddLocationPopup ref="mappopup"></TheAddLocationPopup>
 
@@ -15,54 +13,19 @@
   >
     Transparent overlay
   </w-button>
-
-  <w-drawer v-model="openDrawer" bottom>
-    <div class="container-fluid">
-      <div class="row">
-        <div class="col">
-          <div class="row">
-            <div>
-              portfolio
-              <div id="example-3">
-                <div v-for="p in Object.keys(portfolios)" :key="p">
-                  <input
-                    type="checkbox"
-                    :id="p"
-                    :value="p"
-                    v-model="checkedNames"
-                  />
-                  <label :for="p">{{ p }}</label>
-                  <hr />
-                </div>
-                <span>Checked portfolios: {{ checkedNames }}</span>
-                <hr />
-                <button @click="onChange">click to filter</button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </w-drawer>
 </template>
   
   <script>
 import TheMapFullSize from "@/components/TheMap.vue";
 import TheAddLocationPopup from "../../components/TheAddLocationPopup.vue";
-// import { toStringHDMS } from "ol/coordinate";
 import { apiPortfolio } from "@/scripts/api/portfolio";
 import { apiLocation } from "@/scripts/api/location";
-// import { toLonLat } from "ol/proj";
 import { fromLonLat } from "ol/proj";
 import Point from "ol/geom/Point";
 import Feature from "ol/Feature";
 import { Icon, Style } from "ol/style";
 import VectorSource from "ol/source/Vector";
 import { Vector as VectorLayer } from "ol/layer";
-
-// import userMarker from "/public/assets/markers/geolocation_marker.png";
-
-// import UserCoordinates from "@/components/UserCoordinates.vue";
 
 export default {
   components: {
