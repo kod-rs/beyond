@@ -8,6 +8,15 @@
 
       <ui-textfield
         fullwidth
+        v-model="name"
+        helper-text-id="my-text-field-helper-text"
+      >
+        Name
+      </ui-textfield>
+      <br />
+      <br />
+      <ui-textfield
+        fullwidth
         v-model="section"
         helper-text-id="my-text-field-helper-text"
       >
@@ -59,6 +68,7 @@ export default {
     return {
       options: [],
       portfolio: "",
+      name: "",
       section: "",
       type: "",
 
@@ -75,10 +85,9 @@ export default {
       //     "Only letters, numbers, spaces, commas and dots accepted in the input",
       //   validationRegex: /^(\w|,|\.| )*$/,
 
-      let t = this.$store.getters["clickedLocation"];
+      let t = this.$store.getters.clickedLocation;
 
       if (!t) {
-        console.log("no t", t);
         this.error = "Select location";
         this.$refs.notification.showMessage(
           false,
@@ -89,25 +98,18 @@ export default {
         return;
       }
 
-      let longitude = t.longitude;
-      let latitude = t.latitude;
-
       this.submitted = true;
       this.error = "";
-
-      let section = this.section;
-      let portfolio = this.portfolio;
-      let type = this.type;
 
       if (!(this.section && this.type && this.portfolio)) {
         this.error += "fill all fields";
       }
-      if (!(latitude && longitude)) {
+      if (!(t.latitude && t.longitude)) {
         this.error += "\nselect location";
       }
 
       // todo check portfolio
-      const csrfToken = this.$store.state.synchronizerToken;
+      const csrfToken = this.$store.getters.synchronizerToken;
 
       if (!csrfToken) {
         alert("error with auth, reloading");
@@ -125,16 +127,15 @@ export default {
       }
 
       let r = await apiLocation.addLocation(
-        portfolio,
-        section,
-        type,
-        latitude,
-        longitude,
+        this.portfolio,
+        this.name,
+        this.section,
+        this.type,
+        t.latitude,
+        t.longitude,
         csrfToken
       );
-      // if
-      // .then(
-      //   (r) => {
+
       if (r.payload.status) {
         console.log("add ok, notify");
         this.$emit("added");
@@ -150,15 +151,6 @@ export default {
         "Location adding failed!"
       );
 
-      //   },
-      //   (error) => {
-      //     console.log("Location adding failed");
-
-      //     console.log("error", error);
-      //   }
-      // );
-
-      //   await this.restartForm();
       this.clearForm();
       await this.$refs.csrf.refresh();
       this.submitted = false;
