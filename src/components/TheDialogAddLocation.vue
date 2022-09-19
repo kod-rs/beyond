@@ -1,6 +1,4 @@
 <template>
-  <w-button @click="showDialog"> Open dialog </w-button>
-
   <w-dialog
     v-model="dialog.show"
     :fullscreen="dialog.fullscreen"
