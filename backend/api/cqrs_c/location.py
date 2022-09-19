@@ -3,58 +3,85 @@ from backend.api.cqrs_q.portfolio import get_single_portfolio
 from backend.api.model.portfolio import Portfolio
 
 
-def update(username, portfolio, section, _type,
+def update(username,  portfolio,name,
            params) -> bool:
 
     p = get_single_portfolio(username, portfolio)
+    params = filter_params(params)
 
-    params = {k:v for k,v in params.items() if k in ["portfolio", "section", "type", "latitude", "longitude"]}
+    handle_portfolio_param(params, username)
+
+    return bool(
+        Location.objects \
+            .filter(name=name, portfolio=p) \
+            .update(**params)
+    )
+
+
+def handle_portfolio_param(params, username):
     if "portfolio" in params:
         print("switching portfolio")
 
         new_portfolio_name = params["portfolio"]
-        t = Portfolio.objects.filter(username=username, name=new_portfolio_name).exists()
+        t = Portfolio.objects \
+            .filter(username=username, name=new_portfolio_name).exists()
         if t:
             print("new target portfolio exists")
         else:
             print("new target portfolio not exists")
-        target_portfolio_instance =      get_single_portfolio(username, new_portfolio_name)
+        target_portfolio_instance = get_single_portfolio(username,
+                                                         new_portfolio_name)
 
         params["portfolio"] = target_portfolio_instance
 
-    return bool(
-        Location.objects \
-            .filter(portfolio=p, section=section, type=_type) \
-            .update(**params)
-    )
 
-def add(username, portfolio, section, location_type, latitude, longitude) -> str:
-    print(portfolio, section, location_type, latitude, longitude)
-    print(f"{username=} {portfolio=} {section=} {location_type=}")
+def check_location_exists(username, portfolio_name, location_name):
+    p = get_single_portfolio(username, portfolio_name)
+    if p["exists"]:
+        p = p["content"]
+    return Location.objects.filter(portfolio=p, name=location_name).exists()
+
+
+
+def add(username, portfolio_name, location_name, params) -> str:
     # todo if portfolio does not exist create it,
     #  check if role is manager and how many portfolios exist
 
-    p = get_single_portfolio(username, portfolio)
+    print(username, portfolio_name, location_name, params)
+
+    p = get_single_portfolio(username, portfolio_name)
 
     if p["exists"]:
         p = p["content"]
 
-    e = Location.objects\
-        .filter(portfolio=p, section=section, type=location_type).exists()
-
-    if e:
+    if check_location_exists(username, portfolio_name, location_name):
         return "already exists for this portfolio, section, type"
+
+    params = filter_params(params)
+
+    if "name" in params:
+        del params["name"]
+    if "portfolio" in params:
+        del params["portfolio"]
 
     l = Location.objects.create(
         portfolio=p,
-        section=section,
-        type=location_type,
-        latitude=latitude,
-        longitude=longitude
+        name=location_name,
+        **params
     )
 
     l.save()
     return "created"
+
+
+def filter_params(params):
+    # params = {k:v for k,v in params.items() if k in ["name", "portfolio", "section", "type", "latitude", "longitude"]}
+
+
+    params = {k: v for k, v in
+              params.items() if k in ["section", "name", "portfolio",
+                                      "type", "latitude", "longitude"]}
+    return params
 
 
 def delete(username, portfolio, section, _type) -> bool:
