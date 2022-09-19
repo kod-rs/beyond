@@ -22,14 +22,13 @@ async function patchLocation(
 
 async function deleteLocation(
     portfolioName,
-    section,
-    type,
+name
     ) {
     // todo csrf
 
     return await apiCalls.handleNewResponse(
         await apiCalls.api.delete(
-            `location/${portfolioName}/${section}/${type}`,
+            `location/${portfolioName}/${name}`,
             apiCalls.get_auth_header()
         )
     );
