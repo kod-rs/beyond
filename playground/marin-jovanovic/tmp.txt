@@ -104,3 +104,20 @@ pem_key
     key_type
     key_value
 
+
+building manager
+on gleda
+
+agregator
+nesto radi
+
+
+section
+    stan
+    prostor s upralvjivim uredajima
+
+type
+    industrijski/obicni/kucanstvo
+
+ime lokacije
+section, type, portfolio nije id
