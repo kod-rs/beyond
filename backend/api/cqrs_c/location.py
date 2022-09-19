@@ -84,8 +84,15 @@ def filter_params(params):
     return params
 
 
-def delete(username, portfolio, section, _type) -> bool:
+def delete(username, portfolio, name) -> bool:
     p = get_single_portfolio(username, portfolio)
-    instance = Location.objects.get(portfolio=p, section=section, type=_type)
-    instance.delete()
-    return True
+    if p["exists"]:
+        p = p["content"]
+    else:
+        return False
+    try:
+        instance = Location.objects.get(portfolio=p, name=name)
+        instance.delete()
+        return True
+    except Location.DoesNotExist:
+        return False
