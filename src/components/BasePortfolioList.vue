@@ -275,8 +275,8 @@ export default {
 
       this.showMessage(
         r["payload"]["status"],
-        `Deleted ${portfolioPayload.newName}`,
-        "Error deleting"
+        `Created ${portfolioPayload.newName}`,
+        "Error creating"
       );
 
       if (r["payload"]["status"]) {
@@ -329,25 +329,35 @@ export default {
         console.log("new name is empty");
         return;
       }
-      if (
-        !confirm(
-          "Are you sure you want to delete " + portfolioPayload.newName + "?"
-        )
-      ) {
+      // if (
+      //   !confirm(
+      //     "Are you sure you want to delete " + portfolioPayload.newName + "?"
+      //   )
+      // ) {
+      //   return;
+      // }
+
+      let isConfirmed = await this.$swal.fire({
+        title: "Are you sure?",
+        text: "You won't be able to revert this!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes, delete it!",
+      });
+      console.log(isConfirmed);
+      if (!isConfirmed.isConfirmed) {
         return;
       }
+
       let oldName = portfolioPayload.oldName;
       let r = await apiPortfolio.deletePortfolio(oldName);
       if (r["payload"]["status"]) {
-        delete this.portfolios[oldName];
-        // this.portfolios = this.portfolios.filter(data => data.oldName == currentName);
-        let index = this.portfolios.indexOf(oldName);
-        if (index !== -1) {
-          this.portfolios.splice(index, 1);
-        } else {
-          alert("error deleting");
-        }
+        var index = this.portfolios.indexOf(portfolioPayload);
+        this.portfolios.splice(index, 1);
       }
+      console.log(r["payload"]);
 
       this.showMessage(
         r["payload"]["status"],
