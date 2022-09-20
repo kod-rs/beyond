@@ -1,9 +1,6 @@
 <template>
   <TopNavigationBar></TopNavigationBar>
   <w-app>
-    <!-- <w-button @click="$waveui.notify('Information.')" bg-color="info">
-      Notify info
-    </w-button> -->
     <div>
       <div class="nonscrollable">
         <router-view> </router-view>
@@ -41,11 +38,9 @@ import { INACTIVE_THRESHOLD, TIME_RESOLUTION } from "./scripts/constants";
 import { activate_tab_name_changer } from "./scripts/tab_name_changer";
 import { apiAuth } from "./scripts/api/auth";
 import TopNavigationBar from "./components/TopNavigationBar.vue";
-// import TestNavigation from "./components/TestNavigation.vue";
 
 export default {
   name: "app",
-  // components: { TestNavigation },
   data() {
     return {
       isPublic: sessionStorage.getItem("user") !== null,
@@ -56,6 +51,14 @@ export default {
     };
   },
   mounted() {
+    // this.importScript("sweetalert2.all.min.js");
+
+    this.importScript(
+      "http://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.min.js"
+    );
+
+    this.importScript("https://cdn.jsdelivr.net/npm/sweetalert2@8");
+
     this.importScript(
       "https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
     );
