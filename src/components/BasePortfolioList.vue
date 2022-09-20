@@ -329,13 +329,6 @@ export default {
         console.log("new name is empty");
         return;
       }
-      // if (
-      //   !confirm(
-      //     "Are you sure you want to delete " + portfolioPayload.newName + "?"
-      //   )
-      // ) {
-      //   return;
-      // }
 
       let isConfirmed = await this.$swal.fire({
         title: "Are you sure?",
@@ -346,7 +339,7 @@ export default {
         cancelButtonColor: "#d33",
         confirmButtonText: "Yes, delete it!",
       });
-      console.log(isConfirmed);
+
       if (!isConfirmed.isConfirmed) {
         return;
       }
