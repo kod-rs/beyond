@@ -22,6 +22,13 @@ import { createApp } from 'vue/dist/vue.esm-bundler';
 // import 'vue-toast-notification/dist/theme-sugar.css';
 
 
+import VueSweetalert2 from 'vue-sweetalert2';
+import 'sweetalert2/dist/sweetalert2.min.css';
+
+
+// import "http://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.min.js";
+// import "https://cdn.jsdelivr.net/npm/sweetalert2@8";
+
 
 
 
@@ -42,7 +49,7 @@ new WaveUI(app, {
     //   }
     // Some Wave UI options.
 })
-
+app.use(VueSweetalert2);
 
 app.use(Toast, {
     transition: "Vue-Toastification__bounce",
