@@ -2,8 +2,7 @@
 
 #### how to run
 
-    mark backend as source folder for python
-    yarn install
+
 
 ## Project setup
 ```
@@ -24,6 +23,3 @@ npm run build
 ```
 npm run lint
 ```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
