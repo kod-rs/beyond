@@ -48,13 +48,13 @@ export default {
     return { username: undefined };
   },
   async mounted() {
-    console.log("get username");
+    // console.log("get username");
 
     let r = await apiSettings.getSettings();
     if (r["auth"]["status"]) {
       let pl = r["payload"];
 
-      console.log("pl", pl);
+      // console.log("pl", pl);
 
       this.username = pl["username"];
     }
