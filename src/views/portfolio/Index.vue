@@ -1,25 +1,26 @@
 <template>
-  <div class="container mt-2">
-    <div class="row">
-      <div class="col">
-        <BasePortfolioList
-          @selectUpdate="updateSelectedList"
-          @increase-by="updateSelectedForChart"
-          :selectedForChart="selected"
-        ></BasePortfolioList>
-      </div>
-      <div class="col">
-        <BaseChart ref="temperature"></BaseChart>
-        <BaseChart ref="consumption"></BaseChart>
+  <BaseUserTemplate>
+    <div class="container mt-2">
+      <div class="row">
+        <div class="col">
+          <BasePortfolioList
+            @selectUpdate="updateSelectedList"
+            @increase-by="updateSelectedForChart"
+            :selectedForChart="selected"
+          ></BasePortfolioList>
+        </div>
+        <div class="col">
+          <BaseChart ref="temperature"></BaseChart>
+          <BaseChart ref="consumption"></BaseChart>
 
-        <button @click="showSelected">show selected</button>
+          <button @click="showSelected">show selected</button>
+        </div>
       </div>
-    </div>
 
-    <div class="row">
-      <TheOptimization :locations="selectedList"></TheOptimization>
-    </div>
-  </div>
+      <div class="row">
+        <TheOptimization :locations="selectedList"></TheOptimization>
+      </div></div
+  ></BaseUserTemplate>
 </template>
 
 
@@ -27,6 +28,7 @@
 import BasePortfolioList from "@/components/BasePortfolioList.vue";
 import BaseChart from "@/components/BaseChart.vue";
 import TheOptimization from "@/components/TheOptimization.vue";
+import BaseUserTemplate from "@/components/BaseUserTemplate.vue";
 
 export default {
   name: "PortfolioIndex",
@@ -98,6 +100,7 @@ export default {
     BasePortfolioList,
     BaseChart,
     TheOptimization,
+    BaseUserTemplate,
   },
 };
 </script> 
