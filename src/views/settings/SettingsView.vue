@@ -1,26 +1,29 @@
 <template>
-  <div class="container-fluid">
-    <div class="row">
-      <h1>Settings</h1>
-    </div>
-    <div class="row">
-      <BaseCheckbox
-        :isSelectedInit="zoomUserLocation"
-        @checkboxChange="zoomToggle"
-        ref="zoom"
-      ></BaseCheckbox>
-      zoom on user location
-    </div>
-    <!-- <div class="row">style: <BaseCheckbox></BaseCheckbox></div> -->
+  <BaseUserTemplate>
+    <div class="container-fluid">
+      <div class="row">
+        <h1>Settings</h1>
+      </div>
+      <div class="row">
+        <BaseCheckbox
+          :isSelectedInit="zoomUserLocation"
+          @checkboxChange="zoomToggle"
+          ref="zoom"
+        ></BaseCheckbox>
+        zoom on user location
+      </div>
+      <!-- <div class="row">style: <BaseCheckbox></BaseCheckbox></div> -->
 
-    <BaseNotification ref="notifications"></BaseNotification>
-  </div>
+      <BaseNotification ref="notifications"></BaseNotification>
+    </div>
+  </BaseUserTemplate>
 </template>
   
   <script>
 import BaseNotification from "@/components/BaseNotification.vue";
 import { apiSettings } from "@/scripts/api/settings";
 import BaseCheckbox from "../../components/BaseCheckbox.vue";
+import BaseUserTemplate from "@/components/BaseUserTemplate.vue";
 export default {
   data() {
     return {
@@ -94,7 +97,7 @@ export default {
       // );
     },
   },
-  components: { BaseCheckbox, BaseNotification },
+  components: { BaseCheckbox, BaseNotification, BaseUserTemplate },
 };
 </script>
   
