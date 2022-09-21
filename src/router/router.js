@@ -91,6 +91,9 @@ return authNotRequired;
 //   // isPublicRoute
 // }
 
+// todo fix using global store, not sure if this is creating new instance
+import { store } from "@/store/store"
+
 router.beforeEach((to, from, next) => {
 
   let isPublic = isPublicPath(to.path);
@@ -99,7 +102,9 @@ router.beforeEach((to, from, next) => {
 
   // console.log("targeting", to.path)
 
-  // routerStore.dispatch("SET_PATH", {path: to.path, isPublic: isPublic});
+  // this.$store.dispatch("setPath", value);
+
+  store.dispatch("setPath", {path: to.path, isPublic: isPublic});
 // console.log(isPublicRoute)
 // isPublicRoute = isPublic;
 // console.log("setting public", isPublic)
