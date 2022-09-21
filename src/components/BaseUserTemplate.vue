@@ -1,5 +1,5 @@
 <template>
-  <TopNavigationBar></TopNavigationBar>
+  <TopNavigationBar ref="nav"></TopNavigationBar>
   <div class="moveDown">
     <w-app>
       <div>
@@ -16,6 +16,12 @@ import TopNavigationBar from "./TopNavigationBar.vue";
 export default {
   data() {
     return {};
+  },
+  methods: {
+    setActive(p) {
+      console.log("set a", p);
+      this.$refs.nav.setActive(p);
+    },
   },
   components: { TopNavigationBar },
 };
