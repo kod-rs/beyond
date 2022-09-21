@@ -15,25 +15,24 @@
       </button>
       <div class="collapse navbar-collapse" id="navbarCollapse">
         <ul class="navbar-nav me-auto mb-2 mb-md-0">
-          <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="#">Home</a>
-          </li>
-          <li class="nav-item">
-            <router-link class="nav-link" :to="{ name: 'portfolio' }"
-              >Portfolio</router-link
+          <li v-for="(i, j) in linksD" :key="i" class="nav-item">
+            <router-link class="nav-link" :to="{ name: j }">{{
+              i.name
+            }}</router-link>
+
+            <!-- <router-link
+              v-if="!i.active"
+              @click="clicked(j)"
+              class="nav-link"
+              :to="{ name: j }"
+              >{{ i.name }}</router-link
             >
-            <!-- <a class="nav-link" href="#">Link</a> -->
+
+            <router-link v-else class="nav-link active" :to="{ name: j }">{{
+              i.name
+            }}</router-link> -->
           </li>
         </ul>
-
-        <router-link class="nav-link" :to="{ name: 'portfolio' }"
-          >Portfolio</router-link
-        >
-
-        <router-link :to="{ name: 'login' }">test_login</router-link> |
-        <!-- <router-link :to="{ name: 'portfolio' }">manage portfolio</router-link> -->
-        | <router-link :to="{ name: 'test' }">test_test</router-link> |
-        <router-link :to="{ name: 'history' }">todo_history</router-link> |
       </div>
 
       <TopNavigationBarUser></TopNavigationBarUser>
@@ -46,7 +45,42 @@ import TopNavigationBarName from "./TopNavigationBarName.vue";
 import TopNavigationBarUser from "./TopNavigationBarUser.vue";
 export default {
   data() {
-    return {};
+    return {
+      linksD: {
+        index: { name: "Home", active: true },
+        portfolio: { name: "Portfolio", active: false },
+        test: { name: "test_test", active: true },
+        history: { name: "todo_history", active: false },
+      },
+      links: [
+        { pathName: "index", name: "Home", active: true },
+        { pathName: "portfolio", name: "Portfolio", active: false },
+        { pathName: "login", name: "test_login", active: false },
+        { pathName: "test", name: "test_test", active: false },
+        { pathName: "history", name: "todo_history", active: false },
+      ],
+    };
+  },
+  methods: {
+    clicked(i) {
+      console.log("clicked", i.pathName, i.name, i.active);
+      for (const [key, value] of Object.entries(this.linksD)) {
+        console.log(key, value);
+        value.active = false;
+        // value.name = "brrrrrrrr";
+      }
+
+      this.linksD[i].active = true;
+      // console.log(i.active);
+      // this.links.forEach((j) => {
+      //   j.active = false;
+      // });
+      // i.name = "fffffff";
+      // i.active = true;
+    },
+    setActive(p) {
+      console.log("set", p);
+    },
   },
   components: { TopNavigationBarName, TopNavigationBarUser },
 };
