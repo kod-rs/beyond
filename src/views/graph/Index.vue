@@ -1,13 +1,16 @@
 <template>
-  <div class="row">
-    <div class="col">
-      <BaseChart :portfolio="portfolio" :p="chartOptions"></BaseChart>
+  <BaseUserTemplate>
+    <div class="row">
+      <div class="col">
+        <BaseChart :portfolio="portfolio" :p="chartOptions"></BaseChart>
+      </div>
     </div>
-  </div>
+  </BaseUserTemplate>
 </template>
   
   <script>
 import BaseChart from "@/components/BaseChart.vue";
+import BaseUserTemplate from "@/components/BaseUserTemplate.vue";
 
 export default {
   name: "GraphIndex",
@@ -34,7 +37,7 @@ export default {
     this.type = this.$route.params.type;
     console.log(this.portfolio, this.section, this.type);
   },
-  components: { BaseChart },
+  components: { BaseChart, BaseUserTemplate },
 };
 </script>
   
