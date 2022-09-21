@@ -1,8 +1,9 @@
 <template>
-  <div>
-    <!-- history view -->
+  <BaseUserTemplate>
+    <div>
+      <!-- history view -->
 
-    <!-- <div class="row" v-for="r in rows" :key="r">
+      <!-- <div class="row" v-for="r in rows" :key="r">
             <div class="col" v-for="c in cols" :key="c">
                 <ColourCard></ColourCard>
 
@@ -10,53 +11,54 @@
 
         </div> -->
 
-    <div class="row">
-      <div class="col" v-for="i in colours" :key="i">
-        <input
-          @click.prevent="colourClicked"
-          type="color"
-          class="form-control form-control-color"
-          value="#f1aaf1"
-        />
-        revert to me
+      <div class="row">
+        <div class="col" v-for="i in colours" :key="i">
+          <input
+            @click.prevent="colourClicked"
+            type="color"
+            class="form-control form-control-color"
+            value="#f1aaf1"
+          />
+          revert to me
+        </div>
       </div>
-    </div>
 
-    <!--  -->
-    <div class="col">
-      <!-- <div class="col">
+      <!--  -->
+      <div class="col">
+        <!-- <div class="col">
                 <input @click.prevent="colourClicked" type="color" class="form-control form-control-color"
                     value="#f1aaf1">
                 <hr>
             </div> -->
 
-      <div class="row">
-        <input type="text" v-model="colourHex" />
-        <button @click="addColour">add colour</button>
-        <hr />
-      </div>
-
-      <div class="row">
-        <button @click="refresh">refresh</button>
-        current state
-        <br />
-        <div v-for="i in colours" :key="i">
-          {{ i }}
+        <div class="row">
+          <input type="text" v-model="colourHex" />
+          <button @click="addColour">add colour</button>
+          <hr />
         </div>
-        <hr />
-      </div>
 
-      <div class="row">
-        <button @click="deleteAll">clear list</button>
-        <hr />
-      </div>
-    </div>
-  </div>
+        <div class="row">
+          <button @click="refresh">refresh</button>
+          current state
+          <br />
+          <div v-for="i in colours" :key="i">
+            {{ i }}
+          </div>
+          <hr />
+        </div>
+
+        <div class="row">
+          <button @click="deleteAll">clear list</button>
+          <hr />
+        </div>
+      </div></div
+  ></BaseUserTemplate>
 </template>
   
 
 <script>
 import { apiColour } from "../../scripts/api/colour";
+import BaseUserTemplate from "@/components/BaseUserTemplate.vue";
 
 export default {
   data() {
@@ -92,6 +94,7 @@ export default {
       console.log(r);
     },
   },
+  components: { BaseUserTemplate },
 };
 </script>
   
