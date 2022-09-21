@@ -2,7 +2,7 @@ import {
     createStore
 } from 'vuex'
 
-// this.$store.dispatch(action, value);
+// this.$store.dispatch("setPath", value);
 // let curr = this.$store.getters[variable];
 
 
@@ -34,7 +34,6 @@ export const store = createStore({
     actions: {
         setPath(context, path) {
 // path = {path: "/index", isPublic: false}
-
             context.commit("SET_PATH", path);
         },
         setUserCoordinates(context, userCoordiantes) {
@@ -64,6 +63,7 @@ export const store = createStore({
     },
     mutations: {
         SET_PATH(context, path) {
+            console.log("set p", path)
             context.path = path;
         },
         SET_USER_COORDINATES(context, userCoordiantes) {
