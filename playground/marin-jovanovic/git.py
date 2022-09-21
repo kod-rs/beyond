@@ -30,7 +30,7 @@ def main():
     comment = 'ref: map'
     comment = "wip: master detail"
     comment = "fix: remove colour from portfolio model"
-    comment = "fix: remove navbar from public pages"
+    comment = "wip: navbar link active"
 
     if same_comment:
         if not comment:
