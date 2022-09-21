@@ -56,24 +56,6 @@ export const router = createRouter({
       name: "test",
       component: TestPage
     },
-    // {
-    //   path: '/location',
-    //   component: Location,
-    //   children: [,
-    //     { path: '', component: Location },
-    //     {
-    //       path: '/addlocation',
-    //       name: "addlocation",
-    //       component: LocationAdd
-    //     },
-    //     {
-    //       path: '/viewLocation',
-    //       name: "viewlocation",
-    //       component: LocationView
-    //     },
-
-    //   ]
-    // },
     {
       path: '/:pathMatch(.*)*',
       redirect: '/'
@@ -96,15 +78,32 @@ export const router = createRouter({
   ]
 });
 
+// let isPublicRoute;
+
+function isPublicPath(toPath) {
+  const publicPages = ['/login', '/forgotpassword', '/termsofuse', '/privacypolicy', '/logout'];
+  const authNotRequired = publicPages.includes(toPath);
+return authNotRequired;
+}
+
+// export const routerHelper = {
+//   // isPublicPath,
+//   // isPublicRoute
+// }
+
 router.beforeEach((to, from, next) => {
 
-  // fixme chart should not be public
+  let isPublic = isPublicPath(to.path);
 
-  const publicPages = ['/login', '/forgotpassword', '/termsofuse', '/privacypolicy', '/logout', "/chart"];
-  const authRequired = !publicPages.includes(to.path);
   const loggedIn = sessionStorage.getItem('user');
 
-  if (authRequired && !loggedIn) {
+  // console.log("targeting", to.path)
+
+  // routerStore.dispatch("SET_PATH", {path: to.path, isPublic: isPublic});
+// console.log(isPublicRoute)
+// isPublicRoute = isPublic;
+// console.log("setting public", isPublic)
+  if (!isPublic && !loggedIn) {
     return next({
       path: '/login',
       query: { returnUrl: to.path }
@@ -113,8 +112,3 @@ router.beforeEach((to, from, next) => {
 
   next();
 })
-
-// router.beforeEach((to, from, next) => {
-//   if (!isAuthenticated) next('/login')
-//   else next()
-// })
