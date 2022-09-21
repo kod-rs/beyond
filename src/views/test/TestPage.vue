@@ -1,43 +1,44 @@
 <template>
-  <div>
-    <TheMap ref="map"></TheMap>
-    <TheAddLocationPopup ref="mappopup"></TheAddLocationPopup>
+  <BaseUserTemplate>
+    <div>
+      <TheMap ref="map"></TheMap>
+      <TheAddLocationPopup ref="mappopup"></TheAddLocationPopup>
 
-    <w-button class="ma1" @click="openBottom" outline>
-      Transparent overlay
-    </w-button>
+      <w-button class="ma1" @click="openBottom" outline>
+        Transparent overlay
+      </w-button>
 
-    <w-drawer v-model="isOpened" bottom>
-      <div class="container-fluid">
-        <div class="row">
-          <div class="col">
-            <div class="row">
-              <div>
-                portfolio
-                <div id="example-3">
-                  <div v-for="p in Object.keys(portfolios)" :key="p">
-                    <input
-                      type="checkbox"
-                      :id="p"
-                      :value="p"
-                      v-model="checkedNames"
-                    />
-                    <label :for="p">{{ p }}</label>
+      <w-drawer v-model="isOpened" bottom>
+        <div class="container-fluid">
+          <div class="row">
+            <div class="col">
+              <div class="row">
+                <div>
+                  portfolio
+                  <div id="example-3">
+                    <div v-for="p in Object.keys(portfolios)" :key="p">
+                      <input
+                        type="checkbox"
+                        :id="p"
+                        :value="p"
+                        v-model="checkedNames"
+                      />
+                      <label :for="p">{{ p }}</label>
+                      <hr />
+                    </div>
+                    <span>Checked portfolios: {{ checkedNames }}</span>
                     <hr />
+                    <button @click="onChange">click to filter</button>
                   </div>
-                  <span>Checked portfolios: {{ checkedNames }}</span>
-                  <hr />
-                  <button @click="onChange">click to filter</button>
                 </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
-    </w-drawer>
+      </w-drawer>
 
-    <BaseBottomDrawer ref="bottomDrawer"></BaseBottomDrawer>
-  </div>
+      <BaseBottomDrawer ref="bottomDrawer"></BaseBottomDrawer></div
+  ></BaseUserTemplate>
 </template>
   
   <script>
@@ -52,12 +53,14 @@ import VectorSource from "ol/source/Vector";
 import { Vector as VectorLayer } from "ol/layer";
 import BaseBottomDrawer from "@/components/BaseBottomDrawer.vue";
 import TheMap from "@/components/TheMap.vue";
+import BaseUserTemplate from "@/components/BaseUserTemplate.vue";
 
 export default {
   components: {
     TheAddLocationPopup,
     BaseBottomDrawer,
     TheMap,
+    BaseUserTemplate,
   },
   data() {
     return {
