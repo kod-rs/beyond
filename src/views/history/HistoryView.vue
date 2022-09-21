@@ -1,5 +1,5 @@
 <template>
-  <BaseUserTemplate>
+  <BaseUserTemplate ref="nav">
     <div>
       <!-- history view -->
 
@@ -68,6 +68,9 @@ export default {
       rows: ["row1", "row2", "row3"],
       cols: ["col1", "col2", "col3"],
     };
+  },
+  mounted() {
+    // this.$refs.nav.setActive("history");
   },
   methods: {
     colourClicked() {
