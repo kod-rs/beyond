@@ -1,4 +1,6 @@
-import { createStore } from 'vuex'
+import {
+    createStore
+} from 'vuex'
 
 // this.$store.dispatch(action, value);
 // let curr = this.$store.getters[variable];
@@ -7,21 +9,11 @@ import { createStore } from 'vuex'
 export const store = createStore({
     state() {
         return {
-            // count: 0,
-            // synchronizerToken: "",
-
-            // user lon lat
-            // latitude: 0,
-            // longitude: 0,
-
-            // todo where is this used? navbar?
-            // username: "username_template",
-
+          
             // todo, this is in .env
             appMode: "development",
 
             clickedLocation: undefined,
-          
 
             portfolios: {},
             map: undefined,
@@ -34,26 +26,32 @@ export const store = createStore({
 
             // user coordinates
             userCoordiantes: {},
-     synchronizerToken: "",
- username: "",
+            synchronizerToken: "",
+            username: "",
+            path: {},
         }
     },
     actions: {
-setUserCoordinates(context, userCoordiantes) {
-    context.commit("SET_USER_COORDINATES", userCoordiantes);
-  
-},
-setSynchronizerToken(context, synchronizerToken) {
-    context.commit("SET_SYNCHRONIZER_TOKEN", synchronizerToken); 
-},
-setUsername(context, username) {
-    context.commit("SET_USERNAME", username);
-},
+        setPath(context, path) {
+// path = {path: "/index", isPublic: false}
+
+            context.commit("SET_PATH", path);
+        },
+        setUserCoordinates(context, userCoordiantes) {
+            context.commit("SET_USER_COORDINATES", userCoordiantes);
+
+        },
+        setSynchronizerToken(context, synchronizerToken) {
+            context.commit("SET_SYNCHRONIZER_TOKEN", synchronizerToken);
+        },
+        setUsername(context, username) {
+            context.commit("SET_USERNAME", username);
+        },
         setMap(context, map) {
-            context.commit("setMap", map);
+            context.commit("SET_MAP", map);
         },
         setPortfolios(context, portfolios) {
-            context.commit("setPortfolios", portfolios);
+            context.commit("SET_PORTFOLIOS", portfolios);
         },
         setZoomUserLocation(context, zoomUserLocation) {
             context.commit("SET_ZOOM_USER_LOCATION", zoomUserLocation);
@@ -65,17 +63,17 @@ setUsername(context, username) {
 
     },
     mutations: {
+        SET_PATH(context, path) {
+            context.path = path;
+        },
         SET_USER_COORDINATES(context, userCoordiantes) {
             context.userCoordiantes = userCoordiantes;
         },
-        SET_USERNAME(context, username){
+        SET_USERNAME(context, username) {
             context.username = username;
-
         },
-
-
         SET_SYNCHRONIZER_TOKEN(state, synchronizerToken) {
-state.synchronizerToken = synchronizerToken;
+            state.synchronizerToken = synchronizerToken;
         },
         SET_ZOOM_USER_LOCATION(state, zoomUserLocation) {
             state.zoomUserLocation = zoomUserLocation
@@ -83,58 +81,39 @@ state.synchronizerToken = synchronizerToken;
         SET_CLICKED_LOCATION(state, clickedLocation) {
             state.clickedLocation = clickedLocation;
         },
-
-
-   
-        // setLatitude(state, newValue) {
-        //     state.latitude = newValue
-        // },
-        // setLongitude(state, newValue) {
-        //     state.longitude = newValue
-        // },
-    
-
-        setMap(state, map) {
+        SET_MAP(state, map) {
             state.map = map;
         },
-        setPortfolios(state, portfolios) {
+        SET_PORTFOLIOS(state, portfolios) {
             state.portfolios = portfolios;
-        }
-
-        ,
-
-        selectLocation(state, location) {
-            console.log("selecting location", location)
+        },
+        SELECT_LOCATION(state, location) {
             state.location = location;
         },
-
-        addChart(state, chart) {
-            console.log("adding chart")
+        ADD_CHART(state, chart) {
             state.charts.push(chart);
         }
-
-
     },
     getters: {
-coordiantes(state) {
-return state.coordiantes
-},
-synchronizerToken(state) {
-    return state.synchronizerToken;
-},
-username(state) {
-return state.username;
-},
-
+        path(state) {
+            return state.path;
+        },
+        coordiantes(state) {
+            return state.coordiantes
+        },
+        synchronizerToken(state) {
+            return state.synchronizerToken;
+        },
+        username(state) {
+            return state.username;
+        },
         map(state) {
             return state.map;
         },
-
         portfolios(state) {
             return state.portfolios;
         },
-
-        location(state){
+        location(state) {
             return state.location;
         },
         charts(state) {
@@ -142,15 +121,11 @@ return state.username;
         },
         zoomUserLocation(state) {
             return state.zoomUserLocation;
-        } ,
+        },
         clickedLocation(state) {
             return state.clickedLocation;
-        }
-        // selectedPortfolio(state) {
-        //     return state.selectedPortfolio;
-        // }
+        },
+
     }
 
 })
-
-
