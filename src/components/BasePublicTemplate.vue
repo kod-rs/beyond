@@ -26,7 +26,6 @@
                       />
                     </span>
                   </div>
-                  <!-- <div v-if="error" class="alert alert-danger">{{ error }}</div> -->
                   <slot />
                 </div>
               </div>
@@ -54,7 +53,6 @@
 import { runClouds } from "../scripts/clouds";
 
 export default {
-  // name: 'publicTemplate',
   data() {
     return {};
   },
