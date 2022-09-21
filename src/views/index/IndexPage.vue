@@ -1,16 +1,17 @@
 <template>
-  <div>t</div>
+  <BaseUserTemplate>
+    <div>t</div>
+  </BaseUserTemplate>
 </template>
 
 <script>
 import { useToast } from "vue-toastification";
+import BaseUserTemplate from "@/components/BaseUserTemplate.vue";
 
 export default {
   setup() {
     const toast = useToast();
-
     toast("notif test");
-
     return { toast };
   },
   data() {
@@ -27,7 +28,6 @@ export default {
         timeout: 2000,
       });
     },
-
     showMessage(result, successMessage, errorMessage) {
       if (result) {
         if (successMessage) {
@@ -47,5 +47,6 @@ export default {
       this.showMessage(false, "t", "f");
     },
   },
+  components: { BaseUserTemplate },
 };
 </script>
