@@ -1,6 +1,7 @@
 from backend.api.assets.printer import print_logo
 from backend.api.role_action_validation.role_validator import SchemeValidator
 
+
 class StartupConfig:
 
     def __init__(self):
@@ -18,5 +19,6 @@ class StartupConfig:
     @staticmethod
     def print_app_logo():
         print_logo()
+
 
 startup_configuration = StartupConfig()
