@@ -24,7 +24,7 @@ class KeycloakBackend(BaseBackend):
         print("KeycloakBackend")
 
         if "HTTP_AUTHORIZATION" not in request.META:
-            # print("no authorization")
+            print("no authorization")
             return None
 
         authorization_header = request.META['HTTP_AUTHORIZATION']
@@ -32,12 +32,12 @@ class KeycloakBackend(BaseBackend):
         auth_type, payload = parsed_authorization_header.split(" ")
 
         if auth_type == "Basic":
-            # print("user pass")
+            print("user pass")
             username, password = payload.split(":")
             res = login(username, password)
 
         elif auth_type == "Digest":
-            # print("Digest")
+            print("Digest")
 
             # todo https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Authorization
             access_token, refresh_token = payload.split(":")
@@ -47,7 +47,7 @@ class KeycloakBackend(BaseBackend):
             res = {"is_valid": False}
 
         if not res["is_valid"]:
-            # print("user pass err")
+            print("user pass err")
             return None
 
         try:
@@ -72,7 +72,7 @@ class KeycloakBackend(BaseBackend):
         request.refresh_token = res["refresh_token"]
         request.is_auth = True
 
-        # print(f"{user=}")
+        print(f"{user=}")
         return User
 
 

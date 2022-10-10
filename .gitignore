@@ -349,5 +349,5 @@ dmypy.json
 package-lock.json
 package.json
 yarn.lock
-/playground/certs/localhost.pem
-/playground/certs/localhost-key.pem
+/playground/ivan-cindric/certs/localhost.pem
+/playground/ivan-cindric/certs/localhost-key.pem

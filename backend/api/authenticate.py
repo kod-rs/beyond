@@ -3,8 +3,9 @@ from backend.api.keycloak.keycloak_manager import keycloak_obtain_token, \
 
 
 def login(username, password):
+    print(username, password)
     res = keycloak_obtain_token(username, password)
-
+    print(res)
     if all((i in res) for i in
            [
                "access_token",
