@@ -2,7 +2,7 @@ from django.http import JsonResponse
 from rest_framework.views import APIView
 
 from backend.api.keycloak.keycloak_manager import logout
-from backend.api.view.comm import get_auth_ok_response_template
+from backend.api.view.common import get_auth_ok_response_template
 
 
 class LogoutView(APIView):

@@ -10,7 +10,7 @@ from backend.api.cqrs_q.portfolio import get_single_portfolio
 from backend.api.mode.type_validator import _check_request_data
 from backend.api.model.location import Location
 from backend.api.model.consumption import consumptionValues, consumptionEntry
-from backend.api.view.comm import get_auth_ok_response_template
+from backend.api.view.common import get_auth_ok_response_template
 
 
 #

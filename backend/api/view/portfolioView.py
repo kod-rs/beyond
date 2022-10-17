@@ -8,7 +8,7 @@ from backend.api.cqrs_c.portfolio import  delete_portfolio, \
     update_portfolio, create_portfolio
 from backend.api.cqrs_c.portfolio_colour_adapter import get_last_colour
 from backend.api.cqrs_q.portfolio import get_all_portfolio, get_single_portfolio
-from backend.api.view.comm import get_auth_ok_response_template
+from backend.api.view.common import get_auth_ok_response_template
 
 from backend.api.comm.constants import EXISTS,CREATED
 

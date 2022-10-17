@@ -1,4 +1,4 @@
-from backend.api.cqrs_c.portfolio_colour_adapter import add_colour_to_log
+from backend.api.cqrs_c.portfolio_colour_adapter import add_color_to_log
 from backend.api.model.portfolio import Portfolio
 from backend.api.comm.constants import EXISTS,CREATED,NOT_EXISTS
 # from backend.api.cqrs_c.colour import add_colour_to_log
@@ -19,7 +19,7 @@ def create_portfolio(username, portfolio_name, colour=None):
     if colour:
         # todo log colour
         print("log colour")
-        add_colour_to_log(username,portfolio_name,colour)
+        add_color_to_log(username, portfolio_name, colour)
 
     return {"status": True}
 
@@ -40,7 +40,7 @@ def update_portfolio(username, current_name, params):
         portfolio_name = params["name"]
 
     if "colour" in params:
-        r = add_colour_to_log(username, portfolio_name, params["colour"])
+        r = add_color_to_log(username, portfolio_name, params["colour"])
         return r
 
     # params = {k: v for k, v in params.items() if k in ["name", "colour"]}

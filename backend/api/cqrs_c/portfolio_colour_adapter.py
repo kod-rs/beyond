@@ -61,7 +61,7 @@ def delete_portfolio_colour_entries(username, portfolio):
     return {"status": False}
 
 
-def add_colour_to_log(username, portfolio, colour_hex):
+def add_color_to_log(username, portfolio, colour_hex):
     if str(colour_hex).startswith("#"):
         colour_hex = colour_hex[1:]
 

@@ -3,7 +3,7 @@ from rest_framework.views import APIView
 
 from backend.api.cqrs_c.csrf import create
 from backend.api.csrf.main import get_synchronizer_token
-from backend.api.view.comm import get_auth_ok_response_template
+from backend.api.view.common import get_auth_ok_response_template
 
 
 class CSRFView(APIView):

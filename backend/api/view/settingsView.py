@@ -1,9 +1,8 @@
-
 from django.http import JsonResponse
 from rest_framework.views import APIView
 
 from backend.api.model.user import User
-from backend.api.view.comm import get_auth_ok_response_template
+from backend.api.view.common import get_auth_ok_response_template
 
 
 class SettingsView(APIView):
@@ -41,24 +40,19 @@ class SettingsView(APIView):
         response["payload"]["status"] = True
         return JsonResponse(response)
 
+
 def get_settings(username):
     try:
-        return {
-            "exists": True,
-            "content":
-                User.objects.get(username=username)
-
-        }
+        return {"exists": True,
+                "content": User.objects.get(username=username)}
     except User.DoesNotExist:
         return {"exists": False}
 
+
 def update_settings(username, settings):
-
-
-    j = {k:v for k,v in settings.items()}
+    j = {k: v for k, v in settings.items()}
     j["username"] = username
     i, _ = User.objects.update_or_create(
         username=username,
-         defaults=j
-    )
+        defaults=j)
     i.save()

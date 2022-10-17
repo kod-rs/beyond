@@ -7,7 +7,7 @@ from backend.api.comm.comm import bytes_to_json
 from backend.api.cqrs_c.location import add, delete, update
 from backend.api.cqrs_q.location import get_user_portfolio
 from backend.api.mode.type_validator import _check_request_data
-from backend.api.view.comm import get_auth_ok_response_template
+from backend.api.view.common import get_auth_ok_response_template
 
 
 #
