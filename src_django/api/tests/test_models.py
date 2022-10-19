@@ -5,7 +5,6 @@ from django.utils.timezone import make_aware
 
 from src_django.api.models import Data
 from src_django.api.models import Location
-from src_django.api.models import ManagerAggregator
 from src_django.api.models import PersonLocation
 from src_django.api.models.person import RoleChoices, Person
 
@@ -99,35 +98,3 @@ class PersonLocationTestCase(TestCase):
 
         assert pl2.person.id == 2
         assert pl2.location.id == 'ABC2'
-
-
-#
-class ManagerAggregatorTestCase(TestCase):
-    def setUp(self):
-        set_up_persons()
-
-        ManagerAggregator.objects.create(id=1,
-                                         manager=Person.objects.get(id=1),
-                                         aggregator=Person.objects.get(id=2))
-
-        try:
-            ManagerAggregator.objects.create(
-                id=2,
-                manager=Person.objects.get(id=2),
-                aggregator=Person.objects.get(id=1))
-        except ValueError as e:
-            assert 'field must have a person that is a' in str(e)
-
-    def test_model_attrs(self):
-        manager = Person.objects.get(id=1)
-        aggregator = Person.objects.get(id=2)
-
-        manager_aggregator = ManagerAggregator.objects.get(id=1)
-        manager_from_relation = manager_aggregator.manager
-        aggregator_from_relation = manager_aggregator.aggregator
-
-        assert manager.id == manager_from_relation.id
-        assert manager.role == manager_from_relation.role
-
-        assert aggregator.id == aggregator_from_relation.id
-        assert aggregator.role == aggregator_from_relation.role
