@@ -3,7 +3,7 @@ import json
 from django.http import JsonResponse
 from rest_framework.views import APIView
 
-from src_django.api.controller import location_controller
+from src_django.api import controller
 
 
 class LocationView(APIView):
@@ -18,7 +18,7 @@ class LocationView(APIView):
         """
         locations = json.loads(request.body)
         location_ids = locations.get('location_ids')
-        locations = location_controller.get_locations_by_location_ids(
+        locations = controller.location.get_locations_by_location_ids(
             location_ids)
 
         if not locations:
