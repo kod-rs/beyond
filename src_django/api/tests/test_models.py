@@ -5,14 +5,45 @@ from django.utils.timezone import make_aware
 
 from src_django.api.models import Data
 from src_django.api.models import Location
-from src_django.api.models.person import RoleChoices, Person
+from src_django.api.models import ManagerAggregator
 from src_django.api.models import PersonLocation
+from src_django.api.models.person import RoleChoices, Person
+
+
+def set_up_locations():
+    Location.objects.create(id="ABC1", longitude=1.1, latitude=2.2)
+    Location.objects.create(id="ABC2", longitude=3.3, latitude=4.4)
+
+
+def set_up_data():
+    Data.objects.create(id=1,
+                        timestamp=make_aware(datetime.now()),
+                        value=3.1,
+                        location=Location.objects.get(id="ABC1"))
+    Data.objects.create(id=2,
+                        timestamp=make_aware(datetime.now()),
+                        value=3.2,
+                        location=Location.objects.get(id="ABC2"))
+
+
+def set_up_persons():
+    Person.objects.create(id=1, role=RoleChoices.MANAGER)
+    Person.objects.create(id=2, role=RoleChoices.AGGREGATOR)
+
+
+def set_up_person_location():
+    PersonLocation.objects.create(id=1,
+                                  person=Person.objects.get(id=1),
+                                  location=Location.objects.get(id="ABC1"))
+
+    PersonLocation.objects.create(id=2,
+                                  person=Person.objects.get(id=2),
+                                  location=Location.objects.get(id="ABC2"))
 
 
 class LocationTestCase(TestCase):
     def setUp(self):
-        Location.objects.create(id="ABC1", longitude=1.1, latitude=2.2)
-        Location.objects.create(id="ABC2", longitude=3.3, latitude=4.4)
+        set_up_locations()
 
     def test_model_attrs(self):
         loc1 = Location.objects.get(id="ABC1")
@@ -27,16 +58,8 @@ class LocationTestCase(TestCase):
 
 class DataTestCase(TestCase):
     def setUp(self):
-        Location.objects.create(id="ABC1", longitude=1.1, latitude=2.2)
-        Location.objects.create(id="ABC2", longitude=3.3, latitude=4.4)
-        Data.objects.create(id=1,
-                            timestamp=make_aware(datetime.now()),
-                            value=3.1,
-                            location=Location.objects.get(id="ABC1"))
-        Data.objects.create(id=2,
-                            timestamp=make_aware(datetime.now()),
-                            value=3.2,
-                            location=Location.objects.get(id="ABC2"))
+        set_up_locations()
+        set_up_data()
 
     def test_model_attrs(self):
         loc1 = Location.objects.get(id="ABC1")
@@ -51,8 +74,7 @@ class DataTestCase(TestCase):
 
 class PersonTestCase(TestCase):
     def setUp(self):
-        Person.objects.create(id=1, role=RoleChoices.MANAGER)
-        Person.objects.create(id=2, role=RoleChoices.AGGREGATOR)
+        set_up_persons()
 
     def test_model_attrs(self):
         person1 = Person.objects.get(id=1)
@@ -64,19 +86,9 @@ class PersonTestCase(TestCase):
 
 class PersonLocationTestCase(TestCase):
     def setUp(self):
-        Person.objects.create(id=1, role=RoleChoices.MANAGER)
-        Person.objects.create(id=2, role=RoleChoices.AGGREGATOR)
-
-        Location.objects.create(id="ABC1", longitude=1.1, latitude=2.2)
-        Location.objects.create(id="ABC2", longitude=3.3, latitude=4.4)
-
-        PersonLocation.objects.create(id=1,
-                                      person=Person.objects.get(id=1),
-                                      location=Location.objects.get(id="ABC1"))
-
-        PersonLocation.objects.create(id=2,
-                                      person=Person.objects.get(id=2),
-                                      location=Location.objects.get(id="ABC2"))
+        set_up_persons()
+        set_up_locations()
+        set_up_person_location()
 
     def test_model_attrs(self):
         pl1 = PersonLocation.objects.get(id=1)
@@ -87,3 +99,35 @@ class PersonLocationTestCase(TestCase):
 
         assert pl2.person.id == 2
         assert pl2.location.id == 'ABC2'
+
+
+#
+class ManagerAggregatorTestCase(TestCase):
+    def setUp(self):
+        set_up_persons()
+
+        ManagerAggregator.objects.create(id=1,
+                                         manager=Person.objects.get(id=1),
+                                         aggregator=Person.objects.get(id=2))
+
+        try:
+            ManagerAggregator.objects.create(
+                id=2,
+                manager=Person.objects.get(id=2),
+                aggregator=Person.objects.get(id=1))
+        except ValueError as e:
+            assert 'field must have a person that is a' in str(e)
+
+    def test_model_attrs(self):
+        manager = Person.objects.get(id=1)
+        aggregator = Person.objects.get(id=2)
+
+        manager_aggregator = ManagerAggregator.objects.get(id=1)
+        manager_from_relation = manager_aggregator.manager
+        aggregator_from_relation = manager_aggregator.aggregator
+
+        assert manager.id == manager_from_relation.id
+        assert manager.role == manager_from_relation.role
+
+        assert aggregator.id == aggregator_from_relation.id
+        assert aggregator.role == aggregator_from_relation.role
