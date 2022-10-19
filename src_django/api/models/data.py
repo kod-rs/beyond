@@ -4,7 +4,6 @@ from src_django.api.models.location import Location
 
 
 class Data(models.Model):
-    id = models.IntegerField(primary_key=True)
     timestamp = models.DateTimeField()
     value = models.FloatField()
     location = models.ForeignKey(Location, on_delete=models.DO_NOTHING)

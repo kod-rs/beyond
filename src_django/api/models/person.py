@@ -7,5 +7,4 @@ class RoleChoices(models.TextChoices):
 
 
 class Person(models.Model):
-    id = models.IntegerField(primary_key=True)
     role = models.TextField(choices=RoleChoices.choices)

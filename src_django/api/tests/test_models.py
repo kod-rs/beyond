@@ -2,9 +2,11 @@ from django.test import TestCase
 
 from src_django.api.models import Data
 from src_django.api.models import Location
-from src_django.api.models import PersonLocation
+from src_django.api.models import PersonPortfolio
+from src_django.api.models import PortfolioLocation
 from src_django.api.models.person import RoleChoices, Person
 from src_django.api.tests import common
+
 
 class LocationTestCase(TestCase):
     def setUp(self):
@@ -49,18 +51,23 @@ class PersonTestCase(TestCase):
         assert person2.role == RoleChoices.AGGREGATOR.value
 
 
-class PersonLocationTestCase(TestCase):
+class PersonPortfolioTestCase(TestCase):
     def setUp(self):
-        common.set_up_persons()
-        common.set_up_locations()
-        common.set_up_person_location()
+        common.populate_database()
 
     def test_model_attrs(self):
-        pl1 = PersonLocation.objects.get(id=1)
-        pl2 = PersonLocation.objects.get(id=2)
+        person1_portfolios = PersonPortfolio.objects.filter(person__id=1)
 
-        assert pl1.person.id == 1
-        assert pl1.location.id == 'ABC1'
+        assert len(person1_portfolios) == 2
 
-        assert pl2.person.id == 2
-        assert pl2.location.id == 'ABC2'
+
+class PortfolioTestCase(TestCase):
+    def setUp(self):
+        common.set_up_locations()
+        common.set_up_portfolio()
+        common.set_up_portfolio_location()
+
+    def test_model_attrs(self):
+        portfolio_location = PortfolioLocation.objects.filter(portfolio__id=1)
+
+        assert len(list(portfolio_location)) == 2
