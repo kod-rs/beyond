@@ -1,16 +1,20 @@
-import sys
+import json
 
-import requests
+from django.test import Client
+from django.test import TestCase
 
-
-def main():
-    data = {'location_ids': ['ZIV0034902130', 'ZIV0034902131']}
-
-    response = requests.post('http://127.0.0.1:8000/location/',
-                             json=data)
-    breakpoint()
-    pass
+from src_django.api.tests import common
 
 
-if __name__ == '__main__':
-    sys.exit(main())
+class TestLocation(TestCase):
+    def setUp(self):
+        common.set_up_locations()
+
+    def test_location_get(self):
+        client = Client()
+        data = {'location_ids': ['ABC1', 'ABC2', 'ABC3']}
+        response = client.post('/location/',
+                               json.dumps(data),
+                               content_type="application/json")
+        assert response.json()['status'] is True
+        assert len(response.json()['locations']) == 2

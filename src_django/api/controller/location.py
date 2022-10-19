@@ -11,10 +11,12 @@ def get_location_by_location_id(location_id: str) -> typing.Union[dict, None]:
 
 def get_locations_by_location_ids(location_ids: typing.List[str]
                                   ) -> typing.Union[typing.List[dict], None]:
+    locations = []
     for location_id in location_ids:
         location = get_location_by_location_id(location_id)
         if location:
-            yield location
+            locations.append(location)
+    return locations if locations else None
 
 
 def add_location(location_id: str, longitude: float, latitude: float) -> bool:

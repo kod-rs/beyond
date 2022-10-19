@@ -12,20 +12,20 @@ def main():
             VALUES(?,?,?)'''
     create_locations_table(cur)
     conn.commit()
-    #create_data_table(cur)
+    create_data_table(cur)
 
     with open('active im en.csv') as csv_file:
         csv_reader = list(csv.reader(csv_file))
 
     building_ids = [building_id for building_id in csv_reader[0][2:]]
     create_mock_buildings(cur, building_ids)
-    # csv_reader = csv_reader[1:]
-    # for row_no, row in enumerate(csv_reader):
-    #     timestamp = row[1]
-    #     buildings_data = row[2:]
-    #     for column_no, building_data in enumerate(buildings_data):
-    #         values = (building_data, timestamp, building_ids[column_no])
-    #         cur.execute(sql, values)
+    csv_reader = csv_reader[1:]
+    for row_no, row in enumerate(csv_reader):
+        timestamp = row[1]
+        buildings_data = row[2:]
+        for column_no, building_data in enumerate(buildings_data):
+            values = (building_data, timestamp, building_ids[column_no])
+            cur.execute(sql, values)
     conn.commit()
 
 
@@ -49,8 +49,8 @@ def create_connection(db_file):
 def create_locations_table(cur: sqlite3.Cursor):
     sql_delete = 'DROP TABLE IF EXISTS data'
     sql_create_data_table = """
-    CREATE TABLE IF NOT EXISTS api_location (
-        id TEXT PRIMARY KEY,
+    CREATE TABLE IF NOT EXISTS locations (
+        locationID TEXT PRIMARY KEY,
         longitude REAL NOT NULL,
         latitude REAL NOT NULL);"""
     try:
@@ -74,7 +74,7 @@ def create_data_table(cur: sqlite3.Cursor):
 
 
 def create_mock_buildings(cur, building_ids):
-    sql = '''INSERT OR IGNORE INTO api_location(id, 
+    sql = '''INSERT OR IGNORE INTO locations(locationID, 
                                     longitude,
                                     latitude) 
                 VALUES(?,?,?)'''
