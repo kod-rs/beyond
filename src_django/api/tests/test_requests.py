@@ -18,3 +18,14 @@ class TestLocation(TestCase):
                                content_type="application/json")
         assert response.json()['status'] is True
         assert len(response.json()['portfolios']) == 2
+        # breakpoint()
+        pass
+
+    def test_get_locations_for_portfolio(self):
+        client = Client()
+        data = {'portfolio_id': 101}
+        response = client.post('/location/',
+                               json.dumps(data),
+                               content_type="application/json")
+        assert response.json()['status'] is True
+        assert len(response.json()['locations']) == 3

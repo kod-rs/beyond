@@ -4,25 +4,19 @@ from django.http import JsonResponse
 from rest_framework.views import APIView
 
 from src_django.api import controller
+from src_django.api.view import common
 
 
 class LocationView(APIView):
 
     def post(self, request) -> JsonResponse:
-        """
-        # TODO this, better
-        Request has a json body structured as:
-            {location_ids: [...]}
-        returns:
-            JsonResponse:
-        """
-        locations = json.loads(request.body)
-        location_ids = locations.get('location_ids')
-        locations = controller.location.get_locations_by_location_ids(
-            location_ids)
+        portfolio_id = json.loads(request.body)
+        portfolio_id = portfolio_id.get('portfolio_id')
 
-        if not locations:
-            return JsonResponse({'status': False})
+        if not portfolio_id:
+            return common.false_status
+
+        locations = controller.location.get_for_portfolio(portfolio_id)
 
         return JsonResponse({'status': True,
                              'locations': list(locations)})
