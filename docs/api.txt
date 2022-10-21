@@ -1,0 +1,59 @@
+==================== Beyond API ===============================================
+* Communication will be done over HTTP, SSL may be included.
+* Messages will be HTTP GET and POST requests and responses.
+* The requested data will be JSON formatted.
+* Communication will be bidirectional.
+* Note: For readability purposes, all the messages are given a symbolic name.
+================= FlexOpt to Beyond ===========================================
+* BUILDINGS_BY_USR_ID_REQUEST:
+    - POST request to 'beyond_uri/'
+    - Getting all the buildings for a specific user.
+    - FlexOpt will send a HTTP post request
+        containing the following JSON object:
+        {
+            "type": "get_buildings_by_user_id_request",
+            "user_id": number
+        }
+* BUILDING_INFO_REQUEST:
+    - POST request to 'beyond_uri/'
+    - Getting all the power consumption information for specific buildings.
+    - FlexOpt will send a HTTP post request
+        containing the following JSON object:
+        {
+            "type": "get_building_info_request",
+            "building_ids": Array of Strings
+        }
+    - Note: Assumption made is that the building ID will be a unique string.
+================= Beyond to FlexOpt ===========================================
+* BUILDINGS_BY_USR_ID_RESPONSE:
+    - POST response to 'FlexOpt_uri/'
+    - Once FlexOpt sends a BUILDINGS_BY_USR_ID_REQUEST, this message
+        is expected as a response:
+        {
+            "type": "get_buildings_by_user_id_response",
+            "buildings": Array of BUILDING type
+        }
+    - BUILDING type has the following structure:
+        {
+            "building_id": String,
+            "latitude": Number,
+            "longitude": Number
+        }
+* BUILDING_INFO_RESPONSE:
+    - POST response to 'FlexOpt_uri/'
+    - Once FlexOpt sends a BUILDING_INFO_REQUEST, this message
+        is expected as a response:
+        {
+            "type": "get_building_info_response",
+            "buildings_info": Array of BUILDING_INFO
+        }
+    - BUILDING_INFO type has the following structure:
+        {
+            "building_id": String,
+            "info": Array of TIMESERIES type
+        }
+        , where TIMESERIES type has the following structure:
+            {
+                "value": Number,
+                "timestamp": Timestamp convertible to ISO 8601 format
+            }
