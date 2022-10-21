@@ -1,7 +1,7 @@
 import calendar
 import sys
 from operator import itemgetter
-from typing import List, Union
+from typing import List, Union, NamedTuple
 
 import numpy
 import numpy as np
@@ -20,6 +20,11 @@ N_DAYS = (31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31)
 MONTHS = tuple(calendar.month_name[1:])
 MAX_H_IN_DAY = 24
 H_IN_DAY = list(range(MAX_H_IN_DAY))
+
+
+class TimeInterval(NamedTuple):
+    from_t: int
+    to_t: int
 
 
 def is_outlier(label: int) -> bool:
@@ -207,16 +212,56 @@ def get_max_diff(ids: tuple, points: dict) -> dict:
     max_diff = {month: [] for month in MONTHS}
     no_flex = [[i, 0] for i in range(MAX_H_IN_DAY)]
     for month_index in range(len(MONTHS)):
-        for building_di in range(len(ids)):
-            _points = points[MONTHS[month_index]][building_di]
-            if len(_points) > 40:
-                _points = np.array(_points)
+        for building_id in range(len(ids)):
+            points_by_month = points[MONTHS[month_index]][building_id]
+            if len(points_by_month) > 40:
+                points_by_month = np.array(points_by_month)
                 min_base, max_base, mid_base, diff = baseline_calculation(
-                    _points)
+                    points_by_month)
                 max_diff[MONTHS[month_index]].append(diff)
             else:
                 max_diff[MONTHS[month_index]].append(no_flex)
     return max_diff
+
+
+def add_sort(diffs: np.ndarray, interval: TimeInterval
+             ) -> List[List[Union[int, float]]]:
+    """
+    Function adds the diffs, takes 20% and sorts the results
+    descendingly according to the flexibility.
+    Args:
+        diffs:  Differences
+        interval: Time period
+
+    Returns: Sorted flexibility
+
+    """
+
+    ret = []
+
+    for building in range(len(diffs)):
+        if sum(np.array(
+                diffs[building][interval.from_t:interval.to_t])[:, 1]) > 0:
+            res = np.array(diffs[building][interval.from_t:interval.to_t])
+            res = round(sum(res[:, 1]) * 0.2, 2)
+            ret.append([building, res])
+
+    return sorted(ret, key=itemgetter(1), reverse=True)
+
+
+def confidence(flex_list: List[List[Union[int, float]]],
+               flex_amount: float) -> List[tuple]:
+    """
+    Function that calculates confidence for a building.
+    Args:
+        flex_list: List of possible flexibilities
+        flex_amount: Needed amount of flexibility
+
+    Returns:
+        tuple containing building number and corresponding confidence factor
+    """
+
+    return [(f[0], round(f[1] / flex_amount, 2)) for f in flex_list]
 
 
 def algorithm():
