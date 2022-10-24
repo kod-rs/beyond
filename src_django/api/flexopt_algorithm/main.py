@@ -27,6 +27,12 @@ class TimeInterval(NamedTuple):
     to_t: int
 
 
+class BuildingInfo(NamedTuple):
+    number: int
+    time_interval: TimeInterval
+    flex: float
+
+
 def is_outlier(label: int) -> bool:
     """
     Function that checks if the point in an outlier.
@@ -35,7 +41,6 @@ def is_outlier(label: int) -> bool:
 
     Returns:
         True if point is an outlier, else False
-
     """
     return label == -1
 
@@ -48,7 +53,6 @@ def is_first_cluster(label: int) -> bool:
 
     Returns:
         True if in first cluster, else False
-
     """
     return label == 0
 
@@ -61,7 +65,6 @@ def is_in_range(value: Union[int, float]) -> bool:
 
     Returns:
         True if in range, else False
-
     """
     return MIN_VALUE <= value < MAX_VALUE
 
@@ -264,8 +267,64 @@ def confidence(flex_list: List[List[Union[int, float]]],
     return [(f[0], round(f[1] / flex_amount, 2)) for f in flex_list]
 
 
+def apply_flexibility(diffs: List[List[point_coordinates]], interval: TimeInterval, flex: float) -> List[BuildingInfo]:
+    """
+    Calculate flexibility per time and per building.
+    Args:
+        diffs: List of diffs for the month
+        interval: Interval when the flexibility is needed
+        flex: Amount of flexibility needed
+
+    Returns:
+        How much flexibility can a building give and when
+
+    """
+    order = add_sort(np.array(diffs), interval)
+    ret = []
+    end = None
+
+    for building in range(len(order)):
+        flex_amount = 0
+
+        if flex > 0:
+            if order[building][1] >= flex:
+                start = -1
+                for hour in range(interval.from_t, interval.to_t):
+                    if diffs[order[building][0]][hour][1] > 0 and start == -1:
+                        start = hour
+                    if flex <= diffs[order[building][0]][hour][1]:
+                        flex_amount += flex
+                        end = hour + 1
+                        break
+                    else:
+                        flex_amount += diffs[order[building][0]][hour][1]
+                        flex -= diffs[order[building][0]][hour][1]
+                ret.append(BuildingInfo(number=order[building][0],
+                                        time_interval=TimeInterval(start, end),
+                                        flex=round(flex_amount, 2)))
+                break
+            else:
+                flex -= order[building][1]
+                for hour in range(interval.from_t, interval.to_t):
+                    if diffs[order[building][0]][hour][1] > 0:
+                        start = hour
+                        break
+                for hour in reversed(range(interval.from_t, interval.to_t)):
+                    if diffs[order[building][0]][hour][1] > 0:
+                        end = hour + 1
+                        break
+                ret.append(BuildingInfo(number=order[building][0],
+                                        time_interval=TimeInterval(start, end),
+                                        flex=round(order[building][1], 2)))
+        else:
+            break
+
+    return ret
+
+
 def algorithm():
     # TODO get this from somewhere else
+    interval = TimeInterval(14, 17)
     df = pd.read_csv('active im en.csv')
     df = df.drop(['Unnamed: 0'], axis=1).reset_index(drop=True)
     ids = ('ZIV0034902130', 'ZIV0034902131', 'ZIV0034704030', 'ZIV0034703915',
@@ -275,7 +334,6 @@ def algorithm():
     buildings = [df[_id].values for _id in ids]
     points = get_points(ids, buildings)
     max_diff = get_max_diff(ids, points)
-
     breakpoint()
     pass
 
