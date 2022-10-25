@@ -10,15 +10,15 @@
         - BUILDING_INFO_REQUEST
         - FLEXIBILITY_OFFER_AGR_RESPONSE
         - TOTAL_FLEXIBILITY_OFFER_AGR_RESPONSE
+        - FLEXIBILITY_OFFER_BUILDING_RESPONSE
         - TOTAL_FLEXIBILITY_OFFER_BUILDING_RESPONSE
-        - CONSUMPTION_REQUEST
     - Direction: Beyond to FlexOpt
         - BUILDINGS_BY_USR_ID_RESPONSE
         - BUILDING_INFO_RESPONSE
         - FLEXIBILITY_OFFER_AGR_REQUEST
         - TOTAL_FLEXIBILITY_OFFER_AGR_REQUEST
+        - FLEXIBILITY_OFFER_BUILDING_REQUEST
         - TOTAL_FLEXIBILITY_OFFER_BUILDING_REQUEST
-        - CONSUMPTION_REQUEST
 ================= FlexOpt to Beyond ===========================================
 * BUILDINGS_BY_USR_ID_REQUEST:
     - POST request to 'beyond_uri/'
@@ -43,34 +43,51 @@
 * FLEXIBILITY_OFFER_AGR_RESPONSE
     - Response to 'beyond_uri/'
     - FlexOpt will send a HTTP post request
+        containing the following JSON object:
+        {
+            "type": "flexibility_offer_by_aggregator_response",
+            "user_id": Number,
+            "start_time": String convertible to ISO 8601 format,
+            "end_time": String convertible to ISO 8601 format,
+            "flexibility": Number
+        }
 
 * TOTAL_FLEXIBILITY_OFFER_AGR_RESPONSE
     - Response to 'beyond_uri/'
     - FlexOpt will send a HTTP post request
         containing the following JSON object:
         {
-            "type": "flexibility_offer_by_aggregator_response",
+            "type": "total_flexibility_offer_by_aggregator_response",
+            "start_time": String convertible to ISO 8601 format,
+            "end_time": String convertible to ISO 8601 format,
             "user_id": Number,
             "flexibility": Number
         }
+
+* FLEXIBILITY_OFFER_BUILDING_RESPONSE
+    - Response to 'beyond_uri/'
+    - FlexOpt will send a HTTP post request
+        containing the following JSON object:
+        {
+            "type": "flexibility_offer_by_building_response",
+            "start_time": String convertible to ISO 8601 format,
+            "end_time": String convertible to ISO 8601 format,
+            "building_id": String,
+            "flexibility": Number
+        }
+
 * TOTAL_FLEXIBILITY_OFFER_BUILDING_RESPONSE
     - Response to 'beyond_uri/'
     - FlexOpt will send a HTTP post request
         containing the following JSON object:
         {
-            "type": "total_flexibility_offer_by_aggregator_response",
-            "user_id": Number,
+            "type": "total_flexibility_offer_by_building_response",
+            "start_time": String convertible to ISO 8601 format,
+            "end_time": String convertible to ISO 8601 format,
+            "building_id": String,
             "flexibility": Number
         }
-* CONSUMPTION_RESPONSE
-    - Response to 'beyond_uri/'
-    - FlexOpt will send a HTTP post request
-        containing the following JSON object:
-    {
-        "type": "bulding_consumption",
-        "building_id": String,
-        "consumption": Number
-    }
+
 ================= Beyond to FlexOpt ===========================================
 * BUILDINGS_BY_USR_ID_RESPONSE:
     - POST response to 'FlexOpt_uri/'
@@ -97,6 +114,7 @@
     - BUILDING_INFO type has the following structure:
         {
             "building_id": String,
+            "building_name": String
             "info": Array of TIMESERIES type
         }
         , where TIMESERIES type has the following structure:
@@ -108,59 +126,43 @@
     - GET request to 'FlexOpt_uri/'
     - Retrieve flexibility offers for a given interval and a given aggregator.
     - The request has the following structure:
-
-        {URI}/flexibilityOffer?startTime={START}?endTime={END}?UserId={USR_ID}
-
-        - where:
-            - URI is the hostname of the FlexOpt web application.
-            - START and END are Strings convertible to ISO 8601 format.
-            - USR_ID is a unique number identifier for a specific aggregator.
+         is expected as a response:
+        {
+            "type": "get_flexibility_offer_by_aggregator",
+            "start_time": String convertible to ISO 8601 format,
+            "end_time": String convertible to ISO 8601 format,
+            "user_id": Number
+        }
 
 - TOTAL_FLEXIBILITY_OFFER_AGR_REQUEST:
     - GET request to 'FlexOpt_uri/'
     - Retrieve total flexibility for a given interval and a given aggregator.
     - The request has the following structure:
-
-    {URI}/availableFlexibility?startTime={START}?endTime={END}?UserId={USR_ID}
-
-        - where:
-            - URI is the hostname of the FlexOpt web application.
-            - START and END are Strings convertible to ISO 8601 format.
-            - USR_ID is a unique number identifier for a specific aggregator.
-
+        {
+            "type": "get_total_flexibility_offer_by_aggregator",
+            "start_time": String convertible to ISO 8601 format,
+            "end_time": String convertible to ISO 8601 format,
+            "user_id": Number
+        }.
 
 - TOTAL_FLEXIBILITY_OFFER_BUILDING_REQUEST:
     - GET request to 'FlexOpt_uri/'
     - Retrieve total flexibility for a given interval and a given building.
     - The request has the following structure:
-
-    {URI}/availableFlexibility?startTime={START}?endTime={END}?BuildingId={BID}
-
-        - where:
-            - URI is the hostname of the FlexOpt web application.
-            - START and END are Strings convertible to ISO 8601 format.
-            - BID is a unique string identifier for a specific building.
+        {
+            "type": "get_flexibility_offer_by_building",
+            "start_time": String convertible to ISO 8601 format,
+            "end_time": String convertible to ISO 8601 format,
+            "building_id": String
+        }.
 
 - TOTAL_FLEXIBILITY_OFFER_BUILDING_REQUEST:
     - GET request to 'FlexOpt_uri/'
     - Retrieve total flexibility for a given interval and a given building.
     - The request has the following structure:
-
-    {URI}/availableFlexibility?startTime={START}?endTime={END}?BuildingId={BID}
-
-        - where:
-            - URI is the hostname of the FlexOpt web application.
-            - START and END are Strings convertible to ISO 8601 format.
-            - BID is a unique string identifier for a specific building.
-
-- CONSUMPTION_REQUEST:
-    - GET request to 'FlexOpt_uri/'
-    - Retrieve total consumption for a given interval and a given building.
-    - The request has the following structure:
-
-    {URI}/consumption?startTime={START}?endTime={END}?BuildingId={BID}
-
-        - where:
-            - URI is the hostname of the FlexOpt web application.
-            - START and END are Strings convertible to ISO 8601 format.
-            - BID is a unique string identifier for a specific building.
+        {
+            "type": "get_total_flexibility_offer_by_building",
+            "start_time": String convertible to ISO 8601 format,
+            "end_time": String convertible to ISO 8601 format,
+            "building_id": String
+        }.
