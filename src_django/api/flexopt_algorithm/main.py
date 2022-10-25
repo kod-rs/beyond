@@ -1,5 +1,7 @@
 import calendar
+import datetime
 import sys
+import typing
 from operator import itemgetter
 from typing import List, Union, NamedTuple
 
@@ -22,12 +24,22 @@ MAX_H_IN_DAY = 24
 H_IN_DAY = list(range(MAX_H_IN_DAY))
 
 
+class BuildingEnergy(NamedTuple):
+    building_id: str
+    energy_info: typing.List['EnergyInfo']
+
+
+class EnergyInfo(NamedTuple):
+    timestamp: datetime.datetime
+    value: float
+
+
 class TimeInterval(NamedTuple):
     from_t: int
     to_t: int
 
 
-class BuildingInfo(NamedTuple):
+class CurrentBuildingInfo(NamedTuple):
     number: int
     time_interval: TimeInterval
     flex: float
@@ -113,7 +125,7 @@ def finding_elbow_of_the_graph(point_list: np.array) -> float:
     return knee.knee_y
 
 
-def baseline_calculation(points: numpy.ndarray) -> tuple:
+def baseline_calculation(points: numpy.ndarray) -> list:
     """
     Function that calculates min, mid and max baseline with which the input
     data can be described.
@@ -171,59 +183,72 @@ def baseline_calculation(points: numpy.ndarray) -> tuple:
     min_base[:, 1] = temp_min
     max_base = np.array(max_base)
     max_base[:, 1] = temp_max
-    mid_base = []
 
     diff = []
-    # TODO name this better
-    for x, vr1, vr2 in zip(min_base[:, 0], min_base[:, 1], max_base[:, 1]):
-        mid_base.append([x, (vr1 + vr2) / 2])
-        diff.append([x, (vr2 - vr1) / 2])
 
-    mid_base = np.array(mid_base)
+    for x, val1, val2 in zip(min_base[:, 0], min_base[:, 1], max_base[:, 1]):
+        diff.append([x, (val2 - val1) / 2])
 
-    return min_base, max_base, mid_base, diff
+    return diff
 
 
-def get_points(ids: tuple, buildings: list) -> dict:
-    points = {month: [] for month in MONTHS}
-    for building_id in range(len(ids)):
-        hour_accumulator = 0
+def get_points(building_ids: tuple, buildings: list, month_index: int
+               ) -> List[List[point_coordinates]]:
+    """
 
-        for month_index, month_days in enumerate(N_DAYS):
-            month_hours: list = month_days * H_IN_DAY
+    Args:
+        building_ids: tuple of strings
+        buildings: timeseries values keyed by building id
+        month_index: Očito
 
-            inverted_point_list = np.array(
-                [buildings[building_id][hour_accumulator: hour_accumulator
-                                                          + month_days
-                                                          * MAX_H_IN_DAY],
-                 month_hours]).transpose()
+    Returns:
+        List of (x, y) points to be considered in futher calculations
+    """
+    month_days = N_DAYS[month_index]
+    points = []
+    hour_accumulator = sum(N_DAYS[:month_index]) * 24
+    for building_id in range(len(building_ids)):
+        month_hours: list = month_days * H_IN_DAY
 
-            elbow = finding_elbow_of_the_graph(inverted_point_list)
-            eps, min_samples = [elbow, 8] if elbow <= 20 else [20, 16]
-            dbscan = DBSCAN(eps=eps,
-                            min_samples=min_samples).fit(inverted_point_list)
+        inverted_point_list = np.array(
+            [buildings[building_id][hour_accumulator: hour_accumulator
+                                                      + month_days
+                                                      * MAX_H_IN_DAY],
+             month_hours]).transpose()
 
-            labels: np.ndarray = dbscan.labels_
-            hour_accumulator += month_days * MAX_H_IN_DAY
+        elbow = finding_elbow_of_the_graph(inverted_point_list)
+        eps, min_samples = [elbow, 8] if elbow <= 20 else [20, 16]
+        dbscan = DBSCAN(eps=eps,
+                        min_samples=min_samples).fit(inverted_point_list)
 
-            points[MONTHS[month_index]].append(
-                selected_points(inverted_point_list, labels))
+        labels: np.ndarray = dbscan.labels_
+
+        points.append(selected_points(inverted_point_list, labels))
     return points
 
 
-def get_max_diff(ids: tuple, points: dict) -> dict:
-    max_diff = {month: [] for month in MONTHS}
+def get_max_diff(building_ids: tuple, points: list) -> list:
+    """
+    Calculate the maximum difference between the middle baseline and the
+        extremity baseline.
+    Args:
+        building_ids: building ids
+        points: list of (x, y), where x = current hour, y = consumption
+
+    Returns:
+        List of differences between the middle baseline and the
+        extremity baseline
+    """
+    max_diff = []
     no_flex = [[i, 0] for i in range(MAX_H_IN_DAY)]
-    for month_index in range(len(MONTHS)):
-        for building_id in range(len(ids)):
-            points_by_month = points[MONTHS[month_index]][building_id]
-            if len(points_by_month) > 40:
-                points_by_month = np.array(points_by_month)
-                min_base, max_base, mid_base, diff = baseline_calculation(
-                    points_by_month)
-                max_diff[MONTHS[month_index]].append(diff)
-            else:
-                max_diff[MONTHS[month_index]].append(no_flex)
+    for building_id in range(len(building_ids)):
+        points_by_building = points[building_id]
+        if len(points_by_building) > 40:
+            points_by_building = np.array(points_by_building)
+            diff = baseline_calculation(points_by_building)
+            max_diff.append(diff)
+        else:
+            max_diff.append(no_flex)
     return max_diff
 
 
@@ -239,9 +264,7 @@ def add_sort(diffs: np.ndarray, interval: TimeInterval
     Returns: Sorted flexibility
 
     """
-
     ret = []
-
     for building in range(len(diffs)):
         if sum(np.array(
                 diffs[building][interval.from_t:interval.to_t])[:, 1]) > 0:
@@ -261,17 +284,21 @@ def confidence(flex_list: List[List[Union[int, float]]],
         flex_amount: Needed amount of flexibility
 
     Returns:
-        tuple containing building number and corresponding confidence factor
+        Tuple containing building number and corresponding confidence factor
     """
 
     return [(f[0], round(f[1] / flex_amount, 2)) for f in flex_list]
 
 
-def apply_flexibility(diffs: List[List[point_coordinates]], interval: TimeInterval, flex: float) -> List[BuildingInfo]:
+def apply_flexibility(diffs: List[list],
+                      interval: TimeInterval, flex: float
+                      ) -> List[CurrentBuildingInfo]:
     """
     Calculate flexibility per time and per building.
     Args:
-        diffs: List of diffs for the month
+        diffs: Key is a string representation of a month. Value for a specific
+            key is a list. Every list contains 'N' values, where 'N' is the
+            number of buildings. Every value contains a tuple (hour, diff)
         interval: Interval when the flexibility is needed
         flex: Amount of flexibility needed
 
@@ -281,7 +308,6 @@ def apply_flexibility(diffs: List[List[point_coordinates]], interval: TimeInterv
     """
     order = add_sort(np.array(diffs), interval)
     ret = []
-    end = None
 
     for building in range(len(order)):
         flex_amount = 0
@@ -299,9 +325,10 @@ def apply_flexibility(diffs: List[List[point_coordinates]], interval: TimeInterv
                     else:
                         flex_amount += diffs[order[building][0]][hour][1]
                         flex -= diffs[order[building][0]][hour][1]
-                ret.append(BuildingInfo(number=order[building][0],
-                                        time_interval=TimeInterval(start, end),
-                                        flex=round(flex_amount, 2)))
+                ret.append(CurrentBuildingInfo(number=order[building][0],
+                                               time_interval=TimeInterval(
+                                                   start, end),
+                                               flex=round(flex_amount, 2)))
                 break
             else:
                 flex -= order[building][1]
@@ -313,30 +340,84 @@ def apply_flexibility(diffs: List[List[point_coordinates]], interval: TimeInterv
                     if diffs[order[building][0]][hour][1] > 0:
                         end = hour + 1
                         break
-                ret.append(BuildingInfo(number=order[building][0],
-                                        time_interval=TimeInterval(start, end),
-                                        flex=round(order[building][1], 2)))
+                ret.append(CurrentBuildingInfo(number=order[building][0],
+                                               time_interval=TimeInterval(
+                                                   start, end),
+                                               flex=round(order[building][1],
+                                                          2)))
         else:
             break
 
     return ret
 
 
-def algorithm():
-    # TODO get this from somewhere else
-    interval = TimeInterval(14, 17)
-    df = pd.read_csv('active im en.csv')
-    df = df.drop(['Unnamed: 0'], axis=1).reset_index(drop=True)
-    ids = ('ZIV0034902130', 'ZIV0034902131', 'ZIV0034704030', 'ZIV0034703915',
-           'ZIV0034704013',
-           'ZIV0034703953', 'ZIV0034703954')
-    length = len(ids)
-    buildings = [df[_id].values for _id in ids]
-    points = get_points(ids, buildings)
-    max_diff = get_max_diff(ids, points)
-    breakpoint()
-    pass
+def algorithm(building_energy_list: typing.List[BuildingEnergy],
+              interval: TimeInterval,
+              flex_amount: int,
+              month: MONTHS = None) -> List[CurrentBuildingInfo]:
+    """
+    Flexibility optimization algorithm.
+    Get the available flexibility for the requested interval.
+    Args:
+        building_energy_list: building id paired with its timeseries data
+        interval: requested interval
+        flex_amount: requested flexibility amount
+        month: requested month, if no month given, the default value is
+            tomorrow's month
+    Returns:
+        Potential flexibility per building for the requested interval
+
+    """
+    if not month:
+        month_tomorrow = datetime.datetime.now() + datetime.timedelta(days=1)
+        month_index = month_tomorrow.month - 1
+    else:
+        month_index = MONTHS.index(month)
+
+    building_ids = tuple(b.building_id for b in building_energy_list)
+    buildings = [[b_list.value for b_list in b.energy_info]
+                 for b in building_energy_list]
+
+    points = get_points(building_ids, buildings, month_index)
+
+    max_diff = get_max_diff(building_ids, points)
+
+    building_info_list = apply_flexibility(max_diff, interval, flex_amount)
+
+    return building_info_list
 
 
 if __name__ == '__main__':
-    sys.exit(algorithm())
+    # debug fake test data
+    _interval = TimeInterval(9, 12)
+    _flex_amount = 303
+    _month = MONTHS[1]
+    df = pd.read_csv('active im en.csv')
+    # df = df.drop(['Unnamed: 0'], axis=1).reset_index(drop=True)
+    ids = ('ZIV0034902130', 'ZIV0034902131', 'ZIV0034704030', 'ZIV0034703915',
+           'ZIV0034704013',
+           'ZIV0034703953', 'ZIV0034703954')
+    rows = [df.iloc[index] for index in range(len(df))]
+    building_ids = [b_id for b_id in df.keys()[2:]]
+
+    building_energy = {
+        b_id: [{'ts': datetime.datetime.strptime(row['Timestamp'][:-4],
+                                                 "%Y-%m-%d %H:%M:%S"),
+                'value': row[b_id]}
+               for row in rows]
+        for b_id in building_ids}
+
+    building_energy = [BuildingEnergy(building_id=b_id,
+                                      energy_info=[
+                                          EnergyInfo(
+                                              timestamp=timeseries['ts'],
+                                              value=timeseries['value'])
+                                          for timeseries in b_values])
+                       for b_id, b_values in building_energy.items()]
+    # for month in MONTHS:
+
+    sys.exit(algorithm(
+        building_energy_list=building_energy,
+        interval=_interval,
+        flex_amount=_flex_amount,
+        month=_month))
