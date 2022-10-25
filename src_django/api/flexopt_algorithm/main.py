@@ -12,8 +12,6 @@ from kneed import KneeLocator
 from sklearn.cluster import DBSCAN
 from sklearn.neighbors import NearestNeighbors
 
-point_coordinates = List[Union[int, float]]
-
 MIN_VALUE = 500
 MAX_VALUE = 2500
 NUMBER_OF_SAMPLES = 8760
@@ -22,6 +20,8 @@ N_DAYS = (31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31)
 MONTHS = tuple(calendar.month_name[1:])
 MAX_H_IN_DAY = 24
 H_IN_DAY = list(range(MAX_H_IN_DAY))
+
+point_coordinates = List[Union[int, float]]
 
 
 class BuildingEnergy(NamedTuple):
@@ -81,7 +81,7 @@ def is_in_range(value: Union[int, float]) -> bool:
     return MIN_VALUE <= value < MAX_VALUE
 
 
-def selected_points(list_of_all_points: List[point_coordinates],
+def selected_points(list_of_all_points: point_coordinates,
                     labels: np.ndarray) -> List[point_coordinates]:
     """
        Only considering if there is more than one cluster.
@@ -202,7 +202,7 @@ def get_points(building_ids: tuple, buildings: list, month_index: int
         month_index: Očito
 
     Returns:
-        List of (x, y) points to be considered in futher calculations
+        List of (x, y) points to be considered in further calculations
     """
     month_days = N_DAYS[month_index]
     points = []
@@ -385,39 +385,3 @@ def algorithm(building_energy_list: typing.List[BuildingEnergy],
     building_info_list = apply_flexibility(max_diff, interval, flex_amount)
 
     return building_info_list
-
-
-if __name__ == '__main__':
-    # debug fake test data
-    _interval = TimeInterval(9, 12)
-    _flex_amount = 303
-    _month = MONTHS[1]
-    df = pd.read_csv('active im en.csv')
-    # df = df.drop(['Unnamed: 0'], axis=1).reset_index(drop=True)
-    ids = ('ZIV0034902130', 'ZIV0034902131', 'ZIV0034704030', 'ZIV0034703915',
-           'ZIV0034704013',
-           'ZIV0034703953', 'ZIV0034703954')
-    rows = [df.iloc[index] for index in range(len(df))]
-    building_ids = [b_id for b_id in df.keys()[2:]]
-
-    building_energy = {
-        b_id: [{'ts': datetime.datetime.strptime(row['Timestamp'][:-4],
-                                                 "%Y-%m-%d %H:%M:%S"),
-                'value': row[b_id]}
-               for row in rows]
-        for b_id in building_ids}
-
-    building_energy = [BuildingEnergy(building_id=b_id,
-                                      energy_info=[
-                                          EnergyInfo(
-                                              timestamp=timeseries['ts'],
-                                              value=timeseries['value'])
-                                          for timeseries in b_values])
-                       for b_id, b_values in building_energy.items()]
-    # for month in MONTHS:
-
-    sys.exit(algorithm(
-        building_energy_list=building_energy,
-        interval=_interval,
-        flex_amount=_flex_amount,
-        month=_month))
