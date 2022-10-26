@@ -1,2 +1,2 @@
 
-../../keycloak-18.0.1/bin/kc.sh start-dev
+../../keycloak-19.0.3/bin/kc.sh start-dev
