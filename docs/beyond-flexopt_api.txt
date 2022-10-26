@@ -49,6 +49,7 @@
         containing the following JSON object:
         {
             "type": "flexibility_demand_request",
+            "day": String convertible to ISO 8601 format,
             "user_id": Number,
         }
 
