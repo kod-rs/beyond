@@ -1,0 +1,197 @@
+==================== Beyond API ===============================================
+* Communication will be done over HTTP, SSL may be included.
+* Messages will be HTTP GET and POST requests and responses.
+* The requested data will be JSON formatted.
+* Communication will be bidirectional.
+* Note: For readability purposes, all the messages are given a symbolic name.
+* Message names are:
+    - Direction: FlexOpt to Beyond
+        - BUILDINGS_BY_USR_ID_REQUEST
+        - BUILDING_INFO_REQUEST
+        - FLEXIBILITY_DEMAND_REQUEST
+        - FLEXIBILITY_OFFER_AGR_RESPONSE
+        - TOTAL_FLEXIBILITY_OFFER_AGR_RESPONSE
+        - FLEXIBILITY_OFFER_BUILDING_RESPONSE
+        - TOTAL_FLEXIBILITY_OFFER_BUILDING_RESPONSE
+    - Direction: Beyond to FlexOpt
+        - BUILDINGS_BY_USR_ID_RESPONSE
+        - BUILDING_INFO_RESPONSE
+        - FLEXIBILITY_DEMAND_RESPONSE
+        - FLEXIBILITY_OFFER_AGR_REQUEST
+        - TOTAL_FLEXIBILITY_OFFER_AGR_REQUEST
+        - FLEXIBILITY_OFFER_BUILDING_REQUEST
+        - TOTAL_FLEXIBILITY_OFFER_BUILDING_REQUEST
+================= FlexOpt to Beyond ===========================================
+* BUILDINGS_BY_USR_ID_REQUEST:
+    - POST request to 'beyond_uri/'
+    - Getting all the buildings for a specific user.
+    - FlexOpt will send a HTTP post request
+        containing the following JSON object:
+        {
+            "type": "get_buildings_by_user_id_request",
+            "user_id": Number
+        }
+* BUILDING_INFO_REQUEST:
+    - POST request to 'beyond_uri/'
+    - Getting all the power consumption information for specific buildings.
+    - FlexOpt will send a HTTP post request
+        containing the following JSON object:
+        {
+            "type": "get_building_info_request",
+            "building_ids": Array of Strings
+        }
+    - Note: Assumption made is that the building ID will be a unique string.
+
+
+* FLEXIBILITY_DEMAND_REQUEST
+    - Request to 'beyond_uri/'
+    - FlexOpt will send a HTTP post request
+        containing the following JSON object:
+        {
+            "type": "flexibility_demand_request",
+            "user_id": Number,
+        }
+
+* FLEXIBILITY_OFFER_AGR_RESPONSE
+    - Response to 'beyond_uri/'
+    - FlexOpt will send a HTTP post request
+        containing the following JSON object:
+        {
+            "type": "flexibility_offer_by_aggregator_response",
+            "user_id": Number,
+            "start_time": String convertible to ISO 8601 format,
+            "end_time": String convertible to ISO 8601 format,
+            "flexibility": Number
+        }
+
+* TOTAL_FLEXIBILITY_OFFER_AGR_RESPONSE
+    - Response to 'beyond_uri/'
+    - FlexOpt will send a HTTP post request
+        containing the following JSON object:
+        {
+            "type": "total_flexibility_offer_by_aggregator_response",
+            "start_time": String convertible to ISO 8601 format,
+            "end_time": String convertible to ISO 8601 format,
+            "user_id": Number,
+            "flexibility": Number
+        }
+
+* FLEXIBILITY_OFFER_BUILDING_RESPONSE
+    - Response to 'beyond_uri/'
+    - FlexOpt will send a HTTP post request
+        containing the following JSON object:
+        {
+            "type": "flexibility_offer_by_building_response",
+            "start_time": String convertible to ISO 8601 format,
+            "end_time": String convertible to ISO 8601 format,
+            "building_id": String,
+            "flexibility": Number
+        }
+
+* TOTAL_FLEXIBILITY_OFFER_BUILDING_RESPONSE
+    - Response to 'beyond_uri/'
+    - FlexOpt will send a HTTP post request
+        containing the following JSON object:
+        {
+            "type": "total_flexibility_offer_by_building_response",
+            "start_time": String convertible to ISO 8601 format,
+            "end_time": String convertible to ISO 8601 format,
+            "building_id": String,
+            "flexibility": Number
+        }
+
+================= Beyond to FlexOpt ===========================================
+* BUILDINGS_BY_USR_ID_RESPONSE:
+    - POST response to 'FlexOpt_uri/'
+    - Once FlexOpt sends a BUILDINGS_BY_USR_ID_REQUEST, this message
+        is expected as a response:
+        {
+            "type": "get_buildings_by_user_id_response",
+            "buildings": Array of BUILDING type
+        }
+    - BUILDING type has the following structure:
+        {
+            "building_id": String,
+            "building_name": String,
+            "latitude": Number,
+            "longitude": Number
+        }
+* BUILDING_INFO_RESPONSE:
+    - POST response to 'FlexOpt_uri/'
+    - Once FlexOpt sends a BUILDING_INFO_REQUEST, this message
+        is expected as a response:
+        {
+            "type": "get_building_info_response",
+            "buildings_info": Array of BUILDING_INFO
+        }
+    - BUILDING_INFO type has the following structure:
+        {
+            "building_id": String,
+            "info": Array of TIMESERIES type
+        }
+        , where TIMESERIES type has the following structure:
+            {
+                "value": Number [Wh],
+                "timestamp": Timestamp convertible to ISO 8601 format
+            }
+
+* FLEXIBILITY_DEMAND_RESPONSE
+    - POST response to 'FlexOpt_uri/'
+    - Once FlexOpt sends a FLEXIBILITY_DEMAND_REQUEST, this message
+        is expected as a response:
+        {
+            "type": "flexibility_demand_response",
+            "user_id": Number,
+            "demands": Array of FLEXIBILITY_DEMAND
+        },
+        where FLEXIBILITY_DEMAND is:
+            {
+                "start_time": String convertible to ISO 8601 format,
+                "end_time": String convertible to ISO 8601 format,
+                "flexibility": Number
+            }
+
+* FLEXIBILITY_OFFER_AGR_REQUEST:
+    - GET request to 'FlexOpt_uri/'
+    - Retrieve flexibility offers for a given interval and a given aggregator.
+    - The request has the following structure:
+         is expected as a response:
+        {
+            "type": "get_flexibility_offer_by_aggregator",
+            "start_time": String convertible to ISO 8601 format,
+            "end_time": String convertible to ISO 8601 format,
+            "user_id": Number
+        }
+
+* TOTAL_FLEXIBILITY_OFFER_AGR_REQUEST:
+    - GET request to 'FlexOpt_uri/'
+    - Retrieve total flexibility for a given interval and a given aggregator.
+    - The request has the following structure:
+        {
+            "type": "get_total_flexibility_offer_by_aggregator",
+            "start_time": String convertible to ISO 8601 format,
+            "end_time": String convertible to ISO 8601 format,
+            "user_id": Number
+        }.
+
+* FLEXIBILITY_OFFER_BUILDING_REQUEST:
+    - GET request to 'FlexOpt_uri/'
+    - Retrieve flexibility for a given interval and a given building.
+    - The request has the following structure:
+        {
+            "type": "get_flexibility_offer_by_building",
+            "start_time": String convertible to ISO 8601 format,
+            "end_time": String convertible to ISO 8601 format,
+            "building_id": String
+        }.
+
+* TOTAL_FLEXIBILITY_OFFER_BUILDING_REQUEST:
+    - GET request to 'FlexOpt_uri/'
+    - Retrieve total flexibility for a given interval and a given building.
+    - The request has the following structure:
+        {
+            "type": "get_total_flexibility_offer_by_building",
+            "start_time": String convertible to ISO 8601 format,
+            "end_time": String convertible to ISO 8601 format,
+            "building_id": String
+        }
