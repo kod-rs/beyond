@@ -8,6 +8,7 @@
     - Direction: FlexOpt to Beyond
         - BUILDINGS_BY_USR_ID_REQUEST
         - BUILDING_INFO_REQUEST
+        - FLEXIBILITY_DEMAND_REQUEST
         - FLEXIBILITY_OFFER_AGR_RESPONSE
         - TOTAL_FLEXIBILITY_OFFER_AGR_RESPONSE
         - FLEXIBILITY_OFFER_BUILDING_RESPONSE
@@ -15,6 +16,7 @@
     - Direction: Beyond to FlexOpt
         - BUILDINGS_BY_USR_ID_RESPONSE
         - BUILDING_INFO_RESPONSE
+        - FLEXIBILITY_DEMAND_RESPONSE
         - FLEXIBILITY_OFFER_AGR_REQUEST
         - TOTAL_FLEXIBILITY_OFFER_AGR_REQUEST
         - FLEXIBILITY_OFFER_BUILDING_REQUEST
@@ -27,7 +29,7 @@
         containing the following JSON object:
         {
             "type": "get_buildings_by_user_id_request",
-            "user_id": number
+            "user_id": Number
         }
 * BUILDING_INFO_REQUEST:
     - POST request to 'beyond_uri/'
@@ -39,6 +41,16 @@
             "building_ids": Array of Strings
         }
     - Note: Assumption made is that the building ID will be a unique string.
+
+ # TODO moze li biti vise od jednog demanda za pojedinog usera?
+* FLEXIBILITY_DEMAND_REQUEST
+    - Request to 'beyond_uri/'
+    - FlexOpt will send a HTTP post request
+        containing the following JSON object:
+        {
+            "type": "flexibility_demand_request",
+            "user_id": Number,
+        }
 
 * FLEXIBILITY_OFFER_AGR_RESPONSE
     - Response to 'beyond_uri/'
@@ -100,6 +112,7 @@
     - BUILDING type has the following structure:
         {
             "building_id": String,
+            "building_name": String,
             "latitude": Number,
             "longitude": Number
         }
@@ -114,15 +127,28 @@
     - BUILDING_INFO type has the following structure:
         {
             "building_id": String,
-            "building_name": String
             "info": Array of TIMESERIES type
         }
         , where TIMESERIES type has the following structure:
             {
-                "value": Number,
+                "value": Number [Wh],
                 "timestamp": Timestamp convertible to ISO 8601 format
             }
-- FLEXIBILITY_OFFER_AGR_REQUEST:
+
+ # TODO moze li biti vise od jednog demanda za pojedinog usera?
+* FLEXIBILITY_DEMAND_RESPONSE
+    - POST response to 'FlexOpt_uri/'
+    - Once FlexOpt sends a FLEXIBILITY_DEMAND_REQUEST, this message
+        is expected as a response:
+        {
+            "type": "flexibility_demand_response",
+            "start_time": String convertible to ISO 8601 format,
+            "end_time": String convertible to ISO 8601 format,
+            "user_id": Number,
+            "flexibility": Number,
+        }
+
+* FLEXIBILITY_OFFER_AGR_REQUEST:
     - GET request to 'FlexOpt_uri/'
     - Retrieve flexibility offers for a given interval and a given aggregator.
     - The request has the following structure:
@@ -134,7 +160,7 @@
             "user_id": Number
         }
 
-- TOTAL_FLEXIBILITY_OFFER_AGR_REQUEST:
+* TOTAL_FLEXIBILITY_OFFER_AGR_REQUEST:
     - GET request to 'FlexOpt_uri/'
     - Retrieve total flexibility for a given interval and a given aggregator.
     - The request has the following structure:
@@ -145,9 +171,9 @@
             "user_id": Number
         }.
 
-- TOTAL_FLEXIBILITY_OFFER_BUILDING_REQUEST:
+* FLEXIBILITY_OFFER_BUILDING_REQUEST:
     - GET request to 'FlexOpt_uri/'
-    - Retrieve total flexibility for a given interval and a given building.
+    - Retrieve flexibility for a given interval and a given building.
     - The request has the following structure:
         {
             "type": "get_flexibility_offer_by_building",
@@ -156,7 +182,7 @@
             "building_id": String
         }.
 
-- TOTAL_FLEXIBILITY_OFFER_BUILDING_REQUEST:
+* TOTAL_FLEXIBILITY_OFFER_BUILDING_REQUEST:
     - GET request to 'FlexOpt_uri/'
     - Retrieve total flexibility for a given interval and a given building.
     - The request has the following structure:
@@ -165,4 +191,4 @@
             "start_time": String convertible to ISO 8601 format,
             "end_time": String convertible to ISO 8601 format,
             "building_id": String
-        }.
+        }
