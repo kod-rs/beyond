@@ -4,6 +4,7 @@ from unittest.mock import MagicMock
 import keycloak
 from django.test import Client
 from django.test import TestCase
+from src_django.api.view import building
 
 
 class TestLoginView(TestCase):
@@ -51,12 +52,31 @@ class TestLoginView(TestCase):
 
 class TestLocationView(TestCase):
     def setUp(self):
-        pass
+        def beyond_request_mock(*_):
+            buildings = []
+            for i in range(100):
+                buildings.append({
+                    'building_id': f'b_{i}',
+                    'building_name': f'building_name_{i}',
+                    'latitude': i + 0.3,
+                    'longitude': i + 0.4})
+
+            return {'type': 'buildings_by_user_id_request',
+                    'buildings': buildings}
+
+        building._beyond_request = MagicMock(side_effect=beyond_request_mock)
 
     def test_get_buildings_by_user_id(self):
         client = Client()
-        data = {'type': 'get_buildings_by_user_id_request',
+        data = {'type': 'buildings_by_user_id_request',
                 'user_id': 1}
         response = client.post('/buildings/',
                                json.dumps(data),
                                content_type="application/json")
+        response = response.json()
+        assert response['type'] == 'buildings_by_user_id_response'
+        assert len(response['buildings']) == 100
+        assert isinstance(response['buildings'][0]['building_id'], str)
+        assert isinstance(response['buildings'][0]['building_name'], str)
+        assert isinstance(response['buildings'][0]['longitude'], float)
+        assert isinstance(response['buildings'][0]['longitude'], float)
