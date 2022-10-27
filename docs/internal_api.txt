@@ -58,13 +58,22 @@
 * LOGIN_RESPONSE:
     - POST response to frontend.
     - Sending the login data for a user.
-    - Frontend will send a HTTP post request
+    - IF THE LOGIN IS SUCCESSFUL, the Backend will send a HTTP post response
         containing the following JSON object:
         {
             "type": "login_response",
+            "status": True,
             "user_id": String,
             "access_token": String
         }
+    - IF THE LOGIN IS UNSUCCESSFUL, the Backend will send a HTTP post response
+        containing the following JSON object:
+        {
+            "type": "login_response",
+            "status": False,
+            "message": String describing the failure reason
+        }
+
 * BUILDINGS_BY_USR_ID_RESPONSE:
     - POST response to backend.
     - Once Frontend sends a BUILDINGS_BY_USR_ID_REQUEST, this message
