@@ -13,6 +13,7 @@ class LoginView(APIView):
     def __init__(self):
         super().__init__()
         self._openid = _keycloak_connect()
+        self._request_type = 'login_request'
         self._response_type = 'login_response'
 
     def post(self, request) -> JsonResponse:
@@ -21,7 +22,7 @@ class LoginView(APIView):
         username = credentials.get('username')
         password = credentials.get('password')
 
-        if not username or not password or reason != 'login_request':
+        if not username or not password or reason != self._request_type:
             return common.false_status(msg='invalid request',
                                        response_type=self._response_type)
         try:
