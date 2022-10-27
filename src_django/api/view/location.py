@@ -14,7 +14,7 @@ class LocationView(APIView):
         portfolio_id = portfolio_id.get('portfolio_id')
 
         if not portfolio_id:
-            return common.false_status
+            return common.false_status()
 
         locations = controller.location.get_for_portfolio(portfolio_id)
 

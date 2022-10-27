@@ -1,3 +1,8 @@
 from django.http import JsonResponse
 
-false_status = JsonResponse({'status': False})
+
+def false_status(response_type: str, msg: str) -> JsonResponse:
+    return JsonResponse({
+        'type': response_type,
+        'status': False,
+        'message': msg})

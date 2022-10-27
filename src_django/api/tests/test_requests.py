@@ -1,29 +1,45 @@
 import json
+from unittest.mock import MagicMock
 
+import keycloak
 from django.test import Client
 from django.test import TestCase
 
-from src_django.api.tests import common
 
-
-class TestLocation(TestCase):
+class TestLogin(TestCase):
     def setUp(self):
-        common.populate_database()
+        def _token(username, password):
+            if username == password == 'mirkofleks':
+                return {'refresh_token': 'r3f75h',
+                        'access_token': 'ac355_70k3n'}
+            else:
+                raise keycloak.exceptions.KeycloakAuthenticationError(
+                    response_code=401)
 
-    def test_get_portfolios(self):
+        keycloak.KeycloakOpenID.token = MagicMock(
+            side_effect=_token)
+        keycloak.KeycloakOpenID.userinfo = MagicMock(
+            return_value={'sub': '5u8'})
+
+    def test_get_user_info(self):
         client = Client()
-        data = {'user_id': 1}
-        response = client.post('/portfolio/',
+        data = {'type': 'login_request',
+                'username': 'mirkofleks',
+                'password': 'mirkofleks'}
+        response = client.post('/login/',
                                json.dumps(data),
                                content_type="application/json")
-        assert response.json()['status'] is True
-        assert len(response.json()['portfolios']) == 2
+        response = response.json()
+        assert response['type'] == 'login_response'
+        assert response['status'] is True
+        assert isinstance(response['user_id'], str)
+        assert isinstance(response['access_token'], str)
 
-    def test_get_locations_for_portfolio(self):
-        client = Client()
-        data = {'portfolio_id': 101}
-        response = client.post('/location/',
+        data['password'] = 'wrong_password'
+        response = client.post('/login/',
                                json.dumps(data),
                                content_type="application/json")
-        assert response.json()['status'] is True
-        assert len(response.json()['locations']) == 3
+        response = response.json()
+        assert response['type'] == 'login_response'
+        assert response['status'] is False
+        assert response['message'] == '401'

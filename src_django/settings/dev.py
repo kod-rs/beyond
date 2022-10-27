@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 """
 
 from pathlib import Path
+from decouple import config
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -116,3 +117,9 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+KEYCLOAK_CONFIG = {
+    'URL': config('KEYCLOAK_URL'),
+    'CLIENT_ID': config('KEYCLOAK_CLIENT_ID'),
+    'REALM_NAME': config('KEYCLOAK_REALM_NAME'),
+    'CLIENT_SECRET_KEY': config('KEYCLOAK_CLIENT_SECRET_KEY')}
