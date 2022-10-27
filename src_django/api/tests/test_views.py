@@ -6,7 +6,7 @@ from django.test import Client
 from django.test import TestCase
 
 
-class TestLogin(TestCase):
+class TestLoginView(TestCase):
     def setUp(self):
         def _token(username, password):
             if username == password == 'mirkofleks':
@@ -21,7 +21,7 @@ class TestLogin(TestCase):
         keycloak.KeycloakOpenID.userinfo = MagicMock(
             return_value={'sub': '5u8'})
 
-    def test_get_user_info(self):
+    def test_login_success(self):
         client = Client()
         data = {'type': 'login_request',
                 'username': 'mirkofleks',
@@ -35,7 +35,11 @@ class TestLogin(TestCase):
         assert isinstance(response['user_id'], str)
         assert isinstance(response['access_token'], str)
 
-        data['password'] = 'wrong_password'
+    def test_login_fail(self):
+        client = Client()
+        data = {'type': 'login_request',
+                'username': 'mirkofleks',
+                'password': 'WRONG_PASSWORD'}
         response = client.post('/login/',
                                json.dumps(data),
                                content_type="application/json")
@@ -43,3 +47,16 @@ class TestLogin(TestCase):
         assert response['type'] == 'login_response'
         assert response['status'] is False
         assert response['message'] == '401'
+
+
+class TestLocationView(TestCase):
+    def setUp(self):
+        pass
+
+    def test_get_buildings_by_user_id(self):
+        client = Client()
+        data = {'type': 'get_buildings_by_user_id_request',
+                'user_id': 1}
+        response = client.post('/buildings/',
+                               json.dumps(data),
+                               content_type="application/json")

@@ -16,11 +16,12 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
-from src_django.api.view import LocationView
+
+from src_django.api.view import BuildingView
 from src_django.api.view import LoginView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('location/', LocationView.as_view()),
+    path('buildings/', BuildingView.as_view()),
     path('login/', LoginView.as_view())
 ]

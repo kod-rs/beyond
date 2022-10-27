@@ -28,7 +28,7 @@
     - FlexOpt will send a HTTP post request
         containing the following JSON object:
         {
-            "type": "get_buildings_by_user_id_request",
+            "type": "buildings_by_user_id_request",
             "user_id": Number
         }
 * BUILDING_INFO_REQUEST:
@@ -37,7 +37,7 @@
     - FlexOpt will send a HTTP post request
         containing the following JSON object:
         {
-            "type": "get_building_info_request",
+            "type": "building_info_request",
             "building_ids": Array of Strings
         }
     - Note: Assumption made is that the building ID will be a unique string.
@@ -107,7 +107,7 @@
     - Once FlexOpt sends a BUILDINGS_BY_USR_ID_REQUEST, this message
         is expected as a response:
         {
-            "type": "get_buildings_by_user_id_response",
+            "type": "buildings_by_user_id_response",
             "buildings": Array of BUILDING type
         }
     - BUILDING type has the following structure:
@@ -122,7 +122,7 @@
     - Once FlexOpt sends a BUILDING_INFO_REQUEST, this message
         is expected as a response:
         {
-            "type": "get_building_info_response",
+            "type": "building_info_response",
             "buildings_info": Array of BUILDING_INFO
         }
     - BUILDING_INFO type has the following structure:
@@ -158,7 +158,7 @@
     - The request has the following structure:
          is expected as a response:
         {
-            "type": "get_flexibility_offer_by_aggregator",
+            "type": "flexibility_offer_by_aggregator",
             "start_time": String convertible to ISO 8601 format,
             "end_time": String convertible to ISO 8601 format,
             "user_id": Number
@@ -169,7 +169,7 @@
     - Retrieve total flexibility for a given interval and a given aggregator.
     - The request has the following structure:
         {
-            "type": "get_total_flexibility_offer_by_aggregator",
+            "type": "total_flexibility_offer_by_aggregator",
             "start_time": String convertible to ISO 8601 format,
             "end_time": String convertible to ISO 8601 format,
             "user_id": Number
@@ -180,7 +180,7 @@
     - Retrieve flexibility for a given interval and a given building.
     - The request has the following structure:
         {
-            "type": "get_flexibility_offer_by_building",
+            "type": "flexibility_offer_by_building",
             "start_time": String convertible to ISO 8601 format,
             "end_time": String convertible to ISO 8601 format,
             "building_id": String
@@ -191,7 +191,7 @@
     - Retrieve total flexibility for a given interval and a given building.
     - The request has the following structure:
         {
-            "type": "get_total_flexibility_offer_by_building",
+            "type": "total_flexibility_offer_by_building",
             "start_time": String convertible to ISO 8601 format,
             "end_time": String convertible to ISO 8601 format,
             "building_id": String

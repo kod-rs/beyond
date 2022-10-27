@@ -32,7 +32,7 @@
     - Frontend will send a HTTP post request
         containing the following JSON object:
         {
-            "type": "get_buildings_by_user_id_request",
+            "type": "buildings_by_user_id_request",
             "user_id": Number
         }
 * BUILDING_INFO_REQUEST:
@@ -41,7 +41,7 @@
     - Frontend will send a HTTP post request
         containing the following JSON object:
         {
-            "type": "get_building_info_request",
+            "type": "building_info_request",
             "building_ids": Array of Strings
         }
     - Note: Assumption made is that the building ID will be a unique string.
@@ -79,7 +79,7 @@
     - Once Frontend sends a BUILDINGS_BY_USR_ID_REQUEST, this message
         is expected as a response:
         {
-            "type": "get_buildings_by_user_id_response",
+            "type": "buildings_by_user_id_response",
             "buildings": Array of BUILDING type
         }
     - BUILDING type has the following structure:
@@ -94,7 +94,7 @@
     - Once Frontend sends a BUILDING_INFO_REQUEST, this message
         is expected as a response:
         {
-            "type": "get_building_info_response",
+            "type": "building_info_response",
             "buildings_info": Array of BUILDING_INFO
         }
     - BUILDING_INFO type has the following structure:
