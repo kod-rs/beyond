@@ -66,8 +66,8 @@ class BuildingView(APIView):
             return common.false_status(self._req_building_info,
                                        'invalid request')
 
-        return JsonResponse({'type': self._resp_building_by_usr_id,
-                             'buildings': beyond_data.get('buildings_info')})
+        return JsonResponse({'type': self._resp_building_info,
+                             'buildings_info': beyond_data['buildings_info']})
 
 
 class BeyondConnection:
