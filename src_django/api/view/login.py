@@ -8,7 +8,7 @@ from rest_framework.views import APIView
 from src_django.api.view import common
 from src_django.settings import KEYCLOAK_CONFIG
 
-from src_django.api.validator.login import validate_internal_login
+from src_django.api.validator.internal_api.login import validate_internal_login
 
 
 class LoginView(APIView):
