@@ -1,6 +1,6 @@
 ---
 $schema: 'http://json-schema.org/draft-07/schema#'
-id: 'flexopt://internal_api/frontend_to_backend/login_request.yaml#'
+id: 'flexopt://internal_api/login_request.yaml#'
 title: Login request
 description: Login request configuration schema
 type: object

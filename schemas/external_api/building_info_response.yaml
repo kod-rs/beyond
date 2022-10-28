@@ -1,17 +1,41 @@
 ---
 $schema: 'http://json-schema.org/draft-07/schema#'
-id: 'flexopt://internal_api/buildings_info_request.yaml#'
-title: Buildings info request
+id: 'flexopt://external_api/buildings_info_response.yaml#'
+title: Buildings info response
 description: Buildings info configuration schema
 type: object
 required:
   - type
-  - building_ids
+  - buildings_info
 properties:
   type:
-    const: building_info_request
-  building_ids:
+    const: building_info_response
+  buildings_info:
     type: array
     items:
-      type: string
+      $ref: '#/definitions/building_info'
+definitions:
+  building_info:
+    type: object
+    required:
+      - building_id
+      - info
+    properties:
+      building_id:
+        type: string
+      info:
+        type: array
+        items:
+          $ref: '#/definitions/timeseries'
+  timeseries:
+    type: object
+    required:
+      - value
+      - timestamp
+    properties:
+      value:
+        type: number
+      timestamp:
+        type: string
+        format: "date-time"
 ...

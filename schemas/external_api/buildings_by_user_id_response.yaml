@@ -1,15 +1,36 @@
 ---
 $schema: 'http://json-schema.org/draft-07/schema#'
-id: 'flexopt://internal_api/frontend_to_backend/buildings_by_user_id_request.yaml#'
-title: Buildings by user ID request
+id: 'flexopt://external_api/buildings_by_user_id_response.yaml#'
+title: Buildings by user ID response
 description: Buildings by user ID configuration schema
 type: object
 required:
   - type
-  - user_id
+  - buildings
 properties:
   type:
-    const: buildings_by_user_id_request
-  user_id:
-    type: integer
+    const: buildings_by_user_id_response
+  buildings:
+    type: array
+    items:
+      $ref: '#/definitions/building'
+definitions:
+  building:
+    type: object
+    required:
+      - building_id
+      - building_name
+      - latitude
+      - longitude
+    properties:
+      building_id:
+        type: string
+      building_name:
+        type:
+          string
+      latitude:
+        type: number
+      longitude:
+        type: number
+
 ...
