@@ -8,6 +8,8 @@ from rest_framework.views import APIView
 from src_django.api.view import common
 from src_django.settings import KEYCLOAK_CONFIG
 
+from src_django.api.validator.login import validate_internal_login
+
 
 class LoginView(APIView):
     def __init__(self):
@@ -17,16 +19,15 @@ class LoginView(APIView):
         self._response_type = 'login_response'
 
     def post(self, request) -> JsonResponse:
-        credentials = json.loads(request.body)
-        reason = credentials.get('type')
-        username = credentials.get('username')
-        password = credentials.get('password')
+        request_body = json.loads(request.body)
 
-        if not username or not password or reason != self._request_type:
+        if not validate_internal_login(request_body):
             return common.false_status(msg='invalid request',
                                        response_type=self._response_type)
+
         try:
-            token = self._openid.token(username=username, password=password)
+            token = self._openid.token(username=request_body['username'],
+                                       password=request_body['password'])
             userinfo = self._openid.userinfo(token['access_token'])
         except keycloak.exceptions.KeycloakAuthenticationError as e:
             return common.false_status(msg=str(e.response_code),
