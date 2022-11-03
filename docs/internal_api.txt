@@ -17,6 +17,7 @@
         - FLEXIBILITY_DEMAND_RESPONSE
 ================= Frontend to backend =========================================
 * LOGIN_REQUEST:
+    - URL: base_url/login/
     - POST request to backend.
     - Getting the login data for a user.
     - Frontend will send a HTTP post request
@@ -27,6 +28,7 @@
             "password": String
         }
 * BUILDINGS_BY_USR_ID_REQUEST:
+    - URL: base_url/buildings/
     - POST request to backend.
     - Getting all the buildings for a specific user.
     - Frontend will send a HTTP post request
@@ -36,6 +38,7 @@
             "user_id": Number
         }
 * BUILDING_INFO_REQUEST:
+    - URL: base_url/buildings/
     - POST request to backend.
     - Getting all the power consumption information for specific buildings.
     - Frontend will send a HTTP post request
