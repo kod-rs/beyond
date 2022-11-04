@@ -17,15 +17,15 @@ class LocationTestCase(TestCase):
 
     def test_algorithm(self):
         # TODO don't read from CSV
-        _interval = TimeInterval(9, 12)
-        _flex_amount = 303
-        _month = MONTHS[1]
+        interval = TimeInterval(9, 12)
+        flex_amount = 303
+        month = MONTHS[1]
         csv_file = Path(__file__).parent.resolve() / 'active im en.csv'
         df = pd.read_csv(csv_file)
         # df = df.drop(['Unnamed: 0'], axis=1).reset_index(drop=True)
-        ids = ('ZIV0034902130', 'ZIV0034902131', 'ZIV0034704030',
-               'ZIV0034703915', 'ZIV0034704013',
-               'ZIV0034703953', 'ZIV0034703954')
+        _ids = ('ZIV0034902130', 'ZIV0034902131', 'ZIV0034704030',
+                'ZIV0034703915', 'ZIV0034704013',
+                'ZIV0034703953', 'ZIV0034703954')
         rows = [df.iloc[index] for index in range(len(df))]
         building_ids = [b_id for b_id in df.keys()[2:]]
 
@@ -44,9 +44,12 @@ class LocationTestCase(TestCase):
                                               for timeseries in b_values])
                            for b_id, b_values in building_energy.items()]
 
-        building_info = algorithm(building_energy_list=building_energy,
-                                  interval=_interval,
-                                  flex_amount=_flex_amount,
-                                  month=_month)
+        total_flex, building_info = algorithm(
+            building_energy_list=building_energy,
+            interval=interval,
+            flex_amount=flex_amount,
+            month=month)
+
+        assert total_flex == flex_amount
         assert len(building_info) == 3
         assert building_info[0].flex == 130.0
