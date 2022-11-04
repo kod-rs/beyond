@@ -17,6 +17,6 @@ def validate(yaml_file_path, data, format_checker=False):
             jsonschema.validate(instance=data, schema=schema,
                                 format_checker=jsonschema.FormatChecker())
     except jsonschema.exceptions.ValidationError as e:
-        breakpoint()
+        print(f'VALIDATION FAILED={e}')
         return False
     return True
