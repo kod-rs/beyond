@@ -10,11 +10,13 @@
         - BUILDINGS_BY_USR_ID_REQUEST
         - BUILDING_INFO_REQUEST
         - FLEXIBILITY_DEMAND_REQUEST
+        - ALGORITHM_REQUEST
     - Direction: Backend to Frontend
         - LOGIN_RESPONSE
         - BUILDINGS_BY_USR_ID_RESPONSE
         - BUILDING_INFO_RESPONSE
         - FLEXIBILITY_DEMAND_RESPONSE
+        - ALGORITHM_RESPONSE
 ================= Frontend to backend =========================================
 * LOGIN_REQUEST:
     - URL: base_url/login/
@@ -57,7 +59,70 @@
             "type": "flexibility_demand_request",
             "user_id": Number,
         }
+
+* ALGORITHM_REQUEST
+    - URL: base_url/algorithm/
+    - Request to backend.
+    - Frontend will send a HTTP post request
+        containing the following JSON object:
+        {
+            "type": "algorithm_request",
+            "building_energy_list": Array of BUILDING_ENERGY,
+            "interval": {
+                "from": Number in range [6, 22], as required per algorithm
+                "to": Number in range [6, 22], as required per algorithm
+            },
+            "flexibility_amount": Number,
+            "month": Number in range [1, 12] or Null if the calculation is for
+                the current month
+        },
+        where BUILDING_ENERGY is defined as:
+            {
+                "building_id": String,
+                "energy_info": Array of TIMESERIES
+            },
+            where TIMESERIES is defined as:
+                {
+                    "timestamp": String convertible to RFC 3339 format,
+                    "value": Number
+                }
+    - an example:
+        {
+            "type": "algorithm_request",
+            "building_energy_list": [
+                {"building_id": "building_1",
+                 "energy_info": [
+                    {"timestamp": "2022-11-04T13:40:07.928829+00:00",
+                      "value": 42.3},
+                    {"timestamp": "2022-11-04T13:45:07.928829+00:00",
+                     "value": 44.3}]
+               },
+               {"building_id": "building_2",
+                "energy_info": [
+                    {"timestamp": "2022-11-04T13:40:07.928829+00:00",
+                     "value": 52.3},
+                    {"timestamp": "2022-11-04T13:45:07.928829+00:00",
+                     "value": 64.3}]
+                }
+           ],
+           "interval": {
+                "from": 13,
+                "to": 17
+           },
+           "flexibility_amount": 88,
+           "month": 11
+        }
 ================= Backend to Frontend =========================================
+* GENERIC FAILURE RESPONSE:
+    - If for any reason a failure happens during request handling,
+        the following message will be sent:
+         {
+            "type": defined by request that was being handled
+                    (for example, "login_response",
+            "status": False,
+            "message": String describing the error
+        },
+
 * LOGIN_RESPONSE:
     - POST response to frontend.
     - Sending the login data for a user.
@@ -69,14 +134,6 @@
             "user_id": String,
             "access_token": String
         }
-    - IF THE LOGIN IS UNSUCCESSFUL, the Backend will send a HTTP post response
-        containing the following JSON object:
-        {
-            "type": "login_response",
-            "status": False,
-            "message": String describing the failure reason
-        }
-
 * BUILDINGS_BY_USR_ID_RESPONSE:
     - POST response to backend.
     - Once Frontend sends a BUILDINGS_BY_USR_ID_REQUEST, this message
@@ -110,7 +167,6 @@
                 "value": Number [Wh],
                 "timestamp": Timestamp convertible to RFC 3339 format
             }
-
 * FLEXIBILITY_DEMAND_RESPONSE
     - POST response to Frontend.
     - Once Frontend sends a FLEXIBILITY_DEMAND_REQUEST, this message
@@ -122,7 +178,26 @@
         },
         where FLEXIBILITY_DEMAND is:
             {
-                "start_time": String convertible to RFC 3339 format,
-                "end_time": String convertible to RFC 3339 format,
+                "start_time": Number in range [6, 22]
+                "end_time": Number in range [6, 22]
+                "flexibility": Number
+            }
+* ALGORITHM_RESPONSE
+        - POST response to Frontend.
+    - Once Frontend sends a ALGORITHM_REQUEST, this message
+        is expected as a response:
+        {
+            "type": "algorithm_response",
+            "status": True,
+            "offered_flexibility": Number
+            "building_info": Array of BUILDING_INFO
+        },
+        where BUILDING_INFO is:
+            {
+                "building_id": String,
+                "interval": {
+                    "from": Number in range [6, 22], as required per algorithm
+                    "to": Number in range [6, 22], as required per algorithm
+                },
                 "flexibility": Number
             }
