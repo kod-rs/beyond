@@ -1,11 +1,15 @@
 import datetime
 import json
+from pathlib import Path
 from unittest.mock import MagicMock
 
 import keycloak
+import pandas as pd
 from django.test import Client
 from django.test import TestCase
 
+from src_django.api.flexopt_algorithm import MONTHS
+from src_django.api.flexopt_algorithm import TimeInterval
 from src_django.api.view import building
 
 
@@ -121,3 +125,58 @@ class TestLocationView(TestCase):
         assert len(response['buildings_info'][0]['info']) == 2
         timeseries = response['buildings_info'][0]['info'][0]
         assert set(timeseries.keys()) == {'value', 'timestamp'}
+
+
+class TestAlgorithmView(TestCase):
+    def test_get_buildings_by_user_id(self):
+        client = Client()
+        data = {'type': 'algorithm_request',
+                'building_energy_list': [],
+                'interval': {
+                    'from': 12,
+                    'to': 15},
+                'flexibility_amount': 300,
+                'month': None}
+
+        building_energy_list = _get_building_energy_list()
+
+        data['building_energy_list'] = building_energy_list
+        response = client.post('/algorithm/',
+                               json.dumps(data),
+                               content_type="application/json")
+        response = response.json()
+
+        assert response['type'] == 'algorithm_response'
+        assert response['status'] is True
+        assert (isinstance(response['offered_flexibility'], float)
+                or isinstance(response['offered_flexibility'], int))
+        assert isinstance(response['building_info'], list)
+
+
+def _get_building_energy_list():
+    _interval = TimeInterval(9, 12)
+    _flex_amount = 303
+    _month = MONTHS[1]
+    csv_file = Path(__file__).parent.resolve() / 'active im en.csv'
+    df = pd.read_csv(csv_file)
+    # df = df.drop(['Unnamed: 0'], axis=1).reset_index(drop=True)
+    ids = ('ZIV0034902130', 'ZIV0034902131', 'ZIV0034704030',
+           'ZIV0034703915', 'ZIV0034704013',
+           'ZIV0034703953', 'ZIV0034703954')
+    rows = [df.iloc[index] for index in range(len(df))]
+    # building_ids = [b_id for b_id in df.keys()[2:]]
+
+    building_energy_list = []
+    for b_id in ids[:3]:
+        timeseries = []
+        for row in rows:
+            ts = datetime.datetime.strptime(row['Timestamp'][:-4],
+                                            "%Y-%m-%d %H:%M:%S")
+            ts = ts.replace(tzinfo=datetime.timezone.utc)
+            ts = ts.isoformat()
+            timeseries.append({'timestamp': ts,
+                               'value': row[b_id]})
+        building_energy_list.append({'building_id': b_id,
+                                     'energy_info': timeseries})
+
+    return building_energy_list
