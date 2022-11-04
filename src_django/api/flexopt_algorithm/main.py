@@ -1,6 +1,5 @@
 import calendar
 import datetime
-import sys
 import typing
 from operator import itemgetter
 from typing import List, Union, NamedTuple
@@ -40,7 +39,7 @@ class TimeInterval(NamedTuple):
 
 
 class CurrentBuildingInfo(NamedTuple):
-    number: int
+    building_id: str
     time_interval: TimeInterval
     flex: float
 
@@ -125,16 +124,17 @@ def finding_elbow_of_the_graph(point_list: np.array) -> float:
     return knee.knee_y
 
 
-def baseline_calculation(points: numpy.ndarray) -> list:
+def difference_calculation(points: numpy.ndarray) -> List[tuple]:
     """
     Function that calculates min, mid and max baseline with which the input
     data can be described.
-    It also calculates the difference between mid and max.
+    Then it calculates the difference between mid and max.
     Args:
         points: points to be considered
 
     Returns:
-        A tuple containing (min, mid, max) and abs(mid - max).
+        List of tuples; where each tuple contains x (represents
+        hour in a day) and difference between max and mid baseline
     """
     last_hour = 23
     min_base = []
@@ -187,7 +187,7 @@ def baseline_calculation(points: numpy.ndarray) -> list:
     diff = []
 
     for x, val1, val2 in zip(min_base[:, 0], min_base[:, 1], max_base[:, 1]):
-        diff.append([x, (val2 - val1) / 2])
+        diff.append((x, (val2 - val1) / 2))
 
     return diff
 
@@ -227,28 +227,31 @@ def get_points(building_ids: tuple, buildings: list, month_index: int
     return points
 
 
-def get_max_diff(building_ids: tuple, points: list) -> list:
+def get_max_diff(building_ids: tuple, points: List[List[point_coordinates]]
+                 ) -> List[Union[str, List[tuple]]]:
     """
     Calculate the maximum difference between the middle baseline and the
-        extremity baseline.
+        extremity baseline for all buildings.
     Args:
         building_ids: building ids
         points: list of (x, y), where x = current hour, y = consumption
 
     Returns:
-        List of differences between the middle baseline and the
-        extremity baseline
+        List of lists; where first element is building_id and second is list of
+        tuples; where first element is hour in a day and second is differences
+        between the middle baseline and the extremity baseline at that hour
+
     """
     max_diff = []
     no_flex = [[i, 0] for i in range(MAX_H_IN_DAY)]
-    for building_id in range(len(building_ids)):
-        points_by_building = points[building_id]
+    for index, building_id in enumerate(building_ids):
+        points_by_building = points[index]
         if len(points_by_building) > 40:
             points_by_building = np.array(points_by_building)
-            diff = baseline_calculation(points_by_building)
-            max_diff.append(diff)
+            diff = difference_calculation(points_by_building)
+            max_diff.append([building_id, diff])
         else:
-            max_diff.append(no_flex)
+            max_diff.append([building_id, no_flex])
     return max_diff
 
 
@@ -267,8 +270,8 @@ def add_sort(diffs: np.ndarray, interval: TimeInterval
     ret = []
     for building in range(len(diffs)):
         if sum(np.array(
-                diffs[building][interval.from_t:interval.to_t])[:, 1]) > 0:
-            res = np.array(diffs[building][interval.from_t:interval.to_t])
+                diffs[building][1][interval.from_t:interval.to_t])[:, 1]) > 0:
+            res = np.array(diffs[building][1][interval.from_t:interval.to_t])
             res = round(sum(res[:, 1]) * 0.2, 2)
             ret.append([building, res])
 
@@ -290,15 +293,15 @@ def confidence(flex_list: List[List[Union[int, float]]],
     return [(f[0], round(f[1] / flex_amount, 2)) for f in flex_list]
 
 
-def apply_flexibility(diffs: List[list],
+def apply_flexibility(diffs: List[Union[str, List[tuple]]],
                       interval: TimeInterval, flex: float
                       ) -> List[CurrentBuildingInfo]:
     """
     Calculate flexibility per time and per building.
     Args:
-        diffs: Key is a string representation of a month. Value for a specific
-            key is a list. Every list contains 'N' values, where 'N' is the
-            number of buildings. Every value contains a tuple (hour, diff)
+        diffs: List of N lists, where 'N' is the number of buildings. Every
+        list contains two elements, where the first is building_id (str) and
+         the second is list of tuples (hour, diff).
         interval: Interval when the flexibility is needed
         flex: Amount of flexibility needed
 
@@ -306,7 +309,7 @@ def apply_flexibility(diffs: List[list],
         How much flexibility can a building give and when
 
     """
-    order = add_sort(np.array(diffs), interval)
+    order = add_sort(np.array(diffs, dtype=object), interval)
     ret = []
 
     for building in range(len(order)):
@@ -316,35 +319,38 @@ def apply_flexibility(diffs: List[list],
             if order[building][1] >= flex:
                 start = -1
                 for hour in range(interval.from_t, interval.to_t):
-                    if diffs[order[building][0]][hour][1] > 0 and start == -1:
+                    if (diffs[order[building][0]][1][hour][1] > 0
+                            and start == -1):
                         start = hour
-                    if flex <= diffs[order[building][0]][hour][1]:
+                    if flex <= diffs[order[building][0]][1][hour][1]:
                         flex_amount += flex
                         end = hour + 1
                         break
                     else:
-                        flex_amount += diffs[order[building][0]][hour][1]
-                        flex -= diffs[order[building][0]][hour][1]
-                ret.append(CurrentBuildingInfo(number=order[building][0],
-                                               time_interval=TimeInterval(
-                                                   start, end),
-                                               flex=round(flex_amount, 2)))
+                        flex_amount += diffs[order[building][0]][1][hour][1]
+                        flex -= diffs[order[building][0]][1][hour][1]
+                ret.append(CurrentBuildingInfo(
+                    building_id=diffs[order[building][0]][0],
+                    time_interval=TimeInterval(
+                        start, end),
+                    flex=round(flex_amount, 2)))
                 break
             else:
                 flex -= order[building][1]
                 for hour in range(interval.from_t, interval.to_t):
-                    if diffs[order[building][0]][hour][1] > 0:
+                    if diffs[order[building][0]][1][hour][1] > 0:
                         start = hour
                         break
                 for hour in reversed(range(interval.from_t, interval.to_t)):
-                    if diffs[order[building][0]][hour][1] > 0:
+                    if diffs[order[building][0]][1][hour][1] > 0:
                         end = hour + 1
                         break
-                ret.append(CurrentBuildingInfo(number=order[building][0],
-                                               time_interval=TimeInterval(
-                                                   start, end),
-                                               flex=round(order[building][1],
-                                                          2)))
+                ret.append(CurrentBuildingInfo(
+                    building_id=diffs[order[building][0]][0],
+                    time_interval=TimeInterval(
+                        start, end),
+                    flex=round(order[building][1],
+                               2)))
         else:
             break
 
