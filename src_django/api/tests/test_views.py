@@ -26,7 +26,9 @@ class TestLoginView(TestCase):
         keycloak.KeycloakOpenID.token = MagicMock(
             side_effect=mock_token)
         keycloak.KeycloakOpenID.userinfo = MagicMock(
-            return_value={'sub': '5u8'})
+            return_value={'sub': '5u8',
+                          'realm_access': {'roles': ['AGGREGATOR']},
+                          'preferred_username': 'mirkofleks'})
 
     def test_login_success(self):
         client = Client()
@@ -43,6 +45,9 @@ class TestLoginView(TestCase):
         assert response['status'] is True
         assert isinstance(response['user_id'], str)
         assert isinstance(response['access_token'], str)
+        assert isinstance(response['username'], str)
+        assert isinstance(response['role'], str)
+        assert response['role'] in ['AGGREGATOR', 'MANAGER']
 
     def test_login_fail(self):
         client = Client()

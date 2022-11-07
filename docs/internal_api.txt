@@ -132,6 +132,8 @@
             "type": "login_response",
             "status": True,
             "user_id": String,
+            "username": String,
+            "role": either "AGGREGATOR" or "MANAGER" String,
             "access_token": String
         }
 * BUILDINGS_BY_USR_ID_RESPONSE:

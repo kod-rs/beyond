@@ -1,13 +1,11 @@
-import json
-
 import keycloak.exceptions
 from django.http import JsonResponse
 from keycloak import KeycloakOpenID
 from rest_framework.views import APIView
 
+from src_django.api.validator.internal_api.login import validate_internal_login
 from src_django.api.view import common
 from src_django.settings import KEYCLOAK_CONFIG
-from src_django.api.validator.internal_api.login import validate_internal_login
 
 
 class LoginView(APIView):
@@ -38,9 +36,22 @@ class LoginView(APIView):
             return common.false_status(msg='account not fully set up',
                                        response_type=self._response_type)
 
+        try:
+            role = set(userinfo['realm_access']['roles'])
+            role = role.intersection({'AGGREGATOR', 'MANAGER'})
+            assert len(role) == 1
+            role = role.pop()
+            username = userinfo['preferred_username']
+        except Exception:
+            return common.false_status(
+                msg='invalid data received from keycloak',
+                response_type=self._response_type)
+
         return JsonResponse({'type': self._response_type,
                              'status': True,
                              'user_id': userinfo['sub'],
+                             'username': username,
+                             'role': role,
                              'access_token': token['refresh_token']})
 
 
