@@ -34,6 +34,9 @@ class LoginView(APIView):
         except keycloak.exceptions.KeycloakConnectionError:
             return common.false_status(msg='server connection error',
                                        response_type=self._response_type)
+        except keycloak.exceptions.KeycloakPostError:
+            return common.false_status(msg='account not fully set up',
+                                       response_type=self._response_type)
 
         return JsonResponse({'type': self._response_type,
                              'status': True,
