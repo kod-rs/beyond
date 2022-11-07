@@ -24,5 +24,8 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('buildings/', BuildingView.as_view()),
     path('algorithm/', AlgorithmView.as_view()),
-    path('login/', LoginView.as_view())
+    path('login/', LoginView.as_view()),
+    path('buildings', BuildingView.as_view()),
+    path('algorithm', AlgorithmView.as_view()),
+    path('login', LoginView.as_view())
 ]
