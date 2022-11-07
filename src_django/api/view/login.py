@@ -7,7 +7,6 @@ from rest_framework.views import APIView
 
 from src_django.api.view import common
 from src_django.settings import KEYCLOAK_CONFIG
-
 from src_django.api.validator.internal_api.login import validate_internal_login
 
 
@@ -19,7 +18,7 @@ class LoginView(APIView):
         self._response_type = 'login_response'
 
     def post(self, request) -> JsonResponse:
-        request_body = json.loads(request.body)
+        request_body = common.json_decode(request.body)
 
         if not validate_internal_login(request_body):
             return common.false_status(msg='invalid request',

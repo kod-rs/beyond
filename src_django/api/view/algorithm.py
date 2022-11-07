@@ -23,7 +23,7 @@ class AlgorithmView(APIView):
         self._response_type = 'algorithm_response'
 
     def post(self, request) -> JsonResponse:
-        request_body = json.loads(request.body)
+        request_body = common.json_decode(request.body)
         if not validate_algorithm_request(request_body):
             return common.false_status(msg='invalid request',
                                        response_type=self._response_type)

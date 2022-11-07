@@ -25,7 +25,7 @@ class BuildingView(APIView):
         self._beyond = BeyondConnection()
 
     def post(self, request) -> JsonResponse:
-        request = json.loads(request.body)
+        request = common.json_decode(request.body)
         request_type = request.get('type')
 
         if request_type == self._req_building_by_usr_id:
