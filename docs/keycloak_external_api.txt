@@ -1,0 +1,5 @@
+The communication is the default communication between the keycloak server
+and FlexOpt application in the role of a client.
+
+The only additional change needed is the following set up:
+"Client scopes" -> "roles" -> ticking the "Include in token scope" box.
