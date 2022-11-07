@@ -4,10 +4,13 @@ import requests
 
 
 def main():
-    data = {'location_ids': ['ZIV0034902130', 'ZIV0034902131']}
+    data = {'type': 'login_request',
+            'username': 'mirkofleks',
+            'password': 'mirkofleks'}
 
-    response = requests.post('http://127.0.0.1:8000/location/',
+    response = requests.post('http://127.0.0.1:8000/login/',
                              json=data)
+    response = response.json()
     breakpoint()
     pass
 
