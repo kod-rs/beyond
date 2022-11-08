@@ -25,7 +25,7 @@
 * BUILDINGS_BY_USR_ID_REQUEST:
     - POST request to 'beyond_uri/'
     - Getting all the buildings for a specific user.
-    - FlexOpt will send a HTTP post request
+    - FlexOpt will send an HTTP post request
         containing the following JSON object:
         {
             "type": "buildings_by_user_id_request",
@@ -34,7 +34,7 @@
 * BUILDING_INFO_REQUEST:
     - POST request to 'beyond_uri/'
     - Getting all the power consumption information for specific buildings.
-    - FlexOpt will send a HTTP post request
+    - FlexOpt will send an HTTP post request
         containing the following JSON object:
         {
             "type": "building_info_request",
@@ -45,7 +45,7 @@
 
 * FLEXIBILITY_DEMAND_REQUEST
     - Request to 'beyond_uri/'
-    - FlexOpt will send a HTTP post request
+    - FlexOpt will send an HTTP post request
         containing the following JSON object:
         {
             "type": "flexibility_demand_request",
@@ -55,7 +55,7 @@
 
 * FLEXIBILITY_OFFER_AGR_RESPONSE
     - Response to 'beyond_uri/'
-    - FlexOpt will send a HTTP post request
+    - FlexOpt will send an HTTP post request
         containing the following JSON object:
         {
             "type": "flexibility_offer_by_aggregator_response",
@@ -67,7 +67,7 @@
 
 * TOTAL_FLEXIBILITY_OFFER_AGR_RESPONSE
     - Response to 'beyond_uri/'
-    - FlexOpt will send a HTTP post request
+    - FlexOpt will send an HTTP post request
         containing the following JSON object:
         {
             "type": "total_flexibility_offer_by_aggregator_response",
@@ -79,7 +79,7 @@
 
 * FLEXIBILITY_OFFER_BUILDING_RESPONSE
     - Response to 'beyond_uri/'
-    - FlexOpt will send a HTTP post request
+    - FlexOpt will send an HTTP post request
         containing the following JSON object:
         {
             "type": "flexibility_offer_by_building_response",
@@ -91,7 +91,7 @@
 
 * TOTAL_FLEXIBILITY_OFFER_BUILDING_RESPONSE
     - Response to 'beyond_uri/'
-    - FlexOpt will send a HTTP post request
+    - FlexOpt will send an HTTP post request
         containing the following JSON object:
         {
             "type": "total_flexibility_offer_by_building_response",
