@@ -349,3 +349,12 @@ package.json
 yarn.lock
 /playground/ic/old/localhost.pem
 /playground/ic/old/localhost-key.pem
+/.vs/VSWorkspaceState.json
+/.vs/slnx.sqlite
+/.vs/ProjectSettings.json
+/.vs/Beyond_Ket/FileContentIndex/read.lock
+/.vs/Beyond_Ket/FileContentIndex/89b69be4-af0c-4f36-8600-37e64642407b.vsidx
+/.vs/Beyond_Ket/FileContentIndex/676b2f36-4f4d-4364-9e58-6ed5999cb633.vsidx
+/.vs/Beyond_Ket/FileContentIndex/3ec345a2-b066-4629-9b8c-b5f133c21816.vsidx
+/.vs/Beyond_Ket/FileContentIndex/23146294-fc22-4dbe-8470-bf6ec800ba76.vsidx
+/.vs/Beyond_Ket/FileContentIndex
