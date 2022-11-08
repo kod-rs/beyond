@@ -17,6 +17,7 @@ __pycache__
 # local env files
 .env.local
 .env.*.local
+.env
 
 # Log files
 npm-debug.log*
@@ -349,3 +350,12 @@ package.json
 yarn.lock
 /playground/ic/old/localhost.pem
 /playground/ic/old/localhost-key.pem
+/.vs/VSWorkspaceState.json
+/.vs/slnx.sqlite
+/.vs/ProjectSettings.json
+/.vs/Beyond_Ket/FileContentIndex/read.lock
+/.vs/Beyond_Ket/FileContentIndex/c4a9a078-3719-4122-a165-d4c9abf617e2.vsidx
+/.vs/Beyond_Ket/FileContentIndex/89b69be4-af0c-4f36-8600-37e64642407b.vsidx
+/.vs/Beyond_Ket/FileContentIndex/676b2f36-4f4d-4364-9e58-6ed5999cb633.vsidx
+/.vs/Beyond_Ket/FileContentIndex/3ec345a2-b066-4629-9b8c-b5f133c21816.vsidx
+/.vs/Beyond_Ket/FileContentIndex/fc0d09da-f983-45dc-a9a2-ee97d5a1b909.vsidx
