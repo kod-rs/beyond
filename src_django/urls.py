@@ -18,14 +18,21 @@ from django.urls import path
 
 from src_django.api.view import AlgorithmView
 from src_django.api.view import BuildingView
+from src_django.api.view import FlexibilityDemandView
 from src_django.api.view import LoginView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('buildings/', BuildingView.as_view()),
-    path('algorithm/', AlgorithmView.as_view()),
+
     path('login/', LoginView.as_view()),
+    path('login', LoginView.as_view()),
+
+    path('buildings/', BuildingView.as_view()),
     path('buildings', BuildingView.as_view()),
+
+    path('flexibility_demand/', FlexibilityDemandView.as_view()),
+    path('flexibility_demand', FlexibilityDemandView.as_view()),
+
+    path('algorithm/', AlgorithmView.as_view()),
     path('algorithm', AlgorithmView.as_view()),
-    path('login', LoginView.as_view())
 ]
