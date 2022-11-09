@@ -29,7 +29,7 @@
         containing the following JSON object:
         {
             "type": "buildings_by_user_id_request",
-            "user_id": Number
+            "user_id": String
         }
 * BUILDING_INFO_REQUEST:
     - POST request to 'beyond_uri/'
@@ -54,7 +54,6 @@
                 "month": Integer in range [1 -12],
                 "year": Four digit positive integer
             },
-            "user_id": Number,
         }
 
 * FLEXIBILITY_OFFER_AGR_RESPONSE
@@ -63,7 +62,7 @@
         containing the following JSON object:
         {
             "type": "flexibility_offer_by_aggregator_response",
-            "user_id": Number,
+            "user_id": String,
             "start_time": String convertible to RFC 3339 format,
             "end_time": String convertible to RFC 3339 format,
             "flexibility": Number
@@ -77,7 +76,7 @@
             "type": "total_flexibility_offer_by_aggregator_response",
             "start_time": String convertible to RFC 3339 format,
             "end_time": String convertible to RFC 3339 format,
-            "user_id": Number,
+            "user_id": String,
             "flexibility": Number
         }
 
@@ -146,7 +145,7 @@
         is expected as a response:
         {
             "type": "flexibility_demand_response",
-            "user_id": Number,
+            "user_id": String,
             "demands": Array of FLEXIBILITY_DEMAND
         },
         where FLEXIBILITY_DEMAND is:
@@ -165,7 +164,7 @@
             "type": "flexibility_offer_by_aggregator",
             "start_time": String convertible to RFC 3339 format,
             "end_time": String convertible to RFC 3339 format,
-            "user_id": Number
+            "user_id": String
         }
 
 * TOTAL_FLEXIBILITY_OFFER_AGR_REQUEST:
@@ -176,7 +175,7 @@
             "type": "total_flexibility_offer_by_aggregator",
             "start_time": String convertible to RFC 3339 format,
             "end_time": String convertible to RFC 3339 format,
-            "user_id": Number
+            "user_id": String
         }.
 
 * FLEXIBILITY_OFFER_BUILDING_REQUEST:
