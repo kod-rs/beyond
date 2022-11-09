@@ -20,12 +20,16 @@ definitions:
     required:
       - building_id
       - building_name
+      - address
       - latitude
       - longitude
     properties:
       building_id:
         type: string
       building_name:
+        type:
+          string
+      address:
         type:
           string
       latitude:
