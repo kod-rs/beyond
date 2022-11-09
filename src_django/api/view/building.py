@@ -102,6 +102,7 @@ def _req_building_by_usr_id_mock():
         buildings.append({
             'building_id': f'b_{i}',
             'building_name': f'building_name_{i}',
+            'address': f'Ilica {i}',
             'latitude': (45.815399
                          + random.uniform(0.000_001, 0.000_009)),
             'longitude': (15.966568
