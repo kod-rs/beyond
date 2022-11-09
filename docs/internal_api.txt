@@ -22,7 +22,7 @@
     - URL: base_url/login/
     - POST request to backend.
     - Getting the login data for a user.
-    - Frontend will send a HTTP post request
+    - Frontend will send an HTTP post request
         containing the following JSON object:
         {
             "type": "login_request",
@@ -33,17 +33,17 @@
     - URL: base_url/buildings/
     - POST request to backend.
     - Getting all the buildings for a specific user.
-    - Frontend will send a HTTP post request
+    - Frontend will send an HTTP post request
         containing the following JSON object:
         {
             "type": "buildings_by_user_id_request",
-            "user_id": Number
+            "user_id": String
         }
 * BUILDING_INFO_REQUEST:
     - URL: base_url/buildings/
     - POST request to backend.
     - Getting all the power consumption information for specific buildings.
-    - Frontend will send a HTTP post request
+    - Frontend will send an HTTP post request
         containing the following JSON object:
         {
             "type": "building_info_request",
@@ -52,18 +52,19 @@
     - Note: Assumption made is that the building ID will be a unique string.
 
 * FLEXIBILITY_DEMAND_REQUEST
+    - URL: base_url/flexibility_demand/
     - Request to backend.
-    - Frontend will send a HTTP post request
+    - Frontend will send an HTTP post request
         containing the following JSON object:
         {
             "type": "flexibility_demand_request",
-            "user_id": Number,
+            "date": String convertible to RFC 3339 format
         }
 
 * ALGORITHM_REQUEST
     - URL: base_url/algorithm/
     - Request to backend.
-    - Frontend will send a HTTP post request
+    - Frontend will send an HTTP post request
         containing the following JSON object:
         {
             "type": "algorithm_request",
@@ -126,7 +127,7 @@
 * LOGIN_RESPONSE:
     - POST response to frontend.
     - Sending the login data for a user.
-    - IF THE LOGIN IS SUCCESSFUL, the Backend will send a HTTP post response
+    - IF THE LOGIN IS SUCCESSFUL, the Backend will send an HTTP post response
         containing the following JSON object:
         {
             "type": "login_response",
@@ -175,13 +176,12 @@
         is expected as a response:
         {
             "type": "flexibility_demand_response",
-            "user_id": Number,
             "demands": Array of FLEXIBILITY_DEMAND
         },
         where FLEXIBILITY_DEMAND is:
             {
-                "start_time": Number in range [6, 22]
-                "end_time": Number in range [6, 22]
+                "start_time": String convertible to RFC 3339 format,
+                "end_time": String convertible to RFC 3339 format,
                 "flexibility": Number
             }
 * ALGORITHM_RESPONSE
