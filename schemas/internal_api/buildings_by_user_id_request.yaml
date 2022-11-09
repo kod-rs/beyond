@@ -11,5 +11,5 @@ properties:
   type:
     const: buildings_by_user_id_request
   user_id:
-    type: integer
+    type: string
 ...
