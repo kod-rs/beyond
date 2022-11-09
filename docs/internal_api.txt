@@ -153,13 +153,18 @@
             "longitude": Number
         }
 * BUILDING_INFO_RESPONSE:
-    - POST response to backend.
-    - Once Frontend sends a BUILDING_INFO_REQUEST, this message
+    - POST response to 'FlexOpt_uri/'
+    - Once FlexOpt sends a BUILDING_INFO_REQUEST, this message
         is expected as a response:
         {
             "type": "building_info_response",
+            "unit_of_measurement": Either "kWh" or "kWh/h",
             "buildings_info": Array of BUILDING_INFO
         }
+    - note: "unit_of_measurement" attribute represents the unit of "value"
+        attribute found in BUILDING_INFO. Also, this means that in one
+        BUILDING_INFO_RESPONSE message all the values *must* share the same
+        unit of measurement
     - BUILDING_INFO type has the following structure:
         {
             "building_id": String,
@@ -170,6 +175,7 @@
                 "value": Number [Wh],
                 "timestamp": Timestamp convertible to RFC 3339 format
             }
+
 * FLEXIBILITY_DEMAND_RESPONSE
     - POST response to Frontend.
     - Once Frontend sends a FLEXIBILITY_DEMAND_REQUEST, this message

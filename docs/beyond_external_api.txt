@@ -122,8 +122,13 @@
         is expected as a response:
         {
             "type": "building_info_response",
+            "unit_of_measurement": Either "kWh" or "kWh/h",
             "buildings_info": Array of BUILDING_INFO
         }
+    - note: "unit_of_measurement" attribute represents the unit of "value"
+        attribute found in BUILDING_INFO. Also, this means that in one
+        BUILDING_INFO_RESPONSE message all the values *must* share the same
+        unit of measurement
     - BUILDING_INFO type has the following structure:
         {
             "building_id": String,
