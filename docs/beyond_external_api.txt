@@ -141,7 +141,6 @@
         is expected as a response:
         {
             "type": "flexibility_demand_response",
-            "user_id": String,
             "demands": Array of FLEXIBILITY_DEMAND
         },
         where FLEXIBILITY_DEMAND is:
