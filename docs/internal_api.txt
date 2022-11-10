@@ -11,12 +11,14 @@
         - BUILDING_INFO_REQUEST
         - FLEXIBILITY_DEMAND_REQUEST
         - ALGORITHM_REQUEST
+        - FLEXIBILITY_OFFER_CONFIRMATION_REQUEST
     - Direction: Backend to Frontend
         - LOGIN_RESPONSE
         - BUILDINGS_BY_USR_ID_RESPONSE
         - BUILDING_INFO_RESPONSE
         - FLEXIBILITY_DEMAND_RESPONSE
         - ALGORITHM_RESPONSE
+        - FLEXIBILITY_OFFER_CONFIRMATION_RESPONSE
 ================= Frontend to backend =========================================
 * LOGIN_REQUEST:
     - URL: base_url/login/
@@ -113,6 +115,18 @@
            "flexibility_amount": 88,
            "month": 11
         }
+* FLEXIBILITY_OFFER_CONFIRMATION_REQUEST
+    - URL: base_url/flexibility_offer_confirmation/
+    - Request to backend.
+    - Frontend will send an HTTP post request
+        containing the following JSON object:
+        {
+            "type": "flexibility_offer_confirmation_request",
+            "user_id": String,
+            "algorithm_response": complete JSON object received in
+                ALGORITHM_RESPONSE message. See ALGORITHM_RESPONSE for more
+                information
+        }
 ================= Backend to Frontend =========================================
 * GENERIC FAILURE RESPONSE:
     - If for any reason a failure happens during request handling,
@@ -191,7 +205,7 @@
                 "flexibility": Number
             }
 * ALGORITHM_RESPONSE
-        - POST response to Frontend.
+    - POST response to Frontend.
     - Once Frontend sends a ALGORITHM_REQUEST, this message
         is expected as a response:
         {
@@ -209,3 +223,11 @@
                 },
                 "flexibility": Number
             }
+* FLEXIBILITY_OFFER_CONFIRMATION_REQUEST
+    - POST response to Frontend.
+    - Once Frontend sends a FLEXIBILITY_OFFER_CONFIRMATION_REQUEST,
+        this message is expected as a response:
+        {
+            "type": "flexibility_offer_confirmation_response",
+            "status": True if the save was successful, False otherwise
+        }
