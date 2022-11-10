@@ -223,7 +223,7 @@
                 },
                 "flexibility": Number
             }
-* FLEXIBILITY_OFFER_CONFIRMATION_REQUEST
+* FLEXIBILITY_OFFER_CONFIRMATION_RESPONSE
     - POST response to Frontend.
     - Once Frontend sends a FLEXIBILITY_OFFER_CONFIRMATION_REQUEST,
         this message is expected as a response:
