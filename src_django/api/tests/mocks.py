@@ -1,10 +1,15 @@
 import datetime
+import random
 from pathlib import Path
 
 import keycloak
 import pandas as pd
+
 from src_django.api.view import common
-import random
+
+ids = ('ZIV0034902130', 'ZIV0034902131', 'ZIV0034704030',
+       'ZIV0034703915', 'ZIV0034704013',
+       'ZIV0034703953', 'ZIV0034703954')
 
 
 def mock_token(username, password):
@@ -24,11 +29,11 @@ def mock_userinfo(*_):
 
 def mock_req_building_by_usr_id(*_):
     buildings = []
-    for i in range(100):
+    for i, b_id in enumerate(ids):
         buildings.append({
-            'building_id': f'b_{i}',
+            'building_id': b_id,
             'building_name': f'building_name_{i}',
-            'address': f'Ilica {i}',
+            'address': f'Rade Koncara {i}',
             'latitude': (45.815399
                          + random.uniform(0.000_001, 0.000_009)),
             'longitude': (15.966568
@@ -37,23 +42,13 @@ def mock_req_building_by_usr_id(*_):
             'buildings': buildings}
 
 
-def mock_req_building_info(*_):
-    from pathlib import Path
-    import pandas as pd
-    import datetime
-    csv_file = (Path(__file__).resolve().parents[1]
-                / 'tests'
-                / 'active im en.csv')
-    df = pd.read_csv(csv_file)
-    # df = df.drop(['Unnamed: 0'], axis=1).reset_index(drop=True)
-    ids = ('ZIV0034902130', 'ZIV0034902131', 'ZIV0034704030',
-           'ZIV0034703915', 'ZIV0034704013',
-           'ZIV0034703953', 'ZIV0034703954')
+def mock_req_building_info(_, selected_ids):
+    df = pd.read_csv(Path(__file__).resolve().parents[1]
+                     / 'tests'
+                     / 'active im en.csv')
     rows = [df.iloc[index] for index in range(len(df))]
-    # building_ids = [b_id for b_id in df.keys()[2:]]
-
     building_energy_list = []
-    for b_id in ids[:3]:
+    for b_id in selected_ids:
         timeseries = []
         for row in rows:
             ts = datetime.datetime.strptime(row['Timestamp'][:-4],
@@ -63,16 +58,13 @@ def mock_req_building_info(*_):
             timeseries.append({'timestamp': ts,
                                'value': row[b_id]})
         building_energy_list.append({'building_id': b_id,
-                                     'info': timeseries})
+                                     'energy_info': timeseries})
 
     return {'type': 'building_info_response',
             'buildings_info': building_energy_list}
 
 
 def mock_building_energy_list():
-    ids = ('ZIV0034902130', 'ZIV0034902131', 'ZIV0034704030',
-           'ZIV0034703915', 'ZIV0034704013',
-           'ZIV0034703953', 'ZIV0034703954')
     df = pd.read_csv(Path(__file__).parent.resolve() / 'active im en.csv')
     rows = [df.iloc[index] for index in range(len(df))]
     building_energy_list = []

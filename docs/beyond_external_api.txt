@@ -132,7 +132,7 @@
     - BUILDING_INFO type has the following structure:
         {
             "building_id": String,
-            "info": Array of TIMESERIES type
+            "energy_info": Array of TIMESERIES type
         }
         , where TIMESERIES type has the following structure:
             {

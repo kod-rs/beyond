@@ -19,11 +19,11 @@ definitions:
     type: object
     required:
       - building_id
-      - info
+      - energy_info
     properties:
       building_id:
         type: string
-      info:
+      energy_info:
         type: array
         items:
           $ref: '#/definitions/timeseries'
