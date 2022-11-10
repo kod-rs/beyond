@@ -11,7 +11,7 @@ from src_django.api.flexopt_algorithm.main import TimeInterval
 from pathlib import Path
 
 
-class LocationTestCase(TestCase):
+class AlgorithmTestCase(TestCase):
     def setUp(self):
         pass
 
