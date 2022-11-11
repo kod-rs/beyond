@@ -1,16 +1,18 @@
-import { Outlet } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+import { Navigate, Outlet } from 'react-router-dom';
+import { selectCurrentUser } from '../../store/user/user.selector';
 
-/*import Directory from '../../components/directory/directory.component';*/
 
 const Home = () => {
-  return (
-    <div>
-          {
-              //TODO MAKE 1st page
-          }
-        <Outlet />
-    </div>
-  );
+    const currentUser = useSelector(selectCurrentUser);
+
+    return (
+        <div>
+            {currentUser ? <Navigate to="/buildings" /> : <Navigate to="/auth" />}
+            <Outlet />
+        </div>
+    );
 };
 
 export default Home;
+//{//<Authentication />}

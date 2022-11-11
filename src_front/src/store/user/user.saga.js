@@ -1,5 +1,4 @@
 import { takeLatest, put, all, call } from 'redux-saga/effects';
-
 import { USER_ACTION_TYPES } from './user.types';
 
 import {
@@ -25,16 +24,26 @@ export function* returnCurrentUser({ payload: { email, password } }) {
 
 
 export function* signInWithEmail({ payload: { email, password } }) {
-  try {
-    const { user } = yield call(
-      signInAuthUserWithEmailAndPassword,
-      email,
-      password
-    );
-    //yield call(getSnapshotFromUserAuth, user);
-  } catch (error) {
-    yield put(signInFailed(error));
-  }
+    try {
+        let user = yield call(
+            signInAuthUserWithEmailAndPassword,
+            email,
+            password
+        );
+        if (user) {
+            if (user.status) {
+                yield put(signInSuccess(user));
+                window.open("/buildings");
+            } else {
+                put(signInFailed(user.message));
+            }
+            
+        } else {
+            put(signInFailed("User was null!"));
+        }
+    } catch (error) {
+        yield put(signInFailed(error));
+    }
 }
 
 export function* signOut() {

@@ -7,10 +7,10 @@ import {
 } from '../../utils/reducer/reducer.utils';
 
 import {
-  User,
-  UserData,
-  AdditionalInformation,
-} from '../../utils/api/login.utils';
+    User,
+    UserData,
+    AdditionalInformation,
+} from './user.types';
 
 export type CheckUserSession = Action<USER_ACTION_TYPES.CHECK_USER_SESSION>;
 export type EmailSignInStart = ActionWithPayload<USER_ACTION_TYPES.EMAIL_SIGN_IN_START,{ email: string; password: string }>;

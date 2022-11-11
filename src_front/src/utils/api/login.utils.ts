@@ -1,33 +1,25 @@
 import { signInWithEmailAndPassword } from './api.utils';
+import { UserData } from '../../store/user/user.types';
 
 export type ObjectToAdd = {
   title: string;
 };
 
 
-export type AdditionalInformation = {
-  displayName?: string;
-};
 
-export type UserData = {
-  createdAt: Date;
-  displayName: string;
-  email: string;
-};
-
-export type User = {
-    data: UserData;
-};
 
 export const signInAuthUserWithEmailAndPassword = async (email: string, password: string) => {
   if (!email || !password) return;
 
-  return await signInWithEmailAndPassword(email, password);
+  return signInWithEmailAndPassword(email, password);
 };
 
 export const signOutUser = async () => await signOut();
 
-const signOut = async () => { return null };
+const signOut = async () => {
+    //TODO add signout logic
+    return null
+};
 
 
 

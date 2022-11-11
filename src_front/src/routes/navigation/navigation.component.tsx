@@ -28,7 +28,7 @@ const Navigation = () => {
                 <NavLinks>
                 </NavLinks>
             </NavigationContainer>
-            {currentUser ? <Home /> : <Authentication />}
+            
             <Outlet />
         </Fragment>
         );
