@@ -1,5 +1,4 @@
 import datetime
-import json
 import typing
 
 from django.http import JsonResponse
@@ -8,7 +7,6 @@ from rest_framework.views import APIView
 from src_django.api.flexopt_algorithm import BuildingEnergy
 from src_django.api.flexopt_algorithm import CurrentBuildingInfo
 from src_django.api.flexopt_algorithm import EnergyInfo
-from src_django.api.flexopt_algorithm import MONTHS
 from src_django.api.flexopt_algorithm import TimeInterval
 from src_django.api.flexopt_algorithm import algorithm
 from src_django.api.validator.internal_api.algorithm import \
@@ -32,16 +30,17 @@ class AlgorithmView(APIView):
             request_body['building_energy_list'])
         interval = dict_to_interval(request_body['interval'])
 
-        total_flex, info = algorithm(
+        offered_flex, info = algorithm(
             building_energy_list=building_energy_list,
             interval=interval,
             flex_amount=request_body['flexibility_amount'])
-
         building_info = building_infos_to_dict(info)
-
+        req_flex = request_body['flexibility_amount']
         return JsonResponse({'type': self._response_type,
                              'status': True,
-                             'offered_flexibility': total_flex,
+                             'interval': request_body['interval'],
+                             'offered_flexibility': offered_flex,
+                             'requested_flexibility': req_flex,
                              'building_info': building_info})
 
 
@@ -63,6 +62,12 @@ def dict_to_interval(in_dict: dict) -> TimeInterval:
     return TimeInterval(
         from_t=common.datetime_from_rfc_string(in_dict['from']),
         to_t=common.datetime_from_rfc_string(in_dict['to']))
+
+
+def interval_to_strings(interval: TimeInterval) -> dict:
+    return {
+        'from': interval.from_t.isoformat(),
+        'to': interval.to_t.isoformat()}
 
 
 def building_infos_to_dict(in_list: typing.List[CurrentBuildingInfo]) -> list:
