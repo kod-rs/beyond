@@ -76,8 +76,6 @@
                 "to": Timestamp convertible to RFC 3339 format
             },
             "flexibility_amount": Number,
-            "month": Number in range [1, 12] or Null if the calculation is for
-                the current month
         },
         where BUILDING_ENERGY is defined as:
             {
@@ -109,11 +107,10 @@
                 }
            ],
            "interval": {
-                "from": 13,
-                "to": 17
+                "from": 2022-11-04T13:00:00.000000+00:00,
+                "to": 2022-11-04T17:00:00.000000+00:00
            },
-           "flexibility_amount": 88,
-           "month": 11
+           "flexibility_amount": 88
         }
 * FLEXIBILITY_OFFER_CONFIRMATION_REQUEST
     - URL: base_url/flexibility_offer_confirmation/
@@ -218,8 +215,8 @@
             {
                 "building_id": String,
                 "interval": {
-                    "from": Number in range [6, 22], as required per algorithm
-                    "to": Number in range [6, 22], as required per algorithm
+                    "from": String convertible to RFC 3339 format
+                    "to": String convertible to RFC 3339 format
                 },
                 "flexibility": Number
             }
