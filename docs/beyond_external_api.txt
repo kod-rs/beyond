@@ -64,18 +64,6 @@
             "flexibility": Number
         }
 
-* TOTAL_FLEXIBILITY_OFFER_AGR_RESPONSE
-    - Response to 'beyond_uri/'
-    - FlexOpt will send an HTTP post request
-        containing the following JSON object:
-        {
-            "type": "total_flexibility_offer_by_aggregator_response",
-            "start_time": String convertible to RFC 3339 format,
-            "end_time": String convertible to RFC 3339 format,
-            "user_id": String,
-            "flexibility": Number
-        }
-
 * FLEXIBILITY_OFFER_BUILDING_RESPONSE
     - Response to 'beyond_uri/'
     - FlexOpt will send an HTTP post request
@@ -87,19 +75,6 @@
             "building_id": String,
             "flexibility": Number
         }
-
-* TOTAL_FLEXIBILITY_OFFER_BUILDING_RESPONSE
-    - Response to 'beyond_uri/'
-    - FlexOpt will send an HTTP post request
-        containing the following JSON object:
-        {
-            "type": "total_flexibility_offer_by_building_response",
-            "start_time": String convertible to RFC 3339 format,
-            "end_time": String convertible to RFC 3339 format,
-            "building_id": String,
-            "flexibility": Number
-        }
-
 ================= Beyond to FlexOpt ===========================================
 * BUILDINGS_BY_USR_ID_RESPONSE:
     - POST response to 'FlexOpt_uri/'
@@ -167,34 +142,12 @@
             "user_id": String
         }
 
-* TOTAL_FLEXIBILITY_OFFER_AGR_REQUEST:
-    - GET request to 'FlexOpt_uri/'
-    - Retrieve total flexibility for a given interval and a given aggregator.
-    - The request has the following structure:
-        {
-            "type": "total_flexibility_offer_by_aggregator",
-            "start_time": String convertible to RFC 3339 format,
-            "end_time": String convertible to RFC 3339 format,
-            "user_id": String
-        }.
-
 * FLEXIBILITY_OFFER_BUILDING_REQUEST:
     - GET request to 'FlexOpt_uri/'
     - Retrieve flexibility for a given interval and a given building.
     - The request has the following structure:
         {
             "type": "flexibility_offer_by_building",
-            "start_time": String convertible to RFC 3339 format,
-            "end_time": String convertible to RFC 3339 format,
-            "building_id": String
-        }.
-
-* TOTAL_FLEXIBILITY_OFFER_BUILDING_REQUEST:
-    - GET request to 'FlexOpt_uri/'
-    - Retrieve total flexibility for a given interval and a given building.
-    - The request has the following structure:
-        {
-            "type": "total_flexibility_offer_by_building",
             "start_time": String convertible to RFC 3339 format,
             "end_time": String convertible to RFC 3339 format,
             "building_id": String
