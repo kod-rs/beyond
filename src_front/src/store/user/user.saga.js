@@ -33,7 +33,7 @@ export function* signInWithEmail({ payload: { email, password } }) {
         if (user) {
             if (user.status) {
                 yield put(signInSuccess(user));
-                window.open("/buildings");
+                window.location.assign("/buildings");
             } else {
                 put(signInFailed(user.message));
             }
