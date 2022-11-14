@@ -1,3 +1,4 @@
+import datetime
 import json
 from unittest.mock import MagicMock
 
@@ -7,7 +8,6 @@ from django.test import TestCase
 
 from src_django.api.tests import mocks
 from src_django.api.view import common
-import datetime
 
 
 class WorkflowTestCase(TestCase):
@@ -77,6 +77,9 @@ class WorkflowTestCase(TestCase):
             response = response.json()
 
             assert response['type'] == 'algorithm_response'
+            assert response['interval']['from'] == d['start_time']
+            assert response['interval']['to'] == d['end_time']
+            assert response['requested_flexibility'] == flex_amount
             assert response['status'] is True
             assert response['offered_flexibility'] <= flex_amount
             assert isinstance(response['building_info'], list)

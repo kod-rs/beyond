@@ -150,22 +150,32 @@ class TestAlgorithmView(TestCase):
         assert (isinstance(response['offered_flexibility'], float)
                 or isinstance(response['offered_flexibility'], int))
         assert isinstance(response['building_info'], list)
+        assert response['interval']['from'] == date_from
+        assert response['interval']['to'] == date_to
+        assert response['requested_flexibility'] == 300
 
 
 class TestFlexibilityOfferConfirmationView(TestCase):
     def test_flexibility_offer_confirmation(self):
         client = Client()
 
+        date_from = datetime.datetime(year=2022, month=2, day=10, hour=9)
+        date_from = date_from.replace(tzinfo=datetime.timezone.utc).isoformat()
+        date_to = datetime.datetime(year=2022, month=2, day=10, hour=12)
+        date_to = date_to.replace(tzinfo=datetime.timezone.utc).isoformat()
+        interval = {'from': date_from, 'to': date_to}
+
         algorithm_response = {
             'building_info': [
                 {'building_id': 'ZIV0034704030',
                  'flexibility': 95.8,
-                 'interval': {'from': 12, 'to': 15}},
+                 'interval': interval},
                 {'building_id': 'ZIV0034902130',
                  'flexibility': 93.65,
-                 'interval': {'from': 12, 'to': 15}}],
+                 'interval': interval}],
             'offered_flexibility': 189.45,
             'status': True,
+            'interval': interval,
             'type': 'algorithm_response'}
 
         data = {'type': 'flexibility_offer_confirmation_request',
