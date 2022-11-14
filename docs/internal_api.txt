@@ -208,7 +208,11 @@
         {
             "type": "algorithm_response",
             "status": True,
-            "offered_flexibility": Number
+            "offered_flexibility": Number,
+            "interval": {
+                    "from": String convertible to RFC 3339 format
+                    "to": String convertible to RFC 3339 format
+            },
             "building_info": Array of BUILDING_INFO
         },
         where BUILDING_INFO is:
