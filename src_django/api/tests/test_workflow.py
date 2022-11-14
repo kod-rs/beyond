@@ -29,7 +29,6 @@ class WorkflowTestCase(TestCase):
 
     def test_workflow(self):
         client = Client()
-        breakpoint()
         data = {'type': 'login_request',
                 'username': 'mirkofleks',
                 'password': 'mirkofleks'}
