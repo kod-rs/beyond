@@ -83,5 +83,5 @@ class WorkflowTestCase(TestCase):
             assert len(response['building_info']) > 0
             building = response['building_info'][0]
             assert building['flexibility'] <= flex_amount
-            assert building['interval']['from'] == interval_from
-            assert building['interval']['to'] == interval_to
+            assert building['interval']['from'] == d['start_time']
+            assert building['interval']['to'] == d['end_time']

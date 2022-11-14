@@ -31,7 +31,6 @@ class AlgorithmView(APIView):
         building_energy_list = dict_to_building_energy_list(
             request_body['building_energy_list'])
         interval = dict_to_interval(request_body['interval'])
-        month = number_to_month(request_body['month'])
 
         total_flex, info = algorithm(
             building_energy_list=building_energy_list,
@@ -61,14 +60,9 @@ def dict_to_building_energy_list(in_dict: dict) -> typing.List[BuildingEnergy]:
 
 
 def dict_to_interval(in_dict: dict) -> TimeInterval:
-    return TimeInterval(from_t=in_dict['from'],
-                        to_t=in_dict['to'])
-
-
-def number_to_month(number: typing.Union[None, int]
-                    ) -> typing.Union[None, int]:
-    if number:
-        return MONTHS[number - 1]
+    return TimeInterval(
+        from_t=common.datetime_from_rfc_string(in_dict['from']),
+        to_t=common.datetime_from_rfc_string(in_dict['to']))
 
 
 def building_infos_to_dict(in_list: typing.List[CurrentBuildingInfo]) -> list:
@@ -77,7 +71,7 @@ def building_infos_to_dict(in_list: typing.List[CurrentBuildingInfo]) -> list:
         ret.append({
             'building_id': building.building_id,
             'interval': {
-                'from': building.time_interval.from_t,
-                'to': building.time_interval.to_t},
+                'from': building.time_interval.from_t.isoformat(),
+                'to': building.time_interval.to_t.isoformat()},
             'flexibility': building.flex})
     return ret

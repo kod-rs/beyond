@@ -17,10 +17,10 @@ class AlgorithmTestCase(TestCase):
 
     def test_algorithm(self):
         # TODO don't read from CSV
-        date_from = datetime.datetime(year=2022, month=4, day=10, hour=9)
+        date_from = datetime.datetime(year=2022, month=2, day=10, hour=9)
         date_from = date_from.replace(tzinfo=datetime.timezone.utc)
 
-        date_to = datetime.datetime(year=2022, month=4, day=10, hour=12)
+        date_to = datetime.datetime(year=2022, month=2, day=10, hour=12)
         date_to = date_to.replace(tzinfo=datetime.timezone.utc)
 
         interval = TimeInterval(date_from, date_to)
@@ -54,8 +54,7 @@ class AlgorithmTestCase(TestCase):
         total_flex, building_info = algorithm(
             building_energy_list=building_energy,
             interval=interval,
-            flex_amount=flex_amount,
-            month=month)
+            flex_amount=flex_amount)
 
         assert total_flex == flex_amount
         assert len(building_info) == 3
