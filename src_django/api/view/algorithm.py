@@ -36,8 +36,7 @@ class AlgorithmView(APIView):
         total_flex, info = algorithm(
             building_energy_list=building_energy_list,
             interval=interval,
-            flex_amount=request_body['flexibility_amount'],
-            month=month)
+            flex_amount=request_body['flexibility_amount'])
 
         building_info = building_infos_to_dict(info)
 

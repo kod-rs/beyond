@@ -34,8 +34,8 @@ class EnergyInfo(NamedTuple):
 
 
 class TimeInterval(NamedTuple):
-    from_t: int
-    to_t: int
+    from_t: datetime.datetime
+    to_t: datetime.datetime
 
 
 class CurrentBuildingInfo(NamedTuple):
@@ -359,9 +359,9 @@ def apply_flexibility(diffs: List[Union[str, List[tuple]]],
 
 def algorithm(building_energy_list: typing.List[BuildingEnergy],
               interval: TimeInterval,
-              flex_amount: int,
-              month: MONTHS = None) -> typing.Tuple[float,
-                                                    List[CurrentBuildingInfo]]:
+              flex_amount: int
+              ) -> typing.Tuple[float,
+                                List[CurrentBuildingInfo]]:
     """
     Flexibility optimization algorithm.
     Get the available flexibility for the requested interval.
@@ -375,11 +375,8 @@ def algorithm(building_energy_list: typing.List[BuildingEnergy],
         Potential flexibility per building for the requested interval
 
     """
-    if not month:
-        month_tomorrow = datetime.datetime.now() + datetime.timedelta(days=1)
-        month_index = month_tomorrow.month - 1
-    else:
-        month_index = MONTHS.index(month)
+    breakpoint()
+    month_index = None
 
     building_ids = tuple(b.building_id for b in building_energy_list)
     buildings = [[b_list.value for b_list in b.energy_info]

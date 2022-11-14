@@ -120,13 +120,20 @@ class TestFlexibilityDemand(TestCase):
 
 
 class TestAlgorithmView(TestCase):
-    def test_get_buildings_by_user_id(self):
+    def test_algorithm(self):
         client = Client()
+
+        date_from = datetime.datetime(year=2022, month=4, day=10, hour=9)
+        date_from = date_from.replace(tzinfo=datetime.timezone.utc).isoformat()
+
+        date_to = datetime.datetime(year=2022, month=4, day=10, hour=12)
+        date_to = date_to.replace(tzinfo=datetime.timezone.utc).isoformat()
+
         data = {'type': 'algorithm_request',
                 'building_energy_list': [],
                 'interval': {
-                    'from': 12,
-                    'to': 15},
+                    'from': date_from,
+                    'to': date_to},
                 'flexibility_amount': 300,
                 'month': None}
 
@@ -143,3 +150,32 @@ class TestAlgorithmView(TestCase):
         assert (isinstance(response['offered_flexibility'], float)
                 or isinstance(response['offered_flexibility'], int))
         assert isinstance(response['building_info'], list)
+
+
+class TestFlexibilityOfferConfirmationView(TestCase):
+    def test_flexibility_offer_confirmation(self):
+        client = Client()
+
+        algorithm_response = {
+            'building_info': [
+                {'building_id': 'ZIV0034704030',
+                 'flexibility': 95.8,
+                 'interval': {'from': 12, 'to': 15}},
+                {'building_id': 'ZIV0034902130',
+                 'flexibility': 93.65,
+                 'interval': {'from': 12, 'to': 15}}],
+            'offered_flexibility': 189.45,
+            'status': True,
+            'type': 'algorithm_response'}
+
+        data = {'type': 'flexibility_offer_confirmation_request',
+                'user_id': 'usr1',
+                'algorithm_response': algorithm_response}
+
+        response = client.post('/flexibility_offer_confirmation/',
+                               json.dumps(data),
+                               content_type="application/json")
+        response = response.json()
+
+        assert response['type'] == 'flexibility_offer_confirmation_response'
+        assert response['status'] is True

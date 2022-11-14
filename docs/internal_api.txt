@@ -72,8 +72,8 @@
             "type": "algorithm_request",
             "building_energy_list": Array of BUILDING_ENERGY,
             "interval": {
-                "from": Number in range [6, 22], as required per algorithm
-                "to": Number in range [6, 22], as required per algorithm
+                "from": Timestamp convertible to RFC 3339 format
+                "to": Timestamp convertible to RFC 3339 format
             },
             "flexibility_amount": Number,
             "month": Number in range [1, 12] or Null if the calculation is for

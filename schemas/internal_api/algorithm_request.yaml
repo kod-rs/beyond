@@ -24,11 +24,11 @@ properties:
       - to
     properties:
       from:
-        type: number
-        minimum: 6
+        type: string
+        format: "date-time"
       to:
-        type: number
-        maximum: 22
+        type: string
+        format: "date-time"
   flexibility_amount:
     type: number
   month:

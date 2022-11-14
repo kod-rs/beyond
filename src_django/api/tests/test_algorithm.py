@@ -17,7 +17,14 @@ class AlgorithmTestCase(TestCase):
 
     def test_algorithm(self):
         # TODO don't read from CSV
-        interval = TimeInterval(9, 12)
+        date_from = datetime.datetime(year=2022, month=4, day=10, hour=9)
+        date_from = date_from.replace(tzinfo=datetime.timezone.utc)
+
+        date_to = datetime.datetime(year=2022, month=4, day=10, hour=12)
+        date_to = date_to.replace(tzinfo=datetime.timezone.utc)
+
+        interval = TimeInterval(date_from, date_to)
+
         flex_amount = 303
         month = MONTHS[1]
         csv_file = Path(__file__).parent.resolve() / 'active im en.csv'

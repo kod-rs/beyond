@@ -63,16 +63,12 @@ class WorkflowTestCase(TestCase):
         demands = response['demands']
         for d in demands:
             flex_amount = d['flexibility']
-            interval_from = datetime.datetime.fromisoformat(d['start_time'])
-            interval_from = interval_from.hour
-            interval_to = datetime.datetime.fromisoformat(d['end_time'])
-            interval_to = interval_to.hour
 
             data = {'type': 'algorithm_request',
                     'building_energy_list': buildings_info,
                     'interval': {
-                        'from': interval_from,
-                        'to': interval_to},
+                        'from': d['start_time'],
+                        'to': d['end_time']},
                     'flexibility_amount': flex_amount,
                     'month': None}
             response = client.post('/algorithm/',
