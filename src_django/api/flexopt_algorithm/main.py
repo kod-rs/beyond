@@ -367,9 +367,8 @@ def apply_flexibility(diffs: List[Union[str, List[tuple]]],
 
 def algorithm(building_energy_list: typing.List[BuildingEnergy],
               interval: TimeInterval,
-              flex_amount: int
-              ) -> typing.Tuple[float,
-                                List[CurrentBuildingInfo]]:
+              flex_amount: int) -> typing.Tuple[float,
+                                                List[CurrentBuildingInfo]]:
     """
     Flexibility optimization algorithm.
     Get the available flexibility for the requested interval.
