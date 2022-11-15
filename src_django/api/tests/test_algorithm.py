@@ -1,4 +1,5 @@
 import datetime
+from pathlib import Path
 
 import pandas as pd
 from django.test import TestCase
@@ -8,7 +9,6 @@ from src_django.api.flexopt_algorithm.main import BuildingEnergy
 from src_django.api.flexopt_algorithm.main import EnergyInfo
 from src_django.api.flexopt_algorithm.main import MONTHS
 from src_django.api.flexopt_algorithm.main import TimeInterval
-from pathlib import Path
 
 
 class AlgorithmTestCase(TestCase):

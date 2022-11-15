@@ -54,11 +54,16 @@
         containing the following JSON object:
         {
             "type": "flexibility_offer_by_aggregator_response",
+            "status": True,
             "user_id": String,
-            "start_time": String convertible to RFC 3339 format,
-            "end_time": String convertible to RFC 3339 format,
-            "flexibility": Number
-        }
+            "offered_flexibilities": Array of FLEX_INFO
+        },
+        where FLEX_INFO is defined as:
+            {
+                "start_time": String convertible to RFC 3339 format,
+                "end_time": String convertible to RFC 3339 format,
+                "flexibility": Number
+            }
 
 * FLEXIBILITY_OFFER_BUILDING_RESPONSE
     - Response to 'beyond_uri/'
@@ -66,11 +71,18 @@
         containing the following JSON object:
         {
             "type": "flexibility_offer_by_building_response",
+            "status": True,
             "start_time": String convertible to RFC 3339 format,
             "end_time": String convertible to RFC 3339 format,
             "building_id": String,
-            "flexibility": Number
-        }
+            "offered_flexibilities": Array of FLEX_INFO
+        },
+        where FLEX_INFO is defined as:
+            {
+                "start_time": String convertible to RFC 3339 format,
+                "end_time": String convertible to RFC 3339 format,
+                "flexibility": Number
+            }
 ================= Beyond to FlexOpt ===========================================
 * BUILDINGS_BY_USR_ID_RESPONSE:
     - POST response to 'FlexOpt_uri/'
@@ -127,7 +139,7 @@
             }
 
 * FLEXIBILITY_OFFER_AGR_REQUEST:
-    - GET request to 'FlexOpt_uri/'
+    - GET request to 'FlexOpt_uri/flexibility_offer'
     - Retrieve flexibility offers for a given interval and a given aggregator.
     - The request has the following structure:
          is expected as a response:
@@ -139,7 +151,7 @@
         }
 
 * FLEXIBILITY_OFFER_BUILDING_REQUEST:
-    - GET request to 'FlexOpt_uri/'
+    - GET request to 'FlexOpt_uri/flexibility_offer'
     - Retrieve flexibility for a given interval and a given building.
     - The request has the following structure:
         {

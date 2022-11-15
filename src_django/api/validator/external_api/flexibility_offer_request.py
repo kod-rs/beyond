@@ -1,13 +1,13 @@
 from src_django.api.validator import common
 
 
-def validate_buildings_by_usr_id_resp(data: dict) -> bool:
+def validate_flex_offer_req_agr(data: dict) -> bool:
     yaml_file_path = (common.external_api_dir /
-                      'buildings_by_user_id_response.yaml')
+                      'flexibility_offer_by_aggregator.yaml')
     return common.validate(yaml_file_path, data)
 
 
-def validate_building_info(data: dict) -> bool:
+def validate_flex_offer_req_building(data: dict) -> bool:
     yaml_file_path = (common.external_api_dir /
-                      'building_info_response.yaml')
+                      'flexibility_offer_by_building.yaml')
     return common.validate(yaml_file_path, data)
