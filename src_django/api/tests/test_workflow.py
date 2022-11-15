@@ -1,3 +1,4 @@
+import datetime
 import json
 from unittest.mock import MagicMock
 
@@ -7,7 +8,6 @@ from django.test import TestCase
 
 from src_django.api.tests import mocks
 from src_django.api.view import common
-import datetime
 
 
 class WorkflowTestCase(TestCase):
@@ -29,7 +29,6 @@ class WorkflowTestCase(TestCase):
 
     def test_workflow(self):
         client = Client()
-        breakpoint()
         data = {'type': 'login_request',
                 'username': 'mirkofleks',
                 'password': 'mirkofleks'}
@@ -64,16 +63,12 @@ class WorkflowTestCase(TestCase):
         demands = response['demands']
         for d in demands:
             flex_amount = d['flexibility']
-            interval_from = datetime.datetime.fromisoformat(d['start_time'])
-            interval_from = interval_from.hour
-            interval_to = datetime.datetime.fromisoformat(d['end_time'])
-            interval_to = interval_to.hour
 
             data = {'type': 'algorithm_request',
                     'building_energy_list': buildings_info,
                     'interval': {
-                        'from': interval_from,
-                        'to': interval_to},
+                        'from': d['start_time'],
+                        'to': d['end_time']},
                     'flexibility_amount': flex_amount,
                     'month': None}
             response = client.post('/algorithm/',
@@ -82,11 +77,14 @@ class WorkflowTestCase(TestCase):
             response = response.json()
 
             assert response['type'] == 'algorithm_response'
+            assert response['interval']['from'] == d['start_time']
+            assert response['interval']['to'] == d['end_time']
+            assert response['requested_flexibility'] == flex_amount
             assert response['status'] is True
             assert response['offered_flexibility'] <= flex_amount
             assert isinstance(response['building_info'], list)
             assert len(response['building_info']) > 0
             building = response['building_info'][0]
             assert building['flexibility'] <= flex_amount
-            assert building['interval']['from'] == interval_from
-            assert building['interval']['to'] == interval_to
+            assert building['interval']['from'] == d['start_time']
+            assert building['interval']['to'] == d['end_time']

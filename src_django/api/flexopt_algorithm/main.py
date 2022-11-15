@@ -34,8 +34,8 @@ class EnergyInfo(NamedTuple):
 
 
 class TimeInterval(NamedTuple):
-    from_t: int
-    to_t: int
+    from_t: datetime.datetime
+    to_t: datetime.datetime
 
 
 class CurrentBuildingInfo(NamedTuple):
@@ -192,18 +192,19 @@ def difference_calculation(points: numpy.ndarray) -> List[tuple]:
     return diff
 
 
-def get_points(building_ids: tuple, buildings: list, month_index: int
+def get_points(building_ids: tuple, buildings: list, interval: TimeInterval
                ) -> List[List[point_coordinates]]:
     """
 
     Args:
         building_ids: tuple of strings
         buildings: timeseries values keyed by building id
-        month_index: Očito
+        interval: time period
 
     Returns:
         List of (x, y) points to be considered in further calculations
     """
+    month_index = interval.from_t.month - 1
     month_days = N_DAYS[month_index]
     points = []
     hour_accumulator = sum(N_DAYS[:month_index]) * 24
@@ -269,9 +270,10 @@ def add_sort(diffs: np.ndarray, interval: TimeInterval
     """
     ret = []
     for building in range(len(diffs)):
-        if sum(np.array(
-                diffs[building][1][interval.from_t:interval.to_t])[:, 1]) > 0:
-            res = np.array(diffs[building][1][interval.from_t:interval.to_t])
+        from_h = interval.from_t.hour
+        to_h = interval.to_t.hour
+        if sum(np.array(diffs[building][1][from_h: to_h])[:, 1]) > 0:
+            res = np.array(diffs[building][1][from_h:to_h])
             res = round(sum(res[:, 1]) * 0.2, 2)
             ret.append([building, res])
 
@@ -309,8 +311,12 @@ def apply_flexibility(diffs: List[Union[str, List[tuple]]],
         How much flexibility can a building give and when
 
     """
+
     order = add_sort(np.array(diffs, dtype=object), interval)
     ret = []
+
+    from_h = interval.from_t.hour
+    to_h = interval.to_t.hour
 
     for building in range(len(order)):
         flex_amount = 0
@@ -318,7 +324,7 @@ def apply_flexibility(diffs: List[Union[str, List[tuple]]],
         if flex > 0:
             if order[building][1] >= flex:
                 start = -1
-                for hour in range(interval.from_t, interval.to_t):
+                for hour in range(from_h, to_h):
                     if (diffs[order[building][0]][1][hour][1] > 0
                             and start == -1):
                         start = hour
@@ -329,28 +335,30 @@ def apply_flexibility(diffs: List[Union[str, List[tuple]]],
                     else:
                         flex_amount += diffs[order[building][0]][1][hour][1]
                         flex -= diffs[order[building][0]][1][hour][1]
+
+                start = interval.from_t.replace(hour=start)
+                end = interval.to_t.replace(hour=end)
                 ret.append(CurrentBuildingInfo(
                     building_id=diffs[order[building][0]][0],
-                    time_interval=TimeInterval(
-                        start, end),
+                    time_interval=TimeInterval(start, end),
                     flex=round(flex_amount, 2)))
                 break
             else:
                 flex -= order[building][1]
-                for hour in range(interval.from_t, interval.to_t):
+                for hour in range(from_h, to_h):
                     if diffs[order[building][0]][1][hour][1] > 0:
                         start = hour
                         break
-                for hour in reversed(range(interval.from_t, interval.to_t)):
+                for hour in reversed(range(from_h, to_h)):
                     if diffs[order[building][0]][1][hour][1] > 0:
                         end = hour + 1
                         break
+                start = interval.from_t.replace(hour=start)
+                end = interval.to_t.replace(hour=end)
                 ret.append(CurrentBuildingInfo(
                     building_id=diffs[order[building][0]][0],
-                    time_interval=TimeInterval(
-                        start, end),
-                    flex=round(order[building][1],
-                               2)))
+                    time_interval=TimeInterval(start, end),
+                    flex=round(order[building][1], 2)))
         else:
             break
 
@@ -359,9 +367,8 @@ def apply_flexibility(diffs: List[Union[str, List[tuple]]],
 
 def algorithm(building_energy_list: typing.List[BuildingEnergy],
               interval: TimeInterval,
-              flex_amount: int,
-              month: MONTHS = None) -> typing.Tuple[float,
-                                                    List[CurrentBuildingInfo]]:
+              flex_amount: int) -> typing.Tuple[float,
+                                                List[CurrentBuildingInfo]]:
     """
     Flexibility optimization algorithm.
     Get the available flexibility for the requested interval.
@@ -369,23 +376,15 @@ def algorithm(building_energy_list: typing.List[BuildingEnergy],
         building_energy_list: building id paired with its timeseries data
         interval: requested interval
         flex_amount: requested flexibility amount
-        month: requested month, if no month given, the default value is
-            tomorrow's month
     Returns:
         Potential flexibility per building for the requested interval
 
     """
-    if not month:
-        month_tomorrow = datetime.datetime.now() + datetime.timedelta(days=1)
-        month_index = month_tomorrow.month - 1
-    else:
-        month_index = MONTHS.index(month)
-
     building_ids = tuple(b.building_id for b in building_energy_list)
     buildings = [[b_list.value for b_list in b.energy_info]
                  for b in building_energy_list]
 
-    points = get_points(building_ids, buildings, month_index)
+    points = get_points(building_ids, buildings, interval)
 
     max_diff = get_max_diff(building_ids, points)
 
