@@ -9,6 +9,15 @@ external_api_dir = schemas_dir / 'external_api'
 
 
 def validate(yaml_file_path, data):
+    """
+    Validate input data against yaml file provided by file path.
+    Args:
+        yaml_file_path: Path to schema
+        data: Data to be validated
+
+    Returns:
+        True if the validation was successful, False otherwise
+    """
     with open(yaml_file_path, 'r') as yaml_file:
         schema = yaml.safe_load(yaml_file)
     try:

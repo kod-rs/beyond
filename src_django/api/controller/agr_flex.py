@@ -11,6 +11,18 @@ def add(start_time: str,
         end_time: str,
         user_id: str,
         flexibility: number_type) -> bool:
+    """
+    Saves aggregator flexibility offer to a database
+
+    Args:
+        start_time: RFC 3339 string
+        end_time: RFC 3339
+        user_id: unique user id
+        flexibility: amount of flexibility that can be offered
+
+    Returns:
+        True if saving was successful, False otherwise
+    """
     try:
         start_time = common.datetime_from_rfc_string(start_time)
         end_time = common.datetime_from_rfc_string(end_time)
@@ -28,6 +40,17 @@ def add(start_time: str,
 def get_by_usr_and_time(user_id: str,
                         start_time: str,
                         end_time: str) -> typing.Union[list, bool]:
+    """
+    Reads data from the database based on user ID and requested period.
+    Args:
+        user_id: unique user id
+        start_time: RFC 3339 string
+        end_time: RFC 3339 string
+
+    Returns:
+        Either a list containing all the flexibilities matching the user and
+        time or False in case of  no data found or error while reading data
+    """
     try:
         start_time = common.datetime_from_rfc_string(start_time)
         end_time = common.datetime_from_rfc_string(end_time)

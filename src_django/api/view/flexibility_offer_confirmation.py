@@ -8,6 +8,10 @@ from src_django.api.view import common
 
 
 class FlexibilityOfferConfirmation(APIView):
+    """
+     API for /flexibility_offer_confirmation
+    """
+
     def __init__(self):
         super().__init__()
         self._request_type = 'flexibility_offer_confirmation_request'

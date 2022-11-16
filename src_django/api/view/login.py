@@ -9,6 +9,10 @@ from src_django.settings import KEYCLOAK_CONFIG
 
 
 class LoginView(APIView):
+    """
+     API for /login
+    """
+
     def __init__(self):
         super().__init__()
         self._openid = _keycloak_connect()

@@ -8,6 +8,10 @@ from src_django.api.view import common
 
 
 class FlexibilityOfferRequest(APIView):
+    """
+     API for /flexibility_offer
+    """
+
     def __init__(self):
         super().__init__()
 

@@ -9,6 +9,10 @@ from src_django.api.view import common
 
 
 class FlexibilityDemandView(APIView):
+    """
+     API for /flexibility_demand
+    """
+
     def __init__(self):
         super().__init__()
         self._request_type = 'flexibility_demand_request'
@@ -23,8 +27,7 @@ class FlexibilityDemandView(APIView):
             return common.false_status(msg='invalid request',
                                        response_type=self._response_type)
 
-        beyond_data = self._beyond.req_flex_demand(request_body['type'],
-                                                   request_body['date'])
+        beyond_data = self._beyond.req_flex_demand(request_body['date'])
 
         if not validate_flexibility_demand_response(beyond_data):
             return common.false_status(msg='request failed',
