@@ -112,6 +112,7 @@ class TestFlexibilityDemand(TestCase):
                                json.dumps(data),
                                content_type="application/json")
         response = response.json()
+
         assert response['type'] == 'flexibility_demand_response'
         assert response['status'] is True
         assert isinstance(response['demands'], list)
@@ -127,21 +128,17 @@ class TestAlgorithmView(TestCase):
 
         date_from = datetime.datetime(year=2022, month=4, day=10, hour=9)
         date_from = date_from.replace(tzinfo=datetime.timezone.utc).isoformat()
-
         date_to = datetime.datetime(year=2022, month=4, day=10, hour=12)
         date_to = date_to.replace(tzinfo=datetime.timezone.utc).isoformat()
-
+        flex_amount = 300
         data = {'type': 'algorithm_request',
-                'building_energy_list': [],
+                'building_energy_list': mocks.mock_building_energy_list(),
                 'interval': {
                     'from': date_from,
                     'to': date_to},
-                'flexibility_amount': 300,
+                'flexibility_amount': flex_amount,
                 'month': None}
 
-        building_energy_list = mocks.mock_building_energy_list()
-
-        data['building_energy_list'] = building_energy_list
         response = client.post('/algorithm/',
                                json.dumps(data),
                                content_type="application/json")
@@ -154,13 +151,17 @@ class TestAlgorithmView(TestCase):
         assert isinstance(response['building_info'], list)
         assert response['interval']['from'] == date_from
         assert response['interval']['to'] == date_to
-        assert response['requested_flexibility'] == 300
+        assert response['requested_flexibility'] == flex_amount
+        assert response['offered_flexibility'] <= flex_amount
+        assert isinstance(response['building_info'], list)
+        assert len(response['building_info']) > 0
+        building = response['building_info'][0]
+        assert building['flexibility'] <= flex_amount
+        assert building['interval']['from'] == date_from
+        assert building['interval']['to'] == date_to
 
 
 class TestFlexibilityOfferConfirmationView(TestCase):
-    def setUp(self):
-        pass
-
     def test_flexibility_offer_confirmation(self):
         client = Client()
 
