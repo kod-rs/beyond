@@ -377,7 +377,7 @@ def algorithm(building_energy_list: typing.List[BuildingEnergy],
         interval: requested interval
         flex_amount: requested flexibility amount
     Returns:
-        Potential flexibility per building for the requested interval
+        Total flexibility and flexibility per building for the interval
 
     """
     building_ids = tuple(b.building_id for b in building_energy_list)
