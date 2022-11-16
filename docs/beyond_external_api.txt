@@ -64,6 +64,13 @@
                 "end_time": String convertible to RFC 3339 format,
                 "flexibility": Number
             }
+    - If for any reason a failure happens during request handling,
+        the following message will be sent:
+         {
+            "type": "flexibility_offer_by_aggregator_response",
+            "status": False,
+            "message": String describing the error
+        },
 
 * FLEXIBILITY_OFFER_BUILDING_RESPONSE
     - Response to 'beyond_uri/'
@@ -83,6 +90,13 @@
                 "end_time": String convertible to RFC 3339 format,
                 "flexibility": Number
             }
+    - If for any reason a failure happens during request handling,
+        the following message will be sent:
+         {
+            "type": "flexibility_offer_by_building_response",
+            "status": False,
+            "message": String describing the error
+        },
 ================= Beyond to FlexOpt ===========================================
 * BUILDINGS_BY_USR_ID_RESPONSE:
     - POST response to 'FlexOpt_uri/'
