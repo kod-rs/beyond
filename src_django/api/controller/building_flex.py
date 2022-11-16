@@ -31,20 +31,16 @@ def get_by_building_and_time(building_id: str,
     try:
         start_time = common.datetime_from_rfc_string(start_time)
         end_time = common.datetime_from_rfc_string(end_time)
-        flex_by_usr_id = BuildingFlexibility.objects.filter(
+        flex_by_building_id = BuildingFlexibility.objects.filter(
             building_id=building_id,
             start_time__range=(start_time, end_time),
             end_time__range=(start_time + datetime.timedelta(hours=1),
                              end_time + datetime.timedelta(hours=1))
         ).values('start_time', 'end_time', 'flexibility')
-
-        flex_iso = []
-        for f in flex_by_usr_id:
-            flex_iso.append({
-                'flexibility': f['flexibility'],
-                'start_time': datetime.datetime.isoformat(f['start_time']),
-                'end_time': datetime.datetime.isoformat(f['end_time'])})
-        return flex_iso
+        [d.update({'start_time': datetime.datetime.isoformat(d['start_time']),
+                   'end_time': datetime.datetime.isoformat(d['end_time'])})
+         for d in flex_by_building_id]
+        return list(flex_by_building_id)
     except Exception as e:
         print(e)
         return False
