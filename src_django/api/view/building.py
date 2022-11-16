@@ -31,9 +31,6 @@ class BuildingView(APIView):
         if request_type == self._req_building_info:
             return self._post_building_info(request)
 
-        return common.false_status(response_type='invalid_request_response',
-                                   msg='invalid request type')
-
     def _post_building_by_user_id(self, req: dict) -> JsonResponse:
         if not internal_api.buildings.validate_buildings_by_usr_id_req(req):
             return common.false_status(self._resp_building_by_usr_id,
