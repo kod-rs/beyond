@@ -35,9 +35,9 @@ def mock_req_building_by_usr_id(*_):
             'building_name': f'building_name_{i}',
             'address': f'Rade Koncara {i}',
             'latitude': (45.815399
-                         + random.uniform(0.000_001, 0.000_009)),
+                         + random.uniform(0.1, 0.9)),
             'longitude': (15.966568
-                          + random.uniform(0.000_001, 0.000_009))})
+                          + random.uniform(0.1, 0.9))})
     return {'type': 'buildings_by_user_id_response',
             'buildings': buildings}
 
