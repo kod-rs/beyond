@@ -26,6 +26,7 @@ const Navigation = () => {
                     <BeyondLogo className='logo' />
                 </LogoContainer>
                 <NavLinks>
+
                 </NavLinks>
             </NavigationContainer>
             

@@ -1,6 +1,7 @@
-import { useState, FormEvent, ChangeEvent } from 'react';
-import { useDispatch } from 'react-redux';
-
+import { useState, FormEvent, ChangeEvent, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { selectCurrentUser } from '../../store/user/user.selector';
+import { useNavigate } from 'react-router-dom';
 import FormInput from '../form-input/form-input.component';
 import Button, { BUTTON_TYPE_CLASSES } from '../button/button.component';
 
@@ -11,43 +12,53 @@ import {
 
 import { ReactComponent as BeyondLogo } from '../../assets/beyond-logo.svg';
 
+
 const defaultFormFields = {
   email: '',
   password: '',
 };
 
 const SignInForm = () => {
-  const dispatch = useDispatch();
-  const [formFields, setFormFields] = useState(defaultFormFields);
-  const { email, password } = formFields;
+    const dispatch = useDispatch();
+    const [formFields, setFormFields] = useState(defaultFormFields);
+    const { email, password } = formFields;
+    const currentUser = useSelector(selectCurrentUser);
+    const navigate = useNavigate();
 
-  const resetFormFields = () => {
-    setFormFields(defaultFormFields);
-  };
+    const resetFormFields = () => {
+        setFormFields(defaultFormFields);
+    };
 
-  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
+    useEffect(() => {
+        if (currentUser) {
+            console.log("redirect to buildings");
+            navigate('/buildings');
+        }
+    }, [currentUser]);
 
-    try {
-      dispatch(emailSignInStart(email, password));
-      resetFormFields();
-    } catch (error) {
-      console.log('user sign in failed', error);
-    }
-  };
+    const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+        event.preventDefault();
 
-  const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = event.target;
-    setFormFields({ ...formFields, [name]: value });
-  };
+        try {
+            dispatch(emailSignInStart(email, password));
+            resetFormFields();
+        } catch (error) {
+            console.log('user sign in failed', error);
+        }
+    };
 
-  return (
-      <SignInContainer>
-          <div>
-              <BeyondLogo className='logo' />
-              <FLEXoptContainer>FLEXopt</FLEXoptContainer>
-          </div>
-          <span>Sign in with your username and password</span>
+    const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
+        const { name, value } = event.target;
+        setFormFields({ ...formFields, [name]: value });
+    };
+
+    return (
+        <SignInContainer>
+            <div>
+                <BeyondLogo className='logo' />
+                <FLEXoptContainer>FLEXopt</FLEXoptContainer>
+            </div>
+            <span>Sign in with your username and password</span>
             <form onSubmit={handleSubmit}>
                 <FormInput
                     label='Username'
@@ -70,7 +81,7 @@ const SignInForm = () => {
                 </ButtonsContainer>
             </form>
     </SignInContainer>
-  );
+    );
 };
 
 export default SignInForm;

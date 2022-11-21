@@ -9,18 +9,23 @@ import {
 } from './user.action';
 
 import {
-  getCurrentUser,
+  //getCurrentUser,
   signInAuthUserWithEmailAndPassword,
   signOutUser,
 } from '../../utils/api/login.utils';
 
-export function* returnCurrentUser({ payload: { email, password } }) {
-    try {
-        yield call(getCurrentUser);
-    } catch (error) {
-        yield put(signInFailed(error));
-    }
-}
+
+//export function* returnCurrentUser() {
+//    try {
+//        let currentUser = yield call(getCurrentUser);
+//        currentUser.then((user) => { return user; });
+//        //if (currentUser) {
+//        //    return currentUser;
+//        //}
+//    } catch (error) {
+//        yield put(signInFailed(error));
+//    }
+//}
 
 
 export function* signInWithEmail({ payload: { email, password } }) {
@@ -33,7 +38,6 @@ export function* signInWithEmail({ payload: { email, password } }) {
         if (user) {
             if (user.status) {
                 yield put(signInSuccess(user));
-                window.location.assign("/buildings");
             } else {
                 put(signInFailed(user.message));
             }
@@ -64,8 +68,9 @@ export function* onSignOutStart() {
 }
 
 export function* userSagas() {
-  yield all([
-    call(onEmailSignInStart),
-    call(onSignOutStart),
+    yield all([
+        //call(returnCurrentUser),
+        call(onEmailSignInStart),
+        call(onSignOutStart),
   ]);
 }

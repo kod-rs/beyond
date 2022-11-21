@@ -11,10 +11,6 @@ export enum USER_ACTION_TYPES {
     SIGN_OUT_FAILED = 'user/SIGN_OUT_FAILED',
 }
 
-export type AdditionalInformation = {
-    displayName?: string;
-};
-
 export type User = {
     data: UserData;
 };
