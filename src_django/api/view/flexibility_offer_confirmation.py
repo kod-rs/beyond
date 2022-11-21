@@ -8,6 +8,10 @@ from src_django.api.view import common
 
 
 class FlexibilityOfferConfirmation(APIView):
+    """
+     API for /flexibility_offer_confirmation
+    """
+
     def __init__(self):
         super().__init__()
         self._request_type = 'flexibility_offer_confirmation_request'
@@ -24,14 +28,14 @@ class FlexibilityOfferConfirmation(APIView):
         end = request_body['algorithm_response']['interval']['to']
         flex = request_body['algorithm_response']['offered_flexibility']
 
-        success = controller.aggregator_flexibility.add(
+        success = controller.agr_flex.add(
             start_time=start,
             end_time=end,
             user_id=request_body['user_id'],
             flexibility=flex)
 
         for building in request_body['algorithm_response']['building_info']:
-            success &= controller.building_flexibility.add(
+            success &= controller.building_flex.add(
                 start_time=building['interval']['from'],
                 end_time=building['interval']['to'],
                 building_id=building['building_id'],

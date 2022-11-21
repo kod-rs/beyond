@@ -1,4 +1,5 @@
 from pathlib import Path
+
 import jsonschema
 import yaml
 
@@ -7,15 +8,21 @@ internal_api_dir = schemas_dir / 'internal_api'
 external_api_dir = schemas_dir / 'external_api'
 
 
-def validate(yaml_file_path, data, format_checker=False):
+def validate(yaml_file_path, data):
+    """
+    Validate input data against yaml file provided by file path.
+    Args:
+        yaml_file_path: Path to schema
+        data: Data to be validated
+
+    Returns:
+        True if the validation was successful, False otherwise
+    """
     with open(yaml_file_path, 'r') as yaml_file:
         schema = yaml.safe_load(yaml_file)
     try:
-        if not format_checker:
-            jsonschema.validate(instance=data, schema=schema)
-        else:
-            jsonschema.validate(instance=data, schema=schema,
-                                format_checker=jsonschema.FormatChecker())
+        jsonschema.validate(instance=data, schema=schema,
+                            format_checker=jsonschema.FormatChecker())
     except jsonschema.exceptions.ValidationError as e:
         print(f'VALIDATION FAILED={e}')
         return False

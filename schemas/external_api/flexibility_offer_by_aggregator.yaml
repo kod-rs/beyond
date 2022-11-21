@@ -1,0 +1,23 @@
+---
+$schema: 'http://json-schema.org/draft-07/schema#'
+id: 'flexopt://external_api/flexibility_offer_by_aggregator.yaml#'
+title: Flexibility offer by aggregator id request
+description: Flexibility offer by aggregator id request configuration schema
+type: object
+required:
+  - type
+  - start_time
+  - end_time
+  - user_id
+properties:
+  type:
+    const: flexibility_offer_by_aggregator
+  start_time:
+    type: string
+    format: "date-time"
+  end_time:
+    type: string
+    format: "date-time"
+  user_id:
+    type: string
+...

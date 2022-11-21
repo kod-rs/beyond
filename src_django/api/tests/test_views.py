@@ -6,6 +6,8 @@ import keycloak
 from django.test import Client
 from django.test import TestCase
 
+from src_django.api.models.aggregator_flexibility import AggregatorFlexibility
+from src_django.api.models.building_flexibility import BuildingFlexibility
 from src_django.api.tests import mocks
 from src_django.api.view import common
 
@@ -110,6 +112,7 @@ class TestFlexibilityDemand(TestCase):
                                json.dumps(data),
                                content_type="application/json")
         response = response.json()
+
         assert response['type'] == 'flexibility_demand_response'
         assert response['status'] is True
         assert isinstance(response['demands'], list)
@@ -125,21 +128,17 @@ class TestAlgorithmView(TestCase):
 
         date_from = datetime.datetime(year=2022, month=4, day=10, hour=9)
         date_from = date_from.replace(tzinfo=datetime.timezone.utc).isoformat()
-
         date_to = datetime.datetime(year=2022, month=4, day=10, hour=12)
         date_to = date_to.replace(tzinfo=datetime.timezone.utc).isoformat()
-
+        flex_amount = 300
         data = {'type': 'algorithm_request',
-                'building_energy_list': [],
+                'building_energy_list': mocks.mock_building_energy_list(),
                 'interval': {
                     'from': date_from,
                     'to': date_to},
-                'flexibility_amount': 300,
+                'flexibility_amount': flex_amount,
                 'month': None}
 
-        building_energy_list = mocks.mock_building_energy_list()
-
-        data['building_energy_list'] = building_energy_list
         response = client.post('/algorithm/',
                                json.dumps(data),
                                content_type="application/json")
@@ -152,7 +151,14 @@ class TestAlgorithmView(TestCase):
         assert isinstance(response['building_info'], list)
         assert response['interval']['from'] == date_from
         assert response['interval']['to'] == date_to
-        assert response['requested_flexibility'] == 300
+        assert response['requested_flexibility'] == flex_amount
+        assert response['offered_flexibility'] <= flex_amount
+        assert isinstance(response['building_info'], list)
+        assert len(response['building_info']) > 0
+        building = response['building_info'][0]
+        assert building['flexibility'] <= flex_amount
+        assert building['interval']['from'] == date_from
+        assert building['interval']['to'] == date_to
 
 
 class TestFlexibilityOfferConfirmationView(TestCase):
@@ -189,3 +195,97 @@ class TestFlexibilityOfferConfirmationView(TestCase):
 
         assert response['type'] == 'flexibility_offer_confirmation_response'
         assert response['status'] is True
+
+
+class TestFlexibilityOfferRequest(TestCase):
+    def setUp(self):
+        date_from = datetime.datetime(year=2022, month=2, day=10, hour=9)
+        date_from = date_from.replace(tzinfo=datetime.timezone.utc)
+        date_to = datetime.datetime(year=2022, month=2, day=10, hour=12)
+        date_to = date_to.replace(tzinfo=datetime.timezone.utc)
+        AggregatorFlexibility.objects.create(user_id='usr1',
+                                             start_time=date_from,
+                                             end_time=date_to,
+                                             flexibility=420)
+        BuildingFlexibility.objects.create(building_id='b1',
+                                           start_time=date_from,
+                                           end_time=date_to,
+                                           flexibility=820)
+
+        date_from = date_from.replace(hour=10)
+        date_to = date_to.replace(hour=11)
+        AggregatorFlexibility.objects.create(user_id='usr1',
+                                             start_time=date_from,
+                                             end_time=date_to,
+                                             flexibility=440)
+        BuildingFlexibility.objects.create(building_id='b1',
+                                           start_time=date_from,
+                                           end_time=date_to,
+                                           flexibility=840)
+
+        date_from = date_from.replace(hour=18)
+        date_to = date_to.replace(hour=19)
+        AggregatorFlexibility.objects.create(user_id='usr1',
+                                             start_time=date_from,
+                                             end_time=date_to,
+                                             flexibility=421)
+        BuildingFlexibility.objects.create(building_id='b1',
+                                           start_time=date_from,
+                                           end_time=date_to,
+                                           flexibility=821)
+
+    def test_flexibility_offer_request_agr(self):
+        client = Client()
+
+        date_from = datetime.datetime(year=2022, month=2, day=10, hour=9)
+        date_from = date_from.replace(tzinfo=datetime.timezone.utc).isoformat()
+        date_to = datetime.datetime(year=2022, month=2, day=10, hour=12)
+        date_to = date_to.replace(tzinfo=datetime.timezone.utc).isoformat()
+
+        data = {'type': 'flexibility_offer_by_aggregator',
+                'start_time': date_from,
+                'end_time': date_to,
+                'user_id': 'usr1'}
+
+        response = client.post('/flexibility_offer/',
+                               json.dumps(data),
+                               content_type="application/json")
+        response = response.json()
+
+        assert response['type'] == 'flexibility_offer_by_aggregator_response'
+        assert response['user_id'] == 'usr1'
+        assert response['status'] is True
+        assert isinstance(response['offered_flexibilities'], list)
+        assert len(response['offered_flexibilities']) > 0
+        flex = response['offered_flexibilities'][0]
+        assert flex['flexibility'] > 0
+        assert isinstance(datetime.datetime.fromisoformat(flex['end_time']),
+                          datetime.datetime)
+
+    def test_flexibility_offer_request_building(self):
+        client = Client()
+
+        date_from = datetime.datetime(year=2022, month=2, day=10, hour=9)
+        date_from = date_from.replace(tzinfo=datetime.timezone.utc).isoformat()
+        date_to = datetime.datetime(year=2022, month=2, day=10, hour=12)
+        date_to = date_to.replace(tzinfo=datetime.timezone.utc).isoformat()
+
+        data = {'type': 'flexibility_offer_by_building',
+                'start_time': date_from,
+                'end_time': date_to,
+                'building_id': 'b1'}
+
+        response = client.post('/flexibility_offer/',
+                               json.dumps(data),
+                               content_type="application/json")
+        response = response.json()
+
+        assert response['type'] == 'flexibility_offer_by_building_response'
+        assert response['building_id'] == 'b1'
+        assert response['status'] is True
+        assert isinstance(response['offered_flexibilities'], list)
+        assert len(response['offered_flexibilities']) > 0
+        flex = response['offered_flexibilities'][0]
+        assert flex['flexibility'] > 0
+        assert isinstance(datetime.datetime.fromisoformat(flex['end_time']),
+                          datetime.datetime)

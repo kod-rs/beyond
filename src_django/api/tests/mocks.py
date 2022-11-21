@@ -42,7 +42,7 @@ def mock_req_building_by_usr_id(*_):
             'buildings': buildings}
 
 
-def mock_req_building_info(_, selected_ids):
+def mock_req_building_info(_, selected_ids=ids):
     df = pd.read_csv(Path(__file__).resolve().parents[1]
                      / 'tests'
                      / 'active im en.csv')
@@ -64,11 +64,11 @@ def mock_req_building_info(_, selected_ids):
             'buildings_info': building_energy_list}
 
 
-def mock_building_energy_list():
+def mock_building_energy_list(building_ids=ids):
     df = pd.read_csv(Path(__file__).parent.resolve() / 'active im en.csv')
     rows = [df.iloc[index] for index in range(len(df))]
     building_energy_list = []
-    for b_id in ids[:3]:
+    for b_id in building_ids:
         timeseries = []
         for row in rows:
             ts = datetime.datetime.strptime(row['Timestamp'][:-4],
@@ -81,7 +81,7 @@ def mock_building_energy_list():
     return building_energy_list
 
 
-def mock_get_flexibility_demand(_, date):
+def mock_get_flexibility_demand(date):
     date = common.datetime_from_rfc_string(date)
     demands = []
     for i in range(3):

@@ -29,6 +29,8 @@ class WorkflowTestCase(TestCase):
 
     def test_workflow(self):
         client = Client()
+
+        # login through Keycloak
         data = {'type': 'login_request',
                 'username': 'mirkofleks',
                 'password': 'mirkofleks'}
@@ -37,21 +39,23 @@ class WorkflowTestCase(TestCase):
                                content_type="application/json").json()
         user_id = response['user_id']
 
+        # get building ids, names and coordinates - automatically from Beyond
         data = {'type': 'buildings_by_user_id_request',
                 'user_id': user_id}
         response = client.post('/buildings/',
                                json.dumps(data),
                                content_type="application/json").json()
-        selected_buildings = response['buildings'][:3]
-        building_ids = [b['building_id'] for b in selected_buildings]
 
+        # get consumption info for 'selected' buildings from Beyond
+        selected_buildings = response['buildings'][:3]
         data = {'type': 'building_info_request',
-                'building_ids': building_ids}
+                'building_ids': [b['building_id'] for b in selected_buildings]}
         response = client.post('/buildings/',
                                json.dumps(data),
                                content_type="application/json").json()
-        buildings_info = response['buildings_info']
 
+        # get flexibility demands for a selected data from Beyond
+        buildings_info = response['buildings_info']
         date = datetime.datetime(year=2022, month=4, day=10, hour=0)
         date = date.replace(tzinfo=datetime.timezone.utc).isoformat()
         data = {'type': 'flexibility_demand_request',
@@ -60,10 +64,11 @@ class WorkflowTestCase(TestCase):
                                json.dumps(data),
                                content_type="application/json").json()
 
+        # calculate flexibilities for all the demands
         demands = response['demands']
+        flex_responses = []
         for d in demands:
             flex_amount = d['flexibility']
-
             data = {'type': 'algorithm_request',
                     'building_energy_list': buildings_info,
                     'interval': {
@@ -75,16 +80,36 @@ class WorkflowTestCase(TestCase):
                                    json.dumps(data),
                                    content_type="application/json")
             response = response.json()
+            flex_responses.append(response)
 
-            assert response['type'] == 'algorithm_response'
-            assert response['interval']['from'] == d['start_time']
-            assert response['interval']['to'] == d['end_time']
-            assert response['requested_flexibility'] == flex_amount
-            assert response['status'] is True
-            assert response['offered_flexibility'] <= flex_amount
-            assert isinstance(response['building_info'], list)
-            assert len(response['building_info']) > 0
-            building = response['building_info'][0]
-            assert building['flexibility'] <= flex_amount
-            assert building['interval']['from'] == d['start_time']
-            assert building['interval']['to'] == d['end_time']
+        # save the first flexibility result from the algorithm to database
+        response = flex_responses[0]
+        building = response['building_info'][0]
+        date_from = response['interval']['from']
+        date_to = response['interval']['to']
+        data = {'type': 'flexibility_offer_confirmation_request',
+                'user_id': user_id,
+                'algorithm_response': response}
+        client.post('/flexibility_offer_confirmation/',
+                    json.dumps(data),
+                    content_type="application/json")
+
+        # as Beyond, request the saved data for the aggregator
+        data = {'type': 'flexibility_offer_by_aggregator',
+                'start_time': date_from,
+                'end_time': date_to,
+                'user_id': user_id}
+        response = client.post('/flexibility_offer/',
+                               json.dumps(data),
+                               content_type="application/json").json()
+        assert response['status'] is True
+
+        # as Beyond, request the saved data for a building
+        data = {'type': 'flexibility_offer_by_building',
+                'start_time': date_from,
+                'end_time': date_to,
+                'building_id': building['building_id']}
+        response = client.post('/flexibility_offer/',
+                               json.dumps(data),
+                               content_type="application/json").json()
+        assert response['status'] is True

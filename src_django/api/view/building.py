@@ -10,6 +10,10 @@ number_type = typing.Union[int, float]
 
 
 class BuildingView(APIView):
+    """
+     API for /buildings
+     """
+
     def __init__(self):
         super().__init__()
 
@@ -31,16 +35,11 @@ class BuildingView(APIView):
         if request_type == self._req_building_info:
             return self._post_building_info(request)
 
-        return common.false_status(response_type='invalid_request_response',
-                                   msg='invalid request type')
-
     def _post_building_by_user_id(self, req: dict) -> JsonResponse:
         if not internal_api.buildings.validate_buildings_by_usr_id_req(req):
             return common.false_status(self._resp_building_by_usr_id,
                                        'invalid request')
-
-        beyond_data = self._beyond.req_building_by_usr_id(req['type'],
-                                                          req['user_id'])
+        beyond_data = self._beyond.req_building_by_usr_id(req['user_id'])
 
         if not external_api.buildings.validate_buildings_by_usr_id_resp(
                 beyond_data):
@@ -55,8 +54,7 @@ class BuildingView(APIView):
             return common.false_status(self._req_building_info,
                                        'invalid request')
 
-        beyond_data = self._beyond.req_building_info(request['type'],
-                                                     request['building_ids'])
+        beyond_data = self._beyond.req_building_info(request['building_ids'])
 
         if not external_api.buildings.validate_building_info(beyond_data):
             return common.false_status(self._req_building_info,
