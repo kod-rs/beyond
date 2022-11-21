@@ -4,6 +4,7 @@ from django.db import models
 class BuildingFlexibility(models.Model):
     """
     Database representation of flexibility offered by a building
+
     Args:
         building_id: string unique to each building
         start_time: time that the offered flexibility can start

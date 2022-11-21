@@ -42,6 +42,7 @@ def get_by_usr_and_time(user_id: str,
                         end_time: str) -> typing.Union[list, bool]:
     """
     Reads data from the database based on user ID and requested period.
+
     Args:
         user_id: unique user id
         start_time: RFC 3339 string

@@ -4,6 +4,7 @@ from django.db import models
 class AggregatorFlexibility(models.Model):
     """
     Database representation of flexibility offered by an aggregator
+
     Args:
         user_id: string unique to each user
         start_time: time that the offered flexibility can start

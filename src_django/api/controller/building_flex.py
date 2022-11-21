@@ -42,6 +42,7 @@ def get_by_building_and_time(building_id: str,
                              end_time: str) -> typing.Union[list, bool]:
     """
     Reads data from the database based on building ID and requested period.
+
     Args:
         building_id: unique building id
         start_time: RFC 3339 string
