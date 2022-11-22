@@ -3,7 +3,7 @@
 #
 keys_db
 git.sh
-
+/.vs
 keycloak-*
 # copied from https://github.com/gtalarico/django-vue-template
 yarn.lock
