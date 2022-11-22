@@ -1,0 +1,68 @@
+---
+$schema: 'http://json-schema.org/draft-07/schema#'
+id: 'flexopt://backend_responses/algorithm_response.yaml#'
+title: Algorithm response
+description: Algorithm response configuration schema
+type: object
+oneOf:
+  - '$ref': '#/definitions/success'
+  - '$ref': '#/definitions/fail'
+definitions:
+  success:
+    type: object
+    required:
+      - type
+      - status
+      - offered_flexibility
+      - interval
+      - building_info
+    properties:
+      type:
+        const: algorithm_response
+      status:
+        const: True
+      offered_flexibility:
+        type: number
+      interval:
+        '$ref': '#/definitions/interval'
+      building_info:
+        '$ref': '#/definitions/building_info'
+  fail:
+    type: object
+    required:
+      - type
+      - status
+      - message
+    properties:
+      type:
+        const: algorithm_response
+        status:
+          const: False
+        message:
+          type: string
+  interval:
+    type: object
+    required:
+      - from
+      - to
+    properties:
+      from:
+        type: string
+        format: "date-time"
+      to:
+        type: string
+        format: "date-time"
+  building_info:
+    type: object
+    required:
+      - building_id
+      - interval
+      - flexibility
+    properties:
+      building_id:
+        type: string
+      interval:
+        '$ref': '#/definitions/interval'
+      flexibility:
+        type: number
+...

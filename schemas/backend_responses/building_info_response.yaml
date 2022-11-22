@@ -1,0 +1,59 @@
+---
+$schema: 'http://json-schema.org/draft-07/schema#'
+id: 'flexopt://backend_responses/building_info_response.yaml#'
+title: Building info response
+description: Building info response configuration schema
+type: object
+oneOf:
+  - '$ref': '#/definitions/success'
+  - '$ref': '#/definitions/fail'
+definitions:
+  success:
+    type: object
+    required:
+      - type
+      - buildings_info
+    properties:
+      type:
+        const: building_info_response
+      buildings_info:
+        type: array
+        items:
+          $ref: '#/definitions/building_info'
+  fail:
+    type: object
+    required:
+      - type
+      - status
+      - message
+    properties:
+      type:
+        const: building_info_response
+        status:
+          const: False
+        message:
+          type: string
+  building_info:
+    type: object
+    required:
+      - building_id
+      - energy_info
+    properties:
+      building_id:
+        type: string
+      energy_info:
+        type: array
+        items:
+          $ref: '#/definitions/timeseries'
+  timeseries:
+    type: object
+    required:
+      - value
+      - timestamp
+    properties:
+      value:
+        type: number
+      timestamp:
+        type: string
+        format: "date-time"
+...

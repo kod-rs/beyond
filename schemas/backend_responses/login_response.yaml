@@ -1,0 +1,49 @@
+---
+$schema: 'http://json-schema.org/draft-07/schema#'
+id: 'flexopt://backend_responses/login_response.yaml#'
+title: Login response
+description: Login response configuration schema
+type: object
+oneOf:
+  - '$ref': '#/definitions/success'
+  - '$ref': '#/definitions/fail'
+definitions:
+  success:
+    type: object
+    required:
+      - type
+      - status
+      - user_id
+      - username
+      - role
+      - access_token
+    properties:
+      type:
+        const: login_response
+      status:
+        const: True
+      user_id:
+        type: string
+      username:
+        type: string
+      role:
+        type:
+          enum:
+            - AGGREGATOR
+            - MANAGER
+      access_token:
+        type: string
+  fail:
+    type: object
+    required:
+      - type
+      - status
+      - message
+    properties:
+      type:
+        const: login_response
+        status:
+          const: False
+        message:
+          type: string
+...

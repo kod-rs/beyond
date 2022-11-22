@@ -1,6 +1,6 @@
 ---
 $schema: 'http://json-schema.org/draft-07/schema#'
-id: 'flexopt://internal_api/flexibility_demand_response.yaml#'
+id: 'flexopt://external_api/flexibility_demand_response.yaml#'
 title: Flexibility demand response
 description: Flexibility demand configuration schema
 type: object
