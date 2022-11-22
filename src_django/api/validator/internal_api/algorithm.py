@@ -4,9 +4,10 @@ from src_django.api.validator import common
 def validate_algorithm_request(data: dict) -> bool:
     """
     Validate "algorithm_request" data from frontend
+
     Args:
         data: data that should be formatted as specified in
-        "algorithm_request.yaml"
+            "algorithm_request.yaml"
 
     Returns:
         True if the validation was successful, False otherwise

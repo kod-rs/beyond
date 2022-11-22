@@ -24,21 +24,33 @@ point_coordinates = List[Union[int, float]]
 
 
 class BuildingEnergy(NamedTuple):
+    """
+    Format for the data being given to the algorithm
+    """
     building_id: str
     energy_info: typing.List['EnergyInfo']
 
 
 class EnergyInfo(NamedTuple):
+    """
+    Timeseries object used in src_django.api.flexopt_algorithm.BuildingEnergy
+    """
     timestamp: datetime.datetime
     value: float
 
 
 class TimeInterval(NamedTuple):
+    """
+    Format for the time interval given to the algorithm
+    """
     from_t: datetime.datetime
     to_t: datetime.datetime
 
 
 class CurrentBuildingInfo(NamedTuple):
+    """
+    Format for the building information that the algorithm returns
+    """
     building_id: str
     time_interval: TimeInterval
     flex: float
@@ -46,7 +58,8 @@ class CurrentBuildingInfo(NamedTuple):
 
 def is_outlier(label: int) -> bool:
     """
-    Function that checks if the point in an outlier.
+    Function that checks if the point in an outlier
+
     Args:
         label: -1 if outlier, else positive integer
 
@@ -58,7 +71,8 @@ def is_outlier(label: int) -> bool:
 
 def is_first_cluster(label: int) -> bool:
     """
-    Function that checks if the point is in the first cluster.
+    Function that checks if the point is in the first cluster
+
     Args:
          label: 0 if in first cluster, else non-zero integer
 
@@ -70,7 +84,8 @@ def is_first_cluster(label: int) -> bool:
 
 def is_in_range(value: Union[int, float]) -> bool:
     """
-    Function that checks if the point is in given range.
+    Function that checks if the point is in given range
+
     Args:
         value: y coordinate
 
@@ -83,7 +98,8 @@ def is_in_range(value: Union[int, float]) -> bool:
 def selected_points(list_of_all_points: point_coordinates,
                     labels: np.ndarray) -> List[point_coordinates]:
     """
-       Only considering if there is more than one cluster.
+    Only considering if there is more than one cluster
+
     Args:
         list_of_all_points: Points to be considered
         labels: Array that connects each point with its cluster
@@ -107,7 +123,8 @@ def selected_points(list_of_all_points: point_coordinates,
 def finding_elbow_of_the_graph(point_list: np.array) -> float:
     """
     Function that calculates the distances of every point to their nearest
-    neighbor, sorts them and finds the "elbow".
+    neighbor, sorts them and finds the "elbow"
+
     Args:
         point_list: List of (y,x) tuples
 
@@ -128,7 +145,8 @@ def difference_calculation(points: numpy.ndarray) -> List[tuple]:
     """
     Function that calculates min, mid and max baseline with which the input
     data can be described.
-    Then it calculates the difference between mid and max.
+    Then it calculates the difference between mid and max
+
     Args:
         points: points to be considered
 
@@ -232,7 +250,8 @@ def get_max_diff(building_ids: tuple, points: List[List[point_coordinates]]
                  ) -> List[Union[str, List[tuple]]]:
     """
     Calculate the maximum difference between the middle baseline and the
-        extremity baseline for all buildings.
+        extremity baseline for all buildings
+
     Args:
         building_ids: building ids
         points: list of (x, y), where x = current hour, y = consumption
@@ -260,7 +279,8 @@ def add_sort(diffs: np.ndarray, interval: TimeInterval
              ) -> List[List[Union[int, float]]]:
     """
     Function adds the diffs, takes 20% and sorts the results
-    descendingly according to the flexibility.
+    descendingly according to the flexibility
+
     Args:
         diffs:  Differences
         interval: Time period
@@ -283,7 +303,8 @@ def add_sort(diffs: np.ndarray, interval: TimeInterval
 def confidence(flex_list: List[List[Union[int, float]]],
                flex_amount: float) -> List[tuple]:
     """
-    Function that calculates confidence for a building.
+    Function that calculates confidence for a building
+
     Args:
         flex_list: List of possible flexibilities
         flex_amount: Needed amount of flexibility
@@ -299,7 +320,8 @@ def apply_flexibility(diffs: List[Union[str, List[tuple]]],
                       interval: TimeInterval, flex: float
                       ) -> List[CurrentBuildingInfo]:
     """
-    Calculate flexibility per time and per building.
+    Calculate flexibility per time and per building
+
     Args:
         diffs: List of N lists, where 'N' is the number of buildings. Every
         list contains two elements, where the first is building_id (str) and
@@ -371,7 +393,8 @@ def algorithm(building_energy_list: typing.List[BuildingEnergy],
                                                 List[CurrentBuildingInfo]]:
     """
     Flexibility optimization algorithm.
-    Get the available flexibility for the requested interval.
+    Get the available flexibility for the requested interval
+
     Args:
         building_energy_list: building id paired with its timeseries data
         interval: requested interval

@@ -1,7 +1,8 @@
+import os
 import subprocess
 import sys
 from pathlib import Path
-
+import django
 from hat.doit import common
 from hat.doit.docs import (SphinxOutputType,
                            build_sphinx)
@@ -15,7 +16,7 @@ root_dir = current_dir.parent
 
 docs_dir = root_dir / 'docs'
 dst_docs_dir = root_dir / 'build' / 'docs'
-django_dst_dir = dst_docs_dir / 'dev' / 'django'
+django_dst_dir = root_dir / 'build' / 'django'
 
 
 def task_docs():
@@ -28,17 +29,19 @@ def task_docs_dev():
     """Docs - build developer documentation"""
 
     def build():
-        # build_sphinx(src_dir=docs_dir / 'dev',
-        #              dst_dir=dst_docs_dir / 'dev',
-        #              project='Flexopt backend documentation',
-        #              out_type=SphinxOutputType.HTML,
-        #              extensions=['sphinx.ext.autodoc',
-        #                          'sphinx.ext.napoleon',
-        #                          'sphinx.ext.todo',
-        #                          'sphinxcontrib.drawio',
-        #                          'sphinxcontrib.programoutput'],
-        #              version_path=Path('VERSION'),
-        #              copyright='2022-2023, Koncar Digital')
+        os.environ['DJANGO_SETTINGS_MODULE'] = 'src_django.settings.dev'
+        django.setup()
+        build_sphinx(src_dir=docs_dir / 'dev' / 'backend',
+                     dst_dir=dst_docs_dir / 'dev' / 'backend',
+                     project='Flexopt backend documentation',
+                     out_type=SphinxOutputType.HTML,
+                     extensions=['sphinx.ext.autodoc',
+                                 'sphinx.ext.napoleon',
+                                 'sphinx.ext.todo',
+                                 'sphinxcontrib.drawio',
+                                 'sphinxcontrib.programoutput'],
+                     version_path=Path('VERSION'),
+                     copyright='2022-2023, Koncar Digital')
         pass
 
     return {'actions': [build],
@@ -49,14 +52,13 @@ def task_docs_django():
     """Docs - build django documentation"""
 
     def build():
-        # common.mkdir_p(django_dst_dir.parent)
-        # subprocess.run([sys.executable, '-m', 'pdoc',
-        #                '--html', '--skip-errors', '-f',
-        #                '-o', str(django_dst_dir),
-        #                'src_django'],
-        #               stdout=subprocess.DEVNULL,
-        #               stderr=subprocess.DEVNULL,
-        #               check=True)
-        pass
+        common.mkdir_p(django_dst_dir.parent)
+        subprocess.run([sys.executable, '-m', 'pdoc',
+                        '--html', '--skip-errors', '-f',
+                        '-o', str(django_dst_dir),
+                        'src_django'],
+                       stdout=subprocess.DEVNULL,
+                       stderr=subprocess.DEVNULL,
+                       check=True)
 
     return {'actions': [build]}
