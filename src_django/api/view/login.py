@@ -39,6 +39,9 @@ class LoginView(APIView):
         except keycloak.exceptions.KeycloakPostError:
             return common.false_status(msg='account not fully set up',
                                        response_type=self._response_type)
+        except Exception:
+            return common.false_status(msg='keycloak error',
+                                       response_type=self._response_type)
 
         try:
             role = set(userinfo['realm_access']['roles'])
