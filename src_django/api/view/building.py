@@ -58,7 +58,7 @@ class BuildingView(APIView):
 
         if not external_api.buildings.validate_building_info(beyond_data):
             return common.false_status(self._req_building_info,
-                                       'invalid request')
+                                       'request failed')
 
         return JsonResponse({'type': self._resp_building_info,
                              'buildings_info': beyond_data['buildings_info']})

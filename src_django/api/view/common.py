@@ -11,11 +11,14 @@ from src_django.settings import BEYOND_CONFIG
 def false_status(response_type: str, msg: str) -> JsonResponse:
     """
     Generic JSON response if POST request fails for any reason
+
     Args:
         response_type: expected response type for a specific request
         msg: message describing why the request failed
 
     Returns:
+        A false status JsonResponse message with the type being set to
+        response_type, status set to False, and the message being set to msg
 
     """
     return JsonResponse({
@@ -27,11 +30,12 @@ def false_status(response_type: str, msg: str) -> JsonResponse:
 def json_decode(request_body: bytes) -> dict:
     """
     JSON decode wrapper
+
     Args:
-        request_body: body to be decoded
+        request_body: message to be decoded
 
     Returns:
-        decoded data or an empty dictionary
+        Decoded data or an empty dictionary
     """
     try:
         return json.loads(request_body)
@@ -43,6 +47,7 @@ def json_decode(request_body: bytes) -> dict:
 def datetime_from_rfc_string(rfc_string: str) -> datetime.datetime:
     """
     Convert a string in RFC 3339 format to datetime.datetime object
+
     Args:
         rfc_string: RFC 3339 string
 
@@ -73,12 +78,14 @@ class BeyondConnection:
     def req_building_by_usr_id(self, usr_id: int) -> dict:
         """
         Get all the buildings with their IDs and geolocation info for
-        a specific user.
+        a specific user from the Beyond platform.
         Args:
             usr_id: user ID specific to each user
 
         Returns:
-            object containing the requested data from Beyond platform
+            Object containing the requested data from Beyond platform
+            as specified in the
+            'external_api/building_info_response.yaml' schema
         """
         data = {'type': self._building_by_usr_id_req_type,
                 'user_id': usr_id}
@@ -87,7 +94,18 @@ class BeyondConnection:
         # return resp
         return mocks.mock_req_building_by_usr_id()
 
-    def req_building_info(self, building_ids):
+    def req_building_info(self, building_ids: list) -> dict:
+        """
+        Get all the building information (name, id, geolocation, address)
+        for all the buildings represented by their building ids
+
+        Args:
+            building_ids: Array of building ids
+
+        Returns:
+            Building information as specified by the
+            'external_api/buildings_by_user_id_response.yaml' schema
+        """
         data = {'type': self._building_info_req_type,
                 'building_ids': building_ids}
         # TODO remove mock
@@ -95,7 +113,18 @@ class BeyondConnection:
         # return resp
         return mocks.mock_req_building_info(None)
 
-    def req_flex_demand(self, date):
+    def req_flex_demand(self, date: str):
+        """
+        Get the flexibility demands for the requested date from the Beyond
+        platform.
+
+        Args:
+            date: RFC 3339 string
+
+        Returns:
+            Flexibility demand(s) as specified by the
+            'external_api/flexibility_demand_response.yaml' schema
+        """
         data = {'type': self._flex_demand_type,
                 'date': date}
         # TODO remove mock
