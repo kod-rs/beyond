@@ -3,17 +3,19 @@ import { Outlet, useNavigate } from 'react-router-dom';
 import { selectCurrentUser } from '../../store/user/user.selector';
 import { MapContainer, ListContainer, RowContainer } from './buildings.select.styles';
 import { useEffect, useState } from 'react';
-import { FloatingActionButton } from '@progress/kendo-react-buttons'; 
+import { FloatingActionButton, FloatingActionButtonAlign } from '@progress/kendo-react-buttons'; 
 import { ListView, ListViewItemProps } from "@progress/kendo-react-listview";
 import { Switch } from "@progress/kendo-react-inputs";
 import { BuildingsOnMap } from './buildings.on.map.component';
 import { Building } from '../../store/buildings/buildings.types';
 import { selectBuildingsForCurrentUser } from '../../store/buildings/buildings.selector';
-import { getBuildingsStart } from '../../store/buildings/buildings.action';
+import { getBuildingsStart, setBuildings } from '../../store/buildings/buildings.action';
+import cloneDeep from 'lodash/cloneDeep';
 
 const BuildingsSelect = () => {
     const currentUser = useSelector(selectCurrentUser);
     const buildings = useSelector(selectBuildingsForCurrentUser);
+    const [reload, setReload] = useState<boolean>(false);
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const toHistory = () => {
@@ -21,22 +23,24 @@ const BuildingsSelect = () => {
     } 
 
     useEffect(() => {
-        if (currentUser) {
+        if (currentUser && buildings == null) {
             //get buildings list from backend
             dispatch(getBuildingsStart(currentUser));
         }
     }, [currentUser]);
 
-    useEffect(() => {
-        if (buildings) {
-            console.log('buildings:');
-            console.log(buildings);
-            
-        }
-    }, [buildings]);
-
-    const toggleSelectItem = (item: Building):void => {
-        console.log(item);
+    const toggleSelectItem = (item: Building): void => {
+        let tmpB = cloneDeep(buildings);
+        tmpB!.forEach((building) => {
+            let selected = building.selected ? true : false;
+            if (building.building_id === item.building_id) {
+                building.selected = !selected;
+            } else {
+                building.selected = selected;
+            }
+        });
+        dispatch(setBuildings(tmpB!));
+        setReload(!reload);
     };
 
     const BuildingsListViewItemRender = (props: ListViewItemProps) => {
@@ -73,7 +77,11 @@ const BuildingsSelect = () => {
                     />
                 </ListContainer>
             </RowContainer>
-            <FloatingActionButton text={'Continue'} onClick={toHistory} />
+            <FloatingActionButton
+                align={{ vertical: "bottom", horizontal: "end" } as FloatingActionButtonAlign}
+                text={'Continue'}
+                onClick={toHistory}
+            />
             <Outlet />
         </>
     );

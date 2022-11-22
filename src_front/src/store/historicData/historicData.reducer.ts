@@ -1,11 +1,10 @@
 import { AnyAction } from 'redux';
-import { Building } from './buildings.types';
+import { Building } from './historicData.types';
 
 import {  
     getBuildingsSuccess,
     getBuildingsFailed,  
-    setBuildings
-} from './buildings.action';
+} from './historicData.action';
 
 export type BuildingsState = {
     readonly buildings: Building[] | null;
@@ -31,8 +30,5 @@ export const buildingsReducer = (
         return { ...state, error: action.payload };
     }
 
-    if (setBuildings.match(action)) {
-        return { ...state, buildings: action.payload };
-    }
   return state;
 };
