@@ -111,7 +111,7 @@ class BeyondConnection:
         # TODO remove mock
         # resp = self._send(data)
         # return resp
-        return mocks.mock_req_building_info(None)
+        return mocks.mock_req_building_info(building_ids)
 
     def req_flex_demand(self, date: str):
         """

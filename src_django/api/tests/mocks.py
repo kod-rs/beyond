@@ -42,13 +42,13 @@ def mock_req_building_by_usr_id(*_):
             'buildings': buildings}
 
 
-def mock_req_building_info(_, selected_ids=ids):
+def mock_req_building_info(building_ids):
     df = pd.read_csv(Path(__file__).resolve().parents[1]
                      / 'tests'
                      / 'active im en.csv')
     rows = [df.iloc[index] for index in range(len(df))]
     building_energy_list = []
-    for b_id in selected_ids:
+    for b_id in building_ids:
         timeseries = []
         for row in rows:
             ts = datetime.datetime.strptime(row['Timestamp'][:-4],
