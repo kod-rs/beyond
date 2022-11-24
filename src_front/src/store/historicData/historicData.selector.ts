@@ -1,11 +1,11 @@
 import { createSelector } from 'reselect';
 
-import { BuildingsState } from './historicData.reducer';
+import { HistoricDataState } from './historicData.reducer';
 import { RootState } from '../store';
 
-export const selectBuildingsReducer = (state: RootState): BuildingsState => state.buildings;
+export const selectBuildingsHistoricReducer = (state: RootState): HistoricDataState => state.historicData;
 
-export const selectBuildingsForCurrentUser = createSelector(
-    selectBuildingsReducer,
-    (buildingsState) => buildingsState.buildings
+export const selectBuildingsHistoricData = createSelector(
+    selectBuildingsHistoricReducer,
+    (historicData) => historicData.buildings_info
 );

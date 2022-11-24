@@ -4,14 +4,24 @@ export const DatePickerContainer = styled.div`
     display: flex;
     width: 20%;
     justify-content: space-between;
+    height:35px;
+    margin-left: 35px;
+`;
+
+export const ButtonsContainer = styled.div`
+    display: flex;
+    width: 40%;
+    justify-content: space-between;
+    height:35px;
     margin-left: 35px;
 `;
 
 export const GraphContainer = styled.div`
-  display: flex;
-  width: 25%;
-  justify-content: space-between;
-  margin: 30px auto;
+    display: flex;
+    flex-direction: column;
+    width: 75%;
+    justify-content: space-between;
+    margin: 30px auto;
 `;
 
 export const RowContainer = styled.div`

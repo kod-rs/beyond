@@ -1,34 +1,34 @@
 import { AnyAction } from 'redux';
-import { Building } from './historicData.types';
+import { Building_Info } from './historicData.types';
 
 import {  
-    getBuildingsSuccess,
-    getBuildingsFailed,  
+    getHistoricDataSuccess,
+    getHistoricDataFailed,  
 } from './historicData.action';
 
-export type BuildingsState = {
-    readonly buildings: Building[] | null;
+export type HistoricDataState = {
+    readonly buildings_info: Building_Info[] | null;
     readonly isLoading: boolean;
     readonly error: Error | null;
 };
 
-const INITIAL_STATE: BuildingsState = {
-    buildings: null,
+const INITIAL_STATE: HistoricDataState = {
+    buildings_info: null,
     isLoading: false,
     error: null,
 };
 
-export const buildingsReducer = (
+export const historicDataReducer = (
   state = INITIAL_STATE,
   action = {} as AnyAction
 ) => {
-    if (getBuildingsSuccess.match(action)) {
-        return { ...state, buildings: action.payload };
+    if (getHistoricDataSuccess.match(action)) {
+        return { ...state, buildings_info: action.payload };
     }
 
-    if (getBuildingsFailed.match(action)) {
+    if (getHistoricDataFailed.match(action)) {
         return { ...state, error: action.payload };
     }
 
-  return state;
+    return state;
 };

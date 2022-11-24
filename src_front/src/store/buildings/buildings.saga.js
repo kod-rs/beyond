@@ -13,7 +13,7 @@ import {
 
 export function* getBuildingsForCurrentUser({ payload: { user } }) {
     try {
-        console.log('getBuildingsForCurrentUser hit!');
+        //console.log('getBuildingsForCurrentUser hit!');
         let buildings = yield call(
             getBuildingsForUser,
             user

@@ -2,38 +2,38 @@ import { takeLatest, put, all, call } from 'redux-saga/effects';
 import { HISTORIC_DATA_ACTION_TYPES } from './historicData.types';
 
 import {
-    getBuildingsStart,
-    getBuildingsSuccess,
-    getBuildingsFailed,  
+    getHistoricDataStart,
+    getHistoricDataSuccess,
+    getHistoricDataFailed
 } from './historicData.action';
 
 import {
-    getBuildingsForUser,
+    getBuildingHistoryData,
 } from '../../utils/api/api.utils';
 
-export function* getBuildingsForCurrentUser({ payload: { user } }) {
+export function* getBuildingsHistory({ payload: { buildings } }) {
     try {
-        console.log('getBuildingsForCurrentUser hit!');
-        let buildings = yield call(
-            getBuildingsForUser,
-            user
+        console.log('getBuildingsHistory hit!');
+        let buildings_info_response = yield call(
+            getBuildingHistoryData,
+            buildings
         );
-        if (buildings) {
-            yield put(getBuildingsSuccess(buildings.buildings));
+        if (buildings_info_response) {
+            yield put(getHistoricDataSuccess(buildings_info_response.buildings_info));
         } else {
-            yield put(getBuildingsFailed("Buildings for user " + user.displayName + " were null!"));
+            yield put(getHistoricDataFailed("Buildings_info were null!"));
         }
     } catch (error) {
-        yield put(getBuildingsFailed(error));
+        yield put(getHistoricDataFailed(error));
     }
 }
 
-export function* onGetBuildingsStart() {
-    yield takeLatest(BUILDINGS_ACTION_TYPES.GET_BUILDINGS_START, getBuildingsForCurrentUser);
+export function* onGetBuildingsHistoryStart() {
+    yield takeLatest(HISTORIC_DATA_ACTION_TYPES.GET_HISTORIC_DATA_START, getBuildingsHistory);
 }
 
-export function* buildingsSagas() {
+export function* historicDataSagas() {
     yield all([
-        call(onGetBuildingsStart),
+        call(onGetBuildingsHistoryStart),
     ]);
 }
