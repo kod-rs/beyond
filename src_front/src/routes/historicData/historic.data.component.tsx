@@ -70,8 +70,7 @@ const HistoricData = () => {
                     type="area"
                     tooltip={{ visible: true }}
                     data={item.energy_info.map((info) => { return info.value })}
-                    name={item.building_id}
-                />
+                    name={item.building_id} />
     }
 
     const defineCategories = () => {
@@ -82,7 +81,7 @@ const HistoricData = () => {
             case PERIOD_TYPES.MONTH:
                 setCategories(MonthCategories);
                 break;
-            case PERIOD_TYPES.MONTH:
+            case PERIOD_TYPES.YEAR:
                 setCategories(YearCategories);
                 break;
             default:
@@ -93,30 +92,7 @@ const HistoricData = () => {
         let tmpData = [] as Building_Info[];
         buildingsHistory?.forEach((building_info) => {
             let buildingid = building_info.building_id;
-            let data = building_info.energy_info.filter((timeseries) => {
-                let _date = new Date(timeseries.timestamp);
-                switch (periodType) {
-                    case PERIOD_TYPES.YEAR:
-                        if (_date.getFullYear() === selectedDate.getFullYear()) {
-                            return timeseries;
-                        }
-                        break;
-                    case PERIOD_TYPES.MONTH:
-                        if (_date.getMonth() === selectedDate.getMonth() &&
-                            _date.getFullYear() === selectedDate.getFullYear()) {
-                            return timeseries;
-                        }
-                        break;
-                    case PERIOD_TYPES.DAY:
-                        if (_date.getDay() === selectedDate.getDay() &&
-                            _date.getMonth() === selectedDate.getMonth() &&
-                            _date.getFullYear() === selectedDate.getFullYear()) {
-                            return timeseries;
-                        }
-                        break;
-                    default:
-                }
-            });
+            let data = filterBuildingInfobyPeriodType(building_info,);
             
             tmpData.push({
                 building_id: buildingid,
@@ -126,22 +102,95 @@ const HistoricData = () => {
         setFilteredData(tmpData);
     }
 
+    const filterBuildingInfobyPeriodType = (building_info: Building_Info) => {
+        return building_info.energy_info.filter((timeseries) => {
+            let _date = new Date(timeseries.timestamp);
+            switch (periodType) {
+                case PERIOD_TYPES.YEAR:
+                    if (_date.getFullYear() === selectedDate.getFullYear()) {
+                        return timeseries;
+                    }
+                    break;
+                case PERIOD_TYPES.MONTH:
+                    if (_date.getMonth() === selectedDate.getMonth() &&
+                        _date.getFullYear() === selectedDate.getFullYear()) {
+                        return timeseries;
+                    }
+                    break;
+                case PERIOD_TYPES.DAY:
+                    if (_date.getDay() === selectedDate.getDay() &&
+                        _date.getMonth() === selectedDate.getMonth() &&
+                        _date.getFullYear() === selectedDate.getFullYear()) {
+                        return timeseries;
+                    }
+                    break;
+                default:
+            }
+        });
+    }
+
     const calculateAverages = (_data: TimeseriesData[]) => {
+        let tmpData = [] as TimeseriesData[];
+        if (_data.length > 0) {
+            tmpData = calcPeriodAverageValuesPerUnit(_data, tmpData);
+        }
+        return tmpData;
+    }
+
+    const calcPeriodAverageValuesPerUnit = (_data: TimeseriesData[], tmpData: TimeseriesData[]) => {
+        let startValue = 0;
+        let endValue = 0;
         switch (periodType) {
-            case PERIOD_TYPES.YEAR:
-                
+            case PERIOD_TYPES.DAY:
+                endValue = 24;
                 break;
             case PERIOD_TYPES.MONTH:
-                
+                startValue = 1;
+                endValue = 32;
                 break;
-            case PERIOD_TYPES.DAY:
-
+            case PERIOD_TYPES.YEAR:
+                startValue = 1;
+                endValue = 13;
                 break;
             default:
         }
-        
-        return _data;
+        for (let i = startValue; i < endValue; i++) {
+            let data_by_period = _data.filter((timeseries) => {
+                let timeSpan = getTimespanFromPeriodType(timeseries);
+                if (timeSpan === i) {
+                    return timeseries;
+                }
+            });
+            let avgDate = "";
+            let avgVal = 0;
+            if (data_by_period.length > 0) {
+                avgDate = data_by_period[0].timestamp;
+                data_by_period.forEach((timeseries) => {
+                    avgVal += timeseries.value;
+                });
+                avgVal = avgVal / data_by_period.length;
+            }
+            tmpData.push({
+                timestamp: avgDate,
+                value: avgVal
+            });
+        }
+        return tmpData;
     }
+
+    const getTimespanFromPeriodType = ( timeseries: TimeseriesData)=>{
+        switch (periodType) {
+            case PERIOD_TYPES.DAY:
+                return new Date(timeseries.timestamp).getHours();
+            case PERIOD_TYPES.MONTH:
+                return new Date(timeseries.timestamp).getDay();
+            case PERIOD_TYPES.YEAR:
+                return new Date(timeseries.timestamp).getMonth();
+            default:
+        }
+    }
+
+
 
     return (
         <>
@@ -151,7 +200,7 @@ const HistoricData = () => {
                 </DatePickerContainer>
                 <GraphContainer>
                     <Chart style={{ height: 350, width:'90%' }}>
-                        <ChartTitle text="Area Chart" />
+                        <ChartTitle text="Buildings consumption historic data" />
                         <ChartLegend position="top" orientation="horizontal" />
                         <ChartCategoryAxis>
                             <ChartCategoryAxisItem categories={categories ? categories : []} startAngle={45} />
