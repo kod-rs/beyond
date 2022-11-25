@@ -4,7 +4,7 @@ from rest_framework.views import APIView
 from src_django.api import controller
 from src_django.api.validator.external_api.flexibility_offer_request import \
     validate_flex_offer_req_agr, validate_flex_offer_req_building
-from api import common
+from src_django.api import common
 
 
 class FlexibilityOfferRequest(APIView):

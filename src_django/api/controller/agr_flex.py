@@ -2,7 +2,7 @@ import datetime
 import typing
 
 from src_django.api.models import AggregatorFlexibility
-from api import common
+from src_django.api import common
 
 number_type = typing.Union[float, int]
 

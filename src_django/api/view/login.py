@@ -4,7 +4,7 @@ from keycloak import KeycloakOpenID
 from rest_framework.views import APIView
 
 from src_django.api.validator.internal_api.login import validate_internal_login
-from api import common
+from src_django.api import common
 from src_django.settings import KEYCLOAK_CONFIG
 
 

@@ -4,7 +4,7 @@ from django.http import JsonResponse
 from rest_framework.views import APIView
 
 from src_django.api.validator import internal_api, external_api
-from api import common
+from src_django.api import common
 
 number_type = typing.Union[int, float]
 

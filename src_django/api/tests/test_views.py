@@ -9,7 +9,7 @@ from django.test import TestCase
 from src_django.api.models.aggregator_flexibility import AggregatorFlexibility
 from src_django.api.models.building_flexibility import BuildingFlexibility
 from src_django.api.tests import mocks
-from api import common
+from src_django.api import common
 
 
 class TestLoginView(TestCase):
