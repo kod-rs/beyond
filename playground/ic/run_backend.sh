@@ -1,2 +1,2 @@
 
-python ../../manage.py runserver
+(cd ../../ && python manage.py runserver)

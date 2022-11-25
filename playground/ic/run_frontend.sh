@@ -1,2 +1,2 @@
-
-../../keycloak-19.0.3/bin/kc.sh start-dev
+(cd ../../src_front/ && npm install)
+(cd ../../src_front/ && npm run start)
