@@ -107,20 +107,20 @@ const HistoricData = () => {
             let _date = new Date(timeseries.timestamp);
             switch (periodType) {
                 case PERIOD_TYPES.YEAR:
-                    if (_date.getFullYear() === selectedDate.getFullYear()) {
+                    if (_date.getUTCFullYear() === selectedDate.getUTCFullYear()) {
                         return timeseries;
                     }
                     break;
                 case PERIOD_TYPES.MONTH:
-                    if (_date.getMonth() === selectedDate.getMonth() &&
-                        _date.getFullYear() === selectedDate.getFullYear()) {
+                    if (_date.getUTCMonth() === selectedDate.getUTCMonth() &&
+                        _date.getUTCFullYear() === selectedDate.getUTCFullYear()) {
                         return timeseries;
                     }
                     break;
                 case PERIOD_TYPES.DAY:
-                    if (_date.getDay() === selectedDate.getDay() &&
-                        _date.getMonth() === selectedDate.getMonth() &&
-                        _date.getFullYear() === selectedDate.getFullYear()) {
+                    if (_date.getUTCDay() === selectedDate.getUTCDay() &&
+                        _date.getUTCMonth() === selectedDate.getUTCMonth() &&
+                        _date.getUTCFullYear() === selectedDate.getUTCFullYear()) {
                         return timeseries;
                     }
                     break;
@@ -155,10 +155,11 @@ const HistoricData = () => {
             default:
         }
         for (let i = startValue; i < endValue; i++) {
-            let data_by_period = _data.filter((timeseries) => {
+            let data_by_period = [] as TimeseriesData[];
+            _data.forEach((timeseries) => {
                 let timeSpan = getTimespanFromPeriodType(timeseries);
                 if (timeSpan === i) {
-                    return timeseries;
+                    data_by_period.push(timeseries);
                 }
             });
             let avgDate = "";
@@ -178,16 +179,22 @@ const HistoricData = () => {
         return tmpData;
     }
 
-    const getTimespanFromPeriodType = ( timeseries: TimeseriesData)=>{
+    const getTimespanFromPeriodType = (timeseries: TimeseriesData) => {
+        let _date = new Date(timeseries.timestamp);
+        let result = 0;
         switch (periodType) {
             case PERIOD_TYPES.DAY:
-                return new Date(timeseries.timestamp).getHours();
+                result = _date.getUTCHours();
+                break;
             case PERIOD_TYPES.MONTH:
-                return new Date(timeseries.timestamp).getDay();
+                result = _date.getUTCDate();
+                break;                
             case PERIOD_TYPES.YEAR:
-                return new Date(timeseries.timestamp).getMonth();
+                result = _date.getUTCMonth()+1;
+                break; 
             default:
         }
+        return result;
     }
 
 
