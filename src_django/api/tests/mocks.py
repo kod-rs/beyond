@@ -5,7 +5,7 @@ from pathlib import Path
 import keycloak
 import pandas as pd
 
-from src_django.api.view import common
+from api import common
 
 ids = ('ZIV0034902130', 'ZIV0034902131', 'ZIV0034704030',
        'ZIV0034703915', 'ZIV0034704013',

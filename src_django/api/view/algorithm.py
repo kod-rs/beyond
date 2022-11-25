@@ -11,7 +11,7 @@ from src_django.api.flexopt_algorithm import TimeInterval
 from src_django.api.flexopt_algorithm import algorithm
 from src_django.api.validator.internal_api.algorithm import \
     validate_algorithm_request
-from src_django.api.view import common
+from api import common
 
 
 class AlgorithmView(APIView):

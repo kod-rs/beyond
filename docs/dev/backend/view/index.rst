@@ -37,7 +37,6 @@ Content
 .. toctree::
     :maxdepth: 1
 
-    common
     login
     building
     flexibility_demand

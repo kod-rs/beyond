@@ -7,6 +7,18 @@ from django.http import JsonResponse
 from src_django.api.tests import mocks
 from src_django.settings import BEYOND_CONFIG
 
+request_response_mapping = {
+    'login_request': 'login_response',
+    'algorithm_request': 'algorithm_response',
+    'buildings_by_user_id_request': 'buildings_by_user_id_response',
+    'building_info_request': 'building_info_response',
+    'flexibility_demand_request': 'flexibility_demand_response',
+    'flexibility_offer_confirmation_request': (
+        'flexibility_offer_confirmation_response'),
+    'flexibility_offer_by_aggregator': (
+        'flexibility_offer_by_aggregator_response'),
+    'flexibility_offer_by_building': 'flexibility_offer_by_building_response'}
+
 
 def false_status(response_type: str, msg: str) -> JsonResponse:
     """

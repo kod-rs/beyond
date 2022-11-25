@@ -24,5 +24,6 @@ Content
     models/index
     validator/index
     view/index
+    common
     urls
 

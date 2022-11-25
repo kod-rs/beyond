@@ -4,7 +4,7 @@ from rest_framework.views import APIView
 from src_django.api import controller
 from src_django.api.validator.internal_api.flexibility_offer_confirmation \
     import validate_flexibility_offer_confirmation
-from src_django.api.view import common
+from api import common
 
 
 class FlexibilityOfferConfirmation(APIView):

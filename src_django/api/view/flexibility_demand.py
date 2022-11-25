@@ -5,7 +5,7 @@ from src_django.api.validator.external_api.flexibility_demand_response import \
     validate_flexibility_demand_response
 from src_django.api.validator.internal_api.flexibility_demand_request import \
     validate_flexibility_demand_request
-from src_django.api.view import common
+from api import common
 
 
 class FlexibilityDemandView(APIView):

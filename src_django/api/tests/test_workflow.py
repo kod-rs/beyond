@@ -7,7 +7,7 @@ from django.test import Client
 from django.test import TestCase
 
 from src_django.api.tests import mocks
-from src_django.api.view import common
+from api import common
 
 
 class WorkflowTestCase(TestCase):
