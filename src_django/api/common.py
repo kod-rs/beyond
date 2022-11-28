@@ -2,6 +2,7 @@ import datetime
 import json
 
 import requests
+from dateutil import parser
 from django.http import JsonResponse
 
 from src_django.api.tests import mocks
@@ -67,7 +68,7 @@ def datetime_from_rfc_string(rfc_string: str) -> datetime.datetime:
         datetime.datetime object that contains all the data to conform to
         ISO format
     """
-    dt = datetime.datetime.fromisoformat(rfc_string)
+    dt = parser.parse(rfc_string)
     return dt
 
 
