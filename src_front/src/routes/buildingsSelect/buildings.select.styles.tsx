@@ -8,13 +8,20 @@ export const MapContainer = styled.div`
 `;
 
 export const ListContainer = styled.div`
-  display: flex;
-  width: 25%;
-  justify-content: space-between;
-  margin: 30px auto;
+    display: flex;
+    flex-direction:column;
+    width: 25%;    
+    margin: 30px auto;
 `;
 
 export const RowContainer = styled.div`
     display: flex; 
     justify-content: space-between;
+`;
+
+export const SwitchContainer = styled.div`
+    display: flex;
+    justify-content: space-between;
+    width: 95%; 
+    margin-bottom:30px;
 `;

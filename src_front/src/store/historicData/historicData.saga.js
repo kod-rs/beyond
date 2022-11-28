@@ -2,7 +2,6 @@ import { takeLatest, put, all, call } from 'redux-saga/effects';
 import { HISTORIC_DATA_ACTION_TYPES } from './historicData.types';
 
 import {
-    getHistoricDataStart,
     getHistoricDataSuccess,
     getHistoricDataFailed
 } from './historicData.action';
@@ -13,7 +12,6 @@ import {
 
 export function* getBuildingsHistory({ payload: { buildings } }) {
     try {
-        console.log('getBuildingsHistory hit!');
         let buildings_info_response = yield call(
             getBuildingHistoryData,
             buildings

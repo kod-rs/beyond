@@ -2,7 +2,6 @@ import { takeLatest, put, all, call } from 'redux-saga/effects';
 import { BUILDINGS_ACTION_TYPES } from './buildings.types';
 
 import {
-    getBuildingsStart,
     getBuildingsSuccess,
     getBuildingsFailed,  
 } from './buildings.action';
@@ -13,7 +12,6 @@ import {
 
 export function* getBuildingsForCurrentUser({ payload: { user } }) {
     try {
-        //console.log('getBuildingsForCurrentUser hit!');
         let buildings = yield call(
             getBuildingsForUser,
             user

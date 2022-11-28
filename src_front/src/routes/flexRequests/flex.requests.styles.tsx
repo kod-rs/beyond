@@ -1,20 +1,40 @@
 import styled from 'styled-components';
 
-export const MapContainer = styled.div`
+export const DatePickerContainer = styled.div`
     display: flex;
-    width: 70%;
+    width: 20%;
     justify-content: space-between;
+    height:35px;
     margin-left: 35px;
 `;
 
-export const ListContainer = styled.div`
-  display: flex;
-  width: 25%;
-  justify-content: space-between;
-  margin: 30px auto;
+export const ButtonsContainer = styled.div`
+    display: flex;
+    width: 35%;
+    justify-content: space-between;
+    height:35px;
+    margin: 35px;
+`;
+
+export const GraphContainer = styled.div`
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 95%;
+    justify-content: space-between;
+    margin: 30px auto;
 `;
 
 export const RowContainer = styled.div`
     display: flex; 
-    justify-content: space-between;
+    flex-direction: column;
+    width: 100%;
+`;
+
+export const SliderContainer = styled.div`
+    display: flex; 
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    margin:20px;
 `;

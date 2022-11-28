@@ -231,13 +231,14 @@ const HistoricData = () => {
             
             <FloatingActionButton
                 align={{ vertical: "bottom", horizontal: "end" } as FloatingActionButtonAlign}
-                text={'Continue'}
+                text={'Activate VPP configuration'}
                 onClick={toFlexRequests}
             />
             <FloatingActionButton
                 align={{ vertical: "bottom", horizontal: "start" } as FloatingActionButtonAlign}
-                text={'Back to Buildings'}
+                text={'Return to previous step'}
                 onClick={toBuildings}
+                themeColor="inverse"
             />
             <Outlet />
         </>

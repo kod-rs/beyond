@@ -1,7 +1,6 @@
 import { Algorithm_Response, ALGORITHM_ACTION_TYPES, Algorithm_Request } from './algorithm.types';
 import {
   createAction,
-  Action,
   ActionWithPayload,
   withMatcher,
 } from '../../utils/reducer/reducer.utils';

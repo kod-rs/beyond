@@ -10,10 +10,11 @@ export const DatePickerContainer = styled.div`
 
 export const ButtonsContainer = styled.div`
     display: flex;
-    width: 40%;
+    width: 35%;
     justify-content: space-between;
     height:35px;
-    margin-left: 35px;
+    margin: 35px;
+    
 `;
 
 export const GraphContainer = styled.div`
@@ -22,6 +23,7 @@ export const GraphContainer = styled.div`
     width: 75%;
     justify-content: space-between;
     margin: 30px auto;
+    align-items: center;
 `;
 
 export const RowContainer = styled.div`

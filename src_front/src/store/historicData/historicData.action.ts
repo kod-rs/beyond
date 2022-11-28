@@ -1,6 +1,5 @@
 import { Building_Info, HISTORIC_DATA_ACTION_TYPES } from './historicData.types';
 import {
-    Action,
     createAction,
     ActionWithPayload,
     withMatcher,

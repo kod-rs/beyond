@@ -1,11 +1,12 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { Outlet, useNavigate } from 'react-router-dom';
 import { selectCurrentUser } from '../../store/user/user.selector';
-import { MapContainer, ListContainer, RowContainer } from './buildings.select.styles';
+import { MapContainer, ListContainer, RowContainer, SwitchContainer } from './buildings.select.styles';
 import { useEffect, useState } from 'react';
 import { FloatingActionButton, FloatingActionButtonAlign } from '@progress/kendo-react-buttons'; 
 import { ListView, ListViewItemProps } from "@progress/kendo-react-listview";
-import { Switch } from "@progress/kendo-react-inputs";
+import { Switch, SwitchChangeEvent } from "@progress/kendo-react-inputs";
+import { Label } from "@progress/kendo-react-labels";
 import { BuildingsOnMap } from './buildings.on.map.component';
 import { Building } from '../../store/buildings/buildings.types';
 import { selectBuildingsForCurrentUser } from '../../store/buildings/buildings.selector';
@@ -43,6 +44,15 @@ const BuildingsSelect = () => {
         setReload(!reload);
     };
 
+    const toggleSelectAll = (event: SwitchChangeEvent) => {
+        let tmpB = cloneDeep(buildings);
+        tmpB!.forEach((building) => {
+            building.selected = event.target.value;
+        });
+        dispatch(setBuildings(tmpB!));
+        setReload(!reload);
+    }
+
     const BuildingsListViewItemRender = (props: ListViewItemProps) => {
         let buildingData = props.dataItem;
         return (
@@ -70,6 +80,10 @@ const BuildingsSelect = () => {
                     />
                 </MapContainer>
                 <ListContainer>
+                    <SwitchContainer>
+                        <Label>Select All</Label>
+                        <Switch id={"selectAllSwitch"} onChange={toggleSelectAll} />
+                    </SwitchContainer>
                     <ListView
                         data={buildings ? buildings : []}
                         item={BuildingsListViewItemRender}
@@ -79,7 +93,7 @@ const BuildingsSelect = () => {
             </RowContainer>
             <FloatingActionButton
                 align={{ vertical: "bottom", horizontal: "end" } as FloatingActionButtonAlign}
-                text={'Continue'}
+                text={'Confirm & start analytics '}
                 onClick={toHistory}
             />
             <Outlet />

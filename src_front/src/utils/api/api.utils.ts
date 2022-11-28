@@ -1,16 +1,29 @@
 import { Algorithm_Request } from "../../store/algorithm/algorithm.types";
 import { Building } from "../../store/buildings/buildings.types";
-import { Building_Info } from "../../store/historicData/historicData.types";
 import { UserData } from "../../store/user/user.types";
 
+const CONFIG_URL = process.env.REACT_APP_BASE_URL;
 
-//TODO Get base url from config
-const CONFIG_URL = 'http://127.0.0.1:8000';
+enum REQUEST_TYPES {
+    LOGIN_REQUEST = "/login/",
+    BUILDINGS_REQUEST = "/buildings/",
+    FLEX_DEMAND_REQUEST = "/flexibility_demand/",
+    ALGORITHM_REQUEST = "/algorithm/",
+}
 
-const LOGIN_REQUEST = "/login/";
-const BUILDINGS_REQUEST  = "/buildings/";
-const FLEX_DEMAND_REQUEST  = "/flexibility_demand/";
-const ALGORITHM_REQUEST = "/algorithm/";
+
+const callFetch = async (request_type: REQUEST_TYPES, bodyObj:object) => {
+    const res = await fetch(CONFIG_URL + request_type, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(bodyObj),
+    });
+
+    let data = await res.json();
+    return data;
+}
 
 export const signInWithEmailAndPassword = async (email: string, password: string) => {
 
@@ -20,16 +33,7 @@ export const signInWithEmailAndPassword = async (email: string, password: string
         "password": password
     };
 
-    const res = await fetch(CONFIG_URL + LOGIN_REQUEST , {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(bodyObj),
-    });
-
-    let data = await res.json();
-    //console.log(data);
+    let data = await callFetch(REQUEST_TYPES.LOGIN_REQUEST, bodyObj);
     return data;
 };
 
@@ -41,16 +45,7 @@ export const getBuildingsForUser = async (user: UserData) => {
         "user_id": user.user_id,
     };
 
-    const res = await fetch(CONFIG_URL + BUILDINGS_REQUEST , {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(bodyObj),
-    });
-
-    let data = await res.json();
-    //console.log(data);
+    let data = await callFetch(REQUEST_TYPES.BUILDINGS_REQUEST, bodyObj);
     return data;
 };
 
@@ -61,16 +56,7 @@ export const getBuildingHistoryData = async (buildings: Building[]) => {
         "building_ids": buildings.map((building) => building.building_id)
     };
 
-    const res = await fetch(CONFIG_URL + BUILDINGS_REQUEST , {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(bodyObj),
-    });
-
-    let data = await res.json();
-    //console.log(data);
+    let data = await callFetch(REQUEST_TYPES.BUILDINGS_REQUEST, bodyObj);
     return data;
 };
 
@@ -78,19 +64,10 @@ export const getFlexDemandData = async (date: Date) => {
 
     const bodyObj = {
         "type": "flexibility_demand_request",
-        "date": date.toISOString()
+        "date": date.toISOString(), //RFC 3339 format 
     };
 
-    const res = await fetch(CONFIG_URL + FLEX_DEMAND_REQUEST , {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(bodyObj),
-    });
-
-    let data = await res.json();
-    //console.log(data);
+    let data = await callFetch(REQUEST_TYPES.FLEX_DEMAND_REQUEST, bodyObj);
     return data;
 };
 
@@ -100,21 +77,12 @@ export const getAlgorithmData = async (request: Algorithm_Request) => {
         "type": "algorithm_request",
         "building_energy_list": request.building_energy_list,
         "interval": {
-            "from": request.from.toISOString(),
-            "to": request.to.toISOString(),
+            "from": request.from.toISOString(), //RFC 3339 format
+            "to": request.to.toISOString(), //RFC 3339 format
         },
         "flexibility_amount": request.amount,
     };
 
-    const res = await fetch(CONFIG_URL + ALGORITHM_REQUEST , {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(bodyObj),
-    });
-
-    let data = await res.json();
-    //console.log(data);
+    let data = await callFetch(REQUEST_TYPES.ALGORITHM_REQUEST, bodyObj);
     return data;
 };

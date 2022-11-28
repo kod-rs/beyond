@@ -1,7 +1,6 @@
 import { Building, BUILDINGS_ACTION_TYPES } from './buildings.types';
 import {
   createAction,
-  Action,
   ActionWithPayload,
   withMatcher,
 } from '../../utils/reducer/reducer.utils';

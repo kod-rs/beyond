@@ -1,12 +1,11 @@
 import { Flex_Demand, FLEX_DEMAND_ACTION_TYPES } from './flex.types';
 import {
   createAction,
-  Action,
   ActionWithPayload,
   withMatcher,
 } from '../../utils/reducer/reducer.utils';
 
-export type GetFlexDemandStart = ActionWithPayload<FLEX_DEMAND_ACTION_TYPES.GET_FLEX_DEMAND_START, { date:Date}>;
+export type GetFlexDemandStart = ActionWithPayload<FLEX_DEMAND_ACTION_TYPES.GET_FLEX_DEMAND_START, { date:Date }>;
 export type GetFlexDemandSuccess = ActionWithPayload<FLEX_DEMAND_ACTION_TYPES.GET_FLEX_DEMAND_SUCCESS, Flex_Demand[]>;
 export type GetFlexDemandFailed = ActionWithPayload<FLEX_DEMAND_ACTION_TYPES.GET_FLEX_DEMAND_FAILED, Error>;
 
