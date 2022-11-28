@@ -6,6 +6,7 @@ import { ButtonsContainer, DatePickerContainer, GraphContainer, RowContainer } f
 import { DatePicker, DatePickerChangeEvent } from "@progress/kendo-react-dateinputs";
 import { useEffect, useState } from 'react';
 import { selectBuildingsForCurrentUser } from '../../store/buildings/buildings.selector';
+import { selectCurrentUser } from '../../store/user/user.selector';
 import { getHistoricDataStart } from '../../store/historicData/historicData.action';
 import { 
     Chart,
@@ -20,9 +21,11 @@ import { Building_Info, TimeseriesData } from '../../store/historicData/historic
 import { DayCategories, MonthCategories, PERIOD_TYPES, YearCategories } from './historic.data.types';
 
 
+
 const HistoricData = () => {
     const buildings = useSelector(selectBuildingsForCurrentUser);
     const buildingsHistory = useSelector(selectBuildingsHistoricData);
+    const currentUser = useSelector(selectCurrentUser);
     const dispatch = useDispatch();
     const today= new Date();
     const navigate = useNavigate();
@@ -48,7 +51,13 @@ const HistoricData = () => {
             defineCategories();
             filterDataForChart();
         }
-    }, [buildingsHistory,periodType,selectedDate]);
+    }, [buildingsHistory, periodType, selectedDate]);
+
+    useEffect(() => {
+        if (currentUser === null || currentUser === undefined) {
+            navigate("/auth");
+        }
+    }, [currentUser]);
 
     const toFlexRequests=()=>{
         navigate("/flex");

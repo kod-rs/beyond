@@ -28,6 +28,10 @@ const BuildingsSelect = () => {
             //get buildings list from backend
             dispatch(getBuildingsStart(currentUser));
         }
+
+        if(currentUser === null || currentUser === undefined) {
+            navigate("/auth");
+        }
     }, [currentUser]);
 
     const toggleSelectItem = (item: Building): void => {
@@ -57,11 +61,11 @@ const BuildingsSelect = () => {
         let buildingData = props.dataItem;
         return (
             <RowContainer>
-                <div className="col-2 align-left">
+                <div>
                     {buildingData.building_name}
                 </div>
 
-                <div className="col-2 align-right">
+                <div>
                     <div className="k-chip k-chip-md k-rounded-md k-chip-solid k-chip-solid-base ">
                         <Switch defaultChecked={buildingData.selected} onChange={() => { toggleSelectItem(buildingData) }} />
                     </div>

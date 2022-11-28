@@ -12,7 +12,7 @@ enum REQUEST_TYPES {
 }
 
 
-const callFetch = async (request_type: REQUEST_TYPES, bodyObj:object) => {
+const call_Fetch_Post = async (request_type: REQUEST_TYPES, bodyObj:object) => {
     const res = await fetch(CONFIG_URL + request_type, {
         method: 'POST',
         headers: {
@@ -33,7 +33,7 @@ export const signInWithEmailAndPassword = async (email: string, password: string
         "password": password
     };
 
-    let data = await callFetch(REQUEST_TYPES.LOGIN_REQUEST, bodyObj);
+    let data = await call_Fetch_Post(REQUEST_TYPES.LOGIN_REQUEST, bodyObj);
     return data;
 };
 
@@ -45,7 +45,7 @@ export const getBuildingsForUser = async (user: UserData) => {
         "user_id": user.user_id,
     };
 
-    let data = await callFetch(REQUEST_TYPES.BUILDINGS_REQUEST, bodyObj);
+    let data = await call_Fetch_Post(REQUEST_TYPES.BUILDINGS_REQUEST, bodyObj);
     return data;
 };
 
@@ -56,7 +56,7 @@ export const getBuildingHistoryData = async (buildings: Building[]) => {
         "building_ids": buildings.map((building) => building.building_id)
     };
 
-    let data = await callFetch(REQUEST_TYPES.BUILDINGS_REQUEST, bodyObj);
+    let data = await call_Fetch_Post(REQUEST_TYPES.BUILDINGS_REQUEST, bodyObj);
     return data;
 };
 
@@ -67,7 +67,7 @@ export const getFlexDemandData = async (date: Date) => {
         "date": date.toISOString(), //RFC 3339 format 
     };
 
-    let data = await callFetch(REQUEST_TYPES.FLEX_DEMAND_REQUEST, bodyObj);
+    let data = await call_Fetch_Post(REQUEST_TYPES.FLEX_DEMAND_REQUEST, bodyObj);
     return data;
 };
 
@@ -83,6 +83,6 @@ export const getAlgorithmData = async (request: Algorithm_Request) => {
         "flexibility_amount": request.amount,
     };
 
-    let data = await callFetch(REQUEST_TYPES.ALGORITHM_REQUEST, bodyObj);
+    let data = await call_Fetch_Post(REQUEST_TYPES.ALGORITHM_REQUEST, bodyObj);
     return data;
 };
