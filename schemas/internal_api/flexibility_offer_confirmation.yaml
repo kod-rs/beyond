@@ -18,33 +18,47 @@ properties:
     required:
       - type
       - status
-      - offered_flexibility
-      - interval
-      - building_info
+      - offers
     properties:
       type:
         const: algorithm_response
       status:
-        const: true
+        const: True
+      offers:
+        type: array
+        items:
+          $ref: '#/definitions/offer'
+definitions:
+  offer:
+    type: object
+    required:
+      - offered_flexibility
+      - requested_flexibility
+      - interval
+      - building_info
+    properties:
       offered_flexibility:
         type: number
+      requested_flexibility:
+        type: number
       interval:
-        type: object
-        required:
-          - from
-          - to
-        properties:
-          from:
-            type: string
-            format: "date-time"
-          to:
-            type: string
-            format: "date-time"
+        '$ref': '#/definitions/interval'
       building_info:
         type: array
         items:
-          $ref: '#/definitions/building_info'
-definitions:
+          '$ref': '#/definitions/building_info'
+  interval:
+    type: object
+    required:
+      - from
+      - to
+    properties:
+      from:
+        type: string
+        format: "date-time"
+      to:
+        type: string
+        format: "date-time"
   building_info:
     type: object
     required:

@@ -13,20 +13,16 @@ definitions:
     required:
       - type
       - status
-      - offered_flexibility
-      - interval
-      - building_info
+      - offers
     properties:
       type:
         const: algorithm_response
       status:
         const: True
-      offered_flexibility:
-        type: number
-      interval:
-        '$ref': '#/definitions/interval'
-      building_info:
-        '$ref': '#/definitions/building_info'
+      offers:
+        type: array
+        items:
+          $ref: '#/definitions/offer'
   fail:
     type: object
     required:
@@ -40,6 +36,24 @@ definitions:
           const: False
         message:
           type: string
+  offer:
+    type: object
+    required:
+      - offered_flexibility
+      - requested_flexibility
+      - interval
+      - building_info
+    properties:
+      offered_flexibility:
+        type: number
+      requested_flexibility:
+        type: number
+      interval:
+        '$ref': '#/definitions/interval'
+      building_info:
+        type: array
+        items:
+          '$ref': '#/definitions/building_info'
   interval:
     type: object
     required:

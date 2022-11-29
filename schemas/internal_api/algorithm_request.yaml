@@ -7,8 +7,7 @@ type: object
 required:
   - type
   - building_energy_list
-  - interval
-  - flexibility_amount
+  - flexibility_demands
 properties:
   type:
     const: algorithm_request
@@ -16,21 +15,10 @@ properties:
     type: array
     items:
       $ref: '#/definitions/building_energy'
-  interval:
-    type: object
-    required:
-      - from
-      - to
-    properties:
-      from:
-        type: string
-        format: "date-time"
-      to:
-        type: string
-        format: "date-time"
-  flexibility_amount:
-    type: number
-
+  flexibility_demands:
+    type: array
+    items:
+      $ref: '#/definitions/flexibility_demand'
 definitions:
   building_energy:
     type: object
@@ -55,4 +43,24 @@ definitions:
       timestamp:
         type: string
         format: "date-time"
+  flexibility_demand:
+    type: object
+    required:
+      - interval
+      - flexibility_amount
+    properties:
+      interval:
+        type: object
+        required:
+          - from
+          - to
+        properties:
+          from:
+            type: string
+            format: "date-time"
+          to:
+            type: string
+            format: "date-time"
+      flexibility_amount:
+        type: number
 ...
