@@ -5,7 +5,7 @@ Algorithm view listens for HTTP post on BASE_URL/algorithm.
 There may or may not be a trailing slash following the above-mentioned URL.
 Once an aggregator logs in, and gets the flexibility demands for a specific
 date, the next step is to calculate the possible flexibility offer for selected
-buildings and date.
+buildings and intervals within the selected date.
 Once the request arrives, it is validated. Once validated, the request
 is parsed and the information is forwarded towards the Flexopt algorithm.
 Once the calculation is completed, it is forwarded to the frontend. If for

@@ -6,7 +6,7 @@ BASE_URL/flexibility_offer_confirmation.
 There may or may not be a trailing slash following the above-mentioned URL.
 Once an aggregator logs in, gets the flexibility demands for a specific
 date, and calculates the possible flexibility offer for selected buildings and
-date, the resulting flexibility may be saved. Once the save request, called
+date, the resulting flexibilities may be saved. Once the save request, called
 flexibility offer confirmation, arrives, it is validated. Once validated, the
 request is parsed and the information is forwarded towards the database
 controller which saves the data into a database. If for any reason during this

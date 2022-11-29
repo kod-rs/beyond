@@ -71,22 +71,26 @@
         {
             "type": "algorithm_request",
             "building_energy_list": Array of BUILDING_ENERGY,
-            "interval": {
-                "from": Timestamp convertible to RFC 3339 format
-                "to": Timestamp convertible to RFC 3339 format
-            },
-            "flexibility_amount": Number,
+            "flexibility_demands": Array of FLEXIBILITY_DEMAND
         },
-        where BUILDING_ENERGY is defined as:
+        where FLEXIBILITY_DEMAND is defined as:
             {
-                "building_id": String,
-                "energy_info": Array of TIMESERIES
-            },
-            where TIMESERIES is defined as:
+                "interval": {
+                    "from": Timestamp convertible to RFC 3339 format
+                    "to": Timestamp convertible to RFC 3339 format
+                 },
+                "flexibility_amount": Number,
+            }
+            where BUILDING_ENERGY is defined as:
                 {
-                    "timestamp": String convertible to RFC 3339 format,
-                    "value": Number
-                }
+                    "building_id": String,
+                    "energy_info": Array of TIMESERIES
+                },
+                where TIMESERIES is defined as:
+                    {
+                        "timestamp": String convertible to RFC 3339 format,
+                        "value": Number
+                    }
     - an example:
         {
             "type": "algorithm_request",
@@ -106,11 +110,22 @@
                      "value": 64.3}]
                 }
            ],
-           "interval": {
-                "from": 2022-11-04T13:00:00.000000+00:00,
-                "to": 2022-11-04T17:00:00.000000+00:00
-           },
-           "flexibility_amount": 88
+           "flexibility_demands": [
+                {
+                   "interval": {
+                        "from": 2022-11-04T13:00:00.000000+00:00,
+                        "to": 2022-11-04T17:00:00.000000+00:00
+                    },
+                    "flexibility_amount": 88
+                },
+                {
+                   "interval": {
+                        "from": 2022-11-04T17:00:00.000000+00:00,
+                        "to": 2022-11-04T19:00:00.000000+00:00
+                    },
+                    "flexibility_amount": 77
+                }
+           ]
         }
 * FLEXIBILITY_OFFER_CONFIRMATION_REQUEST
     - URL: base_url/flexibility_offer_confirmation/
@@ -120,9 +135,14 @@
         {
             "type": "flexibility_offer_confirmation_request",
             "user_id": String,
-            "algorithm_response": complete JSON object received in
+            "algorithm_response": JSON object received in
                 ALGORITHM_RESPONSE message. See ALGORITHM_RESPONSE for more
-                information
+                information.
+                *Important*: Either the whole array of OFFERS can be saved,
+                or the OFFERS array can contain only the offers that the
+                user wants to save, i.e., other offers can be removed from the
+                OFFERS array found in the the above-mentioned
+                ALGORITHM_RESPONSE.
         }
 ================= Backend to Frontend =========================================
 * GENERIC FAILURE RESPONSE:
@@ -203,22 +223,27 @@
         {
             "type": "algorithm_response",
             "status": True,
-            "offered_flexibility": Number,
-            "interval": {
-                    "from": String convertible to RFC 3339 format
-                    "to": String convertible to RFC 3339 format
-            },
-            "building_info": Array of BUILDING_INFO
+            "offers": Array of OFFER
         },
-        where BUILDING_INFO is:
+        where OFFER is:
             {
-                "building_id": String,
+                "offered_flexibility": Number,
+                "requested_flexibility": Number sent via ALGORITHM_REQUEST
                 "interval": {
-                    "from": String convertible to RFC 3339 format
-                    "to": String convertible to RFC 3339 format
+                        "from": String convertible to RFC 3339 format
+                        "to": String convertible to RFC 3339 format
                 },
-                "flexibility": Number
+                "building_info": Array of BUILDING_INFO
             }
+            where BUILDING_INFO is:
+                {
+                    "building_id": String,
+                    "interval": {
+                        "from": String convertible to RFC 3339 format
+                        "to": String convertible to RFC 3339 format
+                    },
+                    "flexibility": Number
+                }
 * FLEXIBILITY_OFFER_CONFIRMATION_RESPONSE
     - POST response to Frontend.
     - Once Frontend sends a FLEXIBILITY_OFFER_CONFIRMATION_REQUEST,
