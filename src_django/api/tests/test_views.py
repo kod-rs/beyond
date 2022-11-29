@@ -6,10 +6,10 @@ import keycloak
 from django.test import Client
 from django.test import TestCase
 
+from src_django.api import common
 from src_django.api.models.aggregator_flexibility import AggregatorFlexibility
 from src_django.api.models.building_flexibility import BuildingFlexibility
 from src_django.api.tests import mocks
-from src_django.api import common
 
 
 class TestLoginView(TestCase):
@@ -127,17 +127,20 @@ class TestAlgorithmView(TestCase):
         client = Client()
 
         date_from = datetime.datetime(year=2022, month=4, day=10, hour=9)
-        date_from = date_from.replace(tzinfo=datetime.timezone.utc).isoformat()
+        date_from = date_from.replace(tzinfo=datetime.timezone.utc)
         date_to = datetime.datetime(year=2022, month=4, day=10, hour=12)
-        date_to = date_to.replace(tzinfo=datetime.timezone.utc).isoformat()
+        date_to = date_to.replace(tzinfo=datetime.timezone.utc)
         flex_amount = 300
+        demands = [
+            {'interval': {'from': date_from.isoformat(),
+                          'to': date_to.isoformat()},
+             'flexibility_amount': flex_amount},
+            {'interval': {'from': date_from.replace(hour=13).isoformat(),
+                          'to': date_to.replace(hour=15).isoformat()},
+             'flexibility_amount': flex_amount}]
         data = {'type': 'algorithm_request',
                 'building_energy_list': mocks.mock_building_energy_list(),
-                'interval': {
-                    'from': date_from,
-                    'to': date_to},
-                'flexibility_amount': flex_amount,
-                'month': None}
+                'flexibility_demands': demands}
 
         response = client.post('/algorithm/',
                                json.dumps(data),
@@ -146,19 +149,25 @@ class TestAlgorithmView(TestCase):
 
         assert response['type'] == 'algorithm_response'
         assert response['status'] is True
-        assert (isinstance(response['offered_flexibility'], float)
-                or isinstance(response['offered_flexibility'], int))
-        assert isinstance(response['building_info'], list)
-        assert response['interval']['from'] == date_from
-        assert response['interval']['to'] == date_to
-        assert response['requested_flexibility'] == flex_amount
-        assert response['offered_flexibility'] <= flex_amount
-        assert isinstance(response['building_info'], list)
-        assert len(response['building_info']) > 0
-        building = response['building_info'][0]
+        assert isinstance(response['offers'], list)
+        assert len(response['offers']) > 0
+
+        offer = response['offers'][0]
+        assert (isinstance(offer['offered_flexibility'], float)
+                or isinstance(offer['offered_flexibility'], int))
+        assert isinstance(offer['building_info'], list)
+
+        assert offer['interval']['from'] == date_from.isoformat()
+        assert offer['interval']['to'] == date_to.isoformat()
+        assert offer['requested_flexibility'] == flex_amount
+        assert offer['offered_flexibility'] <= flex_amount
+        assert isinstance(offer['building_info'], list)
+        assert len(offer['building_info']) > 0
+
+        building = offer['building_info'][0]
         assert building['flexibility'] <= flex_amount
-        assert building['interval']['from'] == date_from
-        assert building['interval']['to'] == date_to
+        assert building['interval']['from'] == date_from.isoformat()
+        assert building['interval']['to'] == date_to.isoformat()
 
 
 class TestFlexibilityOfferConfirmationView(TestCase):
@@ -166,23 +175,37 @@ class TestFlexibilityOfferConfirmationView(TestCase):
         client = Client()
 
         date_from = datetime.datetime(year=2022, month=2, day=10, hour=9)
-        date_from = date_from.replace(tzinfo=datetime.timezone.utc).isoformat()
+        date_from = date_from.replace(tzinfo=datetime.timezone.utc)
         date_to = datetime.datetime(year=2022, month=2, day=10, hour=12)
-        date_to = date_to.replace(tzinfo=datetime.timezone.utc).isoformat()
-        interval = {'from': date_from, 'to': date_to}
+        date_to = date_to.replace(tzinfo=datetime.timezone.utc)
 
-        algorithm_response = {
-            'building_info': [
-                {'building_id': 'ZIV0034704030',
-                 'flexibility': 95.8,
-                 'interval': interval},
-                {'building_id': 'ZIV0034902130',
-                 'flexibility': 93.65,
-                 'interval': interval}],
-            'offered_flexibility': 189.45,
-            'status': True,
-            'interval': interval,
-            'type': 'algorithm_response'}
+        interval1 = {'from': date_from.isoformat(),
+                     'to': date_to.isoformat()}
+        interval2 = {'from': date_from.replace(hour=13).isoformat(),
+                     'to': date_to.replace(hour=17).isoformat()}
+
+        offers = [{'offered_flexibility': 189.45,
+                   'requested_flexibility': 200,
+                   'interval': interval1,
+                   'building_info': [{'building_id': 'ZIV0034704030',
+                                      'flexibility': 95.8,
+                                      'interval': interval1},
+                                     {'building_id': 'ZIV0034902130',
+                                      'flexibility': 93.65,
+                                      'interval': interval1}]},
+                  {'offered_flexibility': 289.45,
+                   'requested_flexibility': 300,
+                   'interval': interval2,
+                   'building_info': [{'building_id': 'ZIV0034704030',
+                                      'flexibility': 195.8,
+                                      'interval': interval2},
+                                     {'building_id': 'ZIV0034902130',
+                                      'flexibility': 193.65,
+                                      'interval': interval2}]}]
+
+        algorithm_response = {'status': True,
+                              'type': 'algorithm_response',
+                              'offers': offers}
 
         data = {'type': 'flexibility_offer_confirmation_request',
                 'user_id': 'usr1',

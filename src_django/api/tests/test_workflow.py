@@ -6,8 +6,8 @@ import keycloak
 from django.test import Client
 from django.test import TestCase
 
-from src_django.api.tests import mocks
 from src_django.api import common
+from src_django.api.tests import mocks
 
 
 class WorkflowTestCase(TestCase):
@@ -65,28 +65,29 @@ class WorkflowTestCase(TestCase):
                                content_type="application/json").json()
 
         # calculate flexibilities for all the demands
-        demands = response['demands']
-        flex_responses = []
-        for d in demands:
-            flex_amount = d['flexibility']
-            data = {'type': 'algorithm_request',
-                    'building_energy_list': buildings_info,
-                    'interval': {
-                        'from': d['start_time'],
-                        'to': d['end_time']},
-                    'flexibility_amount': flex_amount,
-                    'month': None}
-            response = client.post('/algorithm/',
-                                   json.dumps(data),
-                                   content_type="application/json")
-            response = response.json()
-            flex_responses.append(response)
+        demands = [{'interval': {'from': d['start_time'],
+                                 'to': d['end_time']},
+                    'flexibility_amount': d['flexibility']}
+                   for d in response['demands']]
 
-        # save the first flexibility result from the algorithm to database
-        response = flex_responses[0]
-        building = response['building_info'][0]
-        date_from = response['interval']['from']
-        date_to = response['interval']['to']
+        data = {'type': 'algorithm_request',
+                'building_energy_list': buildings_info,
+                'flexibility_demands': demands}
+
+        response = client.post('/algorithm/',
+                               json.dumps(data),
+                               content_type="application/json")
+        response = response.json()
+
+        # for later use
+        first_offer = response['offers'][0]
+        building = first_offer['building_info'][0]
+        date_from = first_offer['interval']['from']
+        date_to = first_offer['interval']['to']
+
+        # save ONLY the first flexibility result from the algorithm to database
+        response = {**response, 'offers': [response['offers'][0]]}
+
         data = {'type': 'flexibility_offer_confirmation_request',
                 'user_id': user_id,
                 'algorithm_response': response}

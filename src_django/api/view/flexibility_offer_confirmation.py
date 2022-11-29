@@ -1,10 +1,10 @@
 from django.http import JsonResponse
 from rest_framework.views import APIView
 
+from src_django.api import common
 from src_django.api import controller
 from src_django.api.validator.internal_api.flexibility_offer_confirmation \
     import validate_flexibility_offer_confirmation
-from src_django.api import common
 
 
 class FlexibilityOfferConfirmation(APIView):
@@ -24,26 +24,35 @@ class FlexibilityOfferConfirmation(APIView):
             return common.false_status(msg='invalid request',
                                        response_type=self._response_type)
 
-        start = request_body['algorithm_response']['interval']['from']
-        end = request_body['algorithm_response']['interval']['to']
-        flex = request_body['algorithm_response']['offered_flexibility']
-
-        success = controller.agr_flex.add(
-            start_time=start,
-            end_time=end,
-            user_id=request_body['user_id'],
-            flexibility=flex)
-
-        for building in request_body['algorithm_response']['building_info']:
-            success &= controller.building_flex.add(
-                start_time=building['interval']['from'],
-                end_time=building['interval']['to'],
-                building_id=building['building_id'],
-                flexibility=building['flexibility'])
-
-        if not success:
+        if not _save(request_body):
             return common.false_status(msg='database save failed',
                                        response_type=self._response_type)
 
         return JsonResponse({'type': self._response_type,
                              'status': True})
+
+
+def _save(request_body):
+    success = False
+    usr_id = request_body['user_id']
+
+    for offer in request_body['algorithm_response']['offers']:
+        success = _save_total(offer, usr_id) & all(_save_buildings(offer))
+
+    return success
+
+
+def _save_total(offer, user_id):
+    return controller.agr_flex.add(start_time=offer['interval']['from'],
+                                   end_time=offer['interval']['to'],
+                                   user_id=user_id,
+                                   flexibility=offer['offered_flexibility'])
+
+
+def _save_buildings(offer):
+    for building in offer['building_info']:
+        yield controller.building_flex.add(
+            start_time=building['interval']['from'],
+            end_time=building['interval']['to'],
+            building_id=building['building_id'],
+            flexibility=building['flexibility'])

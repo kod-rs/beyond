@@ -4,6 +4,7 @@ import typing
 from django.http import JsonResponse
 from rest_framework.views import APIView
 
+from src_django.api import common
 from src_django.api.flexopt_algorithm import BuildingEnergy
 from src_django.api.flexopt_algorithm import CurrentBuildingInfo
 from src_django.api.flexopt_algorithm import EnergyInfo
@@ -11,7 +12,6 @@ from src_django.api.flexopt_algorithm import TimeInterval
 from src_django.api.flexopt_algorithm import algorithm
 from src_django.api.validator.internal_api.algorithm import \
     validate_algorithm_request
-from src_django.api import common
 
 
 class AlgorithmView(APIView):
@@ -30,22 +30,31 @@ class AlgorithmView(APIView):
             return common.false_status(msg='invalid request',
                                        response_type=self._response_type)
 
-        building_energy_list = _dict_to_building_energy_list(
-            request_body['building_energy_list'])
-        interval = _dict_to_interval(request_body['interval'])
+        offers = list(_get_algorithm_offers(request_body))
+
+        return JsonResponse({'type': self._response_type,
+                             'status': True,
+                             'offers': offers})
+
+
+def _get_algorithm_offers(request_body):
+    demands = request_body['flexibility_demands']
+    building_energy_list = _dict_to_building_energy_list(
+        request_body['building_energy_list'])
+
+    for demand in demands:
+        req_flex = demand['flexibility_amount']
+        interval = _dict_to_interval(demand['interval'])
 
         offered_flex, info = algorithm(
             building_energy_list=building_energy_list,
             interval=interval,
-            flex_amount=request_body['flexibility_amount'])
-        building_info = _building_infos_to_dict(info)
-        req_flex = request_body['flexibility_amount']
-        return JsonResponse({'type': self._response_type,
-                             'status': True,
-                             'interval': request_body['interval'],
-                             'offered_flexibility': offered_flex,
-                             'requested_flexibility': req_flex,
-                             'building_info': building_info})
+            flex_amount=demand['flexibility_amount'])
+
+        yield {'offered_flexibility': offered_flex,
+               'requested_flexibility': req_flex,
+               'interval': _interval_to_strings(interval),
+               'building_info': _building_infos_to_dict(info)}
 
 
 def _dict_to_building_energy_list(in_dict: dict
