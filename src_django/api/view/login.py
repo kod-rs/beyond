@@ -46,7 +46,6 @@ class LoginView(APIView):
         try:
             role = set(userinfo['realm_access']['roles'])
             role = role.intersection({'AGGREGATOR', 'MANAGER'})
-            assert len(role) == 1
             role = role.pop()
             username = userinfo['preferred_username']
         except Exception:
