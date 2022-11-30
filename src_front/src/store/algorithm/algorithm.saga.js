@@ -13,7 +13,6 @@ import {
 
 export function* getAlgorithm({ payload: { request } }) {
     try {
-        //console.log('getBuildingsForCurrentUser hit!');
         let algorithmDataResponse = yield call(
             getAlgorithmData,
             request

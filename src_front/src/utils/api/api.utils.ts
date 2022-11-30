@@ -76,11 +76,7 @@ export const getAlgorithmData = async (request: Algorithm_Request) => {
     const bodyObj = {
         "type": "algorithm_request",
         "building_energy_list": request.building_energy_list,
-        "interval": {
-            "from": request.from.toISOString(), //RFC 3339 format
-            "to": request.to.toISOString(), //RFC 3339 format
-        },
-        "flexibility_amount": request.amount,
+        "flexibility_demands": request.flexibility_demands,
     };
 
     let data = await call_Fetch_Post(REQUEST_TYPES.ALGORITHM_REQUEST, bodyObj);

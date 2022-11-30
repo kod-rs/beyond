@@ -1,7 +1,7 @@
 import { FloatingActionButton, FloatingActionButtonAlign, Button } from '@progress/kendo-react-buttons';
 import { useDispatch, useSelector } from 'react-redux';
 import { Outlet, useNavigate } from 'react-router-dom';
-import { DatePickerContainer, GraphContainer, RowContainer, SliderContainer } from './flex.requests.styles';
+import { CustomContainer, DatePickerContainer, GraphContainer, RowContainer, SliderContainer } from './flex.requests.styles';
 import { DatePicker, DatePickerChangeEvent } from "@progress/kendo-react-dateinputs";
 import { Label } from '@progress/kendo-react-labels';
 import { Slider, SliderChangeEvent } from "@progress/kendo-react-inputs";
@@ -16,31 +16,40 @@ import {
     ChartLegend,
 } from "@progress/kendo-react-charts";
 
-import { Building_Info, TimeseriesData } from '../../store/historicData/historicData.types';
-import { DayCategories} from '../historicData/historic.data.types';
+import { Flex_Demand } from '../../store/flexDemand/flex.types';
 import { selectFlexDemand } from '../../store/flexDemand/flex.selector';
 import { selectCurrentUser } from '../../store/user/user.selector';
 import { getAlgorithmDataStart } from '../../store/algorithm/algorithm.action';
-import { Algorithm_Request } from '../../store/algorithm/algorithm.types';
+import { Algorithm_Request, Flex_Offer } from '../../store/algorithm/algorithm.types';
 import { getFlexDemandStart } from '../../store/flexDemand/flex.action';
+import { selectBuildingsHistoricData } from '../../store/historicData/historicData.selector';
+import { selectAlgorithmData } from '../../store/algorithm/algorithm.selector';
 
+
+export type Filtered_Flex_Data = {
+    start_time: string,
+    end_time: string,
+    flexibility: number,
+    categoryField: string,
+}
 
 const FlexRequests = () => {
     const currentUser = useSelector(selectCurrentUser);
+    const buildingsHistory = useSelector(selectBuildingsHistoricData);
+    const flexOffers = useSelector(selectAlgorithmData);
     const flexDemand = useSelector(selectFlexDemand);
     const dispatch = useDispatch();
     const today = new Date();
     const navigate = useNavigate();
     const [selectedDate, setSelectedDate] = useState<Date>();
     const [categories, setCategories] = useState<string[]>([]);
-
-    const [filteredData, setFilteredData] = useState<Building_Info[]>([]);
-    const [sliderPct, setSliderPct] = useState<number>(67);
+    const [filteredFlexDemandData, setFilteredFlexDemandData] = useState<Filtered_Flex_Data[]>([]);
+    const [filteredFlexOfferData, setFilteredFlexOfferData] = useState<Filtered_Flex_Data[]>([]);
+    const [sliderPct, setSliderPct] = useState<number>(100);
 
     useEffect(() => {
         if (flexDemand) {
             defineCategories();
-            getAlgorithmData();
         }
     }, [flexDemand]);
 
@@ -49,6 +58,15 @@ const FlexRequests = () => {
             setSelectedDate(today);
         }
     }, []);
+
+    useEffect(() => {
+        if (categories) {
+            if (flexDemand) {
+                setFilteredFlexDataFromDemand();
+                getAlgorithmData();
+            }
+        }
+    }, [categories,flexDemand]);
 
     useEffect(() => {
         if (selectedDate) {
@@ -62,13 +80,62 @@ const FlexRequests = () => {
         }
     }, [currentUser]);
 
-    const getAlgorithmData = () => {
+    useEffect(() => {
+        if (flexOffers) {
+            setFilteredFlexDataFromOffers();
+        }
+    }, [flexOffers]);
+
+    const getTooltipForDemand = (demand: Flex_Demand) => {
+        let start = new Date(demand.start_time);
+        let end = new Date(demand.end_time);
+        return start.toTimeString().split(' ')[0] + " - " + end.toTimeString().split(' ')[0];
+    }
+
+    const setFilteredFlexDataFromDemand = () => {
+        if (flexDemand) {
+            let data: Filtered_Flex_Data[] = flexDemand.map((demand) => {
+                demand.flexibility = Math.round(demand.flexibility * 100) / 100;
+                return { ...demand, categoryField: getTooltipForDemand(demand) }
+            }) as Filtered_Flex_Data[];
+            if (data) {
+                setFilteredFlexDemandData(data);
+            }
+        }
+    }
+
+    const getTooltipForOffer = (offer: Flex_Offer) => {
+        let start = new Date(offer.start_time);
+        let end = new Date(offer.end_time);
+        return start.toTimeString().split(' ')[0] + " - " + end.toTimeString().split(' ')[0];
+    }
+
+    const setFilteredFlexDataFromOffers = () => {
+        if (flexOffers) {
+            let data: Filtered_Flex_Data[] = flexOffers.map((offer) => {
+                offer.offered_flexibility = Math.round(offer.offered_flexibility * 100) / 100;
+                return { start_time:offer.start_time,end_time:offer.end_time,flexibility:offer.offered_flexibility, categoryField: getTooltipForOffer(offer) }
+            }) as Filtered_Flex_Data[];
+            if (data) {
+                setFilteredFlexOfferData(data);
+            }
+        }
+    }
+
+    const setAlgorithmRequest = () => {
+        let _tmp_flexDemand = JSON.parse(JSON.stringify(flexDemand)) as Flex_Demand[];
         let algorithmRequest = {
-            from: new Date(),
-            to: new Date(),
-            amount: sliderPct,
-            building_energy_list: [],
+            flexibility_demands: _tmp_flexDemand?.map((demand) => {
+                demand.flexibility = demand.flexibility * sliderPct / 100;
+                return demand;
+            }),
+            building_energy_list: buildingsHistory,
         } as Algorithm_Request;
+        return algorithmRequest;
+    }
+
+    const getAlgorithmData = () => {
+        let algorithmRequest = setAlgorithmRequest();
         dispatch(getAlgorithmDataStart(algorithmRequest));
     }
 
@@ -83,33 +150,19 @@ const FlexRequests = () => {
     const onChangeSelectedDate = (event: DatePickerChangeEvent) => {
         if (event.value) {
             setSelectedDate(event.value);
-            
         }
     }
 
-    const renderChartSeriesItem = (item: Building_Info, idx: number) => {
-        return <ChartSeriesItem
-            key={idx}
-            type="area"
-            tooltip={{ visible: true }}
-            data={item.energy_info.map((info) => { return info.value })}
-            name={item.building_id} />
-    }
-
-    const renderChartCollumnSeriesItem = (item: Building_Info, idx: number) => {
-        return <ChartSeriesItem
-            key={idx}
-            type="column"
-            tooltip={{ visible: true }}
-            data={item.energy_info.map((info) => { return info.value })}
-            name={item.building_id} />
-    }
-
     const defineCategories = () => {
-        setCategories(DayCategories);
+        if (flexDemand) {
+            let ctgs = flexDemand.map((demand) => {
+                return getTooltipForDemand(demand)
+            })
+            if (ctgs) {
+                setCategories(ctgs);
+            }
+        }
     }
-
- 
 
     const onSubmit = () => {
         //TODO do submit
@@ -120,7 +173,33 @@ const FlexRequests = () => {
         setSliderPct(Math.round(event.value * 10) / 10);
     }
 
+    const renderBarChartSeriesItem = (items: Filtered_Flex_Data[],color?:string) => {
+        return <ChartSeriesItem
+            key={'demand'}
+            type="column"
+            tooltip={{ visible: true, format: "{0} kWh" }}
+            data={items}
+            field={'flexibility'}
+            categoryField={'categoryField'}
+            name={'flexibility'}
+            color={color ? color : '#CC00FF'}
+        />
+    }
 
+    const rendeAreaChartSeriesItem = (items: Filtered_Flex_Data[]) => {
+        return <ChartSeriesItem
+                    key={'demand'}
+                    type="area"
+                    tooltip={{ visible: true, format: "{0} kWh" }}
+                    data={items}
+                    field={'flexibility'}
+                    categoryField={'categoryField'}
+                    name={'flexibility'} />
+    }
+
+    const onButtonReloadClick = () => {
+        getAlgorithmData();
+    }
 
     return (
         <>
@@ -129,45 +208,49 @@ const FlexRequests = () => {
                     <DatePicker defaultValue={today} format={"dd.MM.yyyy"} onChange={onChangeSelectedDate} />
                 </DatePickerContainer>
                 <GraphContainer>
-                    <Chart style={{ height: 300, width: '99%' }}>
-                        <ChartTitle text="Flexibility requests" />
-                        <ChartLegend position="top" orientation="horizontal" />
-                        <ChartCategoryAxis>
-                            <ChartCategoryAxisItem categories={categories ? categories : []} startAngle={45} />
-                        </ChartCategoryAxis>
-                        <ChartSeries>
-                            {
-                                filteredData && filteredData.map((item, idx) => (
-                                    renderChartCollumnSeriesItem(item, idx)
-                                ))
-                            }
-                        </ChartSeries>
-                    </Chart>
-                    <Chart style={{ height: 300, width: '99%' }}>
-                        <ChartTitle text="Available VPP configuration" />
-                        <ChartLegend position="top" orientation="horizontal" />
-                        <ChartCategoryAxis>
-                            <ChartCategoryAxisItem categories={categories ? categories : []} startAngle={45} />
-                        </ChartCategoryAxis>
-                        <ChartSeries>
-                            {
-                                filteredData && filteredData.map((item, idx) => (
-                                    renderChartSeriesItem(item, idx)
-                                ))
-                            }
-                        </ChartSeries>
-                    </Chart>
-                    <SliderContainer>
-                        <Label editorId="slider1">{sliderPct && (sliderPct + "%")}</Label>
-                        <Slider id="slider1" min={0} max={100} step={1} defaultValue={67} onChange={onSliderValueChange} />
-                    </SliderContainer>
-
+                    {
+                        filteredFlexDemandData &&
+                        <Chart style={{ height: 300, width: '99%' }} pannable={{ lock: "y" }} zoomable={{ mousewheel: { lock: "y" } }}>
+                            <ChartTitle text="Flexibility requests" />
+                            <ChartLegend position="top" orientation="horizontal" />
+                            <ChartCategoryAxis>
+                                <ChartCategoryAxisItem startAngle={45} categories={categories} />
+                            </ChartCategoryAxis>
+                            <ChartSeries>
+                                {
+                                    renderBarChartSeriesItem(filteredFlexDemandData)
+                                }
+                            </ChartSeries>
+                        </Chart>
+                    }
+                    {
+                        filteredFlexOfferData &&
+                        <Chart style={{ height: 300, width: '99%' }}>
+                            <ChartTitle text="Available VPP configuration" />
+                            <ChartLegend position="top" orientation="horizontal" />
+                            <ChartCategoryAxis>
+                                <ChartCategoryAxisItem categories={categories ? categories : []} startAngle={45} />
+                            </ChartCategoryAxis>
+                            <ChartSeries>
+                                {
+                                    renderBarChartSeriesItem(filteredFlexOfferData,"green")
+                                }
+                            </ChartSeries>
+                        </Chart>
+                    }
+                    <CustomContainer>
+                        <SliderContainer>
+                            <Label editorId="slider1">{sliderPct + "%"}</Label>
+                            <Slider id="slider1" min={0} max={100} step={1} defaultValue={sliderPct} onChange={onSliderValueChange} />
+                        </SliderContainer>
+                        <Button onClick={onButtonReloadClick} themeColor="tertiary">Reload</Button>
+                    </CustomContainer>
                 </GraphContainer>
                 
             </RowContainer>
 
             <FloatingActionButton
-                align={{ vertical: "bottom", horizontal: "end" } as FloatingActionButtonAlign}
+                align={{ vertical: "bottom", horizontal: "center" } as FloatingActionButtonAlign}
                 text={'Insights & Analytics'}
                 onClick={toInsightAnalytics} />
             <FloatingActionButton
@@ -176,7 +259,7 @@ const FlexRequests = () => {
                 onClick={toBuildings}
                 themeColor="inverse" />
             <FloatingActionButton
-                align={{ vertical: "bottom", horizontal: "center" } as FloatingActionButtonAlign}
+                align={{ vertical: "bottom", horizontal: "end" } as FloatingActionButtonAlign}
                 text={'Submit'}
                 onClick={onSubmit}
                 themeColor="tertiary" />

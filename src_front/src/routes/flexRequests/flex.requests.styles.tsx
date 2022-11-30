@@ -36,5 +36,13 @@ export const SliderContainer = styled.div`
     align-items: center;
     justify-content: center;
     flex-direction: column;
+    margin:15px;
+`;
+
+export const CustomContainer = styled.div`
+    display: flex; 
+    align-items: center;
+    justify-content: center;
+    flex-direction: row;
     margin:20px;
 `;

@@ -4,7 +4,7 @@ import { RootState } from '../store';
 
 export const selectAlgorithmReducer = (state: RootState): AlgorithmDataState => state.algorithmData;
 
-export const selectAlgorithm = createSelector(
+export const selectAlgorithmData = createSelector(
     selectAlgorithmReducer,
-    (algorithmData) => algorithmData
+    (algorithmDataState) => algorithmDataState.algorithmData?.offers
 );

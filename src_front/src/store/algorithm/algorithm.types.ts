@@ -1,3 +1,4 @@
+import { Flex_Demand } from "../flexDemand/flex.types";
 import { Building_Info } from "../historicData/historicData.types";
 
 export enum ALGORITHM_ACTION_TYPES {
@@ -13,21 +14,26 @@ export type IntervalObj = {
 
 export type Building_Energy_Info = {
     building_id: string,
-    interval: IntervalObj,
+    start_time: string, //RFC 3339 format
+    end_time: string,   //RFC 3339 format
     flexibility: number,
 }
 
 export type Algorithm_Request = {
     building_energy_list: Building_Info[],
-    from: Date,
-    to: Date,
-    amount: number
+    flexibility_demands: Flex_Demand[],
 }
 
 export type Algorithm_Response = {
     type: string,
     status: boolean,
-    offered_flexibility: number,
-    interval: IntervalObj,
-    building_info: Building_Energy_Info[]
+    offers: Flex_Offer[],
 };
+
+export type Flex_Offer = {
+    offered_flexibility: number,
+    requested_flexibility: number 
+    start_time: string, //RFC 3339 format
+    end_time: string, //RFC 3339 format
+    building_info: Building_Energy_Info[],
+}

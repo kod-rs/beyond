@@ -16,6 +16,7 @@ import {
     ChartCategoryAxisItem,
     ChartTitle,
     ChartLegend,
+    LineStyle,
 } from "@progress/kendo-react-charts";
 import { Building_Info, TimeseriesData } from '../../store/historicData/historicData.types';
 import { DayCategories, MonthCategories, PERIOD_TYPES, YearCategories } from './historic.data.types';
@@ -182,7 +183,7 @@ const HistoricData = () => {
             }
             tmpData.push({
                 timestamp: avgDate,
-                value: avgVal
+                value: Math.round(avgVal * 100) / 100
             });
         }
         return tmpData;
