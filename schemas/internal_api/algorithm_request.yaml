@@ -46,21 +46,16 @@ definitions:
   flexibility_demand:
     type: object
     required:
-      - interval
-      - flexibility_amount
+      - flexibility
+      - start_time
+      - end_time
     properties:
-      interval:
-        type: object
-        required:
-          - from
-          - to
-        properties:
-          from:
-            type: string
-            format: "date-time"
-          to:
-            type: string
-            format: "date-time"
-      flexibility_amount:
+      start_time:
+        type: string
+        format: "date-time"
+      end_time:
+        type: string
+        format: "date-time"
+      flexibility:
         type: number
 ...

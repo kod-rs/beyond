@@ -132,12 +132,12 @@ class TestAlgorithmView(TestCase):
         date_to = date_to.replace(tzinfo=datetime.timezone.utc)
         flex_amount = 300
         demands = [
-            {'interval': {'from': date_from.isoformat(),
-                          'to': date_to.isoformat()},
-             'flexibility_amount': flex_amount},
-            {'interval': {'from': date_from.replace(hour=13).isoformat(),
-                          'to': date_to.replace(hour=15).isoformat()},
-             'flexibility_amount': flex_amount}]
+            {'start_time': date_from.isoformat(),
+             'end_time': date_to.isoformat(),
+             'flexibility': flex_amount},
+            {'start_time': date_from.replace(hour=13).isoformat(),
+             'end_time': date_to.replace(hour=15).isoformat(),
+             'flexibility': flex_amount}]
         data = {'type': 'algorithm_request',
                 'building_energy_list': mocks.mock_building_energy_list(),
                 'flexibility_demands': demands}

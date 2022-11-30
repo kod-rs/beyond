@@ -75,11 +75,9 @@
         },
         where FLEXIBILITY_DEMAND is defined as:
             {
-                "interval": {
-                    "from": Timestamp convertible to RFC 3339 format
-                    "to": Timestamp convertible to RFC 3339 format
-                 },
-                "flexibility_amount": Number,
+                "start_time": Timestamp convertible to RFC 3339 format
+                "end_time": Timestamp convertible to RFC 3339 format
+                "flexibility": Number,
             }
             where BUILDING_ENERGY is defined as:
                 {
@@ -112,18 +110,14 @@
            ],
            "flexibility_demands": [
                 {
-                   "interval": {
-                        "from": 2022-11-04T13:00:00.000000+00:00,
-                        "to": 2022-11-04T17:00:00.000000+00:00
-                    },
-                    "flexibility_amount": 88
+                    "start_time": 2022-11-04T13:00:00.000000+00:00,
+                    "end_time": 2022-11-04T17:00:00.000000+00:00
+                    "flexibility": 88
                 },
                 {
-                   "interval": {
-                        "from": 2022-11-04T17:00:00.000000+00:00,
-                        "to": 2022-11-04T19:00:00.000000+00:00
-                    },
-                    "flexibility_amount": 77
+                    "start_time": 2022-11-04T17:00:00.000000+00:00,
+                    "end_time": 2022-11-04T19:00:00.000000+00:00
+                    "flexibility": 77
                 }
            ]
         }

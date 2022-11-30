@@ -65,14 +65,9 @@ class WorkflowTestCase(TestCase):
                                content_type="application/json").json()
 
         # calculate flexibilities for all the demands
-        demands = [{'interval': {'from': d['start_time'],
-                                 'to': d['end_time']},
-                    'flexibility_amount': d['flexibility']}
-                   for d in response['demands']]
-
         data = {'type': 'algorithm_request',
                 'building_energy_list': buildings_info,
-                'flexibility_demands': demands}
+                'flexibility_demands': response['demands']}
 
         response = client.post('/algorithm/',
                                json.dumps(data),

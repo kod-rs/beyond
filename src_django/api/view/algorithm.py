@@ -43,13 +43,13 @@ def _get_algorithm_offers(request_body):
         request_body['building_energy_list'])
 
     for demand in demands:
-        req_flex = demand['flexibility_amount']
-        interval = _dict_to_interval(demand['interval'])
+        req_flex = demand['flexibility']
+        interval = _dict_to_interval(demand)
 
         offered_flex, info = algorithm(
             building_energy_list=building_energy_list,
             interval=interval,
-            flex_amount=demand['flexibility_amount'])
+            flex_amount=demand['flexibility'])
 
         yield {'offered_flexibility': offered_flex,
                'requested_flexibility': req_flex,
@@ -74,8 +74,8 @@ def _dict_to_building_energy_list(in_dict: dict
 
 def _dict_to_interval(in_dict: dict) -> TimeInterval:
     return TimeInterval(
-        from_t=common.datetime_from_rfc_string(in_dict['from']),
-        to_t=common.datetime_from_rfc_string(in_dict['to']))
+        from_t=common.datetime_from_rfc_string(in_dict['start_time']),
+        to_t=common.datetime_from_rfc_string(in_dict['end_time']))
 
 
 def _interval_to_strings(interval: TimeInterval) -> dict:
