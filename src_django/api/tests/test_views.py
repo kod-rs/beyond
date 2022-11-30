@@ -157,8 +157,8 @@ class TestAlgorithmView(TestCase):
                 or isinstance(offer['offered_flexibility'], int))
         assert isinstance(offer['building_info'], list)
 
-        assert offer['interval']['from'] == date_from.isoformat()
-        assert offer['interval']['to'] == date_to.isoformat()
+        assert offer['start_time'] == date_from.isoformat()
+        assert offer['end_time'] == date_to.isoformat()
         assert offer['requested_flexibility'] == flex_amount
         assert offer['offered_flexibility'] <= flex_amount
         assert isinstance(offer['building_info'], list)
@@ -166,8 +166,8 @@ class TestAlgorithmView(TestCase):
 
         building = offer['building_info'][0]
         assert building['flexibility'] <= flex_amount
-        assert building['interval']['from'] == date_from.isoformat()
-        assert building['interval']['to'] == date_to.isoformat()
+        assert building['start_time'] == date_from.isoformat()
+        assert building['end_time'] == date_to.isoformat()
 
 
 class TestFlexibilityOfferConfirmationView(TestCase):
@@ -179,29 +179,33 @@ class TestFlexibilityOfferConfirmationView(TestCase):
         date_to = datetime.datetime(year=2022, month=2, day=10, hour=12)
         date_to = date_to.replace(tzinfo=datetime.timezone.utc)
 
-        interval1 = {'from': date_from.isoformat(),
-                     'to': date_to.isoformat()}
-        interval2 = {'from': date_from.replace(hour=13).isoformat(),
-                     'to': date_to.replace(hour=17).isoformat()}
+        date_from2 = date_from.replace(hour=13)
+        date_to2 = date_to.replace(hour=17)
 
         offers = [{'offered_flexibility': 189.45,
                    'requested_flexibility': 200,
-                   'interval': interval1,
+                   'start_time': date_from.isoformat(),
+                   'end_time': date_to.isoformat(),
                    'building_info': [{'building_id': 'ZIV0034704030',
                                       'flexibility': 95.8,
-                                      'interval': interval1},
+                                      'start_time': date_from.isoformat(),
+                                      'end_time': date_to.isoformat()},
                                      {'building_id': 'ZIV0034902130',
                                       'flexibility': 93.65,
-                                      'interval': interval1}]},
+                                      'start_time': date_from.isoformat(),
+                                      'end_time': date_to.isoformat()}]},
                   {'offered_flexibility': 289.45,
                    'requested_flexibility': 300,
-                   'interval': interval2,
+                   'start_time': date_from2.isoformat(),
+                   'end_time': date_to2.isoformat(),
                    'building_info': [{'building_id': 'ZIV0034704030',
                                       'flexibility': 195.8,
-                                      'interval': interval2},
+                                      'start_time': date_from2.isoformat(),
+                                      'end_time': date_to2.isoformat()},
                                      {'building_id': 'ZIV0034902130',
                                       'flexibility': 193.65,
-                                      'interval': interval2}]}]
+                                      'start_time': date_from2.isoformat(),
+                                      'end_time': date_to2.isoformat()}]}]
 
         algorithm_response = {'status': True,
                               'type': 'algorithm_response',

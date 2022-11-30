@@ -43,18 +43,16 @@ def _get_algorithm_offers(request_body):
         request_body['building_energy_list'])
 
     for demand in demands:
-        req_flex = demand['flexibility']
-        interval = _dict_to_interval(demand)
-
         offered_flex, info = algorithm(
             building_energy_list=building_energy_list,
-            interval=interval,
+            interval=_dict_to_interval(demand),
             flex_amount=demand['flexibility'])
 
         yield {'offered_flexibility': offered_flex,
-               'requested_flexibility': req_flex,
-               'interval': _interval_to_strings(interval),
-               'building_info': _building_infos_to_dict(info)}
+               'requested_flexibility': demand['flexibility'],
+               'start_time': demand['start_time'],
+               'end_time': demand['end_time'],
+               'building_info': list(_building_infos_to_dict(info))}
 
 
 def _dict_to_building_energy_list(in_dict: dict
@@ -78,18 +76,10 @@ def _dict_to_interval(in_dict: dict) -> TimeInterval:
         to_t=common.datetime_from_rfc_string(in_dict['end_time']))
 
 
-def _interval_to_strings(interval: TimeInterval) -> dict:
-    return {'from': interval.from_t.isoformat(),
-            'to': interval.to_t.isoformat()}
-
-
-def _building_infos_to_dict(in_list: typing.List[CurrentBuildingInfo]) -> list:
-    ret = []
+def _building_infos_to_dict(
+        in_list: typing.List[CurrentBuildingInfo]) -> list:
     for building in in_list:
-        ret.append({
-            'building_id': building.building_id,
-            'interval': {
-                'from': building.time_interval.from_t.isoformat(),
-                'to': building.time_interval.to_t.isoformat()},
-            'flexibility': building.flex})
-    return ret
+        yield {'building_id': building.building_id,
+               'start_time': building.time_interval.from_t.isoformat(),
+               'end_time': building.time_interval.to_t.isoformat(),
+               'flexibility': building.flex}

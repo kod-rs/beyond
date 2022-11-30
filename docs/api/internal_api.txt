@@ -223,19 +223,15 @@
             {
                 "offered_flexibility": Number,
                 "requested_flexibility": Number sent via ALGORITHM_REQUEST
-                "interval": {
-                        "from": String convertible to RFC 3339 format
-                        "to": String convertible to RFC 3339 format
-                },
+                "start_time": String convertible to RFC 3339 format
+                "end_time": String convertible to RFC 3339 format
                 "building_info": Array of BUILDING_INFO
             }
             where BUILDING_INFO is:
                 {
                     "building_id": String,
-                    "interval": {
-                        "from": String convertible to RFC 3339 format
-                        "to": String convertible to RFC 3339 format
-                    },
+                    "start_time": String convertible to RFC 3339 format
+                    "end_time": String convertible to RFC 3339 format
                     "flexibility": Number
                 }
 * FLEXIBILITY_OFFER_CONFIRMATION_RESPONSE

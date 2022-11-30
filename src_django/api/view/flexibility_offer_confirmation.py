@@ -43,16 +43,15 @@ def _save(request_body):
 
 
 def _save_total(offer, user_id):
-    return controller.agr_flex.add(start_time=offer['interval']['from'],
-                                   end_time=offer['interval']['to'],
+    return controller.agr_flex.add(start_time=offer['start_time'],
+                                   end_time=offer['end_time'],
                                    user_id=user_id,
                                    flexibility=offer['offered_flexibility'])
 
 
 def _save_buildings(offer):
     for building in offer['building_info']:
-        yield controller.building_flex.add(
-            start_time=building['interval']['from'],
-            end_time=building['interval']['to'],
-            building_id=building['building_id'],
-            flexibility=building['flexibility'])
+        yield controller.building_flex.add(start_time=building['start_time'],
+                                           end_time=building['end_time'],
+                                           building_id=building['building_id'],
+                                           flexibility=building['flexibility'])

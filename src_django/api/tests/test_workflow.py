@@ -77,8 +77,8 @@ class WorkflowTestCase(TestCase):
         # for later use
         first_offer = response['offers'][0]
         building = first_offer['building_info'][0]
-        date_from = first_offer['interval']['from']
-        date_to = first_offer['interval']['to']
+        date_from = first_offer['start_time']
+        date_to = first_offer['end_time']
 
         # save ONLY the first flexibility result from the algorithm to database
         response = {**response, 'offers': [response['offers'][0]]}
