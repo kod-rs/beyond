@@ -359,3 +359,8 @@ yarn.lock
 /.vs/Beyond_Ket/FileContentIndex/23146294-fc22-4dbe-8470-bf6ec800ba76.vsidx
 /.vs/Beyond_Ket/FileContentIndex
 /.vs/Beyond_Ket/v17
+/docker/backend/manage.py
+/docker/backend/requirements.pip.txt
+/docker/backend/src_django/
+/docker/backend/env
+/docker/backend/.env
