@@ -1,0 +1,57 @@
+---
+$schema: 'http://json-schema.org/draft-07/schema#'
+id: 'flexopt://backend_responses/flexibility_offer_by_building.yaml#'
+title: Flexibility offer by building id request
+description: Flexibility offer by building id request configuration schema
+type: object
+oneOf:
+  - '$ref': '#/definitions/success'
+  - '$ref': '#/definitions/fail'
+definitions:
+  success:
+    type: object
+    required:
+      - type
+      - status
+      - building_id
+      - offered_flexibilities
+    properties:
+      type:
+        const: flexibility_offer_by_building_response
+      status:
+        const: True
+      building_id:
+        type: String
+      offered_flexibilities:
+        type: array
+        items:
+          $ref: '#/definitions/flexibilities'
+  fail:
+    type: object
+    required:
+      - type
+      - status
+      - message
+    properties:
+      type:
+        const: flexibility_offer_confirmation_response
+        status:
+          const: False
+        message:
+          type: string
+  flexibilities:
+    type: object
+    required:
+      - start_time
+      - end_time
+      - flexibility
+    properties:
+      start_time:
+        type: string
+        format: "date-time"
+      end_time:
+        type: string
+        format: "date-time"
+      flexibility:
+        type: number
+...

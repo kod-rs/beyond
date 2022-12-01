@@ -1,0 +1,15 @@
+version: "3.9"
+services:
+  keycloak:
+    image: keycloak
+    build: ./keycloak/
+    command: ./run_keycloak.sh
+    ports:
+      - "8080:8080"
+  backend:
+    image: backend
+    build: ./backend/
+    command: ./run_backend.sh
+    ports:
+      - "127.0.0.1:8000:8000"
+    network_mode: host
