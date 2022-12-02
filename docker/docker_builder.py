@@ -14,11 +14,17 @@ def copy_file(src, dst, file_name):
 
 
 def rm_dir(dst, dir_name):
-    rmtree(str(dst / dir_name))
+    try:
+        rmtree(str(dst / dir_name))
+    except Exception as e:
+        pass
 
 
 def rm_file(dst, file_name):
-    os.remove(str(dst / file_name))
+    try:
+        os.remove(str(dst / file_name))
+    except Exception as e:
+        pass
 
 
 def copy_to_backend(parent_dir):
