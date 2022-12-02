@@ -1,12 +1,14 @@
 import os
 import sys
-from distutils.dir_util import copy_tree
+
 from pathlib import Path
-from shutil import copyfile, rmtree
+from shutil import copyfile, rmtree, copytree
 
 
 def copy_dir(src, dst, dir_name):
-    copy_tree(str(src / dir_name), str(dst / dir_name))
+    if os.path.isdir(dst / dir_name):
+        rm_dir(dst, dir_name)
+    copytree(str(src / dir_name), str(dst / dir_name))
 
 
 def copy_file(src, dst, file_name):
