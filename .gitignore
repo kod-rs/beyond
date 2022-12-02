@@ -364,3 +364,6 @@ yarn.lock
 /docker/backend/src_django/
 /docker/backend/env
 /docker/backend/.env
+/src_front/.vs/
+/docker/frontend/src_front/
+/docker/backend/schemas/
