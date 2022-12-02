@@ -1,2 +1,2 @@
 #!/bin/sh
-(python docker_builder.py && sudo docker compose up)
+(python3 docker_builder.py && sudo docker compose up)
