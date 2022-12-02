@@ -5,9 +5,11 @@ import {
   withMatcher,
 } from '../../utils/reducer/reducer.utils';
 
-export type GetFlexDemandStart = ActionWithPayload<FLEX_DEMAND_ACTION_TYPES.GET_FLEX_DEMAND_START, { date:Date }>;
+export type GetFlexDemandStart = ActionWithPayload<FLEX_DEMAND_ACTION_TYPES.GET_FLEX_DEMAND_START, { date: Date }>;
 export type GetFlexDemandSuccess = ActionWithPayload<FLEX_DEMAND_ACTION_TYPES.GET_FLEX_DEMAND_SUCCESS, Flex_Demand[]>;
 export type GetFlexDemandFailed = ActionWithPayload<FLEX_DEMAND_ACTION_TYPES.GET_FLEX_DEMAND_FAILED, Error>;
+
+export type SetFlexDate = ActionWithPayload<FLEX_DEMAND_ACTION_TYPES.SET_FLEX_DATE, { date: Date }>;
 
 export const getFlexDemandStart = withMatcher(
     (date: Date): GetFlexDemandStart =>
@@ -22,4 +24,9 @@ export const getFlexDemandSuccess = withMatcher(
 export const getFlexDemandFailed = withMatcher(
     (error: Error): GetFlexDemandFailed =>
         createAction(FLEX_DEMAND_ACTION_TYPES.GET_FLEX_DEMAND_FAILED, error)
+);
+
+export const setFlexDateStart = withMatcher(
+    (date: Date): SetFlexDate =>
+        createAction(FLEX_DEMAND_ACTION_TYPES.SET_FLEX_DATE, { date })
 );

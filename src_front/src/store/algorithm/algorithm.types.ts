@@ -5,11 +5,10 @@ export enum ALGORITHM_ACTION_TYPES {
     GET_ALGORITHM_START = 'flex/GET_ALGORITHM_START',
     GET_ALGORITHM_SUCCESS = 'flex/GET_ALGORITHM_SUCCESS',
     GET_ALGORITHM_FAILED = 'flex/GET_ALGORITHM_FAILED',
-}
 
-export type IntervalObj = {
-    from: string,
-    to: string,
+    SEND_FLEX_OFFER_START = 'flex/SEND_FLEX_OFFER_START',
+    SEND_FLEX_OFFER_SUCCESS = 'flex/SEND_FLEX_OFFER_SUCCESS',
+    SEND_FLEX_OFFER_FAILED = 'flex/SEND_FLEX_OFFER_FAILED',
 }
 
 export type Building_Energy_Info = {
@@ -36,4 +35,9 @@ export type Flex_Offer = {
     start_time: string, //RFC 3339 format
     end_time: string, //RFC 3339 format
     building_info: Building_Energy_Info[],
+}
+
+export type Flexibility_Offer_Confirmation_Response = {
+    "type": string,
+    "status": boolean,
 }

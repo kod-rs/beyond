@@ -17,14 +17,13 @@ import {
 } from "@progress/kendo-react-charts";
 
 import { Flex_Demand } from '../../store/flexDemand/flex.types';
-import { selectFlexDemand } from '../../store/flexDemand/flex.selector';
+import { selectFlexDate, selectFlexDemand } from '../../store/flexDemand/flex.selector';
 import { selectCurrentUser } from '../../store/user/user.selector';
-import { getAlgorithmDataStart } from '../../store/algorithm/algorithm.action';
-import { Algorithm_Request, Flex_Offer } from '../../store/algorithm/algorithm.types';
-import { getFlexDemandStart } from '../../store/flexDemand/flex.action';
+import { getAlgorithmDataStart, sendFlexOfferStart } from '../../store/algorithm/algorithm.action';
+import { Algorithm_Request, Flex_Offer, Algorithm_Response } from '../../store/algorithm/algorithm.types';
+import { getFlexDemandStart, setFlexDateStart } from '../../store/flexDemand/flex.action';
 import { selectBuildingsHistoricData } from '../../store/historicData/historicData.selector';
 import { selectAlgorithmData } from '../../store/algorithm/algorithm.selector';
-
 
 export type Filtered_Flex_Data = {
     start_time: string,
@@ -38,8 +37,9 @@ const FlexRequests = () => {
     const buildingsHistory = useSelector(selectBuildingsHistoricData);
     const flexOffers = useSelector(selectAlgorithmData);
     const flexDemand = useSelector(selectFlexDemand);
+    const flexDate = useSelector(selectFlexDate);
     const dispatch = useDispatch();
-    const today = new Date();
+    const tomorrow = new Date(new Date().setDate(new Date().getDate()+1));
     const navigate = useNavigate();
     const [selectedDate, setSelectedDate] = useState<Date>();
     const [categories, setCategories] = useState<string[]>([]);
@@ -54,8 +54,12 @@ const FlexRequests = () => {
     }, [flexDemand]);
 
     useEffect(() => {
-        if (selectedDate == null || selectedDate==undefined) {
-            setSelectedDate(today);
+        if (selectedDate == null || selectedDate == undefined) {
+            if (flexDate == null) {
+                setSelectedDate(tomorrow);
+            } else {
+                setSelectedDate(flexDate);
+            }
         }
     }, []);
 
@@ -70,7 +74,10 @@ const FlexRequests = () => {
 
     useEffect(() => {
         if (selectedDate) {
-            dispatch(getFlexDemandStart(selectedDate));
+            if (selectedDate !== flexDate) {
+                dispatch(setFlexDateStart(selectedDate));
+                dispatch(getFlexDemandStart(selectedDate));
+            }
         }
     }, [selectedDate]);
 
@@ -165,8 +172,14 @@ const FlexRequests = () => {
     }
 
     const onSubmit = () => {
-        //TODO do submit
-        return null;
+        if (currentUser) {
+            let algorithmResponse = {
+                type: "algorithm_response",
+                status: true,
+                offers: flexOffers,
+            } as Algorithm_Response;
+            dispatch(sendFlexOfferStart(currentUser.user_id, algorithmResponse));
+        }
     }
 
     const onSliderValueChange = (event: SliderChangeEvent) => {
@@ -175,26 +188,13 @@ const FlexRequests = () => {
 
     const renderBarChartSeriesItem = (items: Filtered_Flex_Data[],color?:string) => {
         return <ChartSeriesItem
-            key={'demand'}
-            type="column"
-            tooltip={{ visible: true, format: "{0} kWh" }}
-            data={items}
-            field={'flexibility'}
-            categoryField={'categoryField'}
-            name={'flexibility'}
-            color={color ? color : '#CC00FF'}
-        />
-    }
-
-    const rendeAreaChartSeriesItem = (items: Filtered_Flex_Data[]) => {
-        return <ChartSeriesItem
                     key={'demand'}
-                    type="area"
+                    type="column"
                     tooltip={{ visible: true, format: "{0} kWh" }}
                     data={items}
                     field={'flexibility'}
                     categoryField={'categoryField'}
-                    name={'flexibility'} />
+                    color={color ? color : '#CC00FF'}/>
     }
 
     const onButtonReloadClick = () => {
@@ -205,12 +205,12 @@ const FlexRequests = () => {
         <>
             <RowContainer>
                 <DatePickerContainer>
-                    <DatePicker defaultValue={today} format={"dd.MM.yyyy"} onChange={onChangeSelectedDate} />
+                    <DatePicker defaultValue={tomorrow} format={"dd.MM.yyyy"} onChange={onChangeSelectedDate} />
                 </DatePickerContainer>
                 <GraphContainer>
                     {
                         filteredFlexDemandData &&
-                        <Chart style={{ height: 300, width: '99%' }} pannable={{ lock: "y" }} zoomable={{ mousewheel: { lock: "y" } }}>
+                        <Chart style={{ height: 250, width: '99%' }} pannable={{ lock: "y" }} zoomable={{ mousewheel: { lock: "y" } }}>
                             <ChartTitle text="Flexibility requests" />
                             <ChartLegend position="top" orientation="horizontal" />
                             <ChartCategoryAxis>
@@ -225,7 +225,7 @@ const FlexRequests = () => {
                     }
                     {
                         filteredFlexOfferData &&
-                        <Chart style={{ height: 300, width: '99%' }}>
+                        <Chart style={{ height: 250, width: '99%' }}>
                             <ChartTitle text="Available VPP configuration" />
                             <ChartLegend position="top" orientation="horizontal" />
                             <ChartCategoryAxis>
@@ -242,8 +242,9 @@ const FlexRequests = () => {
                         <SliderContainer>
                             <Label editorId="slider1">{sliderPct + "%"}</Label>
                             <Slider id="slider1" min={0} max={100} step={1} defaultValue={sliderPct} onChange={onSliderValueChange} />
+                            <Button onClick={onButtonReloadClick} themeColor="tertiary" style={{margin:'5px'}}>Reload VPP configuration</Button>
                         </SliderContainer>
-                        <Button onClick={onButtonReloadClick} themeColor="tertiary">Reload</Button>
+                        
                     </CustomContainer>
                 </GraphContainer>
                 
@@ -261,6 +262,7 @@ const FlexRequests = () => {
             <FloatingActionButton
                 align={{ vertical: "bottom", horizontal: "end" } as FloatingActionButtonAlign}
                 text={'Submit'}
+                disabled={(currentUser===null) || (flexOffers===undefined)}
                 onClick={onSubmit}
                 themeColor="tertiary" />
             <Outlet />

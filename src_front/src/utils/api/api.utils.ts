@@ -1,4 +1,4 @@
-import { Algorithm_Request } from "../../store/algorithm/algorithm.types";
+import { Algorithm_Request, Algorithm_Response } from "../../store/algorithm/algorithm.types";
 import { Building } from "../../store/buildings/buildings.types";
 import { UserData } from "../../store/user/user.types";
 
@@ -9,6 +9,7 @@ enum REQUEST_TYPES {
     BUILDINGS_REQUEST = "/buildings/",
     FLEX_DEMAND_REQUEST = "/flexibility_demand/",
     ALGORITHM_REQUEST = "/algorithm/",
+    SEND_FLEX_OFFER_REQUEST = "/flexibility_offer_confirmation/",
 }
 
 
@@ -80,5 +81,17 @@ export const getAlgorithmData = async (request: Algorithm_Request) => {
     };
 
     let data = await call_Fetch_Post(REQUEST_TYPES.ALGORITHM_REQUEST, bodyObj);
+    return data;
+};
+
+export const sendFlexOffer = async (user_id: string, response: Algorithm_Response) => {
+
+    const bodyObj = {
+        "type": "flexibility_offer_confirmation_request",
+        "user_id": user_id,
+        "algorithm_response": response,
+    };
+
+    let data = await call_Fetch_Post(REQUEST_TYPES.SEND_FLEX_OFFER_REQUEST, bodyObj);
     return data;
 };

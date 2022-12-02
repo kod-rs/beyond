@@ -9,3 +9,8 @@ export const selectFlexDemand = createSelector(
     selectFlexDemandReducer,
     (flexDemandState) => flexDemandState.flexDemand
 );
+
+export const selectFlexDate = createSelector(
+    selectFlexDemandReducer,
+    (flexDemandState) => flexDemandState.flexDate
+);

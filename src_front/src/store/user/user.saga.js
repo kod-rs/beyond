@@ -41,7 +41,6 @@ export function* signInWithEmail({ payload: { email, password } }) {
             } else {
                 put(signInFailed(user.message));
             }
-            
         } else {
             put(signInFailed("User was null!"));
         }

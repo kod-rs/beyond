@@ -102,7 +102,7 @@ const HistoricData = () => {
         let tmpData = [] as Building_Info[];
         buildingsHistory?.forEach((building_info) => {
             let buildingid = building_info.building_id;
-            let data = filterBuildingInfobyPeriodType(building_info,);
+            let data = filterBuildingInfoByPeriodType(building_info);
             
             tmpData.push({
                 building_id: buildingid,
@@ -112,7 +112,7 @@ const HistoricData = () => {
         setFilteredData(tmpData);
     }
 
-    const filterBuildingInfobyPeriodType = (building_info: Building_Info) => {
+    const filterBuildingInfoByPeriodType = (building_info: Building_Info) => {
         return building_info.energy_info.filter((timeseries) => {
             let _date = new Date(timeseries.timestamp);
             switch (periodType) {

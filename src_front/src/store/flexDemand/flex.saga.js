@@ -13,7 +13,6 @@ import {
 
 export function* getFlexDemand({ payload: { date } }) {
     try {
-        //console.log('getBuildingsForCurrentUser hit!');
         let flexDemandResponse = yield call(
             getFlexDemandData,
             date
