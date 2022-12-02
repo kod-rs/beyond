@@ -102,6 +102,7 @@ sphinxcontrib-serializinghtml==1.1.5
 sqlparse==0.4.2
 threadpoolctl==3.1.0
 tomli==2.0.1
+tzdata==2022.7
 urllib3==1.26.10
 Werkzeug==2.2.2
 whitenoise==5.0.1
