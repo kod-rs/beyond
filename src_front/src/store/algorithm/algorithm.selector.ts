@@ -8,3 +8,8 @@ export const selectAlgorithmData = createSelector(
     selectAlgorithmReducer,
     (algorithmDataState) => algorithmDataState.algorithmData?.offers
 );
+
+export const selectAlgorithmDataLoading = createSelector(
+    selectAlgorithmReducer,
+    (algorithmDataState) => algorithmDataState.isLoading
+);

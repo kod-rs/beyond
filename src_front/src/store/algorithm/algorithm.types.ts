@@ -9,6 +9,8 @@ export enum ALGORITHM_ACTION_TYPES {
     SEND_FLEX_OFFER_START = 'flex/SEND_FLEX_OFFER_START',
     SEND_FLEX_OFFER_SUCCESS = 'flex/SEND_FLEX_OFFER_SUCCESS',
     SEND_FLEX_OFFER_FAILED = 'flex/SEND_FLEX_OFFER_FAILED',
+
+    SET_IS_LOADING = 'flex/SET_IS_LOADING_ALGORITHM',
 }
 
 export type Building_Energy_Info = {
@@ -38,6 +40,6 @@ export type Flex_Offer = {
 }
 
 export type Flexibility_Offer_Confirmation_Response = {
-    "type": string,
-    "status": boolean,
+    type: string,
+    status: boolean,
 }

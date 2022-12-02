@@ -2,9 +2,9 @@ import { takeLatest, put, all, call } from 'redux-saga/effects';
 import { FLEX_DEMAND_ACTION_TYPES } from './flex.types';
 
 import {
-    getFlexDemandStart,
     getFlexDemandSuccess,
     getFlexDemandFailed,  
+    setFlexIsLoading,
 } from './flex.action';
 
 import {
@@ -13,6 +13,7 @@ import {
 
 export function* getFlexDemand({ payload: { date } }) {
     try {
+        yield put(setFlexIsLoading(true));
         let flexDemandResponse = yield call(
             getFlexDemandData,
             date

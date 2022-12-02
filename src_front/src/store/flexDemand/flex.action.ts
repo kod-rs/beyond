@@ -10,6 +10,7 @@ export type GetFlexDemandSuccess = ActionWithPayload<FLEX_DEMAND_ACTION_TYPES.GE
 export type GetFlexDemandFailed = ActionWithPayload<FLEX_DEMAND_ACTION_TYPES.GET_FLEX_DEMAND_FAILED, Error>;
 
 export type SetFlexDate = ActionWithPayload<FLEX_DEMAND_ACTION_TYPES.SET_FLEX_DATE, { date: Date }>;
+export type SetFlexIsLoading = ActionWithPayload<FLEX_DEMAND_ACTION_TYPES.SET_IS_LOADING, { value: boolean }>;
 
 export const getFlexDemandStart = withMatcher(
     (date: Date): GetFlexDemandStart =>
@@ -29,4 +30,9 @@ export const getFlexDemandFailed = withMatcher(
 export const setFlexDateStart = withMatcher(
     (date: Date): SetFlexDate =>
         createAction(FLEX_DEMAND_ACTION_TYPES.SET_FLEX_DATE, { date })
+);
+
+export const setFlexIsLoading = withMatcher(
+    (value: boolean): SetFlexIsLoading =>
+        createAction(FLEX_DEMAND_ACTION_TYPES.SET_IS_LOADING, { value })
 );

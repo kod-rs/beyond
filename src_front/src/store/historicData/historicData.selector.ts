@@ -9,3 +9,8 @@ export const selectBuildingsHistoricData = createSelector(
     selectBuildingsHistoricReducer,
     (historicData) => historicData.buildings_info
 );
+
+export const selectIsLoadingHistoricData = createSelector(
+    selectBuildingsHistoricReducer,
+    (historicData) => historicData.isLoading
+);

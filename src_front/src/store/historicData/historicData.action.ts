@@ -11,6 +11,8 @@ export type GetHistoricDataStart = ActionWithPayload<HISTORIC_DATA_ACTION_TYPES.
 export type GetHistoricDataSuccess = ActionWithPayload<HISTORIC_DATA_ACTION_TYPES.GET_HISTORIC_DATA_SUCCESS, Building_Info[]>;
 export type GetHistoricDataFailed = ActionWithPayload<HISTORIC_DATA_ACTION_TYPES.GET_HISTORIC_DATAS_FAILED, Error>;
 
+export type SetIsLoadingHistory = ActionWithPayload<HISTORIC_DATA_ACTION_TYPES.SET_IS_LOADING, boolean>;
+
 //Get Buildings history data For CurrentUser
 
 export const getHistoricDataStart = withMatcher(
@@ -28,6 +30,7 @@ export const getHistoricDataFailed = withMatcher(
         createAction(HISTORIC_DATA_ACTION_TYPES.GET_HISTORIC_DATAS_FAILED, error)
 );
 
-
-
-
+export const setIsLoadingHistory = withMatcher(
+    (value: boolean): SetIsLoadingHistory =>
+        createAction(HISTORIC_DATA_ACTION_TYPES.SET_IS_LOADING, value)
+);

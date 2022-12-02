@@ -4,7 +4,8 @@ import {
     getAlgorithmDataFailed,
     getAlgorithmDataSuccess,
     sendFlexOfferSuccess,
-    sendFlexOfferFailed
+    sendFlexOfferFailed,
+    setAlgorithmDataLoading,
 } from './algorithm.action';
 
 
@@ -27,19 +28,23 @@ export const algorithmDataReducer = (
   action = {} as AnyAction
 ) => {
     if (getAlgorithmDataSuccess.match(action)) {
-        return { ...state, algorithmData: action.payload };
+        return { ...state, algorithmData: action.payload, isLoading:false };
     }
 
     if (getAlgorithmDataFailed.match(action)) {
-        return { ...state, error: action.payload };
+        return { ...state, error: action.payload, isLoading: false };
     }
 
     if (sendFlexOfferSuccess.match(action)) {
-        return { ...state, offer_confirmation_response: action.payload };
+        return { ...state, offer_confirmation_response: action.payload, isLoading: false };
     }
 
     if (sendFlexOfferFailed.match(action)) {
-        return { ...state, error: action.payload };
+        return { ...state, error: action.payload, isLoading: false };
+    }
+
+    if (setAlgorithmDataLoading.match(action)) {
+        return { ...state, isLoading: action.payload };
     }
 
   return state;

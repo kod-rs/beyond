@@ -2,6 +2,8 @@ export enum HISTORIC_DATA_ACTION_TYPES {
     GET_HISTORIC_DATA_START = 'historicData/GET_HISTORIC_DATA_START',
     GET_HISTORIC_DATA_SUCCESS = 'historicData/GET_HISTORIC_DATA_SUCCESS',
     GET_HISTORIC_DATAS_FAILED = 'historicData/GET_HISTORIC_DATAS_FAILED',
+    SET_IS_LOADING = 'historicData/SET_IS_LOADING',
+
  }
 
 export type TimeseriesData = {

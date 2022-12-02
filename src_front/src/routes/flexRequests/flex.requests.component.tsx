@@ -17,13 +17,15 @@ import {
 } from "@progress/kendo-react-charts";
 
 import { Flex_Demand } from '../../store/flexDemand/flex.types';
-import { selectFlexDate, selectFlexDemand } from '../../store/flexDemand/flex.selector';
+import { selectFlexDate, selectFlexDemand, selectFlexIsLoading } from '../../store/flexDemand/flex.selector';
 import { selectCurrentUser } from '../../store/user/user.selector';
 import { getAlgorithmDataStart, sendFlexOfferStart } from '../../store/algorithm/algorithm.action';
 import { Algorithm_Request, Flex_Offer, Algorithm_Response } from '../../store/algorithm/algorithm.types';
 import { getFlexDemandStart, setFlexDateStart } from '../../store/flexDemand/flex.action';
 import { selectBuildingsHistoricData } from '../../store/historicData/historicData.selector';
-import { selectAlgorithmData } from '../../store/algorithm/algorithm.selector';
+import { selectAlgorithmData, selectAlgorithmDataLoading } from '../../store/algorithm/algorithm.selector';
+import { SpinnerContainer } from '../general.routes.styles';
+import { Loader } from '@progress/kendo-react-indicators';
 
 export type Filtered_Flex_Data = {
     start_time: string,
@@ -38,6 +40,8 @@ const FlexRequests = () => {
     const flexOffers = useSelector(selectAlgorithmData);
     const flexDemand = useSelector(selectFlexDemand);
     const flexDate = useSelector(selectFlexDate);
+    const algorithmIsLoading = useSelector(selectAlgorithmDataLoading); 
+    const flexDemandIsLoading = useSelector(selectFlexIsLoading); 
     const dispatch = useDispatch();
     const tomorrow = new Date(new Date().setDate(new Date().getDate()+1));
     const navigate = useNavigate();
@@ -204,6 +208,9 @@ const FlexRequests = () => {
     return (
         <>
             <RowContainer>
+                <SpinnerContainer>
+                    {(algorithmIsLoading || flexDemandIsLoading) && <Loader type="converging-spinner" />}
+                </SpinnerContainer>
                 <DatePickerContainer>
                     <DatePicker defaultValue={tomorrow} format={"dd.MM.yyyy"} onChange={onChangeSelectedDate} />
                 </DatePickerContainer>
@@ -242,7 +249,12 @@ const FlexRequests = () => {
                         <SliderContainer>
                             <Label editorId="slider1">{sliderPct + "%"}</Label>
                             <Slider id="slider1" min={0} max={100} step={1} defaultValue={sliderPct} onChange={onSliderValueChange} />
-                            <Button onClick={onButtonReloadClick} themeColor="tertiary" style={{margin:'5px'}}>Reload VPP configuration</Button>
+                            <Button
+                                onClick={onButtonReloadClick}
+                                themeColor="tertiary"
+                                disabled={(currentUser === null) || (flexOffers === undefined) || algorithmIsLoading || flexDemandIsLoading}
+                                style={{ margin: '5px' }}>
+                                Reload VPP configuration</Button>
                         </SliderContainer>
                         
                     </CustomContainer>
@@ -253,6 +265,7 @@ const FlexRequests = () => {
             <FloatingActionButton
                 align={{ vertical: "bottom", horizontal: "center" } as FloatingActionButtonAlign}
                 text={'Insights & Analytics'}
+                disabled={(currentUser === null) || (flexOffers === undefined) || algorithmIsLoading || flexDemandIsLoading}
                 onClick={toInsightAnalytics} />
             <FloatingActionButton
                 align={{ vertical: "bottom", horizontal: "start" } as FloatingActionButtonAlign}
@@ -262,7 +275,7 @@ const FlexRequests = () => {
             <FloatingActionButton
                 align={{ vertical: "bottom", horizontal: "end" } as FloatingActionButtonAlign}
                 text={'Submit'}
-                disabled={(currentUser===null) || (flexOffers===undefined)}
+                disabled={(currentUser===null) || (flexOffers===undefined) || algorithmIsLoading || flexDemandIsLoading}
                 onClick={onSubmit}
                 themeColor="tertiary" />
             <Outlet />

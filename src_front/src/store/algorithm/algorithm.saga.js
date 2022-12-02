@@ -2,7 +2,7 @@ import { takeLatest, put, all, call } from 'redux-saga/effects';
 import { ALGORITHM_ACTION_TYPES } from './algorithm.types';
 
 import {
-    getAlgorithmDataStart,
+    setAlgorithmDataLoading,
     getAlgorithmDataSuccess,
     getAlgorithmDataFailed,
     sendFlexOfferSuccess,
@@ -16,6 +16,7 @@ import {
 
 export function* getAlgorithm({ payload: { request } }) {
     try {
+        yield put(setAlgorithmDataLoading(true));
         let algorithmDataResponse = yield call(
             getAlgorithmData,
             request
@@ -36,6 +37,7 @@ export function* getAlgorithm({ payload: { request } }) {
 
 export function* sendOffer({ payload: { user_id, response } }) {
     try {
+        yield put(setAlgorithmDataLoading(true));
         let sendOfferResponse = yield call(
             sendFlexOffer,
             user_id,

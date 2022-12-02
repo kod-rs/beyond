@@ -36,13 +36,7 @@ const InsightAnalytics = () => {
     const [areaData, setAreaData] = useState<Building_Area_Chart_Data[]>([]);
     const navigate = useNavigate();
 
-    useEffect(() => {
-        if (flexOffers) {
-            getCategoriesForPieAndBarChart();
-            setPieDataFromFlexOffers();
-            setAreaDataFromFlexOffers();
-        }
-    }, [flexOffers]);
+ 
 
     const toFlex = () => {
         navigate("/flex");
@@ -131,6 +125,14 @@ const InsightAnalytics = () => {
         });
         setPieCategories(categories);
     }
+
+    useEffect(() => {
+        if (flexOffers) {
+            getCategoriesForPieAndBarChart();
+            setPieDataFromFlexOffers();
+            setAreaDataFromFlexOffers();
+        }
+    }, [flexOffers]);
 
     const labelContent = (e:any) => e.category;
 

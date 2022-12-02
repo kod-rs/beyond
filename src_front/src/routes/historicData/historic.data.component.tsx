@@ -1,7 +1,7 @@
 import { FloatingActionButton, FloatingActionButtonAlign, Button } from '@progress/kendo-react-buttons';
 import { useDispatch, useSelector } from 'react-redux';
 import { Outlet,useNavigate } from 'react-router-dom';
-import { selectBuildingsHistoricData } from '../../store/historicData/historicData.selector';
+import { selectBuildingsHistoricData, selectIsLoadingHistoricData } from '../../store/historicData/historicData.selector';
 import { ButtonsContainer, DatePickerContainer, GraphContainer, RowContainer } from './historic.data.styles';
 import { DatePicker, DatePickerChangeEvent } from "@progress/kendo-react-dateinputs";
 import { useEffect, useState } from 'react';
@@ -20,6 +20,8 @@ import {
 } from "@progress/kendo-react-charts";
 import { Building_Info, TimeseriesData } from '../../store/historicData/historicData.types';
 import { DayCategories, MonthCategories, PERIOD_TYPES, YearCategories } from './historic.data.types';
+import { Loader } from '@progress/kendo-react-indicators';
+import { SpinnerContainer } from '../general.routes.styles';
 
 
 
@@ -27,6 +29,7 @@ const HistoricData = () => {
     const buildings = useSelector(selectBuildingsForCurrentUser);
     const buildingsHistory = useSelector(selectBuildingsHistoricData);
     const currentUser = useSelector(selectCurrentUser);
+    const isLoading = useSelector(selectIsLoadingHistoricData);
     const dispatch = useDispatch();
     const today= new Date();
     const navigate = useNavigate();
@@ -212,6 +215,10 @@ const HistoricData = () => {
     return (
         <>
             <RowContainer>
+                <SpinnerContainer>
+                    {isLoading && <Loader type="converging-spinner" />}
+                </SpinnerContainer>
+                
                 <DatePickerContainer>
                     <DatePicker defaultValue={today} format={"dd.MM.yyyy"} onChange={onChangeSelectedDate} />
                 </DatePickerContainer>
@@ -243,6 +250,7 @@ const HistoricData = () => {
                 align={{ vertical: "bottom", horizontal: "end" } as FloatingActionButtonAlign}
                 text={'Activate VPP configuration'}
                 onClick={toFlexRequests}
+                disabled={isLoading}
             />
             <FloatingActionButton
                 align={{ vertical: "bottom", horizontal: "start" } as FloatingActionButtonAlign}

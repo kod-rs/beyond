@@ -4,6 +4,7 @@ import { Building_Info } from './historicData.types';
 import {  
     getHistoricDataSuccess,
     getHistoricDataFailed,  
+    setIsLoadingHistory,
 } from './historicData.action';
 
 export type HistoricDataState = {
@@ -28,6 +29,10 @@ export const historicDataReducer = (
 
     if (getHistoricDataFailed.match(action)) {
         return { ...state, error: action.payload };
+    }
+
+    if (setIsLoadingHistory.match(action)) {
+        return { ...state, isLoading: action.payload };
     }
 
     return state;

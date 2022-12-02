@@ -9,13 +9,17 @@ import { Switch, SwitchChangeEvent } from "@progress/kendo-react-inputs";
 import { Label } from "@progress/kendo-react-labels";
 import { BuildingsOnMap } from './buildings.on.map.component';
 import { Building } from '../../store/buildings/buildings.types';
-import { selectBuildingsForCurrentUser } from '../../store/buildings/buildings.selector';
+import { selectBuildingsForCurrentUser, selectIsLoadingBuildings } from '../../store/buildings/buildings.selector';
 import { getBuildingsStart, setBuildings } from '../../store/buildings/buildings.action';
+import {
+    Loader,
+} from "@progress/kendo-react-indicators";
 import cloneDeep from 'lodash/cloneDeep';
 
 const BuildingsSelect = () => {
     const currentUser = useSelector(selectCurrentUser);
     const buildings = useSelector(selectBuildingsForCurrentUser);
+    const isLoading = useSelector(selectIsLoadingBuildings);
     const [reload, setReload] = useState<boolean>(false);
     const dispatch = useDispatch();
     const navigate = useNavigate();
@@ -77,6 +81,7 @@ const BuildingsSelect = () => {
     return (
         <>
             <RowContainer>
+                {isLoading && <Loader type="converging-spinner" />}
                 <MapContainer>
                     <BuildingsOnMap
                         toggleSelectBuilding={toggleSelectItem}

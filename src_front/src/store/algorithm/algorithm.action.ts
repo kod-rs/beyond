@@ -13,6 +13,8 @@ export type SendFlexOfferStart = ActionWithPayload<ALGORITHM_ACTION_TYPES.SEND_F
 export type SendFlexOfferSuccess = ActionWithPayload<ALGORITHM_ACTION_TYPES.SEND_FLEX_OFFER_SUCCESS, Flexibility_Offer_Confirmation_Response>;
 export type SendFlexOfferFailed = ActionWithPayload<ALGORITHM_ACTION_TYPES.SEND_FLEX_OFFER_FAILED, Error>;
 
+export type SetAlgorithmDataLoading = ActionWithPayload<ALGORITHM_ACTION_TYPES.SET_IS_LOADING, {value:boolean}>;
+
 export const getAlgorithmDataStart = withMatcher(
     (request: Algorithm_Request): GetAlgorithmDataStart =>
         createAction(ALGORITHM_ACTION_TYPES.GET_ALGORITHM_START, { request })
@@ -41,4 +43,9 @@ export const sendFlexOfferSuccess = withMatcher(
 export const sendFlexOfferFailed = withMatcher(
     (error: Error): SendFlexOfferFailed =>
         createAction(ALGORITHM_ACTION_TYPES.SEND_FLEX_OFFER_FAILED, error)
+);
+
+export const setAlgorithmDataLoading = withMatcher(
+    (value: boolean): SetAlgorithmDataLoading =>
+        createAction(ALGORITHM_ACTION_TYPES.SET_IS_LOADING, { value })
 );

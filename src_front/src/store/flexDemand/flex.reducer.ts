@@ -3,9 +3,9 @@ import { Flex_Demand } from './flex.types';
 
 import {  
     getFlexDemandFailed,
-    getFlexDemandStart,  
     getFlexDemandSuccess,
-    setFlexDateStart
+    setFlexDateStart,
+    setFlexIsLoading
 } from './flex.action';
 
 export type FlexDemandState = {
@@ -27,15 +27,19 @@ export const flexDemandReducer = (
   action = {} as AnyAction
 ) => {
     if (getFlexDemandSuccess.match(action)) {
-        return { ...state, flexDemand: action.payload };
+        return { ...state, flexDemand: action.payload, isLoading: false };
     }
 
     if (getFlexDemandFailed.match(action)) {
-        return { ...state, error: action.payload };
+        return { ...state, error: action.payload, isLoading: false };
     }
 
     if (setFlexDateStart.match(action)) {
         return { ...state, flexDate: action.payload };
+    }
+
+    if (setFlexIsLoading.match(action)) {
+        return { ...state, isLoading: action.payload };
     }
 
   return state;

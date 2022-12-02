@@ -4,7 +4,8 @@ import { Building } from './buildings.types';
 import {  
     getBuildingsSuccess,
     getBuildingsFailed,  
-    setBuildings
+    setBuildings,
+    setIsLoadingBuildings,
 } from './buildings.action';
 
 export type BuildingsState = {
@@ -24,15 +25,19 @@ export const buildingsReducer = (
   action = {} as AnyAction
 ) => {
     if (getBuildingsSuccess.match(action)) {
-        return { ...state, buildings: action.payload };
+        return { ...state, buildings: action.payload, isLoading: false};
     }
 
     if (getBuildingsFailed.match(action)) {
-        return { ...state, error: action.payload };
+        return { ...state, error: action.payload, isLoading: false};
     }
 
     if (setBuildings.match(action)) {
         return { ...state, buildings: action.payload };
+    }
+
+    if (setIsLoadingBuildings.match(action)) {
+        return { ...state, isLoading: action.payload };
     }
   return state;
 };

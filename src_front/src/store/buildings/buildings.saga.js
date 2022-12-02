@@ -3,7 +3,8 @@ import { BUILDINGS_ACTION_TYPES } from './buildings.types';
 
 import {
     getBuildingsSuccess,
-    getBuildingsFailed,  
+    getBuildingsFailed, 
+    setIsLoadingBuildings,
 } from './buildings.action';
 
 import {
@@ -12,6 +13,7 @@ import {
 
 export function* getBuildingsForCurrentUser({ payload: { user } }) {
     try {
+        yield put(setIsLoadingBuildings(true));
         let buildings = yield call(
             getBuildingsForUser,
             user

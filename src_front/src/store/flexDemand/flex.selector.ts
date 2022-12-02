@@ -14,3 +14,8 @@ export const selectFlexDate = createSelector(
     selectFlexDemandReducer,
     (flexDemandState) => flexDemandState.flexDate
 );
+
+export const selectFlexIsLoading = createSelector(
+    selectFlexDemandReducer,
+    (flexDemandState) => flexDemandState.isLoading
+);
