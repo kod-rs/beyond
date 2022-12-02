@@ -46,8 +46,11 @@ def copy_to_frontend(parent_dir):
 
 def main():
     parent_dir = Path(__file__).resolve().parent
+    print('Copying backend files...')
     copy_to_backend(parent_dir)
+    print('Copying frontend files...')
     copy_to_frontend(parent_dir)
+    print('Copying done.')
 
 
 if __name__ == '__main__':
