@@ -44,25 +44,8 @@ def mock_req_building_by_usr_id(*_):
 
 
 def mock_req_building_info(building_ids):
-    df = pd.read_csv(Path(__file__).resolve().parents[1]
-                     / 'tests'
-                     / 'active im en.csv')
-    rows = [df.iloc[index] for index in range(len(df))]
-    building_energy_list = []
-    for b_id in building_ids:
-        timeseries = []
-        for row in rows:
-            ts = datetime.datetime.strptime(row['Timestamp'][:-4],
-                                            "%Y-%m-%d %H:%M:%S")
-            ts = ts.replace(tzinfo=datetime.timezone.utc)
-            ts = ts.isoformat()
-            timeseries.append({'timestamp': ts,
-                               'value': row[b_id]})
-        building_energy_list.append({'building_id': b_id,
-                                     'energy_info': timeseries})
-
     return {'type': 'building_info_response',
-            'buildings_info': building_energy_list}
+            'buildings_info': mock_building_energy_list(building_ids)}
 
 
 def mock_building_energy_list(building_ids=ids):
@@ -79,7 +62,23 @@ def mock_building_energy_list(building_ids=ids):
                                'value': row[b_id]})
         building_energy_list.append({'building_id': b_id,
                                      'energy_info': timeseries})
+    building_energy_list = append_year(building_energy_list)
     return building_energy_list
+
+
+def append_year(data):
+    new_data = []
+    _today = datetime.datetime.now()
+    for building_info in data:
+        new_energy = [{'timestamp': e['timestamp'].replace('2021', '2022'),
+                       'value': e['value']}
+                      for e in building_info['energy_info']
+                      if (int(e['timestamp'][5:7]) <= _today.month
+                      and int(e['timestamp'][8:10]) < _today.day)]
+        new_data.append(
+            {'building_id': building_info['building_id'],
+             'energy_info': building_info['energy_info'] + new_energy})
+    return new_data
 
 
 def mock_get_flexibility_demand(date):
