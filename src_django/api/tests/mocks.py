@@ -6,6 +6,7 @@ import keycloak
 import pandas as pd
 
 from src_django.api import common
+from src_django.api import cryptography_wrapper
 
 ids = ('ZIV0034902130', 'ZIV0034902131', 'ZIV0034704030',
        'ZIV0034703915', 'ZIV0034704013',
@@ -91,3 +92,10 @@ def mock_get_flexibility_demand(date):
             'flexibility': random.uniform(100, 200)})
     return {'type': 'flexibility_demand_response',
             'demands': demands}
+
+
+BEYOND_PRIVATE_PATH = Path(__file__).resolve().parent / 'priv.key'
+BEYOND_PRIVATE_KEY_BYTES = cryptography_wrapper.load_private_key(
+    BEYOND_PRIVATE_PATH)
+BEYOND_PRIVATE_KEY = cryptography_wrapper.get_private_key_from_bytes(
+    BEYOND_PRIVATE_KEY_BYTES)

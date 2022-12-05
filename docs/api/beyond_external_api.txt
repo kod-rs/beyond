@@ -25,7 +25,12 @@
         containing the following JSON object:
         {
             "type": "buildings_by_user_id_request",
-            "user_id": String
+            "user_id": String,
+            "signature": String formatted HEX value representation of Hash
+                function signed with the FlexOpt private key calculated over
+                the rest of the message (excluding signature).
+                For more information refer
+                to "beyond_verification_procedure.txt"
         }
 * BUILDING_INFO_REQUEST:
     - POST request to 'beyond_uri/'
@@ -34,7 +39,12 @@
         containing the following JSON object:
         {
             "type": "building_info_request",
-            "building_ids": Array of Strings
+            "building_ids": Array of Strings,
+            "signature": String formatted HEX value representation of Hash
+                function signed with the FlexOpt private key calculated over
+                the rest of the message (excluding signature).
+                For more information refer
+                to "beyond_verification_procedure.txt"
         }
     - Note: Assumption made is that the building ID will be a unique string.
 
@@ -45,7 +55,12 @@
         containing the following JSON object:
         {
             "type": "flexibility_demand_request",
-            "date": String convertible to RFC 3339 format
+            "date": String convertible to RFC 3339 format,
+            "signature": String formatted HEX value representation of Hash
+                function signed with the FlexOpt private key calculated over
+                the rest of the message (excluding signature).
+                For more information refer
+                to "beyond_verification_procedure.txt"
         }
 
 * FLEXIBILITY_OFFER_AGR_RESPONSE
@@ -156,7 +171,12 @@
             "type": "flexibility_offer_by_aggregator",
             "start_time": String convertible to RFC 3339 format,
             "end_time": String convertible to RFC 3339 format,
-            "user_id": String
+            "user_id": String,
+            "signature": String formatted HEX value representation of Hash
+                function signed with the Beyond private key calculated over
+                the rest of the message (excluding signature).
+                For more information refer
+                to "beyond_verification_procedure.txt"
         }
 
 * FLEXIBILITY_OFFER_BUILDING_REQUEST:
@@ -167,5 +187,10 @@
             "type": "flexibility_offer_by_building",
             "start_time": String convertible to RFC 3339 format,
             "end_time": String convertible to RFC 3339 format,
-            "building_id": String
+            "building_id": String,
+            "signature": String formatted HEX value representation of Hash
+                function signed with the Beyond private key calculated over
+                the rest of the message (excluding signature).
+                For more information refer
+                to "beyond_verification_procedure.txt"
         }

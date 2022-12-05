@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 """
 
 from pathlib import Path
+
 from decouple import config
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -41,6 +42,7 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
+    'src_django.api.middleware.beyond_verifier.BeyondVerifierMiddleware',
     'src_django.api.middleware.request_check.RequestCheckMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -127,7 +129,11 @@ KEYCLOAK_CONFIG = {
     'REALM_NAME': config('KEYCLOAK_REALM_NAME'),
     'CLIENT_SECRET_KEY': config('KEYCLOAK_CLIENT_SECRET_KEY')}
 
-BEYOND_CONFIG = {'URL': config('BEYOND_URL')}
+BEYOND_CONFIG = {
+    'URL': config('BEYOND_URL'),
+    'BEYOND_PUBLIC_KEY_PATH': config('BEYOND_PUBLIC_KEY_PATH'),
+    'FLEXOPT_PRIVATE_KEY_PATH': config('FLEXOPT_PRIVATE_KEY_PATH'),
+    'FLEXOPT_PUBLIC_KEY_PATH': config('FLEXOPT_PUBLIC_KEY_PATH')}
 
 CORS_ALLOW_ALL_ORIGINS = True
 CORS_ALLOW_CREDENTIALS = True

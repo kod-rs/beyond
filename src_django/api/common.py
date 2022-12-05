@@ -1,21 +1,25 @@
 import datetime
 import json
+from pathlib import Path
 
 import requests
 from dateutil import parser
 from django.http import JsonResponse
 
+from src_django.api import cryptography_wrapper
 from src_django.api.tests import mocks
 from src_django.settings import BEYOND_CONFIG
 
-request_response_mapping = {
+internal_requests_mapping = {
     'login_request': 'login_response',
     'algorithm_request': 'algorithm_response',
     'buildings_by_user_id_request': 'buildings_by_user_id_response',
     'building_info_request': 'building_info_response',
     'flexibility_demand_request': 'flexibility_demand_response',
     'flexibility_offer_confirmation_request': (
-        'flexibility_offer_confirmation_response'),
+        'flexibility_offer_confirmation_response')}
+
+beyond_requests_mapping = {
     'flexibility_offer_by_aggregator': (
         'flexibility_offer_by_aggregator_response'),
     'flexibility_offer_by_building': 'flexibility_offer_by_building_response'}
@@ -82,8 +86,17 @@ class BeyondConnection:
         self._building_info_req_type = 'building_info_request'
         self._flex_demand_type = 'flexibility_demand_request'
         self._url = BEYOND_CONFIG['URL']
+        private_key_path = BEYOND_CONFIG['FLEXOPT_PRIVATE_KEY_PATH']
+        private_key_path = Path(private_key_path)
+        private_key_bytes = cryptography_wrapper.load_private_key(
+            private_key_path)
+        private_key = cryptography_wrapper.get_private_key_from_bytes(
+            private_key_bytes)
+        self._flexopt_private_key = private_key
 
     def _send(self, data: dict) -> dict:
+        signature = cryptography_wrapper.sign(self._flexopt_private_key, data)
+        data = {**data, 'signature': signature}
         response = requests.post(self._url, json=data)
         response_data = response.json()
         return response_data

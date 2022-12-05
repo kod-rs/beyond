@@ -7,6 +7,7 @@ from django.test import Client
 from django.test import TestCase
 
 from src_django.api import common
+from src_django.api import cryptography_wrapper
 from src_django.api.models.aggregator_flexibility import AggregatorFlexibility
 from src_django.api.models.building_flexibility import BuildingFlexibility
 from src_django.api.tests import mocks
@@ -274,14 +275,17 @@ class TestFlexibilityOfferRequest(TestCase):
                 'end_time': date_to,
                 'user_id': 'usr1'}
 
+        signature = cryptography_wrapper.sign(mocks.BEYOND_PRIVATE_KEY, data)
+        data = {**data, 'signature': signature}
+
         response = client.post('/flexibility_offer/',
                                json.dumps(data),
                                content_type="application/json")
         response = response.json()
 
         assert response['type'] == 'flexibility_offer_by_aggregator_response'
-        assert response['user_id'] == 'usr1'
         assert response['status'] is True
+        assert response['user_id'] == 'usr1'
         assert isinstance(response['offered_flexibilities'], list)
         assert len(response['offered_flexibilities']) > 0
         flex = response['offered_flexibilities'][0]
@@ -302,14 +306,17 @@ class TestFlexibilityOfferRequest(TestCase):
                 'end_time': date_to,
                 'building_id': 'b1'}
 
+        signature = cryptography_wrapper.sign(mocks.BEYOND_PRIVATE_KEY, data)
+        data = {**data, 'signature': signature}
+
         response = client.post('/flexibility_offer/',
                                json.dumps(data),
                                content_type="application/json")
         response = response.json()
 
         assert response['type'] == 'flexibility_offer_by_building_response'
-        assert response['building_id'] == 'b1'
         assert response['status'] is True
+        assert response['building_id'] == 'b1'
         assert isinstance(response['offered_flexibilities'], list)
         assert len(response['offered_flexibilities']) > 0
         flex = response['offered_flexibilities'][0]

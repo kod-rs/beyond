@@ -9,6 +9,7 @@ required:
   - start_time
   - end_time
   - building_id
+  - signature
 properties:
   type:
     const: flexibility_offer_by_building
@@ -20,4 +21,8 @@ properties:
     format: "date-time"
   building_id:
     type: string
+  signature:
+    type: string
+    description: Hash function signed with the sender private key calculated
+      over the rest of the message (excluding signature)
 ...

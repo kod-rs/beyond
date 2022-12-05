@@ -7,6 +7,7 @@ from django.test import Client
 from django.test import TestCase
 
 from src_django.api import common
+from src_django.api import cryptography_wrapper
 from src_django.api.tests import mocks
 
 
@@ -95,6 +96,8 @@ class WorkflowTestCase(TestCase):
                 'start_time': date_from,
                 'end_time': date_to,
                 'user_id': user_id}
+        signature = cryptography_wrapper.sign(mocks.BEYOND_PRIVATE_KEY, data)
+        data = {**data, 'signature': signature}
         response = client.post('/flexibility_offer/',
                                json.dumps(data),
                                content_type="application/json").json()
@@ -105,6 +108,8 @@ class WorkflowTestCase(TestCase):
                 'start_time': date_from,
                 'end_time': date_to,
                 'building_id': building['building_id']}
+        signature = cryptography_wrapper.sign(mocks.BEYOND_PRIVATE_KEY, data)
+        data = {**data, 'signature': signature}
         response = client.post('/flexibility_offer/',
                                json.dumps(data),
                                content_type="application/json").json()

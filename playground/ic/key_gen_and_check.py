@@ -50,8 +50,10 @@ def hash_algorithm(private_key_path: Path, data: dict) -> bytes:
     hash_process = subprocess.Popen(['openssl',
                                      'dgst',
                                      '-sha256',
+                                     '-sigopt',
+                                     'rsa_padding_mode:pss',
                                      '-sign',
-                                     f'{str(private_key_path)}'],
+                                     f'{private_key_path}'],
                                     stdin=subprocess.PIPE,
                                     stdout=subprocess.PIPE)
 
@@ -69,8 +71,10 @@ def verify_signature(public_key_path: Path, signed_data: dict) -> bool:
     verify_process = subprocess.Popen(['openssl',
                                        'dgst',
                                        '-sha256',
+                                       '-sigopt',
+                                       'rsa_padding_mode:pss',
                                        '-verify',
-                                       f'{str(public_key_path)}',
+                                       f'{public_key_path}',
                                        '-signature',
                                        'sig.file'],
                                       stdin=subprocess.PIPE,

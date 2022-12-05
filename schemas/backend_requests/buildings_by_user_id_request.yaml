@@ -1,0 +1,20 @@
+---
+$schema: 'http://json-schema.org/draft-07/schema#'
+id: 'flexopt://backend_requests/buildings_by_user_id_request.yaml#'
+title: Buildings by user ID request
+description: Buildings by user ID configuration schema
+type: object
+required:
+  - type
+  - user_id
+  - signature
+properties:
+  type:
+    const: buildings_by_user_id_request
+  user_id:
+    type: string
+  signature:
+    type: string
+    description: Hash function signed with the sender private key calculated
+      over the rest of the message (excluding signature)
+...

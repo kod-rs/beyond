@@ -9,6 +9,7 @@ required:
   - start_time
   - end_time
   - user_id
+  - signature
 properties:
   type:
     const: flexibility_offer_by_aggregator
@@ -20,4 +21,8 @@ properties:
     format: "date-time"
   user_id:
     type: string
+  signature:
+    type: string
+    description: Hash function signed with the sender private key calculated
+      over the rest of the message (excluding signature)
 ...
