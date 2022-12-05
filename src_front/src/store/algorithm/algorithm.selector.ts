@@ -13,3 +13,8 @@ export const selectAlgorithmDataLoading = createSelector(
     selectAlgorithmReducer,
     (algorithmDataState) => algorithmDataState.isLoading
 );
+
+export const selectFlexOfferResponse = createSelector(
+    selectAlgorithmReducer,
+    (algorithmDataState) => algorithmDataState.offer_confirmation_response
+);

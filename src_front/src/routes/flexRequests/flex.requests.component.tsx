@@ -23,9 +23,14 @@ import { getAlgorithmDataStart, sendFlexOfferStart } from '../../store/algorithm
 import { Algorithm_Request, Flex_Offer, Algorithm_Response } from '../../store/algorithm/algorithm.types';
 import { getFlexDemandStart, setFlexDateStart } from '../../store/flexDemand/flex.action';
 import { selectBuildingsHistoricData } from '../../store/historicData/historicData.selector';
-import { selectAlgorithmData, selectAlgorithmDataLoading } from '../../store/algorithm/algorithm.selector';
+import { selectAlgorithmData, selectAlgorithmDataLoading, selectFlexOfferResponse } from '../../store/algorithm/algorithm.selector';
 import { SpinnerContainer } from '../general.routes.styles';
 import { Loader } from '@progress/kendo-react-indicators';
+import {
+    Notification,
+    NotificationGroup,
+} from "@progress/kendo-react-notification";
+import { Fade } from "@progress/kendo-react-animation";
 
 export type Filtered_Flex_Data = {
     start_time: string,
@@ -40,6 +45,7 @@ const FlexRequests = () => {
     const flexOffers = useSelector(selectAlgorithmData);
     const flexDemand = useSelector(selectFlexDemand);
     const flexDate = useSelector(selectFlexDate);
+    const offerResponse = useSelector(selectFlexOfferResponse);
     const algorithmIsLoading = useSelector(selectAlgorithmDataLoading); 
     const flexDemandIsLoading = useSelector(selectFlexIsLoading); 
     const dispatch = useDispatch();
@@ -50,12 +56,16 @@ const FlexRequests = () => {
     const [filteredFlexDemandData, setFilteredFlexDemandData] = useState<Filtered_Flex_Data[]>([]);
     const [filteredFlexOfferData, setFilteredFlexOfferData] = useState<Filtered_Flex_Data[]>([]);
     const [sliderPct, setSliderPct] = useState<number>(100);
+    const [success, setSuccess] = useState<boolean|null>(null);
+    const [error, setError] = useState<boolean | null>(null);
 
     useEffect(() => {
         if (flexDemand) {
             defineCategories();
         }
     }, [flexDemand]);
+
+
 
     useEffect(() => {
         if (selectedDate == null || selectedDate == undefined) {
@@ -97,6 +107,13 @@ const FlexRequests = () => {
         }
     }, [flexOffers]);
 
+    useEffect(() => {
+        if (offerResponse) {
+            setSuccess(offerResponse.status);
+            setError(!offerResponse.status);
+        }
+    }, [offerResponse]);
+
     const getTooltipForDemand = (demand: Flex_Demand) => {
         let start = new Date(demand.start_time);
         let end = new Date(demand.end_time);
@@ -106,7 +123,7 @@ const FlexRequests = () => {
     const setFilteredFlexDataFromDemand = () => {
         if (flexDemand) {
             let data: Filtered_Flex_Data[] = flexDemand.map((demand) => {
-                demand.flexibility = Math.round(demand.flexibility * 100) / 100;
+                demand.flexibility = Math.round(Math.round(demand.flexibility * 100) / 100);
                 return { ...demand, categoryField: getTooltipForDemand(demand) }
             }) as Filtered_Flex_Data[];
             if (data) {
@@ -125,7 +142,12 @@ const FlexRequests = () => {
         if (flexOffers) {
             let data: Filtered_Flex_Data[] = flexOffers.map((offer) => {
                 offer.offered_flexibility = Math.round(offer.offered_flexibility * 100) / 100;
-                return { start_time:offer.start_time,end_time:offer.end_time,flexibility:offer.offered_flexibility, categoryField: getTooltipForOffer(offer) }
+                return {
+                    start_time: offer.start_time,
+                    end_time: offer.end_time,
+                    flexibility: offer.offered_flexibility,
+                    categoryField: getTooltipForOffer(offer)
+                }
             }) as Filtered_Flex_Data[];
             if (data) {
                 setFilteredFlexOfferData(data);
@@ -278,6 +300,42 @@ const FlexRequests = () => {
                 disabled={(currentUser===null) || (flexOffers===undefined) || algorithmIsLoading || flexDemandIsLoading}
                 onClick={onSubmit}
                 themeColor="tertiary" />
+
+            {
+
+                <NotificationGroup
+                    style={{
+                        right: 170,
+                        bottom: 0,
+                        alignItems: "flex-start",
+                        flexWrap: "wrap-reverse",
+                    }}
+                >
+                    <Fade>
+                        {success && (
+                            <Notification
+                                type={{ style: "success", icon: true }}
+                                closable={true}
+                                onClose={() => setSuccess(false)}
+                            >
+                                <span>Your data has been saved.</span>
+                            </Notification>
+                        )}
+                    </Fade>
+                    <Fade>
+                        {error && (
+                            <Notification
+                                type={{ style: "error", icon: true }}
+                                closable={true}
+                                onClose={() => setError(false)}
+                            >
+                                <span>Oops! Something went wrong ...</span>
+                            </Notification>
+                        )}
+                    </Fade>
+
+                </NotificationGroup>
+            }
             <Outlet />
         </>
     );

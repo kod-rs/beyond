@@ -44,11 +44,12 @@ export function* sendOffer({ payload: { user_id, response } }) {
             response
         );
         if (sendOfferResponse) {
-            if (sendOfferResponse.status) {
-                yield put(sendFlexOfferSuccess(sendOfferResponse));
-            } else {
-                yield put(sendFlexOfferFailed(sendOfferResponse.message));
-            }
+            //if (sendOfferResponse.status) {
+            //    yield put(sendFlexOfferSuccess(sendOfferResponse));
+            //} else {
+            //    yield put(sendFlexOfferFailed(sendOfferResponse.message));
+            //}
+            yield put(sendFlexOfferSuccess(sendOfferResponse));
         } else {
             yield put(sendFlexOfferFailed("SendOfferResponse data was null!"));
         }
