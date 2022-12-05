@@ -367,3 +367,4 @@ yarn.lock
 /src_front/.vs/
 /docker/frontend/src_front/
 /docker/backend/schemas/
+/docker/keycloak/keycloak-19.0.3/data/h2/
