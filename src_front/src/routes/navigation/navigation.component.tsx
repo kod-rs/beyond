@@ -10,9 +10,11 @@ import {
   NavLinks,
   NavLink,
   LogoContainer,
+  FLEXoptContainer,
 } from './navigation.styles';
 import Authentication from '../authentication/authentication.component';
 import Home from '../home/home.component';
+
 
 const Navigation = () => {
     const dispatch = useDispatch();
@@ -24,6 +26,7 @@ const Navigation = () => {
             <NavigationContainer>
                 <LogoContainer to='/'>
                     <BeyondLogo className='logo' />
+                    <FLEXoptContainer>FLEXopt</FLEXoptContainer>
                 </LogoContainer>
                 <NavLinks>
 

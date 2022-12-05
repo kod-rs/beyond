@@ -166,13 +166,14 @@ const InsightAnalytics = () => {
 
     const renderAreaChartSeriesItem = (item: Building_Area_Chart_Data,index:number) => {
         return <ChartSeriesItem
-            key={index}
-            type="area"
-            tooltip={{ visible: true, format: "{0} kWh" }}
-            data={item.series}
-            field={'flexibility'}
-            categoryField={'categoryField'}
-            name={item.building_name} />
+                    key={index}
+                    type="area"
+                    tooltip={{ visible: true, format: "{0} kWh" }}
+                    data={item.series}
+                    field={'flexibility'}
+                    categoryField={'categoryField'}
+                    name={item.building_name}
+                />
     }
 
     return (
@@ -186,7 +187,11 @@ const InsightAnalytics = () => {
                             <ChartTitle text="Buildings flexibility" />
                             <ChartLegend position="bottom" orientation="horizontal" />
                             <ChartCategoryAxis>
-                                    <ChartCategoryAxisItem categories={pieCategories ? pieCategories : []} startAngle={45} />
+                                    <ChartCategoryAxisItem
+                                        categories={pieCategories ? pieCategories : []}
+                                        startAngle={45}
+                                        labels={{ format: "d", rotation: "auto" }}
+                                    />
                             </ChartCategoryAxis>
                             <ChartSeries>
                                 {
@@ -204,7 +209,11 @@ const InsightAnalytics = () => {
                             <ChartTitle text="" />
                             <ChartLegend position="bottom" orientation="horizontal" />
                             <ChartCategoryAxis>
-                                <ChartCategoryAxisItem categories={DayCategories} startAngle={45} />
+                                    <ChartCategoryAxisItem
+                                        categories={DayCategories}
+                                        startAngle={45}
+                                        labels={{ format: "d", rotation: "auto" }}
+                                    />
                             </ChartCategoryAxis>
                             <ChartSeries>
                                 {
@@ -223,7 +232,11 @@ const InsightAnalytics = () => {
                                 <ChartTitle text="Flexibility usage" />
                                 <ChartLegend position="top" orientation="horizontal" />
                                 <ChartCategoryAxis>
-                                    <ChartCategoryAxisItem categories={pieCategories ? pieCategories : []} startAngle={45} />
+                                        <ChartCategoryAxisItem
+                                            categories={pieCategories ? pieCategories : []}
+                                            startAngle={45}
+                                            labels={{ format: "d", rotation: "auto" }}
+                                        />
                                 </ChartCategoryAxis>
                                 <ChartSeries>
                                     {

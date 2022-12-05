@@ -216,7 +216,7 @@ const HistoricData = () => {
         <>
             <RowContainer>
                 <SpinnerContainer>
-                    {isLoading && <Loader type="converging-spinner" />}
+                    {isLoading && <Loader size="large" type="converging-spinner" />}
                 </SpinnerContainer>
                 
                 <DatePickerContainer>

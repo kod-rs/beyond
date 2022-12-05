@@ -81,7 +81,7 @@ const BuildingsSelect = () => {
     return (
         <>
             <RowContainer>
-                {isLoading && <Loader type="converging-spinner" />}
+                {isLoading && <Loader size="large"  type="converging-spinner" />}
                 <MapContainer>
                     <BuildingsOnMap
                         toggleSelectBuilding={toggleSelectItem}

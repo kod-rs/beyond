@@ -71,7 +71,7 @@ const FlexRequests = () => {
         if (categories) {
             if (flexDemand) {
                 setFilteredFlexDataFromDemand();
-                getAlgorithmData();
+                //getAlgorithmData();
             }
         }
     }, [categories,flexDemand]);
@@ -204,12 +204,12 @@ const FlexRequests = () => {
     const onButtonReloadClick = () => {
         getAlgorithmData();
     }
-
+    //pannable={{ lock: "y" }} zoomable={{ mousewheel: { lock: "y" } }}
     return (
         <>
             <RowContainer>
                 <SpinnerContainer>
-                    {(algorithmIsLoading || flexDemandIsLoading) && <Loader type="converging-spinner" />}
+                    {(algorithmIsLoading || flexDemandIsLoading) && <Loader size="large"  type="converging-spinner" />}
                 </SpinnerContainer>
                 <DatePickerContainer>
                     <DatePicker defaultValue={tomorrow} format={"dd.MM.yyyy"} onChange={onChangeSelectedDate} />
@@ -217,7 +217,7 @@ const FlexRequests = () => {
                 <GraphContainer>
                     {
                         filteredFlexDemandData &&
-                        <Chart style={{ height: 250, width: '99%' }} pannable={{ lock: "y" }} zoomable={{ mousewheel: { lock: "y" } }}>
+                        <Chart style={{ height: 250, width: '99%' }}> 
                             <ChartTitle text="Flexibility requests" />
                             <ChartLegend position="top" orientation="horizontal" />
                             <ChartCategoryAxis>
@@ -252,9 +252,9 @@ const FlexRequests = () => {
                             <Button
                                 onClick={onButtonReloadClick}
                                 themeColor="tertiary"
-                                disabled={(currentUser === null) || (flexOffers === undefined) || algorithmIsLoading || flexDemandIsLoading}
+                                disabled={(currentUser === null) ||  algorithmIsLoading || flexDemandIsLoading}
                                 style={{ margin: '5px' }}>
-                                Reload VPP configuration</Button>
+                                Load VPP configuration</Button>
                         </SliderContainer>
                         
                     </CustomContainer>
