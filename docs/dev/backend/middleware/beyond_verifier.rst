@@ -17,7 +17,7 @@ The schemas are as follows:
 
 - flexibility_offer_by_building
 
-.. include:: ../../../../schemas/backend_responses/flexibility_offer_by_aggregator_response.yaml
+.. include:: ../../../../schemas/external_api/flexibility_offer_by_building.yaml
     :literal:
 
 If the signature is invalid or nonexistent a false status message will be
