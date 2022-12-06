@@ -35,8 +35,18 @@ def fix_env():
         'KEYCLOAK_URL=http://localhost:8080/\n',
         'KEYCLOAK_URL=http://0.0.0.0:8080/\n'), data))
 
+    new_data = []
+    for line in data:
+        if str(line).startswith('BEYOND_PUBLIC_KEY_PATH'):
+            line = 'BEYOND_PUBLIC_KEY_PATH = ./beyond_keys/pub.key\n'
+        elif str(line).startswith('FLEXOPT_PRIVATE_KEY_PATH'):
+            line = 'FLEXOPT_PRIVATE_KEY_PATH = ./flexopt_keys/priv.key\n'
+        elif str(line).startswith('FLEXOPT_PUBLIC_KEY_PATH'):
+            line = 'FLEXOPT_PUBLIC_KEY_PATH = ./flexopt_keys/pub.key\n'
+        new_data.append(line)
+
     with open(env_file_path, 'w') as file:
-        file.writelines(data)
+        file.writelines(new_data)
 
 
 def main():

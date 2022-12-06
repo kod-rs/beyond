@@ -34,10 +34,22 @@ def copy_to_backend(parent_dir):
     dst = parent_dir / 'backend'
 
     copy_dir(src, dst, 'src_django')
+    copy_dir(src, dst, 'src_django')
     copy_dir(src, dst, 'schemas')
     copy_file(src, dst, 'manage.py')
     copy_file(src, dst, 'requirements.pip.txt')
     copy_file(src, dst, '.env')
+
+    # copy keys
+    beyond_keys_path = src / 'playground' / 'keys' / 'beyond_keys'
+    if os.path.isdir(dst / 'beyond_keys'):
+        rm_dir(dst, 'beyond_keys')
+    copytree(str(beyond_keys_path), str(dst / 'beyond_keys'))
+
+    flexopt_keys_path = src / 'playground' / 'keys' / 'flexopt_keys'
+    if os.path.isdir(dst / 'flexopt_keys'):
+        rm_dir(dst, 'flexopt_keys')
+    copytree(str(flexopt_keys_path), str(dst / 'flexopt_keys'))
 
 
 def copy_to_frontend(parent_dir):

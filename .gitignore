@@ -368,3 +368,5 @@ yarn.lock
 /docker/frontend/src_front/
 /docker/backend/schemas/
 /docker/keycloak/keycloak-19.0.3/data/h2/
+/docker/backend/beyond_keys/
+/docker/backend/flexopt_keys/

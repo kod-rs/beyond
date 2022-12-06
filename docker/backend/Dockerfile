@@ -20,6 +20,8 @@ COPY .env .env
 COPY manage.py manage.py
 COPY run_backend.sh run_backend.sh
 COPY add_env.py add_env.py
+ADD beyond_keys beyond_keys
+ADD flexopt_keys flexopt_keys
 
 RUN python3 add_env.py
 
