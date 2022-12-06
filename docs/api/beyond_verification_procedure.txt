@@ -1,4 +1,186 @@
-# TODO
-1) Add current year data
-2) Update docs + mention new schemas (requests to beyond)
-3) Explain verification procedure here
+The signature procedure roughly consist of the following steps:
+ - Beyond generates a pair of keys (private and public key)
+ - FlexOpt generates a pair of keys (private and public key)
+ - Public keys are exchanged via means external to this API and the standard
+   communication of the sender and the receiver. For example, via e-mails prior
+   to the communication initialization between Beyond and FlexOpt.
+ - Once a sender, be it either Beyond of FlexOpt, decides to send a request
+   to the receiver, it will sign the data with their own private key.
+ - (Data + signature) is sent to the other side
+ - Using the public key of the sender, the signature is verified
+ - If the signature is successfully verified, the data will be processed. If
+   not, an appropriate message will be sent. That message will be a false
+   status message as defined by "beyond_external_api.txt".
+
+These steps are defined in more detail below.
+
+Two approaches are given:
+- Using OpenSSL
+- Using custom scripts developed in Python (crypto.py file)
+
+Key generation
+===============
+
+To generate a key pair, the following OpenSSL commands can be used:
+
+- openssl genrsa -out priv.key 2048
+- openssl rsa -in priv.key -pubout -out pub.key
+
+With those two commands, two files will be generated:
+
+- "priv.key" : containing the private key
+- "pub.key" : containing the public key
+
+Or in Python:
+
+    sender_private_key, sender_public_key = generate_key_pair()
+
+    parent_dir = Path(__file__).resolve().parent
+    save_keys(get_private_bytes(sender_private_key),
+              get_public_key_bytes(sender_public_key),
+              dir_name=parent_dir / 'example_keys')
+
+Key examples can be found in the directory ./example_keys"
+Those keys will be used to illustrate the rest of the procedure.
+
+Private key used to sign the data:
+
+-----BEGIN PRIVATE KEY-----
+MIIEvwIBADANBgkqhkiG9w0BAQEFAASCBKkwggSlAgEAAoIBAQDXDm3bsL1YMh+L
+Q6hKICyAfaWYaG8kSV7DjeHsZ5TkWNSBTT4iXV3GYsc6npNL18WvyuaiVCYQdM8I
+s90kgdoZUbhV3b1YhjtywgXt+VsyteFzSCTwA15B6S5zqPZGR2sVlHEs4BGyA34p
+D4EMcF59Bkox0IVfZTjWyoin80edRrNZzMtlhk0fR+vQZttmBV8d7k3hLnVA2+Mg
+rAtAPg3ijLcVHmxA6XCkXNFuqDPlgz3nBGzNuyC4fY7KR0K8xSahpl+U6/TDJyyW
+6fZj+rlASh+nDJaPB3dBOZdXoXg7iijvFA1qTrRUHfuiD6UIFfhtrKwaZdeeVYCE
++84m6CHPAgMBAAECggEAB/FX/F+0NpAvWxDmI8q5agt59L2SsUfmcJmKaRVQSfi/
+7ICiVVmWb4/RZOhbb1cqTXpUd1VdTIlL5jniZolHOV0rzjwQ1LasdmoVFvt5M0/F
+YmEdQCIXtp56oTnx0pmrqlHftjUWYjk/zRtt/DwgOUTks59MdcACz+gOEQnqsLPM
+7pqvNXT6kvTshzsjL/MLo/bP3Xl2JHfvbVJwBF84WlCJ5RgPfIy0sc+C+nyUeu7S
+zdwqBL/SWJte4MaATyCZpch7OaVcLsv1XDRUO35N0lrD0H4jluoA0QNIjOtXqjwV
+5dnZlclUS3pm5OeO3MXHiSRHTn3n1VyJcQxSIRg05QKBgQDz78pC+yIEP4k6mbTT
+/a/rHcja+M1zqD6siJg1RFlXpS2vww8YQVw9kf3w7HwimqksJMTsGC8a84DOM7zB
+/uzBMHXyrG3emM0/+9r9IFBucB2sPe5cFf0O8d0fUMJVeYdNT52cBWDJOC2sd6qe
+U/x4g8brWXg1ePqwS3uPybdkAwKBgQDhsQSCX0RJuhfnt94kD2pHa5tXD8tJNI3I
+ahW0KOxoqKBryBit/bu1ooEPksVScPKHS5XD+9fzUkOdgxfmQr8W+mdDRuCR/2V9
+HS4grg8oNjndaTqQc+a9qMYDj17WBLimpGhHBYo6WKBCjB/8x5kSCLG5DqROFrhh
+vvJKYIoPRQKBgQCCXgfZrj9qx83+XIEwvqbS3/MlW8zpX+RG7yVxalrZJXT6NyQN
+EXlLioeNx8U79S4uYmQ/zVj3bWXMTgg2IZjEUrLmg9KgIUeoR2Cs4SU7MH4bPGn0
+GuhIoWhMwStq5O0zmzYfWRx1zalTQA0WWspWWg7oXsOIyGQp7d1WZja1owKBgQCO
+OPIBgi1TVJ0J3blz+e7ccPgkJgTR7fdHC2r/7CYGUfU91ouO4W1vqacw/CmyqRB8
+p+oJ5eORJw8K7HicFwW6YjO+lqSf/FSlQkU2PNm6WmmemFhafV8zt26JAckejz0Z
+blN0Jg6UdBMRvKHPtqxETAxK9Oofd3vbxOuEaU+3DQKBgQDjc+DzjqoeAjZuqUMG
+d6vD4HB92Yh4whKgkjI2uf6knsmvYcbwuXgXhcVKlQ/2YlxGi8wg9liMS0XXHxTh
+iwW9ppuh7Mkd3+QtuoDiXvGJflygUcwkGHp9QcwEf7kBFLA644NsxxDc0/jj4XbE
+UR2wg5Cuw0OcpCGXrWFEq6TQFA==
+-----END PRIVATE KEY-----
+
+Public key used to verify the data:
+
+-----BEGIN PUBLIC KEY-----
+MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA1w5t27C9WDIfi0OoSiAs
+gH2lmGhvJElew43h7GeU5FjUgU0+Il1dxmLHOp6TS9fFr8rmolQmEHTPCLPdJIHa
+GVG4Vd29WIY7csIF7flbMrXhc0gk8ANeQekuc6j2RkdrFZRxLOARsgN+KQ+BDHBe
+fQZKMdCFX2U41sqIp/NHnUazWczLZYZNH0fr0GbbZgVfHe5N4S51QNvjIKwLQD4N
+4oy3FR5sQOlwpFzRbqgz5YM95wRszbsguH2OykdCvMUmoaZflOv0wycslun2Y/q5
+QEofpwyWjwd3QTmXV6F4O4oo7xQNak60VB37og+lCBX4baysGmXXnlWAhPvOJugh
+zwIDAQAB
+-----END PUBLIC KEY-----
+
+
+Key exchange
+============
+
+Before communication initialization between Beyond and FlexOpt and after
+generating the keys, the public keys will be exchanged. Upon receiving the
+public keys, those public keys will be made available to their respective
+system for further use in the verification process.
+The exchange and storage process is out of the scope of this API.
+
+Sending a request
+===================
+
+Generally speaking, the request messages being sent has the following
+structure:
+
+    message = {'type': 'message_type', 'payload': 'message_payload...'}
+
+Firstly it will be converted into string:
+
+    message = "{'type': 'message_type', 'payload': 'message_payload...'}"
+
+Then, it will be "utf-8" encoded:
+
+    message = b"{'type': 'message_type', 'payload': 'message_payload...'}"
+
+For illustration purposes, the message will be saved into send.msg in "utf-8"
+encoded format.
+
+To sign the message, the following OpenSSL command can be used:
+
+- openssl dgst -sha256 -sigopt rsa_padding_mode:pss -sign priv.key -out signed.msg send.msg
+
+*Important to note*: Must use "sigopt rsa_padding_mode:pss"
+
+That will generate a file signed.msg.
+That file may look something like this:
+
+b'\n\x0b\x9a\xb3;\x905\xff\xd5 \xdd\x97j\x97?\xc6\xdf(\x0b\xde}X\xd4\x92'
+b'\x88\x8e\xf3\xf4_\xfe\xcdT\xb0\x8a,\x05HJ\xf7\xf3\xe6`\xbc\xfc`\xbc\xab\x02'
+b'\xbf\xf2:\xff?h2\xb5\x0e\x8e\x15\xd2\x91\xc5?\xb4~;\x86j\x8b\xc7dA\xa2^N\\'
+b"Q\xeb7Cu@y1\x05Xk\xf8*L\x9c\xf9\xd2\xa0\xf1\xaf'\x8bBb\xcd=\xfc\xbc$JE\xf3"
+b"~H\xba\n\xc7\x10n\xd8-B;l\x0e\x84'4j\x02\x9f>fa\x9fc^\xbaSm'B~T"
+b'\xcf\xda\xff\xd2\x8e\xae a\xcc\xaf&i\x8d\x18\xcc8\x7fm=\x9dH\xde\xa1\xde'
+b'\xae\xae\x03d\xa73Je\xb2=\xf9#;h\xbc\xec\xc2\x98\x82\xa5u~\xbb/\x12<\x9a\x00'
+b'OW\xce\xaf\xbdt\x0c\x0e<b\xc50U\xfa\x85o\xde\xbf\xe7b\x13\xa1T2\xd4P\x97\xc1'
+b'\xc2F]\x9d+\x83(\xa9)\x15\xc8\rB\x97\x97\xfe\x8f\x07\xc0E\x00g\x91['
+b'\xc7\ny\xbb(:)\xfa\xad\x87\x03,'
+
+Before sending, the above-mentioned signature will be turned into hex data:
+
+0a0b9ab33b9035ffd520dd976a973fc6df280bde7d58d492888ef3f45ffecd54b08a2c05484af7
+f3e660bcfc60bcab02bff23aff3f6832b50e8e15d291c53fb47e3b866a8bc76441a25e4e5c51eb
+37437540793105586bf82a4c9cf9d2a0f1af278b4262cd3dfcbc244a45f37e48ba0ac7106ed82d
+423b6c0e8427346a029f3e66619f635eba536d27427e54cfdaffd28eae2061ccaf26698d18cc38
+7f6d3d9d48dea1deaeae0364a7334a65b23df9233b68bcecc29882a5757ebb2f123c9a004f57ce
+afbd740c0e3c62c53055fa856fdebfe76213a15432d45097c1c2465d9d2b8328a92915c80d4297
+97fe8f07c0450067915bc70a79bb283a29faad87032c
+
+Finally, the JSON message being sent will have the following structure:
+
+    {
+    'type': 'message_type',
+    'payload': 'message_payload...',
+    'signature': '0a0b9ab33b9035ffd5...'
+    }
+
+Or, in Python:
+    data = {'type': 'message_type', 'payload': 'message_payload...'}
+    hash_data = sign(sender_private_key, data)
+    signed_data = {**data, 'signature': hash_data}
+
+Receiving a request
+===================
+
+Upon receiving a request, the message will be split into the original message
+and the signature, i.e:
+    signature = ''0a0b9ab33b9035ffd...'
+    original_message =  {'type': 'message_type', 'payload': 'message_payload...'}
+
+For illustration purposes, the message will be saved into recv.msg in "utf-8"
+encoded format and the signature will be saved into sig.file.
+
+To verify the message, the following OpenSSL command can be used:
+
+- openssl dgst -sha256 -sigopt rsa_padding_mode:pss -verify pub.key -signature sig.file recv.msg
+
+If 'OK', the message can be considered verified and further processed.
+
+
+Or, in Python:
+    received = signed_data
+    verified = verify_signature(sender_public_key, received)
+    print(f'Verified = ', verified)
+
+
+
+

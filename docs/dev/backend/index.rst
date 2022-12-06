@@ -21,6 +21,7 @@ Content
 
     controller/index
     flexopt_algorithm/index
+    middleware/index
     models/index
     validator/index
     view/index

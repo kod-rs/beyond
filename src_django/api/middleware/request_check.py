@@ -7,6 +7,7 @@ class RequestCheckMiddleware:
         self._requests = common.internal_requests_mapping.keys()
 
     def __call__(self, request):
+        # TODO
         # request_body = common.json_decode(request.body)
         # request_type = request_body.get('type')
         # if not request_type:

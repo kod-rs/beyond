@@ -36,6 +36,14 @@ schema:
 .. include:: ../../../../schemas/internal_api/buildings_by_user_id_request.yaml
     :literal:
 
+The message sent to Beyond is similar to the received request message.
+The difference being the fact that the message being sent to Beyond
+has a signature field.  The request schema, although not validated on the
+sender (FlexOpt) side is as follows:
+
+.. include:: ../../../../schemas/backend_requests/buildings_by_user_id_request.yaml
+    :literal:
+
 As can be seen from the schema, the expected message type **must** be
 *buildings_by_user_id_request*. As stated, the response can either contain the
 needed building information or an error message. Although the generated
@@ -72,3 +80,10 @@ as follows:
     :literal:
 
 The response type will always be *building_info_response*.
+
+
+ For more information about the signature procedure, refer to this document:
+ (beyond_verification_procedure.txt)
+
+.. include:: ../../../api/beyond_verification_procedure.txt
+    :literal:

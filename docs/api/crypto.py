@@ -1,4 +1,3 @@
-import base64
 import json
 import os
 import sys
@@ -164,7 +163,7 @@ def generate_key_pair() -> (rsa.RSAPrivateKey, rsa.RSAPublicKey):
     return private_key, public_key
 
 
-def sign(private_key: rsa.RSAPrivateKey, data: dict) -> bytes:
+def sign(private_key: rsa.RSAPrivateKey, data: dict) -> str:
     """
     Sign the data with the private key
 
@@ -180,7 +179,8 @@ def sign(private_key: rsa.RSAPrivateKey, data: dict) -> bytes:
                            padding.PSS(mgf=padding.MGF1(hashes.SHA256()),
                                        salt_length=padding.PSS.MAX_LENGTH),
                            hashes.SHA256())
-    sig = base64.urlsafe_b64encode(sig)
+
+    sig = sig.hex()
     return sig
 
 
@@ -197,11 +197,12 @@ def verify_signature(public_key: rsa.RSAPublicKey, signed_data: dict) -> bool:
         True if verification is successful, False otherwise
 
     """
-    signature = signed_data['hash']
-    signature = base64.urlsafe_b64decode(signature)
-    del signed_data['hash']
+    signature = signed_data['signature']
+    signature = bytes.fromhex(signature)
 
-    message = json.dumps(signed_data).encode('utf-8')
+    data = {k: v for k, v in signed_data.items() if k != 'signature'}
+    message = json.dumps(data).encode('utf-8')
+
     try:
         public_key.verify(signature,
                           message,
@@ -214,18 +215,22 @@ def verify_signature(public_key: rsa.RSAPublicKey, signed_data: dict) -> bool:
 
 
 def main():
-    keys_dir = Path(__file__).resolve().parent.parent
-    keys_dir = keys_dir / 'keys'
+    parent_dir = Path(__file__).resolve().parent
+
     sender_private_key, sender_public_key = generate_key_pair()
-    receiver_private_key, receiver_public_key = generate_key_pair()
 
     save_keys(get_private_bytes(sender_private_key),
               get_public_key_bytes(sender_public_key),
-              dir_name=keys_dir / 'beyond_keys')
+              dir_name=parent_dir / 'example_keys')
 
-    save_keys(get_private_bytes(receiver_private_key),
-              get_public_key_bytes(receiver_public_key),
-              dir_name=keys_dir / 'flexopt_keys')
+    data = {'type': 'message_type', 'payload': 'message_payload...'}
+    hash_data = sign(sender_private_key, data)
+    signed_data = {**data, 'signature': hash_data}
+
+    # As a receiver, try to verify the received message
+    received = signed_data
+    verified = verify_signature(sender_public_key, received)
+    print(f'Verified = ', verified)
 
 
 if __name__ == '__main__':

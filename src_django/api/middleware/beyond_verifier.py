@@ -1,11 +1,9 @@
-import json
 from pathlib import Path
-from django.http import JsonResponse
+
 from src_django.api import common
 from src_django.api import cryptography_wrapper
 from src_django.api.common import beyond_requests_mapping
 from src_django.settings import BEYOND_CONFIG
-from src_django.api import cryptography_wrapper
 
 
 class BeyondVerifierMiddleware:

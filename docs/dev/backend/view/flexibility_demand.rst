@@ -22,6 +22,21 @@ schema:
 .. include:: ../../../../schemas/internal_api/flexibility_demand_request.yaml
     :literal:
 
+
+The message sent to Beyond is similar to the received flexibility demand
+request. The difference being the fact that the message being sent to Beyond
+has a signature field.  The request schema, although not validated on the
+sender (FlexOpt) side is as follows:
+
+.. include:: ../../../../schemas/backend_requests/flexibility_demand_request.yaml
+    :literal:
+
+For more information about the signature procedure, refer to this document:
+(beyond_verification_procedure.txt)
+
+.. include:: ../../../api/beyond_verification_procedure.txt
+    :literal:
+
 As can be seen from the schema, the expected message type **must** be
 *flexibility_demand_request*. As stated, the response can either contain the
 needed information or an error message. Although the generated responses are
