@@ -276,7 +276,7 @@ const FlexRequests = () => {
                                     onClick={() => {setShowKWH(true)}}
                                     themeColor="info"
                                     disabled={(currentUser === null) || algorithmIsLoading || flexDemandIsLoading}
-                                    style={{ margin: '5px', width: 200,alignSelf:'center' }}>
+                                    style={{ margin: '5px', width: 200, alignSelf:'center' }}>
                                     Show kWh
                                 </Button>
                             )
