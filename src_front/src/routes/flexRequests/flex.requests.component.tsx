@@ -31,12 +31,14 @@ import {
     NotificationGroup,
 } from "@progress/kendo-react-notification";
 import { Fade } from "@progress/kendo-react-animation";
+import { off } from 'process';
 
 export type Filtered_Flex_Data = {
     start_time: string,
     end_time: string,
     flexibility: number,
     categoryField: string,
+    percentage:number,
 }
 
 const FlexRequests = () => {
@@ -55,6 +57,7 @@ const FlexRequests = () => {
     const [categories, setCategories] = useState<string[]>([]);
     const [filteredFlexDemandData, setFilteredFlexDemandData] = useState<Filtered_Flex_Data[]>([]);
     const [filteredFlexOfferData, setFilteredFlexOfferData] = useState<Filtered_Flex_Data[]>([]);
+    const [showKWH, setShowKWH] = useState<boolean>(true);
     const [sliderPct, setSliderPct] = useState<number>(100);
     const [success, setSuccess] = useState<boolean|null>(null);
     const [error, setError] = useState<boolean | null>(null);
@@ -81,7 +84,6 @@ const FlexRequests = () => {
         if (categories) {
             if (flexDemand) {
                 setFilteredFlexDataFromDemand();
-                //getAlgorithmData();
             }
         }
     }, [categories,flexDemand]);
@@ -123,7 +125,7 @@ const FlexRequests = () => {
     const setFilteredFlexDataFromDemand = () => {
         if (flexDemand) {
             let data: Filtered_Flex_Data[] = flexDemand.map((demand) => {
-                demand.flexibility = Math.round(Math.round(demand.flexibility * 100) / 100);
+                demand.flexibility = Math.round(demand.flexibility * 100) / 100;
                 return { ...demand, categoryField: getTooltipForDemand(demand) }
             }) as Filtered_Flex_Data[];
             if (data) {
@@ -142,11 +144,13 @@ const FlexRequests = () => {
         if (flexOffers) {
             let data: Filtered_Flex_Data[] = flexOffers.map((offer) => {
                 offer.offered_flexibility = Math.round(offer.offered_flexibility * 100) / 100;
+                let tooltipTxt = getTooltipForOffer(offer);
                 return {
                     start_time: offer.start_time,
                     end_time: offer.end_time,
                     flexibility: offer.offered_flexibility,
-                    categoryField: getTooltipForOffer(offer)
+                    categoryField: tooltipTxt,
+                    percentage: Math.round(offer.offered_flexibility/offer.requested_flexibility*100),
                 }
             }) as Filtered_Flex_Data[];
             if (data) {
@@ -223,6 +227,17 @@ const FlexRequests = () => {
                     color={color ? color : '#CC00FF'}/>
     }
 
+    const renderBarChartSeriesItemPercentage = (items: Filtered_Flex_Data[], color?: string) => {
+        return <ChartSeriesItem
+            key={'demand'}
+            type="column"
+            tooltip={{ visible: true, format: "{0}%" }}
+            data={items}
+            field={'percentage'}
+            categoryField={'categoryField'}
+            color={color ? color : '#CC00FF'} />
+    }
+
     const onButtonReloadClick = () => {
         getAlgorithmData();
     }
@@ -252,6 +267,29 @@ const FlexRequests = () => {
                             </ChartSeries>
                         </Chart>
                     }
+                    <RowContainer>
+                        {
+                            filteredFlexOfferData.length>0 &&
+                            (
+                                showKWH ?
+                                <Button
+                                    onClick={() => {setShowKWH(false)}}
+                                    themeColor="info"
+                                    disabled={(currentUser === null) || algorithmIsLoading || flexDemandIsLoading}
+                                    style={{ margin: '5px', width: 200, alignSelf: 'center'}}>
+                                    Show %
+                                </Button>
+                                :
+                                <Button
+                                    onClick={() => {setShowKWH(true)}}
+                                    themeColor="info"
+                                    disabled={(currentUser === null) || algorithmIsLoading || flexDemandIsLoading}
+                                    style={{ margin: '5px', width: 200,alignSelf:'center' }}>
+                                    Show kWh
+                                </Button>
+                            )
+                        }
+                    </RowContainer>
                     {
                         filteredFlexOfferData &&
                         <Chart style={{ height: 250, width: '99%' }}>
@@ -261,9 +299,12 @@ const FlexRequests = () => {
                                 <ChartCategoryAxisItem categories={categories ? categories : []} startAngle={45} />
                             </ChartCategoryAxis>
                             <ChartSeries>
-                                {
-                                    renderBarChartSeriesItem(filteredFlexOfferData,"green")
-                                }
+                                    {
+                                        showKWH ?
+                                            renderBarChartSeriesItem(filteredFlexOfferData, "green")
+                                            :
+                                            renderBarChartSeriesItemPercentage(filteredFlexOfferData, "green")
+                                    }
                             </ChartSeries>
                         </Chart>
                     }
@@ -287,7 +328,7 @@ const FlexRequests = () => {
             <FloatingActionButton
                 align={{ vertical: "bottom", horizontal: "center" } as FloatingActionButtonAlign}
                 text={'Insights & Analytics'}
-                disabled={(currentUser === null) || (flexOffers === undefined) || algorithmIsLoading || flexDemandIsLoading}
+                disabled={(currentUser === null) || (flexOffers === undefined) || (algorithmIsLoading === true) || (flexDemandIsLoading === true)}
                 onClick={toInsightAnalytics} />
             <FloatingActionButton
                 align={{ vertical: "bottom", horizontal: "start" } as FloatingActionButtonAlign}
@@ -297,7 +338,7 @@ const FlexRequests = () => {
             <FloatingActionButton
                 align={{ vertical: "bottom", horizontal: "end" } as FloatingActionButtonAlign}
                 text={'Submit'}
-                disabled={(currentUser===null) || (flexOffers===undefined) || algorithmIsLoading || flexDemandIsLoading}
+                disabled={(currentUser===null) || (flexOffers===undefined) || (algorithmIsLoading===true) || (flexDemandIsLoading===true)}
                 onClick={onSubmit}
                 themeColor="tertiary" />
 
@@ -316,7 +357,7 @@ const FlexRequests = () => {
                             <Notification
                                 type={{ style: "success", icon: true }}
                                 closable={true}
-                                onClose={() => setSuccess(false)}
+                                onClose={() => { setSuccess(false) }}
                             >
                                 <span>Your data has been saved.</span>
                             </Notification>
@@ -327,7 +368,7 @@ const FlexRequests = () => {
                             <Notification
                                 type={{ style: "error", icon: true }}
                                 closable={true}
-                                onClose={() => setError(false)}
+                                onClose={() => { setError(false) }}
                             >
                                 <span>Oops! Something went wrong ...</span>
                             </Notification>
