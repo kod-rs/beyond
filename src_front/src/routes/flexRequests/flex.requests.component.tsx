@@ -67,8 +67,6 @@ const FlexRequests = () => {
         }
     }, [flexDemand]);
 
-
-
     useEffect(() => {
         if (selectedDate == null || selectedDate == undefined) {
             if (flexDate == null) {
@@ -192,7 +190,7 @@ const FlexRequests = () => {
     const defineCategories = () => {
         if (flexDemand) {
             let ctgs = flexDemand.map((demand) => {
-                return getTooltipForDemand(demand)
+                return getTooltipForDemand(demand);
             })
             if (ctgs) {
                 setCategories(ctgs);
@@ -215,26 +213,21 @@ const FlexRequests = () => {
         setSliderPct(Math.round(event.value * 10) / 10);
     }
 
-    const renderBarChartSeriesItem = (items: Filtered_Flex_Data[],color?:string) => {
+    const renderBarChartSeriesItem = (items: Filtered_Flex_Data[], color?: string, showKWH?: boolean) => {
+        let mesurement_unit = 'kWh';
+        let field_ = 'flexibility';
+        if (showKWH===false) {
+            mesurement_unit = "%";
+            field_ = 'percentage';
+        }
         return <ChartSeriesItem
                     key={'demand'}
                     type="column"
-                    tooltip={{ visible: true, format: "{0} kWh" }}
+                    tooltip={{ visible: true, format: "{0} " + mesurement_unit }}
                     data={items}
-                    field={'flexibility'}
+                    field={field_}
                     categoryField={'categoryField'}
                     color={color ? color : '#CC00FF'}/>
-    }
-
-    const renderBarChartSeriesItemPercentage = (items: Filtered_Flex_Data[], color?: string) => {
-        return <ChartSeriesItem
-            key={'demand'}
-            type="column"
-            tooltip={{ visible: true, format: "{0}%" }}
-            data={items}
-            field={'percentage'}
-            categoryField={'categoryField'}
-            color={color ? color : '#CC00FF'} />
     }
 
     const onButtonReloadClick = () => {
@@ -299,10 +292,7 @@ const FlexRequests = () => {
                             </ChartCategoryAxis>
                             <ChartSeries>
                                     {
-                                        showKWH ?
-                                            renderBarChartSeriesItem(filteredFlexOfferData, "green")
-                                            :
-                                            renderBarChartSeriesItemPercentage(filteredFlexOfferData, "green")
+                                        renderBarChartSeriesItem(filteredFlexOfferData, "green", showKWH)
                                     }
                             </ChartSeries>
                         </Chart>
