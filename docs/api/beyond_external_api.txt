@@ -1,5 +1,5 @@
 ==================== Beyond API ===============================================
-* Communication will be done over HTTP, SSL may be included.
+* Communication will be done over HTTP.
 * Messages will be HTTP GET and POST requests and responses.
 * The requested data will be JSON formatted.
 * Communication will be bidirectional.
