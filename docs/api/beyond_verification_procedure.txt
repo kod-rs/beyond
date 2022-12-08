@@ -11,6 +11,12 @@ The signature procedure roughly consist of the following steps:
  - If the signature is successfully verified, the data will be processed. If
    not, an appropriate message will be sent. That message will be a false
    status message as defined by "beyond_external_api.txt".
+ - Upon processing a verified message, a response will be sent. The response
+   shall also be digitally signed - now by the other side. The procedure is
+   the same as the previously described. Using own private key, 
+   the responder will sign the hash included in the message and send it.
+ - The original sender then veirifes the message, and if successful, 
+   processes the response.
 
 These steps are defined in more detail below.
 
@@ -127,12 +133,33 @@ To verify the message, the following OpenSSL command can be used:
 
 If 'OK', the message can be considered verified and further processed.
 
-
 Or, in Python:
     received = signed_data
     verified = verify_signature(sender_public_key, received)
     print(f'Verified = ', verified)
 
 
+Sending a response
+===================
 
+If the message is verified, a response will be generated.
+A generic response has a similar format to the request:
+
+
+message = {'type': 'response_type', 'payload': 'response_payload...'}
+
+Doing the same procedure as before, a signature is added to the message.
+The responder signs the message with his private key, adds the hex value
+into the response:
+
+message = {'type': 'response_type', 
+           'payload': 'response_payload...',
+           'signature':....}
+           
+Receiving a response
+=====================
+
+Upon receiving a response, a verification process is initiated.
+If successful, the message is processed.
+If not, the response is ignored.
 
