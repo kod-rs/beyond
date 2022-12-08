@@ -16,13 +16,11 @@ def save_keys(private_key: bytes,
               dir_name: Path = None) -> (Path, Path):
     """
     Save the byte formatted keys into a directory for later use.
-
     Args:
         private_key: Private key in byte format
         public_key: Public key in byte format
         dir_name: Directory where the keys will be saved. If it does not exist
             or is not defined, it will be created
-
     Returns:
             (private key path, public key path)
     """
@@ -45,11 +43,9 @@ def save_keys(private_key: bytes,
 def load_keys(private_key_path: Path, public_key_path: Path) -> (bytes, bytes):
     """
     Load the private and the public key defined by their respective paths.
-
     Args:
         private_key_path: Path to the file containing the private key
         public_key_path: Path to the file containing the public key
-
     Returns:
         (private key bytes, public key bytes)
     """
@@ -59,10 +55,8 @@ def load_keys(private_key_path: Path, public_key_path: Path) -> (bytes, bytes):
 def load_private_key(private_key_path: Path) -> bytes:
     """
     Load the private key defined by the path.
-
     Args:
         private_key_path: Path to the file containing the private key
-
     Returns:
         private key bytes
     """
@@ -75,10 +69,8 @@ def load_private_key(private_key_path: Path) -> bytes:
 def load_public_key(public_key_path: Path) -> bytes:
     """
     Load the public key defined by the path.
-
     Args:
         public_key_path: Path to the file containing the public key
-
     Returns:
         public key bytes
     """
@@ -91,13 +83,10 @@ def load_public_key(public_key_path: Path) -> bytes:
 def get_private_bytes(private_key: rsa.RSAPrivateKey) -> bytes:
     """
     Transform the rsa.PrivateKey into bytes
-
     Args:
         private_key: Object from which the bytes will be extracted
-
     Returns:
         Byte representation of the private key
-
     """
     private_key_bytes = private_key.private_bytes(
         encoding=serialization.Encoding.PEM,
@@ -109,13 +98,10 @@ def get_private_bytes(private_key: rsa.RSAPrivateKey) -> bytes:
 def get_public_key_bytes(public_key: rsa.RSAPublicKey) -> bytes:
     """
     Transform the rsa.PublicKey into bytes
-
     Args:
         public_key: Object from which the bytes will be extracted
-
     Returns:
         Byte representation of the public key
-
     """
     public_key_bytes = public_key.public_bytes(
         encoding=serialization.Encoding.PEM,
@@ -128,7 +114,6 @@ def get_private_key_from_bytes(private_key_bytes: bytes) -> rsa.RSAPrivateKey:
     Get the rsa.RSAPrivateKey created from the input bytes
     Args:
         private_key_bytes: Byte representation of the private key
-
     Returns:
         rsa.RSAPrivateKey representation of the input bytes
     """
@@ -142,7 +127,6 @@ def get_public_key_from_bytes(public_key_bytes: bytes) -> rsa.RSAPublicKey:
     Get the rsa.RSAPublicKey created from the input bytes
     Args:
         public_key_bytes: Byte representation of the public key
-
     Returns:
         rsa.RSAPublicKey representation of the input bytes
     """
@@ -153,7 +137,6 @@ def get_public_key_from_bytes(public_key_bytes: bytes) -> rsa.RSAPublicKey:
 def generate_key_pair() -> (rsa.RSAPrivateKey, rsa.RSAPublicKey):
     """
     Generate the private key and the corresponding public key
-
     Returns:
         (private key, public key)
     """
@@ -166,11 +149,9 @@ def generate_key_pair() -> (rsa.RSAPrivateKey, rsa.RSAPublicKey):
 def sign(private_key: rsa.RSAPrivateKey, data: dict) -> str:
     """
     Sign the data with the private key
-
     Args:
         private_key: Key used for signing
         data: Data to be signed (firstly utf-8 encoded)
-
     Returns:
         Signature
     """
@@ -187,15 +168,12 @@ def sign(private_key: rsa.RSAPrivateKey, data: dict) -> str:
 def verify_signature(public_key: rsa.RSAPublicKey, signed_data: dict) -> bool:
     """
     Verify the signature for the requested data
-
     Args:
         public_key: Public key used for data verification
         signed_data: Data that contains both the original message and the
             signature
-
     Returns:
         True if verification is successful, False otherwise
-
     """
     signature = signed_data['signature']
     signature = bytes.fromhex(signature)
@@ -215,22 +193,50 @@ def verify_signature(public_key: rsa.RSAPublicKey, signed_data: dict) -> bool:
 
 
 def main():
+    # Before communication initialization, the key are generated
+    # The generated keys are exchanged
     parent_dir = Path(__file__).resolve().parent
 
     sender_private_key, sender_public_key = generate_key_pair()
+    receiver_private_key, receiver_public_key = generate_key_pair()
 
     save_keys(get_private_bytes(sender_private_key),
               get_public_key_bytes(sender_public_key),
-              dir_name=parent_dir / 'example_keys')
+              dir_name=parent_dir / 'sender_example_keys')
 
+    save_keys(get_private_bytes(sender_private_key),
+              get_public_key_bytes(sender_public_key),
+              dir_name=parent_dir / 'receiver_example_keys')
+
+    # As a SENDER, send a signed message
     data = {'type': 'message_type', 'payload': 'message_payload...'}
     hash_data = sign(sender_private_key, data)
     signed_data = {**data, 'signature': hash_data}
 
-    # As a receiver, try to verify the received message
+    # As a RECEIVER, try to verify the received message
     received = signed_data
     verified = verify_signature(sender_public_key, received)
-    print(f'Verified = ', verified)
+
+    print(f'RECEIVER: Verified message = ', verified)
+
+    if not verified:
+        print('RECEIVER: Sending false status')
+        return
+
+    data = {'type': 'response_type', 'payload': 'response_payload...'}
+    hash_data = sign(sender_private_key, data)
+    signed_data = {**data, 'signature': hash_data}
+
+    # As a SENDER, try to verify the response
+
+    received = signed_data
+    verified = verify_signature(sender_public_key, received)
+
+    print(f'SENDER: Verified message = ', verified)
+
+    if not verified:
+        print('SENDER: Sending false status')
+        return
 
 
 if __name__ == '__main__':
