@@ -6,6 +6,7 @@ import { flexDemandSagas } from './flexDemand/flex.saga';
 import { algorithmDataSagas } from './algorithm/algorithm.saga';
 
 
+/* A generator function that is used to run all the sagas at once. */
 export function* rootSaga() {
     yield all([
         call(buildingsSagas),

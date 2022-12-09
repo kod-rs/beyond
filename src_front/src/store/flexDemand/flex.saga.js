@@ -11,6 +11,9 @@ import {
     getFlexDemandData,
 } from '../../utils/api/api.utils';
 
+/* This is a generator function that is listening for the action type
+`FLEX_DEMAND_ACTION_TYPES.GET_FLEX_DEMAND_START` and when it is dispatched, it will call the
+`getFlexDemand` generator function. */
 export function* getFlexDemand({ payload: { date } }) {
     try {
         yield put(setFlexIsLoading(true));
@@ -28,10 +31,14 @@ export function* getFlexDemand({ payload: { date } }) {
     }
 }
 
+/* A generator function that is listening for the action type
+`FLEX_DEMAND_ACTION_TYPES.GET_FLEX_DEMAND_START` and when it is dispatched, it will call the
+`getFlexDemand` generator function. */
 export function* onGetFlexDemandStart() {
     yield takeLatest(FLEX_DEMAND_ACTION_TYPES.GET_FLEX_DEMAND_START, getFlexDemand);
 }
 
+/* This is the root saga. It is the saga that is exported to the store. */
 export function* flexDemandSagas() {
     yield all([
         call(onGetFlexDemandStart),

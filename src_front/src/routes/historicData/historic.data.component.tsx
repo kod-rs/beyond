@@ -16,7 +16,6 @@ import {
     ChartCategoryAxisItem,
     ChartTitle,
     ChartLegend,
-    LineStyle,
 } from "@progress/kendo-react-charts";
 import { Building_Info, TimeseriesData } from '../../store/historicData/historicData.types';
 import { DayCategories, MonthCategories, PERIOD_TYPES, YearCategories } from './historic.data.types';
@@ -25,6 +24,7 @@ import { SpinnerContainer } from '../general.routes.styles';
 
 
 
+/* A React component that is using the Kendo UI Chart component to display a chart. */
 const HistoricData = () => {
     const buildings = useSelector(selectBuildingsForCurrentUser);
     const buildingsHistory = useSelector(selectBuildingsHistoricData);
@@ -38,6 +38,8 @@ const HistoricData = () => {
     const [periodType, setPeriodType] = useState<PERIOD_TYPES>(PERIOD_TYPES.DAY);
     const [filteredData, setFilteredData] = useState<Building_Info[]>([]);
 
+    /* A react hook that is called when the component is mounted. It is used to get the buildings historic
+    data list from the backend. */
     useEffect(() => {
         if (buildings) {
             //get buildings historic data list from backend
@@ -50,6 +52,9 @@ const HistoricData = () => {
         }
     }, [buildings]);
 
+    /* A react hook that is called when the component is mounted. It is used to get the buildings
+    historic
+        data list from the backend. */
     useEffect(() => {
         if (buildingsHistory) {
             defineCategories();
@@ -57,26 +62,39 @@ const HistoricData = () => {
         }
     }, [buildingsHistory, periodType, selectedDate]);
 
+    /* Checking if the user is logged in. If not, it redirects to the login page. */
     useEffect(() => {
         if (currentUser === null || currentUser === undefined) {
             navigate("/auth");
         }
     }, [currentUser]);
 
+    /**
+     * When the user clicks the button, navigate to the /flex route.
+     */
     const toFlexRequests=()=>{
         navigate("/flex");
     }
 
+    /**
+     * When the user clicks on the button, navigate to the buildings page.
+     */
     const toBuildings=()=>{
         navigate("/buildings");
     }
 
+    /**
+     * OnChangeSelectedDate is a function that takes an event of type DatePickerChangeEvent and sets
+     * SelectedDate with the value.
+     * @param {DatePickerChangeEvent} event - DatePickerChangeEvent
+     */
     const onChangeSelectedDate = (event: DatePickerChangeEvent) => {
         if (event.value) {
             setSelectedDate(event.value);
         }
     }
 
+    /* A function that takes a Building_Info and an index and returns a ChartSeriesItem. */
     const renderChartSeriesItem = (item: Building_Info, idx:number) => {
         return <ChartSeriesItem
                     key={idx}
@@ -86,6 +104,12 @@ const HistoricData = () => {
                     name={item.building_id} />
     }
 
+    /**
+     * If the periodType is equal to PERIOD_TYPES.DAY, then set the categories to DayCategories, else
+     * if the periodType is equal to PERIOD_TYPES.MONTH, then set the categories to MonthCategories,
+     * else if the periodType is equal to PERIOD_TYPES.YEAR, then set the categories to YearCategories,
+     * else do nothing.
+     */
     const defineCategories = () => {
         switch (periodType) {
             case PERIOD_TYPES.DAY:
@@ -101,6 +125,11 @@ const HistoricData = () => {
         }
     }
 
+    /**
+     * It takes an array of objects, and for each object in the array, it filters the object's data
+     * based on a period type, then calculates the average of the filtered data, and then pushes the
+     * object's id and the average data into a new array.
+     */
     const filterDataForChart = () => {
         let tmpData = [] as Building_Info[];
         buildingsHistory?.forEach((building_info) => {
@@ -115,6 +144,11 @@ const HistoricData = () => {
         setFilteredData(tmpData);
     }
 
+    /**
+     * It filters a list of objects by a date property, and returns the filtered list.
+     * @param {Building_Info} building_info - Building_Info = {
+     * @returns An array of objects that match the criteria.
+     */
     const filterBuildingInfoByPeriodType = (building_info: Building_Info) => {
         return building_info.energy_info.filter((timeseries) => {
             let _date = new Date(timeseries.timestamp);
@@ -142,6 +176,12 @@ const HistoricData = () => {
         });
     }
 
+    /**
+     * CalculateAverages takes an array of TimeseriesData objects and returns an array of
+     * TimeseriesData objects.
+     * @param {TimeseriesData[]} _data - TimeseriesData[] = [{
+     * @returns An array of TimeseriesData objects.
+     */
     const calculateAverages = (_data: TimeseriesData[]) => {
         let tmpData = [] as TimeseriesData[];
         if (_data.length > 0) {
@@ -150,6 +190,14 @@ const HistoricData = () => {
         return tmpData;
     }
 
+    /**
+     * It takes an array of objects, and returns an array of objects.     
+     * The function is called with an array of objects, and
+     * @param {TimeseriesData[]} _data - TimeseriesData[] = [{timestamp: "2020-01-01T00:00:00.000Z",
+     * value: 1}, {timestamp: "2020-01-01T01:00:00.000Z", value: 2}, {timestamp: "2020
+     * @param {TimeseriesData[]} tmpData - TimeseriesData[] = [];
+     * @returns An array of objects with the following structure:
+     */
     const calcPeriodAverageValuesPerUnit = (_data: TimeseriesData[], tmpData: TimeseriesData[]) => {
         let startValue = 0;
         let endValue = 0;
@@ -192,6 +240,11 @@ const HistoricData = () => {
         return tmpData;
     }
 
+    /**
+     * It takes a timestamp and returns a number based on the periodType.
+     * @param {TimeseriesData} timeseries - TimeseriesData = {
+     * @returns the result of the switch statement.
+     */
     const getTimespanFromPeriodType = (timeseries: TimeseriesData) => {
         let _date = new Date(timeseries.timestamp);
         let result = 0;
@@ -209,8 +262,6 @@ const HistoricData = () => {
         }
         return result;
     }
-
-
 
     return (
         <>

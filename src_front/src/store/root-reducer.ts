@@ -7,6 +7,7 @@ import { flexDemandReducer } from './flexDemand/flex.reducer';
 import { algorithmDataReducer } from './algorithm/algorithm.reducer';
 
 
+/* Combining all the reducers into one reducer. */
 export const rootReducer = combineReducers({
     user: userReducer,
     buildings: buildingsReducer,

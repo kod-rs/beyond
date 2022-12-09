@@ -11,6 +11,8 @@ import {
     getBuildingsForUser,
 } from '../../utils/api/api.utils';
 
+/* A generator function that is called by the saga middleware. It is a generator function that is
+called by the saga middleware. */
 export function* getBuildingsForCurrentUser({ payload: { user } }) {
     try {
         yield put(setIsLoadingBuildings(true));
@@ -28,10 +30,15 @@ export function* getBuildingsForCurrentUser({ payload: { user } }) {
     }
 }
 
+
+/* A generator function that is called by the saga middleware. It is a generator function that is
+called by the saga middleware.*/
 export function* onGetBuildingsStart() {
     yield takeLatest(BUILDINGS_ACTION_TYPES.GET_BUILDINGS_START, getBuildingsForCurrentUser);
 }
 
+/* This is the root saga. It is the saga that is exported to the store. It is the saga that is run by
+the saga middleware. */
 export function* buildingsSagas() {
     yield all([
         call(onGetBuildingsStart),

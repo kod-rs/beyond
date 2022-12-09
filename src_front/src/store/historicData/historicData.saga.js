@@ -11,6 +11,7 @@ import {
     getBuildingHistoryData,
 } from '../../utils/api/api.utils';
 
+/* A generator function that is used to run all the sagas at once. */
 export function* getBuildingsHistory({ payload: { buildings } }) {
     try {
         yield put(setIsLoadingHistory(true));
@@ -30,10 +31,12 @@ export function* getBuildingsHistory({ payload: { buildings } }) {
     }
 }
 
+/* A generator function that is used to run all the sagas at once. */
 export function* onGetBuildingsHistoryStart() {
     yield takeLatest(HISTORIC_DATA_ACTION_TYPES.GET_HISTORIC_DATA_START, getBuildingsHistory);
 }
 
+/* A generator function that is used to run all the sagas at once. */
 export function* historicDataSagas() {
     yield all([
         call(onGetBuildingsHistoryStart),

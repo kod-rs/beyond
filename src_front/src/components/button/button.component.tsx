@@ -7,12 +7,18 @@ import {
   ButtonSpinner,
 } from './button.styles';
 
+/* It's defining an enum. */
 export enum BUTTON_TYPE_CLASSES {
   base = 'base',
   google = 'google-sign-in',
   inverted = 'inverted',
 }
 
+/**
+ * If the buttonType is base, return BaseButton, if it's google, return GoogleSignInButton, if it's
+ * inverted, return InvertedButton, otherwise return BaseButton.
+ * @param buttonType - The type of button you want to render.
+ */
 const getButton = (buttonType = BUTTON_TYPE_CLASSES.base): typeof BaseButton =>
   ({
     [BUTTON_TYPE_CLASSES.base]: BaseButton,

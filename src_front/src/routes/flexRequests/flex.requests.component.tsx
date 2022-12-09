@@ -32,6 +32,15 @@ import {
 } from "@progress/kendo-react-notification";
 import { Fade } from "@progress/kendo-react-animation";
 
+/**
+ * Filtered_Flex_Data is an object with four properties: start_time, end_time, flexibility, and
+ * categoryField. All of these properties are strings except for flexibility, which is a number.
+ * @property {string} start_time - The start time of the flex data
+ * @property {string} end_time - string,
+ * @property {number} flexibility - number,
+ * @property {string} categoryField - This is the name of the category.
+ * @property {number} percentage - number,
+ */
 export type Filtered_Flex_Data = {
     start_time: string,
     end_time: string,
@@ -40,6 +49,7 @@ export type Filtered_Flex_Data = {
     percentage:number,
 }
 
+/* The above code is a React component that is using the Kendo UI library. */
 const FlexRequests = () => {
     const currentUser = useSelector(selectCurrentUser);
     const buildingsHistory = useSelector(selectBuildingsHistoricData);
@@ -61,14 +71,17 @@ const FlexRequests = () => {
     const [success, setSuccess] = useState<boolean|null>(null);
     const [error, setError] = useState<boolean | null>(null);
 
+    /* A React Hook. It is a function that lets you “hook into” React features. For example, useState
+    is a Hook that lets you add React state to function components. */
     useEffect(() => {
         if (flexDemand) {
             defineCategories();
         }
     }, [flexDemand]);
 
+    /* Setting the selectedDate to tomorrow if the selectedDate is null or undefined. */
     useEffect(() => {
-        if (selectedDate == null || selectedDate == undefined) {
+        if (selectedDate == null || selectedDate === undefined) {
             if (flexDate == null) {
                 setSelectedDate(tomorrow);
             } else {
@@ -77,6 +90,8 @@ const FlexRequests = () => {
         }
     }, []);
 
+    /* Checking if categories and flexDemand are not null, then it is calling the
+    setFilteredFlexDataFromDemand() function. */
     useEffect(() => {
         if (categories) {
             if (flexDemand) {
@@ -85,6 +100,8 @@ const FlexRequests = () => {
         }
     }, [categories,flexDemand]);
 
+    /* Checking if the selectedDate is not equal to flexDate, then it will dispatch the
+    setFlexDateStart and getFlexDemandStart. */
     useEffect(() => {
         if (selectedDate) {
             if (selectedDate !== flexDate) {
@@ -94,18 +111,23 @@ const FlexRequests = () => {
         }
     }, [selectedDate]);
 
+    /* Checking if the currentUser is null or undefined, if it is, it will navigate to the auth page. */
     useEffect(() => {
         if (currentUser === null || currentUser === undefined) {
             navigate("/auth");
         }
     }, [currentUser]);
 
+    /* Checking if flexOffers is true, if it is, it will set the filteredFlexDataFromOffers. */
     useEffect(() => {
         if (flexOffers) {
             setFilteredFlexDataFromOffers();
         }
     }, [flexOffers]);
 
+    /* Checking if the offerResponse is true, if it is, it will set the success to the status of the
+    offerResponse. If it is not true, it will set the error to the opposite of the status of the
+    offerResponse. */
     useEffect(() => {
         if (offerResponse) {
             setSuccess(offerResponse.status);
@@ -113,12 +135,24 @@ const FlexRequests = () => {
         }
     }, [offerResponse]);
 
+    /**
+     * "getTooltipForDemand" is a function that takes a "demand" object as an argument and returns a
+     * string.
+     * @param {Flex_Demand} demand - Flex_Demand
+     * @returns A function that takes a demand object and returns a string.
+     */
     const getTooltipForDemand = (demand: Flex_Demand) => {
         let start = new Date(demand.start_time);
         let end = new Date(demand.end_time);
         return start.toTimeString().split(' ')[0] + " - " + end.toTimeString().split(' ')[0];
     }
 
+    /**
+     * If flexDemand is truthy, then set filteredFlexDemandData to the result of mapping flexDemand to
+     * a new array of Filtered_Flex_Data objects, where each object is a copy of the corresponding
+     * flexDemand object with a new categoryField property set to the result of calling
+     * getTooltipForDemand on the corresponding flexDemand object.
+     */
     const setFilteredFlexDataFromDemand = () => {
         if (flexDemand) {
             let data: Filtered_Flex_Data[] = flexDemand.map((demand) => {
@@ -131,12 +165,23 @@ const FlexRequests = () => {
         }
     }
 
+    /**
+     * It takes a Flex_Offer object, creates two Date objects from the start_time and end_time
+     * properties of the Flex_Offer object, and returns a string that is the start time and end time of
+     * the Flex_Offer object.
+     * @param {Flex_Offer} offer - Flex_Offer
+     * @returns A function that takes an offer and returns a string.
+     */
     const getTooltipForOffer = (offer: Flex_Offer) => {
         let start = new Date(offer.start_time);
         let end = new Date(offer.end_time);
         return start.toTimeString().split(' ')[0] + " - " + end.toTimeString().split(' ')[0];
     }
 
+    /**
+     * If flexOffers is not null, then map over flexOffers and return a new array of Filtered_Flex_Data
+     * objects.
+     */
     const setFilteredFlexDataFromOffers = () => {
         if (flexOffers) {
             let data: Filtered_Flex_Data[] = flexOffers.map((offer) => {
@@ -156,6 +201,7 @@ const FlexRequests = () => {
         }
     }
 
+    /* Creating a new object and assigning it to the variable algorithmRequest. */
     const setAlgorithmRequest = () => {
         let _tmp_flexDemand = JSON.parse(JSON.stringify(flexDemand)) as Flex_Demand[];
         let algorithmRequest = {
@@ -168,25 +214,44 @@ const FlexRequests = () => {
         return algorithmRequest;
     }
 
+    /**
+     * GetAlgorithmData() is a function that calls setAlgorithmRequest() and then dispatches the result
+     * of setAlgorithmRequest() to the reducer.
+     */
     const getAlgorithmData = () => {
         let algorithmRequest = setAlgorithmRequest();
         dispatch(getAlgorithmDataStart(algorithmRequest));
     }
 
+    /**
+     * When the user clicks on the button, the user will be navigated to the insight page.
+     */
     const toInsightAnalytics = () => {
         navigate("/insight");
     }
 
+    /**
+     * When the user clicks on the button, the user will be navigated to the buildings page.
+     */
     const toBuildings = () => {
         navigate("/buildings");
     }
 
+    /**
+     * OnChangeSelectedDate is a function that takes an event of type DatePickerChangeEvent and sets
+     * SelectedDate with the value.
+     * @param {DatePickerChangeEvent} event - DatePickerChangeEvent
+     */
     const onChangeSelectedDate = (event: DatePickerChangeEvent) => {
         if (event.value) {
             setSelectedDate(event.value);
         }
     }
 
+    /**
+     * If flexDemand is true, then map over flexDemand and return the result of
+     * getTooltipForDemand(demand) and set the result to categories.
+     */
     const defineCategories = () => {
         if (flexDemand) {
             let ctgs = flexDemand.map((demand) => {
@@ -198,6 +263,11 @@ const FlexRequests = () => {
         }
     }
 
+    /**
+     * If the currentUser is defined, then create a new object called algorithmResponse, and then
+     * dispatch the sendFlexOfferStart function with the currentUser.user_id and algorithmResponse as
+     * parameters.
+     */
     const onSubmit = () => {
         if (currentUser) {
             let algorithmResponse = {
@@ -209,10 +279,17 @@ const FlexRequests = () => {
         }
     }
 
+    /**
+     * OnSliderValueChange is a function that takes an event of type SliderChangeEvent and sets
+     * sliderPct with value.
+     * @param {SliderChangeEvent} event - SliderChangeEvent - The event object that is passed to the
+     * event handler.
+     */
     const onSliderValueChange = (event: SliderChangeEvent) => {
         setSliderPct(Math.round(event.value * 10) / 10);
     }
 
+    /* A function that returns a ChartSeriesItem. */
     const renderBarChartSeriesItem = (items: Filtered_Flex_Data[], color?: string, showKWH?: boolean) => {
         let mesurement_unit = 'kWh';
         let field_ = 'flexibility';
@@ -230,10 +307,13 @@ const FlexRequests = () => {
                     color={color ? color : '#CC00FF'}/>
     }
 
+    /**
+     * When the button is clicked, call the getAlgorithmData() function.
+     */
     const onButtonReloadClick = () => {
         getAlgorithmData();
     }
-    //pannable={{ lock: "y" }} zoomable={{ mousewheel: { lock: "y" } }}
+    
     return (
         <>
             <RowContainer>

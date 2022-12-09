@@ -9,9 +9,13 @@ import { PersistGate } from 'redux-persist/integration/react';
 import { store, persistor } from './store/store';
 import '@progress/kendo-theme-material/dist/all.css';
 
+/* A new way to render React apps. It is a new API that allows you to render React apps without
+unmounting the previous tree. This is useful for server-side rendering, where you want to render the
+app on the server, and then hydrate it on the client. */
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
+/* Rendering the app. */
 root.render(
     <React.StrictMode>
         <Provider store={store}>

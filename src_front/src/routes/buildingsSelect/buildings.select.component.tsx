@@ -27,9 +27,12 @@ const BuildingsSelect = () => {
         navigate("/history");
     } 
 
+    /* Checking if the current user is logged in and if the buildings are null. If they are null, it
+    will dispatch the getBuildingsStart action. If the current user is null or undefined, it will
+    navigate to the auth page. 
+    */
     useEffect(() => {
-        if (currentUser && buildings == null) {
-            //get buildings list from backend
+        if (currentUser && buildings == null) {            
             dispatch(getBuildingsStart(currentUser));
         }
 
@@ -38,6 +41,15 @@ const BuildingsSelect = () => {
         }
     }, [currentUser]);
 
+    /**
+     * "If the building_id of the building in the array is the same as the building_id of the item
+     * passed in, then toggle the selected property of the building in the array, otherwise set the
+     * selected property of the building in the array to the value of the selected property of the
+     * building in the array."
+     * 
+     * I'm not sure if that's the best way to explain it, but I hope it helps.
+     * @param {Building} item - Building =&gt; the item that is being selected
+     */
     const toggleSelectItem = (item: Building): void => {
         let tmpB = cloneDeep(buildings);
         tmpB!.forEach((building) => {
@@ -52,6 +64,12 @@ const BuildingsSelect = () => {
         setReload(!reload);
     };
 
+    /**
+     * I'm going to take the buildings array, clone it, then iterate over each building and set the
+     * selected property to the value of the switch.
+     * @param {SwitchChangeEvent} event - SwitchChangeEvent - this is the event that is triggered when
+     * the switch is toggled.
+     */
     const toggleSelectAll = (event: SwitchChangeEvent) => {
         let tmpB = cloneDeep(buildings);
         tmpB!.forEach((building) => {
@@ -61,6 +79,12 @@ const BuildingsSelect = () => {
         setReload(!reload);
     }
 
+    /**
+     * I'm a function that takes a ListViewItemProps object as an argument and returns a React
+     * component.
+     * @param {ListViewItemProps} props - ListViewItemProps
+     * @returns A React component that is a function that returns a JSX element.
+     */
     const BuildingsListViewItemRender = (props: ListViewItemProps) => {
         let buildingData = props.dataItem;
         return (
