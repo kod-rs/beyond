@@ -28,6 +28,7 @@ export type Building_Chart_Series = {
     flexibility: number;
 }
 
+/* A React component that is using the Kendo UI library to render a pie chart and an area chart. */
 const InsightAnalytics = () => {
     const flexOffers = useSelector(selectAlgorithmData);
     const buildings = useSelector(selectBuildingsForCurrentUser);
@@ -42,6 +43,17 @@ const InsightAnalytics = () => {
         navigate("/flex");
     }
 
+    /**
+     * "If the buildings array is not empty, then for each building in the buildings array, if the building
+     * is selected, then add the building to the dataArr array. If the flexOffers array is not empty, then
+     * for each flexOffer in the flexOffers array, for each building in the flexOffer's building_info
+     * array, if the building is in the dataArr array, then add the building's flexibility to the
+     * flexibility property of the pieItem object in the dataArr array."
+     * 
+     * I'm not sure if this is the best way to do this, but it works.
+     * 
+     * I hope this helps someone else.
+     */
     const setPieDataFromFlexOffers = () => {
         let dataArr = [] as Building_Chart_Series[];
         if (buildings) {
@@ -55,9 +67,9 @@ const InsightAnalytics = () => {
             if (flexOffers) {
                 flexOffers?.forEach((offer) => {
                     offer.building_info.forEach((info) => {
-                        let pieItem = dataArr.find((item) => item.id == info.building_id);
+                        let pieItem = dataArr.find((item) => item.id === info.building_id);
                         if (pieItem) {
-                            pieItem.flexibility += info.flexibility;
+                            pieItem.flexibility += Math.round(info.flexibility * 100) / 100;
                         }
                     })
                 });
@@ -66,11 +78,18 @@ const InsightAnalytics = () => {
         }
     }
 
+    /**
+     * It takes an array of Building_Area_Chart_Data objects, and for each Building_Area_Chart_Data object,
+     * it takes an array of Building_Chart_Series objects, and for each Building_Chart_Series object, it
+     * takes a string, and if that string is not in the DayCategories array, it adds a new
+     * Building_Chart_Series object to the array of Building_Chart_Series objects.
+     * @param {Building_Area_Chart_Data[]} chartAreaData - Building_Area_Chart_Data[]
+     */
     const addEmptyHoursToBuildingsInfo = (chartAreaData: Building_Area_Chart_Data[]) => {
         chartAreaData.forEach((_building_data) => {
             let _data_series: Building_Chart_Series[] = [];
             DayCategories.forEach((categoryName) => {
-                let serie_ = _building_data.series.find((ser) => ser.categoryField == categoryName);
+                let serie_ = _building_data.series.find((ser) => ser.categoryField === categoryName);
                 if (serie_ === null || serie_ === undefined) {
                     _data_series.push({
                         categoryField: categoryName,
@@ -85,6 +104,15 @@ const InsightAnalytics = () => {
         });
     }
 
+    /**
+     * If buildings and flexOffers are defined, then create a new array of Building_Area_Chart_Data,
+     * and for each flexOffer, for each building_info, create a new Building_Chart_Series, and if the
+     * building_name of the Building_Chart_Series is already in the array of Building_Area_Chart_Data,
+     * then add the Building_Chart_Series to the array of Building_Chart_Series, otherwise add a new
+     * Building_Area_Chart_Data to the array of Building_Area_Chart_Data, and then call the
+     * addEmptyHoursToBuildingsInfo function with the array of Building_Area_Chart_Data, and then set
+     * the areaData state to the array of Building_Area_Chart_Data.
+     */
     const setAreaDataFromFlexOffers = () => {
         if (buildings) {
             if (flexOffers) {
@@ -93,7 +121,7 @@ const InsightAnalytics = () => {
                     offer.building_info.forEach((info) => {
                         let _serie_data: Building_Chart_Series = {
                             categoryField: new Date(info.start_time).getUTCHours().toString(),
-                            flexibility: info.flexibility,
+                            flexibility: Math.round(info.flexibility * 100) / 100,
                             id: info.building_id
                         } as Building_Chart_Series;
                         let _building_name = buildings.find((building) => building.building_id == info.building_id)?.building_name;
@@ -110,12 +138,13 @@ const InsightAnalytics = () => {
                 });
                 addEmptyHoursToBuildingsInfo(chartAreaData);
                 setAreaData(chartAreaData);
-            }
-            
-        }
-        
+            }            
+        }        
     }
 
+    /**
+     * If the building is selected, add the building name to the categories array.
+     */
     const getCategoriesForPieAndBarChart = () => {
         let categories = [] as string[];
         buildings?.forEach((building) => {
@@ -126,6 +155,9 @@ const InsightAnalytics = () => {
         setPieCategories(categories);
     }
 
+    /* A React Hook. It is a function that lets you “hook into” React features. For example, useState
+    is a Hook that lets you add React state to function components. We call it inside a function
+    component to add some local state to it. React will preserve this state between re-renders. */
     useEffect(() => {
         if (flexOffers) {
             getCategoriesForPieAndBarChart();
@@ -134,8 +166,13 @@ const InsightAnalytics = () => {
         }
     }, [flexOffers]);
 
+    /**
+     * It takes an object with a category property and returns that property
+     * @param {any} e - The event object.
+     */
     const labelContent = (e:any) => e.category;
 
+    /* Rendering a pie chart. */
     const renderPieChartSeriesItem = (items: Building_Chart_Series[]) => {
         return <ChartSeriesItem
                     key={'pie'}
@@ -154,6 +191,7 @@ const InsightAnalytics = () => {
                 </ChartSeriesItem>
     }
 
+    /* Rendering a column chart series item. */
     const renderColumnChartSeriesItem = (items: Building_Chart_Series[]) => {
         return <ChartSeriesItem
                     key={'coll'}
@@ -164,6 +202,7 @@ const InsightAnalytics = () => {
                     categoryField={'categoryField'} />
     }
 
+    /* A function that returns a ChartSeriesItem component. */
     const renderAreaChartSeriesItem = (item: Building_Area_Chart_Data,index:number) => {
         return <ChartSeriesItem
                     key={index}

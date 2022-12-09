@@ -14,6 +14,9 @@ import {
     sendFlexOffer,
 } from '../../utils/api/api.utils';
 
+/* A generator function that is listening for the action type
+`ALGORITHM_ACTION_TYPES.GET_ALGORITHM_START` and when it is dispatched, it will call the function
+`getAlgorithm` */
 export function* getAlgorithm({ payload: { request } }) {
     try {
         yield put(setAlgorithmDataLoading(true));
@@ -35,6 +38,9 @@ export function* getAlgorithm({ payload: { request } }) {
     }
 }
 
+/* A generator function that is listening for the action type
+`ALGORITHM_ACTION_TYPES.SEND_FLEX_OFFER_START` and when it is dispatched, it will call the function
+`sendOffer` */
 export function* sendOffer({ payload: { user_id, response } }) {
     try {
         yield put(setAlgorithmDataLoading(true));
@@ -44,11 +50,6 @@ export function* sendOffer({ payload: { user_id, response } }) {
             response
         );
         if (sendOfferResponse) {
-            //if (sendOfferResponse.status) {
-            //    yield put(sendFlexOfferSuccess(sendOfferResponse));
-            //} else {
-            //    yield put(sendFlexOfferFailed(sendOfferResponse.message));
-            //}
             yield put(sendFlexOfferSuccess(sendOfferResponse));
         } else {
             yield put(sendFlexOfferFailed("SendOfferResponse data was null!"));
@@ -58,14 +59,19 @@ export function* sendOffer({ payload: { user_id, response } }) {
     }
 }
 
+/* Listening for the action type `ALGORITHM_ACTION_TYPES.GET_ALGORITHM_START` and when it is
+dispatched, it will call the function `getAlgorithm` */
 export function* onGetAlgorithmDataStart() {
     yield takeLatest(ALGORITHM_ACTION_TYPES.GET_ALGORITHM_START, getAlgorithm);
 }
 
+/* Listening for the action type `ALGORITHM_ACTION_TYPES.SEND_FLEX_OFFER_START` and when it is
+dispatched, it will call the function `sendOffer` */
 export function* onSendFlexOfferStart() {
     yield takeLatest(ALGORITHM_ACTION_TYPES.SEND_FLEX_OFFER_START, sendOffer);
 }
 
+/* A generator function that is used to run all the sagas at once. */
 export function* algorithmDataSagas() {
     yield all([
         call(onGetAlgorithmDataStart),

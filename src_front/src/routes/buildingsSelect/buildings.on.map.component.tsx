@@ -8,14 +8,21 @@ type BuildingsOnMapProps = {
 }
 
 export function BuildingsOnMap(props: BuildingsOnMapProps) {
-    const [hue, setHue] = useState<number>(0);
+    const [hue] = useState<number>(0);
     const color = `hsl(${hue % 360}deg 39% 70%)`;
     const colorSelected = `hsl(${60 % 360}deg 39% 70%)`;
     const [mapHeight, setMapHeight] = useState(window.innerHeight * 0.8);
     const [defaultCenter, setDefaultCenter] = useState<Point>([45.8150, 15.9819]);
 
+    /**
+     * "If the props object has a buildings property that is an array with at least one element, then
+     * return the average longitude and latitude of the buildings in the array, otherwise return the
+     * longitude and latitude of Zagreb, Croatia."
+     * @returns An array of two numbers.
+     */
     const getAverageMapPosition = () => {
-        if (props.buildings && props.buildings.length>0) {
+        let point_:Point=[45.8150, 15.9819] as Point;
+        if (props && props.buildings && props.buildings.length>0) {
             let long = 0;
             let lat = 0;
             props.buildings.forEach(building => {
@@ -24,21 +31,20 @@ export function BuildingsOnMap(props: BuildingsOnMapProps) {
             });
             long = long / props.buildings.length;
             lat = lat / props.buildings.length;
-            return [long, lat] as Point;
+            point_= [long, lat] as Point;
         }
-        return [45.8150, 15.9819] as Point;
+        return point_;
     }
 
-    useEffect(() => {
-        setMapHeight(window.innerHeight * 0.8);
-    }, [window.innerHeight]);
+    // useEffect(() => {
+    //     setMapHeight(window.innerHeight * 0.8);
+    // }, [window.innerHeight]);
 
+    /* It's a React hook that runs the function whenever the value of props.buildings changes. */
     useEffect(() => {
-
         if (props.buildings && props.buildings.length>0) {
             setDefaultCenter(getAverageMapPosition());
-        }
-        
+        }        
     }, [props.buildings]);
 
     return (

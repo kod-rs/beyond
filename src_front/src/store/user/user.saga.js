@@ -8,26 +8,12 @@ import {
   signOutFailed,
 } from './user.action';
 
-import {
-  //getCurrentUser,
+import {  
   signInAuthUserWithEmailAndPassword,
   signOutUser,
 } from '../../utils/api/login.utils';
 
-
-//export function* returnCurrentUser() {
-//    try {
-//        let currentUser = yield call(getCurrentUser);
-//        currentUser.then((user) => { return user; });
-//        //if (currentUser) {
-//        //    return currentUser;
-//        //}
-//    } catch (error) {
-//        yield put(signInFailed(error));
-//    }
-//}
-
-
+/* A generator function that is being called by the signInWithEmailSaga. */
 export function* signInWithEmail({ payload: { email, password } }) {
     try {
         let user = yield call(
@@ -49,6 +35,8 @@ export function* signInWithEmail({ payload: { email, password } }) {
     }
 }
 
+
+/* Calling the signOutUser function and then dispatching the signOutSuccess action. */
 export function* signOut() {
   try {
     yield call(signOutUser);
@@ -58,17 +46,19 @@ export function* signOut() {
   }
 }
 
+/* Listening for the EMAIL_SIGN_IN_START action and then calling the signInWithEmail function. */
 export function* onEmailSignInStart() {
   yield takeLatest(USER_ACTION_TYPES.EMAIL_SIGN_IN_START, signInWithEmail);
 }
 
+/* Listening for the SIGN_OUT_START action and then calling the signOut function. */
 export function* onSignOutStart() {
   yield takeLatest(USER_ACTION_TYPES.SIGN_OUT_START, signOut);
 }
 
+/* A generator function that is used to run all the sagas at once. */
 export function* userSagas() {
     yield all([
-        //call(returnCurrentUser),
         call(onEmailSignInStart),
         call(onSignOutStart),
   ]);

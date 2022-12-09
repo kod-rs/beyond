@@ -1,5 +1,5 @@
 import { Fragment } from 'react';
-import { Outlet, Navigate } from 'react-router-dom';
+import { Outlet } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { selectCurrentUser } from '../../store/user/user.selector';
 import { signOutStart } from '../../store/user/user.action';
@@ -8,14 +8,14 @@ import { ReactComponent as BeyondLogo } from '../../assets/beyond-logo.svg';
 import {
   NavigationContainer,
   NavLinks,
-  NavLink,
   LogoContainer,
   FLEXoptContainer,
 } from './navigation.styles';
-import Authentication from '../authentication/authentication.component';
-import Home from '../home/home.component';
 
-
+/**
+ * The Navigation function is a React component that renders a navigation bar and a router outlet.
+ * @returns A Fragment with a NavigationContainer, LogoContainer, NavLinks, and Outlet.
+ */
 const Navigation = () => {
     const dispatch = useDispatch();
     const currentUser = useSelector(selectCurrentUser);
@@ -38,4 +38,5 @@ const Navigation = () => {
         );
     };
 
+/* Exporting the Navigation component. */
 export default Navigation;

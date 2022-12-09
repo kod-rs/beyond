@@ -2,8 +2,10 @@ import { Algorithm_Request, Algorithm_Response } from "../../store/algorithm/alg
 import { Building } from "../../store/buildings/buildings.types";
 import { UserData } from "../../store/user/user.types";
 
+/* A constant that is being used to store the base URL of the API. */
 const CONFIG_URL = process.env.REACT_APP_BASE_URL;
 
+/* Defining an enumeration of strings. */
 enum REQUEST_TYPES {
     LOGIN_REQUEST = "/login/",
     BUILDINGS_REQUEST = "/buildings/",
@@ -13,6 +15,14 @@ enum REQUEST_TYPES {
 }
 
 
+/**
+ * This function takes in a request type and a body object, and returns a promise that resolves to the
+ * data returned from the server.
+ * @param {REQUEST_TYPES} request_type - REQUEST_TYPES = 'login' | 'register' | 'logout' |
+ * 'get_user_data' | 'update_user_data' | 'delete_user_data'
+ * @param {object} bodyObj - {
+ * @returns The data is being returned as a promise.
+ */
 const call_Fetch_Post = async (request_type: REQUEST_TYPES, bodyObj:object) => {
     const res = await fetch(CONFIG_URL + request_type, {
         method: 'POST',
@@ -26,6 +36,13 @@ const call_Fetch_Post = async (request_type: REQUEST_TYPES, bodyObj:object) => {
     return data;
 }
 
+/**
+ * This function takes in an email and password, and returns a promise that resolves to a response
+ * object.
+ * @param {string} email - string, password: string
+ * @param {string} password - string
+ * @returns The data is being returned from the call_Fetch_Post function.
+ */
 export const signInWithEmailAndPassword = async (email: string, password: string) => {
 
     const bodyObj = {
@@ -39,6 +56,20 @@ export const signInWithEmailAndPassword = async (email: string, password: string
 };
 
 
+/**
+ * This function takes a user object, and returns a promise that resolves to an array of building
+ * objects.
+ * @param {UserData} user - UserData = {
+ * @returns {
+ *     "type": "buildings_by_user_id_response",
+ *     "buildings": [
+ *         {
+ *             "building_id": "1",
+ *             "building_name": "Building 1",
+ *             "building_address": "123 Main St",
+ *             "building_city": "Anytown",
+ *             "building_state
+ */
 export const getBuildingsForUser = async (user: UserData) => {
  
     const bodyObj = {
@@ -50,6 +81,10 @@ export const getBuildingsForUser = async (user: UserData) => {
     return data;
 };
 
+/**
+ * This function takes an array of buildings, and returns an array of buildings with additional data.
+ * @param {Building[]} buildings - Building[]
+ */
 export const getBuildingHistoryData = async (buildings: Building[]) => {
 
     const bodyObj = {
@@ -61,6 +96,11 @@ export const getBuildingHistoryData = async (buildings: Building[]) => {
     return data;
 };
 
+/**
+ * This function takes a date as an argument and returns a promise that resolves to an object
+ * containing the data from the API call.
+ * @param {Date} date - Date
+ */
 export const getFlexDemandData = async (date: Date) => {
 
     const bodyObj = {
@@ -72,6 +112,12 @@ export const getFlexDemandData = async (date: Date) => {
     return data;
 };
 
+/**
+ * It takes an object of type Algorithm_Request, converts it to a JSON object, and sends it to the
+ * server.
+ * @param {Algorithm_Request} request - Algorithm_Request
+ * @returns The data is being returned as a string.
+ */
 export const getAlgorithmData = async (request: Algorithm_Request) => {
 
     const bodyObj = {
@@ -84,6 +130,13 @@ export const getAlgorithmData = async (request: Algorithm_Request) => {
     return data;
 };
 
+/**
+ * It takes a user_id and an algorithm_response object, and sends a POST request to the server with the
+ * user_id and algorithm_response object as the body
+ * @param {string} user_id - string, response: Algorithm_Response
+ * @param {Algorithm_Response} response - Algorithm_Response
+ * @returns The response from the server.
+ */
 export const sendFlexOffer = async (user_id: string, response: Algorithm_Response) => {
 
     const bodyObj = {
