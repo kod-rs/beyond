@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { Map, Marker, Point } from "pigeon-maps";
 import { Building } from "../../store/buildings/buildings.types";
 
@@ -31,16 +31,29 @@ export function BuildingsOnMap(props: BuildingsOnMapProps) {
             });
             long = long / props.buildings.length;
             lat = lat / props.buildings.length;
-            point_= [long, lat] as Point;
+            point_ = [long, lat] as Point;
         }
         return point_;
     }
 
-    // useEffect(() => {
-    //     setMapHeight(window.innerHeight * 0.8);
-    // }, [window.innerHeight]);
+    // Add this hook to run the function whenever the window is resized
+    useEffect(() => {
+        // Add an event listener for the 'resize' event
+        window.addEventListener('resize', handleResize);
 
-    /* It's a React hook that runs the function whenever the value of props.buildings changes. */
+        // Return a function to clean up the event listener when the component is unmounted
+        return () => {
+            window.removeEventListener('resize', handleResize);
+        };
+    });
+
+    // Define a function to handle the 'resize' event
+    const handleResize = () => {
+        // Update the mapHeight state variable with the new window height
+        setMapHeight(window.innerHeight * 0.8);
+    }
+
+    /* It's a React hook that runs sets the initial map center position whenever the value of props.buildings changes. */
     useEffect(() => {
         if (props.buildings && props.buildings.length>0) {
             setDefaultCenter(getAverageMapPosition());

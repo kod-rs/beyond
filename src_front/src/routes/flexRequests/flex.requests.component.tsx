@@ -53,7 +53,7 @@ export type Filtered_Flex_Data = {
 const FlexRequests = () => {
     const currentUser = useSelector(selectCurrentUser);
     const buildingsHistory = useSelector(selectBuildingsHistoricData);
-    const flexOffers = useSelector(selectAlgorithmData);
+    const flexOffers = useSelector(selectAlgorithmData);    
     const flexDemand = useSelector(selectFlexDemand);
     const flexDate = useSelector(selectFlexDate);
     const offerResponse = useSelector(selectFlexOfferResponse);
@@ -70,9 +70,9 @@ const FlexRequests = () => {
     const [sliderPct, setSliderPct] = useState<number>(100);
     const [success, setSuccess] = useState<boolean|null>(null);
     const [error, setError] = useState<boolean | null>(null);
+    const [flexOffersModified, setFlexOffersModified] = useState<Flex_Offer[]>([]);
 
-    /* A React Hook. It is a function that lets you “hook into” React features. For example, useState
-    is a Hook that lets you add React state to function components. */
+    /* Define categories when flexDemand is loaded */
     useEffect(() => {
         if (flexDemand) {
             defineCategories();
@@ -81,14 +81,20 @@ const FlexRequests = () => {
 
     /* Setting the selectedDate to tomorrow if the selectedDate is null or undefined. */
     useEffect(() => {
+        // Set the default value of selectedDate to tomorrow if it is null or undefined
+        let defaultDate = tomorrow;
+
+        // If flexDate is not null, set the default value of selectedDate to flexDate
+        if (flexDate != null) {
+            defaultDate = flexDate;
+        }
+
+        // If selectedDate is null or undefined, set it to the default value
         if (selectedDate == null || selectedDate === undefined) {
-            if (flexDate == null) {
-                setSelectedDate(tomorrow);
-            } else {
-                setSelectedDate(flexDate);
-            }
+            setSelectedDate(defaultDate);
         }
     }, []);
+
 
     /* Checking if categories and flexDemand are not null, then it is calling the
     setFilteredFlexDataFromDemand() function. */
@@ -141,11 +147,18 @@ const FlexRequests = () => {
      * @param {Flex_Demand} demand - Flex_Demand
      * @returns A function that takes a demand object and returns a string.
      */
-    const getTooltipForDemand = (demand: Flex_Demand) => {
-        let start = new Date(demand.start_time);
-        let end = new Date(demand.end_time);
-        return start.toTimeString().split(' ')[0] + " - " + end.toTimeString().split(' ')[0];
-    }
+    const getTooltipForDemandOrOffer = (demandOrOffer: Flex_Demand|Flex_Offer) => {
+        // Create Date objects from the start_time and end_time properties of the demand object
+        let start = new Date(demandOrOffer.start_time);
+        let end = new Date(demandOrOffer.end_time);
+
+        // Get the time string for each Date object and split it at the space character
+        let startTime = start.toTimeString().split(" ")[0];
+        let endTime = end.toTimeString().split(" ")[0];
+
+        // Return a string with the start and end times separated by a hyphen
+        return `${startTime} - ${endTime}`;
+    };
 
     /**
      * If flexDemand is truthy, then set filteredFlexDemandData to the result of mapping flexDemand to
@@ -157,7 +170,7 @@ const FlexRequests = () => {
         if (flexDemand) {
             let data: Filtered_Flex_Data[] = flexDemand.map((demand) => {
                 demand.flexibility = Math.round(demand.flexibility * 100) / 100;
-                return { ...demand, categoryField: getTooltipForDemand(demand) }
+                return { ...demand, categoryField: getTooltipForDemandOrOffer(demand) }
             }) as Filtered_Flex_Data[];
             if (data) {
                 setFilteredFlexDemandData(data);
@@ -166,53 +179,62 @@ const FlexRequests = () => {
     }
 
     /**
-     * It takes a Flex_Offer object, creates two Date objects from the start_time and end_time
-     * properties of the Flex_Offer object, and returns a string that is the start time and end time of
-     * the Flex_Offer object.
-     * @param {Flex_Offer} offer - Flex_Offer
-     * @returns A function that takes an offer and returns a string.
-     */
-    const getTooltipForOffer = (offer: Flex_Offer) => {
-        let start = new Date(offer.start_time);
-        let end = new Date(offer.end_time);
-        return start.toTimeString().split(' ')[0] + " - " + end.toTimeString().split(' ')[0];
-    }
-
-    /**
      * If flexOffers is not null, then map over flexOffers and return a new array of Filtered_Flex_Data
      * objects.
      */
     const setFilteredFlexDataFromOffers = () => {
-        if (flexOffers) {
-            let data: Filtered_Flex_Data[] = flexOffers.map((offer) => {
-                offer.offered_flexibility = Math.round(offer.offered_flexibility * 100) / 100;
-                let tooltipTxt = getTooltipForOffer(offer);
-                return {
-                    start_time: offer.start_time,
-                    end_time: offer.end_time,
-                    flexibility: offer.offered_flexibility,
-                    categoryField: tooltipTxt,
-                    percentage: Math.round(offer.offered_flexibility/offer.requested_flexibility*100),
-                }
-            }) as Filtered_Flex_Data[];
-            if (data) {
-                setFilteredFlexOfferData(data);
-            }
+        // Check if flexOffers is defined and not empty
+        if (Array.isArray(flexOffers) && flexOffers.length > 0) {
+          // Create a new array called data and map the flexOffers array
+          let data: Filtered_Flex_Data[] = flexOffers.map((offer) => {
+            // Round the offered_flexibility property to two decimal places
+            offer.offered_flexibility = Math.round(offer.offered_flexibility * 100) / 100;
+      
+            // Call the getTooltipForOffer function and save the result to a variable
+            let tooltipTxt = getTooltipForDemandOrOffer(offer);
+      
+            // Return an object with the data we want to include in the new array
+            return {
+              start_time: offer.start_time,
+              end_time: offer.end_time,
+              flexibility: offer.offered_flexibility,
+              categoryField: tooltipTxt,
+              percentage: Math.round(offer.offered_flexibility / offer.requested_flexibility * 100),
+            };
+          });
+      
+          // Check if the data array is defined and not empty
+          if (Array.isArray(data) && data.length > 0) {
+            // Call the setFilteredFlexOfferData function and pass it the data array
+            setFilteredFlexOfferData(data);
+          }
         }
-    }
+      };
 
     /* Creating a new object and assigning it to the variable algorithmRequest. */
     const setAlgorithmRequest = () => {
-        let _tmp_flexDemand = JSON.parse(JSON.stringify(flexDemand)) as Flex_Demand[];
-        let algorithmRequest = {
-            flexibility_demands: _tmp_flexDemand?.map((demand) => {
-                demand.flexibility = demand.flexibility * sliderPct / 100;
-                return demand;
-            }),
+        // Check if the flexDemand variable is defined
+        if (flexDemand) {
+          // Create a copy of the flexDemand array and save it to a variable
+          let _tmp_flexDemand = [...flexDemand];
+      
+          // Map the _tmp_flexDemand array and update the flexibility property of each demand
+          _tmp_flexDemand = _tmp_flexDemand.map((demand) => {
+            demand.flexibility = demand.flexibility * sliderPct / 100;
+            return demand;
+          });
+      
+          // Create an algorithmRequest object and assign it the _tmp_flexDemand array and the buildingsHistory array
+          let algorithmRequest = {
+            flexibility_demands: _tmp_flexDemand,
             building_energy_list: buildingsHistory,
-        } as Algorithm_Request;
-        return algorithmRequest;
-    }
+          } as Algorithm_Request;
+      
+          // Return the algorithmRequest object
+          return algorithmRequest;
+        }
+      };
+      
 
     /**
      * GetAlgorithmData() is a function that calls setAlgorithmRequest() and then dispatches the result
@@ -220,7 +242,9 @@ const FlexRequests = () => {
      */
     const getAlgorithmData = () => {
         let algorithmRequest = setAlgorithmRequest();
-        dispatch(getAlgorithmDataStart(algorithmRequest));
+        if(algorithmRequest){
+            dispatch(getAlgorithmDataStart(algorithmRequest));
+        }
     }
 
     /**
@@ -250,12 +274,12 @@ const FlexRequests = () => {
 
     /**
      * If flexDemand is true, then map over flexDemand and return the result of
-     * getTooltipForDemand(demand) and set the result to categories.
+     * getTooltipForDemandOrOffer(demand) and set the result to categories.
      */
     const defineCategories = () => {
         if (flexDemand) {
             let ctgs = flexDemand.map((demand) => {
-                return getTooltipForDemand(demand);
+                return getTooltipForDemandOrOffer(demand);
             })
             if (ctgs) {
                 setCategories(ctgs);
@@ -437,8 +461,7 @@ const FlexRequests = () => {
                             <Notification
                                 type={{ style: "error", icon: true }}
                                 closable={true}
-                                onClose={() => { setError(false) }}
-                            >
+                                onClose={() => { setError(false) }} >
                                 <span>Oops! Something went wrong ...</span>
                             </Notification>
                         )}
@@ -449,7 +472,6 @@ const FlexRequests = () => {
             <Outlet />
         </>
     );
-
 };
 
 export default FlexRequests;
