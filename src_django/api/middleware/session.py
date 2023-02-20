@@ -14,6 +14,7 @@
 #     def __call__(self, request):
 #         request_body = json_decode(request.body)
 #         # if request_body.get('token'):
+                # read from db GET EXP_TIME WHERE TOKEN = REQ(TOKEN)) (kroz dj)
 #         #     # check token expiry
 #         #     # if expired
 #         #

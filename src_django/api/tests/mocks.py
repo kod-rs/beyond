@@ -16,7 +16,9 @@ ids = ('ZIV0034902130', 'ZIV0034902131', 'ZIV0034704030',
 def mock_token(username, password):
     if username == password == 'mirkofleks':
         return {'refresh_token': 'r3f75h',
-                'access_token': 'ac355_70k3n'}
+                'access_token': 'ac355_70k3n',
+                'expires_in': 300,
+                'refresh_expires_in': 1800}
     else:
         raise keycloak.exceptions.KeycloakAuthenticationError(
             response_code=401)
