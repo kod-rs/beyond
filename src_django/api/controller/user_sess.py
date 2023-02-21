@@ -1,5 +1,3 @@
-import typing
-
 from src_django.api.models import UserSession
 
 

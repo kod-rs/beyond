@@ -6,6 +6,7 @@ from rest_framework.views import APIView
 from src_django.api.validator.internal_api.login import validate_internal_login
 from src_django.api import common
 from src_django.settings import KEYCLOAK_CONFIG
+from src_django.api.controller import user_sess
 
 
 class LoginView(APIView):
@@ -53,12 +54,22 @@ class LoginView(APIView):
                 msg='invalid data received from keycloak',
                 response_type=self._response_type)
 
+        success = user_sess.add(user_id=userinfo['sub'],
+                                user_token=token['access_token'],
+                                expires_in=token['expires_in'])
+
+        if not success:
+            return common.false_status(
+                msg='login failed',
+                response_type=self._response_type
+            )
+
         return JsonResponse({'type': self._response_type,
                              'status': True,
                              'user_id': userinfo['sub'],
                              'username': username,
                              'role': role,
-                             'access_token': token['refresh_token']})
+                             'access_token': token['access_token']})
 
 
 def _keycloak_connect():

@@ -11,5 +11,5 @@ class UserSession(models.Model):
         expires_in: amount os seconds that session lasts
     """
     user_id = models.CharField(max_length=200)
-    user_token = models.CharField()
+    user_token = models.CharField(max_length=2_000)
     expires_in = models.IntegerField()
