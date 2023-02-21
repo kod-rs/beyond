@@ -1,4 +1,3 @@
-import datetime
 import json
 from unittest.mock import MagicMock
 
@@ -6,10 +5,6 @@ import keycloak
 from django.test import Client
 from django.test import TestCase
 
-from src_django.api import common
-from src_django.api import cryptography_wrapper
-from src_django.api.models.aggregator_flexibility import AggregatorFlexibility
-from src_django.api.models.building_flexibility import BuildingFlexibility
 from src_django.api.controller import user_sess
 from src_django.api.tests import mocks
 
