@@ -4,6 +4,7 @@ id: 'flexopt://internal_api/buildings_info_request.yaml#'
 title: Buildings info request
 description: Buildings info configuration schema
 type: object
+additionalProperties: false
 required:
   - type
   - building_ids

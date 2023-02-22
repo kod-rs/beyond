@@ -4,6 +4,7 @@ id: 'flexopt://backend_responses/buildings_by_user_id_response.yaml#'
 title: Buildings by user id response
 description: Buildings by user id response configuration schema
 type: object
+additionalProperties: false
 oneOf:
   - '$ref': '#/definitions/success'
   - '$ref': '#/definitions/fail'

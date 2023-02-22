@@ -4,6 +4,7 @@ id: 'flexopt://backend_responses/flexibility_offer_by_aggregator.yaml#'
 title: Flexibility offer by aggregator id request
 description: Flexibility offer by aggregator id request configuration schema
 type: object
+additionalProperties: false
 oneOf:
   - '$ref': '#/definitions/success'
   - '$ref': '#/definitions/fail'

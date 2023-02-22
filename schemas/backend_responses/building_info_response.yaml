@@ -4,6 +4,7 @@ id: 'flexopt://backend_responses/building_info_response.yaml#'
 title: Building info response
 description: Building info response configuration schema
 type: object
+additionalProperties: false
 oneOf:
   - '$ref': '#/definitions/success'
   - '$ref': '#/definitions/fail'

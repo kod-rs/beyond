@@ -4,6 +4,7 @@ id: 'flexopt://backend_responses/algorithm_response.yaml#'
 title: Algorithm response
 description: Algorithm response configuration schema
 type: object
+additionalProperties: false
 oneOf:
   - '$ref': '#/definitions/success'
   - '$ref': '#/definitions/fail'

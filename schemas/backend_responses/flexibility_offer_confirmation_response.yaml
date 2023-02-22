@@ -4,6 +4,7 @@ id: 'flexopt://backend_responses/flexibility_offer_confirmation.yaml#'
 title: Flexibility offer confirmation response
 description: Flexibility offer confirmation configuration schema
 type: object
+additionalProperties: false
 oneOf:
   - '$ref': '#/definitions/success'
   - '$ref': '#/definitions/fail'

@@ -4,6 +4,7 @@ id: 'flexopt://backend_responses/flexibility_offer_by_building.yaml#'
 title: Flexibility offer by building id request
 description: Flexibility offer by building id request configuration schema
 type: object
+additionalProperties: false
 oneOf:
   - '$ref': '#/definitions/success'
   - '$ref': '#/definitions/fail'

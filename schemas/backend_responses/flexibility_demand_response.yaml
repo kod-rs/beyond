@@ -4,6 +4,7 @@ id: 'flexopt://backend_responses/flexibility_demand_response.yaml#'
 title: Flexibility demand response
 description: Flexibility demand configuration schema
 type: object
+additionalProperties: false
 oneOf:
   - '$ref': '#/definitions/success'
   - '$ref': '#/definitions/fail'

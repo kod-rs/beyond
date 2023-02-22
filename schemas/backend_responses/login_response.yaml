@@ -4,6 +4,7 @@ id: 'flexopt://backend_responses/login_response.yaml#'
 title: Login response
 description: Login response configuration schema
 type: object
+additionalProperties: false
 oneOf:
   - '$ref': '#/definitions/success'
   - '$ref': '#/definitions/fail'

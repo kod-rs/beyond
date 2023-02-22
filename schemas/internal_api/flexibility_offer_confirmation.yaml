@@ -4,6 +4,7 @@ id: 'flexopt://internal_api/flexibility_offer_confirmation.yaml#'
 title: Flexibility offer confirmation request
 description: Flexibility offer confirmation configuration schema
 type: object
+additionalProperties: false
 required:
   - type
   - user_id
@@ -11,6 +12,8 @@ required:
 properties:
   type:
     const: flexibility_offer_confirmation_request
+  user_id:
+    type: string
   date:
     type: string
   algorithm_response:

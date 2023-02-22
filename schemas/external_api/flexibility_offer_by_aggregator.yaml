@@ -4,6 +4,7 @@ id: 'flexopt://external_api/flexibility_offer_by_aggregator.yaml#'
 title: Flexibility offer by aggregator id request
 description: Flexibility offer by aggregator id request configuration schema
 type: object
+additionalProperties: false
 required:
   - type
   - start_time

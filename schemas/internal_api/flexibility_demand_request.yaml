@@ -4,6 +4,7 @@ id: 'flexopt://internal_api/flexibility_demand_request.yaml#'
 title: Flexibility demand request
 description: Flexibility demand configuration schema
 type: object
+additionalProperties: false
 required:
   - type
   - date

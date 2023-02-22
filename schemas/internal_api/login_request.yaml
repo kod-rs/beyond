@@ -4,6 +4,7 @@ id: 'flexopt://internal_api/login_request.yaml#'
 title: Login request
 description: Login request configuration schema
 type: object
+additionalProperties: false
 required:
   - type
   - username

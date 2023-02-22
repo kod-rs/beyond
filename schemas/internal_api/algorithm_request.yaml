@@ -4,6 +4,7 @@ id: 'flexopt://internal_api/algorithm_request.yaml#'
 title: Algorithm request
 description: Algorithm configuration schema
 type: object
+additionalProperties: false
 required:
   - type
   - building_energy_list

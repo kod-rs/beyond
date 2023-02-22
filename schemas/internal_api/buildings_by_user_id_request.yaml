@@ -4,6 +4,7 @@ id: 'flexopt://internal_api/buildings_by_user_id_request.yaml#'
 title: Buildings by user ID request
 description: Buildings by user ID configuration schema
 type: object
+additionalProperties: false
 required:
   - type
   - user_id
