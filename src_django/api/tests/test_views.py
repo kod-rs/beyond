@@ -63,7 +63,7 @@ class TestLocationView(TestCase):
             side_effect=mocks.mock_req_building_by_usr_id)
         common.BeyondConnection.req_building_info = MagicMock(
             side_effect=mocks.mock_req_building_info)
-        sess_start = datetime.datetime.now() - datetime.timedelta(seconds=5)
+        sess_start = timezone.now() - datetime.timedelta(seconds=5)
         UserSession.objects.create(user_token='janje',
                                    expires_in=300,
                                    session_start=sess_start)
