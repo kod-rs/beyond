@@ -8,6 +8,7 @@ additionalProperties: false
 required:
   - type
   - building_ids
+  - access_token
 properties:
   type:
     const: building_info_request
@@ -15,4 +16,6 @@ properties:
     type: array
     items:
       type: string
+  access_token:
+    type: string
 ...

@@ -5,11 +5,13 @@ from unittest.mock import MagicMock
 import keycloak
 from django.test import Client
 from django.test import TestCase
+from django.utils import timezone
 
 from src_django.api import common
 from src_django.api import cryptography_wrapper
 from src_django.api.models.aggregator_flexibility import AggregatorFlexibility
 from src_django.api.models.building_flexibility import BuildingFlexibility
+from src_django.api.models.user_session import UserSession
 from src_django.api.tests import mocks
 
 
@@ -61,11 +63,16 @@ class TestLocationView(TestCase):
             side_effect=mocks.mock_req_building_by_usr_id)
         common.BeyondConnection.req_building_info = MagicMock(
             side_effect=mocks.mock_req_building_info)
+        sess_start = datetime.datetime.now() - datetime.timedelta(seconds=5)
+        UserSession.objects.create(user_token='janje',
+                                   expires_in=300,
+                                   session_start=sess_start)
 
     def test_get_buildings_by_user_id(self):
         client = Client()
         data = {'type': 'buildings_by_user_id_request',
-                'user_id': 'usr1abcdef'}
+                'user_id': 'usr1abcdef',
+                'access_token': 'janje'}
 
         response = client.post('/buildings/',
                                json.dumps(data),
@@ -83,7 +90,8 @@ class TestLocationView(TestCase):
         client = Client()
 
         data = {'type': 'building_info_request',
-                'building_ids': mocks.ids[:3]}
+                'building_ids': mocks.ids[:3],
+                'access_token': 'janje'}
 
         response = client.post('/buildings/',
                                json.dumps(data),
@@ -101,13 +109,18 @@ class TestFlexibilityDemand(TestCase):
     def setUp(self):
         common.BeyondConnection.req_flex_demand = MagicMock(
             side_effect=mocks.mock_get_flexibility_demand)
+        sess_start = timezone.now() - datetime.timedelta(seconds=5)
+        UserSession.objects.create(user_token='janje',
+                                   expires_in=300,
+                                   session_start=sess_start)
 
     def test_flexibility_demand(self):
         client = Client()
         date = datetime.datetime(year=2022, month=4, day=10, hour=0)
         date = date.replace(tzinfo=datetime.timezone.utc).isoformat()
         data = {'type': 'flexibility_demand_request',
-                'date': date}
+                'date': date,
+                'access_token': 'janje'}
 
         response = client.post('/flexibility_demand/',
                                json.dumps(data),
@@ -124,6 +137,12 @@ class TestFlexibilityDemand(TestCase):
 
 
 class TestAlgorithmView(TestCase):
+    def setUp(self):
+        sess_start = timezone.now() - datetime.timedelta(seconds=5)
+        UserSession.objects.create(user_token='janje',
+                                   expires_in=300,
+                                   session_start=sess_start)
+
     def test_algorithm(self):
         client = Client()
 
@@ -141,7 +160,8 @@ class TestAlgorithmView(TestCase):
              'flexibility': flex_amount}]
         data = {'type': 'algorithm_request',
                 'building_energy_list': mocks.mock_building_energy_list(),
-                'flexibility_demands': demands}
+                'flexibility_demands': demands,
+                'access_token': 'janje'}
 
         response = client.post('/algorithm/',
                                json.dumps(data),
@@ -172,6 +192,12 @@ class TestAlgorithmView(TestCase):
 
 
 class TestFlexibilityOfferConfirmationView(TestCase):
+    def setUp(self):
+        sess_start = timezone.now() - datetime.timedelta(seconds=5)
+        UserSession.objects.create(user_token='janje',
+                                   expires_in=300,
+                                   session_start=sess_start)
+
     def test_flexibility_offer_confirmation(self):
         client = Client()
 
@@ -214,7 +240,8 @@ class TestFlexibilityOfferConfirmationView(TestCase):
 
         data = {'type': 'flexibility_offer_confirmation_request',
                 'user_id': 'usr1',
-                'algorithm_response': algorithm_response}
+                'algorithm_response': algorithm_response,
+                'access_token': 'janje'}
 
         response = client.post('/flexibility_offer_confirmation/',
                                json.dumps(data),

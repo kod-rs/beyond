@@ -1,3 +1,4 @@
+import datetime
 import json
 from unittest.mock import MagicMock
 
@@ -26,7 +27,8 @@ class TestSessionEntry(TestCase):
                                json.dumps(data),
                                content_type="application/json")
         response = response.json()
-        expiry = user_sess.get_by_usr_and_token(user_id=response['user_id'],
-                                                user_token=response['access_token'])
+        expiry, sess_start = user_sess.get_by_token(
+            user_token=response['access_token'])
 
         assert isinstance(expiry, int)
+        assert isinstance(sess_start, datetime.datetime)

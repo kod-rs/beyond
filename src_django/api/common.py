@@ -24,6 +24,14 @@ beyond_requests_mapping = {
         'flexibility_offer_by_aggregator_response'),
     'flexibility_offer_by_building': 'flexibility_offer_by_building_response'}
 
+token_types = {
+    'algorithm_request',
+    'buildings_by_user_id_request',
+    'building_info_request',
+    'flexibility_demand_request',
+    'flexibility_offer_confirmation_request'
+}
+
 
 def false_status(response_type: str, msg: str) -> JsonResponse:
     """

@@ -8,10 +8,13 @@ additionalProperties: false
 required:
   - type
   - date
+  - access_token
 properties:
   type:
     const: flexibility_demand_request
   date:
     type: string
     format: "date-time"
+  access_token:
+    type: string
 ...

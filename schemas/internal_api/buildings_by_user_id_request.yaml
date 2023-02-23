@@ -8,9 +8,12 @@ additionalProperties: false
 required:
   - type
   - user_id
+  - access_token
 properties:
   type:
     const: buildings_by_user_id_request
   user_id:
+    type: string
+  access_token:
     type: string
 ...

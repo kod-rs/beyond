@@ -9,6 +9,7 @@ required:
   - type
   - building_energy_list
   - flexibility_demands
+  - access_token
 properties:
   type:
     const: algorithm_request
@@ -20,6 +21,8 @@ properties:
     type: array
     items:
       $ref: '#/definitions/flexibility_demand'
+  access_token:
+    type: string
 definitions:
   building_energy:
     type: object

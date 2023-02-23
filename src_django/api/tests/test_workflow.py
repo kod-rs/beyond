@@ -8,6 +8,7 @@ from django.test import TestCase
 
 from src_django.api import common
 from src_django.api import cryptography_wrapper
+from src_django.api.models import UserSession
 from src_django.api.tests import mocks
 
 
@@ -40,9 +41,11 @@ class WorkflowTestCase(TestCase):
                                content_type="application/json").json()
         user_id = response['user_id']
 
+        access_token = UserSession.objects.get().user_token
         # get building ids, names and coordinates - automatically from Beyond
         data = {'type': 'buildings_by_user_id_request',
-                'user_id': user_id}
+                'user_id': user_id,
+                'access_token': access_token}
         response = client.post('/buildings/',
                                json.dumps(data),
                                content_type="application/json").json()
@@ -50,7 +53,8 @@ class WorkflowTestCase(TestCase):
         # get consumption info for 'selected' buildings from Beyond
         selected_buildings = response['buildings'][:3]
         data = {'type': 'building_info_request',
-                'building_ids': [b['building_id'] for b in selected_buildings]}
+                'building_ids': [b['building_id'] for b in selected_buildings],
+                'access_token': access_token}
         response = client.post('/buildings/',
                                json.dumps(data),
                                content_type="application/json").json()
@@ -60,7 +64,8 @@ class WorkflowTestCase(TestCase):
         date = datetime.datetime(year=2022, month=4, day=10, hour=0)
         date = date.replace(tzinfo=datetime.timezone.utc).isoformat()
         data = {'type': 'flexibility_demand_request',
-                'date': date}
+                'date': date,
+                'access_token': access_token}
         response = client.post('/flexibility_demand/',
                                json.dumps(data),
                                content_type="application/json").json()
@@ -68,7 +73,8 @@ class WorkflowTestCase(TestCase):
         # calculate flexibilities for all the demands
         data = {'type': 'algorithm_request',
                 'building_energy_list': buildings_info,
-                'flexibility_demands': response['demands']}
+                'flexibility_demands': response['demands'],
+                'access_token': access_token}
 
         response = client.post('/algorithm/',
                                json.dumps(data),
@@ -86,7 +92,8 @@ class WorkflowTestCase(TestCase):
 
         data = {'type': 'flexibility_offer_confirmation_request',
                 'user_id': user_id,
-                'algorithm_response': response}
+                'algorithm_response': response,
+                'access_token': access_token}
         client.post('/flexibility_offer_confirmation/',
                     json.dumps(data),
                     content_type="application/json")

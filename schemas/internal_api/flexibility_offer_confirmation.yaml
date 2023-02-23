@@ -9,6 +9,7 @@ required:
   - type
   - user_id
   - algorithm_response
+  - access_token
 properties:
   type:
     const: flexibility_offer_confirmation_request
@@ -31,6 +32,8 @@ properties:
         type: array
         items:
           $ref: '#/definitions/offer'
+  access_token:
+    type: string
 definitions:
   offer:
     type: object
