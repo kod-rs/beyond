@@ -5,6 +5,7 @@ This middleware verifies whether the incoming Beyond requests contain a
 signature, and if signature exists, if it is valid.
 
 It processes the following requests from Beyond:
+
 - flexibility_offer_by_aggregator
 - flexibility_offer_by_building
 

@@ -4,6 +4,7 @@ Custom Session
 This middleware verifies whether the user session is valid or has not expired.
 
 It processes the following requests from frontend:
+
 - algorithm_request
 - buildings_by_user_id_request
 - building_info_request
