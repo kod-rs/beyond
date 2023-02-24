@@ -12,4 +12,5 @@ Content
 
     agr_flex
     building_flex
+    user_sess
 

@@ -19,5 +19,5 @@ Content
 
     aggregator_flexibility
     building_flexibility
-
+    user_session
 

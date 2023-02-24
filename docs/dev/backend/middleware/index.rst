@@ -14,3 +14,4 @@ Content
     :maxdepth: 1
 
     beyond_verifier
+    session
