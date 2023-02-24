@@ -1,5 +1,7 @@
 import datetime
+
 from django.utils import timezone
+
 from src_django.api import common
 from src_django.api.controller import user_sess
 
@@ -25,11 +27,5 @@ class CustomSessionMiddleware:
             expiry_time = sess_start + datetime.timedelta(seconds=sess_expiry)
             if timezone.now() >= expiry_time:
                 return common.false_status(self._mapping[request_body.get('type')], 'session expired')
-            # check token expiry
-            # if not sess_expiry:
-            #     session_key = request.META.get(
-            #         "HTTP_%s" % settings.SESSION_KEY_NAME,
-            #         None)
-            #     request.session = self.SessionStore(session_key)
         # Ako je apsolutno sve okej onda vracam zadnju liniju
         return self.get_response(request)
