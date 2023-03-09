@@ -24,7 +24,7 @@ enum REQUEST_TYPES {
  * @returns The data is being returned as a promise.
  */
 const call_Fetch_Post = async (request_type: REQUEST_TYPES, bodyObj:object) => {
-    const res = await fetch(CONFIG_URL + request_type, {
+    const res = await fetch(request_type, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
