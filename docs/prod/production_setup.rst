@@ -57,7 +57,8 @@ keep it in root.
 
   $ sudo cp -r /path/to/beyond/src_front/build/. /var/www/html
 
-Next part revolves around configuring server file. Firstly, since size of 
+Next part revolves around configuring server file (it is located under
+``/etc/nginx/sites-available/default``). Firstly, since size of 
 packets sent to user via Djagno containing building info will increase 
 proportional to number of buildings it is recommended to increase client
 packet size. This is done by adding following variable in server config 
