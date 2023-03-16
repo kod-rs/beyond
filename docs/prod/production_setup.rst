@@ -3,7 +3,7 @@ General
 
 Project's frontend is served through *Nginx*, which communicates with *Django*
 backend and *Keycloak* service to display buildings. Required tools are node.js, 
-Python and Nginx. Bla bla bla
+Python (Django) and Nginx.
 
 Django
 =======
@@ -24,6 +24,10 @@ like shown below.
 .. code-block:: python
 
   'src_django.settings.dev' -> 'src_django.settings.prod'
+
+It is also worth noting that for production purposes it is recommended to have a
+secret key in separate file. In our case it is named ``secret_key.txt`` and 
+should be placed in home directory.
 
 Nginx
 ======
