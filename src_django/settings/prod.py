@@ -1,4 +1,4 @@
-from src_django.settings.dev import *  #NOQA
+from src_django.settings.dev import *  # NOQA
 
 DEBUG = False
 
@@ -36,3 +36,6 @@ SECURE_SSL_REDIRECT = False
 # (using HTTP) with your domain for the given period of time.
 
 SECURE_HSTS_SECONDS = 0
+
+with open(HOME_LOCATION + '/secret_key.txt') as f:
+    SECRET_KEY = f.read().strip()
