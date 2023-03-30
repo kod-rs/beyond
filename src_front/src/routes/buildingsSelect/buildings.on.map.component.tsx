@@ -31,14 +31,10 @@ export function BuildingsOnMap(props: BuildingsOnMapProps) {
             });
             long = long / props.buildings.length;
             lat = lat / props.buildings.length;
-            point_= [long, lat] as Point;
+            point_= [lat, long] as Point;
         }
         return point_;
     }
-
-    // useEffect(() => {
-    //     setMapHeight(window.innerHeight * 0.8);
-    // }, [window.innerHeight]);
 
     /* It's a React hook that runs the function whenever the value of props.buildings changes. */
     useEffect(() => {
@@ -48,7 +44,7 @@ export function BuildingsOnMap(props: BuildingsOnMapProps) {
     }, [props.buildings]);
 
     return (
-        <Map height={mapHeight} defaultCenter={defaultCenter} defaultZoom={7}>
+        <Map height={mapHeight} center={defaultCenter} defaultZoom={7}>
             {
                 props.buildings &&
                     props.buildings.map((building:Building) => (

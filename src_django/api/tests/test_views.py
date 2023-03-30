@@ -12,6 +12,7 @@ from src_django.api import cryptography_wrapper
 from src_django.api.models.aggregator_flexibility import AggregatorFlexibility
 from src_django.api.models.building_flexibility import BuildingFlexibility
 from src_django.api.models.user_session import UserSession
+from src_django.api.models.temp_usr_model import TempUserModel
 from src_django.api.tests import mocks
 
 
@@ -67,11 +68,14 @@ class TestLocationView(TestCase):
         UserSession.objects.create(user_token='janje',
                                    expires_in=300,
                                    session_start=sess_start)
+        TempUserModel.objects.create(user_token='janje',
+                                     username='mirkofleks',
+                                     user_id='5u8')
 
     def test_get_buildings_by_user_id(self):
         client = Client()
         data = {'type': 'buildings_by_user_id_request',
-                'user_id': 'usr1abcdef',
+                'user_id': '5u8',
                 'access_token': 'janje'}
 
         response = client.post('/buildings/',
@@ -90,7 +94,7 @@ class TestLocationView(TestCase):
         client = Client()
 
         data = {'type': 'building_info_request',
-                'building_ids': mocks.ids[:3],
+                'building_ids': mocks.cro_ids[:3],
                 'access_token': 'janje'}
 
         response = client.post('/buildings/',
@@ -113,6 +117,9 @@ class TestFlexibilityDemand(TestCase):
         UserSession.objects.create(user_token='janje',
                                    expires_in=300,
                                    session_start=sess_start)
+        TempUserModel.objects.create(user_token='janje',
+                                     username='mirkofleks',
+                                     user_id='5u8')
 
     def test_flexibility_demand(self):
         client = Client()
@@ -142,6 +149,9 @@ class TestAlgorithmView(TestCase):
         UserSession.objects.create(user_token='janje',
                                    expires_in=300,
                                    session_start=sess_start)
+        TempUserModel.objects.create(user_token='janje',
+                                     username='mirkofleks',
+                                     user_id='5u8')
 
     def test_algorithm(self):
         client = Client()
@@ -197,6 +207,9 @@ class TestFlexibilityOfferConfirmationView(TestCase):
         UserSession.objects.create(user_token='janje',
                                    expires_in=300,
                                    session_start=sess_start)
+        TempUserModel.objects.create(user_token='janje',
+                                     username='mirkofleks',
+                                     user_id='5u8')
 
     def test_flexibility_offer_confirmation(self):
         client = Client()

@@ -26,11 +26,7 @@ class CustomSessionMiddleware:
         #         return common.false_status(self._mapping[request_body.get('type')], 'session expired')
         # # Ako je apsolutno sve okej onda vracam zadnju liniju
         # NOTE: temporary fix, TODO permanent fix (uncomment the above)
-        if request_body.get('type') == 'login_request':
-            from src_django.api.controller import user_sess
-            user_sess.add(user_token='usr_tkn',
-                          expires_in=5000,
-                          session_start=timezone.now())
+        
         if request_body.get('type') in common.token_types:
             import json
             abc = {**request_body, 'access_token': 'usr_token'}

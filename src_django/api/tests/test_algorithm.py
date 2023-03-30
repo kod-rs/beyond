@@ -17,7 +17,7 @@ class AlgorithmTestCase(TestCase):
         date_to = date_to.replace(tzinfo=datetime.timezone.utc)
         interval = TimeInterval(date_from, date_to)
         flex_amount = 303
-        ids = mocks.ids
+        ids = mocks.cro_ids
         building_energy = mocks.mock_building_energy_list(ids)
         building_energy = [BuildingEnergy(building_id=b['building_id'],
                                           energy_info=[EnergyInfo(

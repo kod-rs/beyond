@@ -126,7 +126,7 @@ class BeyondConnection:
         # TODO remove mock
         # resp = self._send(data)
         # return resp
-        return mocks.mock_req_building_by_usr_id()
+        return mocks.mock_req_building_by_usr_id(usr_id)
 
     def req_building_info(self, building_ids: list) -> dict:
         """
