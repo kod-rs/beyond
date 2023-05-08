@@ -1,4 +1,5 @@
 from src_django.api.models import TempUserModel
+from django.db import IntegrityError
 
 
 def add(user_token, username, user_id) -> bool:
@@ -7,6 +8,8 @@ def add(user_token, username, user_id) -> bool:
                                         username=username,
                                         user_id=user_id)
         new_temp_usr_model.save()
+    except IntegrityError:
+        return False
     except Exception as e:
         print(f'error={e}')
         return False

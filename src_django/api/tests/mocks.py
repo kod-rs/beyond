@@ -29,6 +29,11 @@ def mock_token(username, password):
                 'access_token': 'sdf789789d_3',
                 'expires_in': 300,
                 'refresh_expires_in': 1800}
+    if username == password == 'mytilineos':
+        return {'refresh_token': 'n3k1t35k1t0k3n',
+                'access_token': '15to_ac3ssdrug1',
+                'expires_in': 300,
+                'refresh_expires_in': 1800}
     else:
         raise keycloak.exceptions.KeycloakAuthenticationError(
             response_code=401)
@@ -43,6 +48,10 @@ def mock_userinfo(access_token):
         return {'sub': 'ag$qz57',
                 'realm_access': {'roles': ['AGGREGATOR']},
                 'preferred_username': 'urbener_acc'}
+    if access_token == '15to_ac3ssdrug1':  # Access token for mytilineos
+        return {'sub': 'random3r0j',
+                'realm_access': {'roles': ['AGGREGATOR']},
+                'preferred_username': 'mytilineos'}
 
 
 def mock_req_building_by_usr_id(user_id):
@@ -73,7 +82,7 @@ def mock_req_building_by_usr_id(user_id):
     username = tmp_usr_model.get_by_user_id(user_id=user_id)
     if username == 'mirkofleks':  # User id for mirkofleks
         return mock_req_building_cro()
-    if username == 'urbener_acc':  # User id for urbener_acc
+    if username == 'urbener_acc' or username == 'mytilineos':  # User id for urbener_acc
         return mock_req_building_esp()
 
 
