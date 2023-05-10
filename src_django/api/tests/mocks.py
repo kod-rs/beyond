@@ -110,7 +110,8 @@ def mock_building_energy_list(building_ids=cro_ids):
         return building_energy_list
 
     def mock_esp_buildings():
-        urbener_df = pd.read_csv("~/Downloads/BEYOND DATA URBENER.csv", memory_map=True)
+        urbener_df = pd.read_csv(Path(__file__).parent.resolve() / 
+                    "BEYOND DATA URBENER.csv", memory_map=True)
         data = urbener_df.to_dict()
         del data['Unnamed: 0']
         first = next(iter(data))
