@@ -110,27 +110,27 @@ def mock_building_energy_list(building_ids=cro_ids):
         return building_energy_list
 
     def mock_esp_buildings():
-        # Keys are names of sheets and values are DataFrame objects
-        beyond_df = pd.read_excel(Path(__file__).parent.resolve()
-             / "BEYOND DATA URBENER.xlsx", sheet_name=None)
+        urbener_df = pd.read_csv("~/Downloads/BEYOND DATA URBENER.csv", memory_map=True)
+        data = urbener_df.to_dict()
+        del data['Unnamed: 0']
+        first = next(iter(data))
+        timestamps = data[first]  # Keys are indexes and values are timestamps
         building_energy_list = []
 
-        for name, df in beyond_df.items():
-            energy_info = []
-            # Take into account only first and second column, remove NaN values
-            trunc_df = df.iloc[:, lambda df: [1, 2]].dropna()
+        for k in timestamps.keys():
+            ts = datetime.datetime.strptime(timestamps[k][:-5], "%Y-%m-%dT%H:%M:%S")
+            ts = ts.replace(tzinfo=datetime.timezone.utc).isoformat()
+            timestamps[k] = ts
 
-            for index, timecode in trunc_df.iterrows():
-                # timecode looks like ['2021-11-18T13:00:00.000Z', 0.103]
-                timest = timecode.values[0]
-                timest = datetime.datetime.strptime(timest[:-5],
-                    "%Y-%m-%dT%H:%M:%S").replace(tzinfo=datetime.timezone.utc).isoformat()
-                value = np.float64(timecode.values[1] * 1000.0)
-                energy_info.append({'timestamp': timest,
-                                    'value': value})
+        del data['Timestamp']
 
-            building_energy_list.append({'building_id': name,
-                                        'energy_info': energy_info})
+        for k in data.keys():
+            timeseries = []
+            for i in timestamps.keys():
+                timeseries.append({'timestamp': timestamps[i],
+                                    'value': np.float64(data[k][i] * 1000.0)})
+            building_energy_list.append({'building_id': k,
+                                            'energy_info': timeseries})
         return building_energy_list
 
     if any(elem in cro_ids for elem in building_ids):
