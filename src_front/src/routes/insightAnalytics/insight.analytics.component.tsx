@@ -177,17 +177,12 @@ const InsightAnalytics = () => {
         return <ChartSeriesItem
                     key={'pie'}
                     type="donut"
-                    tooltip={{ visible: true, format: "{0} kWh" }}
+                    tooltip={{ visible: true, format: "{0} Wh" }}
                     data={items}
                     field={'flexibility'}
                     categoryField={'categoryField'}
                     //name={'name'} 
                 >
-                    <ChartSeriesLabels
-                        color="	#000033"
-                        background="none"
-                        content={labelContent}
-                    />
                 </ChartSeriesItem>
     }
 
@@ -196,7 +191,7 @@ const InsightAnalytics = () => {
         return <ChartSeriesItem
                     key={'coll'}
                     type="column"
-                    tooltip={{ visible: true, format: "{0} kWh" }}
+                    tooltip={{ visible: true, format: "{0} Wh" }}
                     data={items}
                     field={'flexibility'}
                     categoryField={'categoryField'} />
@@ -207,7 +202,7 @@ const InsightAnalytics = () => {
         return <ChartSeriesItem
                     key={index}
                     type="area"
-                    tooltip={{ visible: true, format: "{0} kWh" }}
+                    tooltip={{ visible: true, format: "{0} Wh" }}
                     data={item.series}
                     field={'flexibility'}
                     categoryField={'categoryField'}

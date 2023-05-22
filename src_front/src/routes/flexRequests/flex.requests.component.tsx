@@ -291,7 +291,7 @@ const FlexRequests = () => {
 
     /* A function that returns a ChartSeriesItem. */
     const renderBarChartSeriesItem = (items: Filtered_Flex_Data[], color?: string, showKWH?: boolean) => {
-        let mesurement_unit = 'kWh';
+        let mesurement_unit = 'Wh';
         let field_ = 'flexibility';
         if (showKWH===false) {
             mesurement_unit = "%";
@@ -357,7 +357,7 @@ const FlexRequests = () => {
                                     themeColor="info"
                                     disabled={(currentUser === null) || algorithmIsLoading || flexDemandIsLoading}
                                     style={{ margin: '5px', width: 200, alignSelf:'center' }}>
-                                    Show kWh
+                                    Show Wh
                                 </Button>
                             )
                         }
