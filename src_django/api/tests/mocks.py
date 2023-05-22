@@ -93,19 +93,28 @@ def mock_req_building_info(building_ids):
 
 def mock_building_energy_list(building_ids=cro_ids):
     def mock_cro_buildings():
-        df = pd.read_csv(Path(__file__).parent.resolve() / 'active im en.csv')
-        rows = [df.iloc[index] for index in range(len(df))]
+        koncar_df = pd.read_csv(Path(__file__).parent.resolve() / 
+                    "active im en.csv", memory_map=True)
+        data = koncar_df.to_dict()
+        del data['Unnamed: 0']
+        first = next(iter(data))
+        timestamps = data[first]  # Keys are indexes and values are timestamps
         building_energy_list = []
-        for b_id in building_ids:
+
+        for k in timestamps.keys():
+            ts = datetime.datetime.strptime(timestamps[k][:-4], "%Y-%m-%d %H:%M:%S")
+            ts = ts.replace(tzinfo=datetime.timezone.utc).isoformat()
+            timestamps[k] = ts
+
+        del data['Timestamp']
+
+        for k in data.keys():
             timeseries = []
-            for row in rows:
-                ts = datetime.datetime.strptime(row['Timestamp'][:-4],
-                                                "%Y-%m-%d %H:%M:%S")
-                ts = ts.replace(tzinfo=datetime.timezone.utc).isoformat()
-                timeseries.append({'timestamp': ts,
-                                   'value': row[b_id]})
-            building_energy_list.append({'building_id': b_id,
-                                         'energy_info': timeseries})
+            for i in timestamps.keys():
+                timeseries.append({'timestamp': timestamps[i],
+                                    'value': np.float64(data[k][i])})
+            building_energy_list.append({'building_id': k,
+                                            'energy_info': timeseries})
         building_energy_list = append_year(building_energy_list)
         return building_energy_list
 
