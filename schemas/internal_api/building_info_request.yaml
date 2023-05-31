@@ -9,6 +9,7 @@ required:
   - type
   - building_ids
   - access_token
+  - resolution
 properties:
   type:
     const: building_info_request
@@ -17,5 +18,7 @@ properties:
     items:
       type: string
   access_token:
+    type: string
+  resolution:
     type: string
 ...
