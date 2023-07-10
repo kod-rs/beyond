@@ -21,6 +21,7 @@ import { Building_Info, TimeseriesData } from '../../store/historicData/historic
 import { DayCategories, MonthCategories, PERIOD_TYPES, YearCategories } from './historic.data.types';
 import { Loader } from '@progress/kendo-react-indicators';
 import { SpinnerContainer } from '../general.routes.styles';
+import { Building } from '../../store/buildings/buildings.types';
 
 
 
@@ -48,7 +49,11 @@ const HistoricData = () => {
                     return building;
                 }
             });
-            dispatch(getHistoricDataStart(filtered));
+            var buildingsWithoutColor = filtered.map(function(building) {
+                var { color, ...buildingWithoutColor } = building;
+                return buildingWithoutColor;
+              });
+            dispatch(getHistoricDataStart(buildingsWithoutColor as Building[]));
         }
     }, [buildings]);
 
@@ -94,11 +99,21 @@ const HistoricData = () => {
         }
     }
 
+    /* A function that takes building_id and finds belonging color */
+    const getColorFromBuildingID = (building_id: string) => {
+        if (buildings){
+            var color = buildings.find(building => building.building_id === building_id)?.color;
+            return color;
+        }
+        return '#89CFF0';
+    }
+
     /* A function that takes a Building_Info and an index and returns a ChartSeriesItem. */
     const renderChartSeriesItem = (item: Building_Info, idx:number) => {
         return <ChartSeriesItem
                     key={idx}
                     type="area"
+                   color={getColorFromBuildingID(item.building_id)}
                     tooltip={{ visible: true }}
                     data={item.energy_info.map((info) => { return info.value })}
                     name={item.building_id} />
