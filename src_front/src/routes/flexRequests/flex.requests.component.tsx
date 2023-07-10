@@ -14,6 +14,8 @@ import {
     ChartCategoryAxisItem,
     ChartTitle,
     ChartLegend,
+    ChartValueAxis,
+    ChartValueAxisItem,
 } from "@progress/kendo-react-charts";
 
 import { Flex_Demand } from '../../store/flexDemand/flex.types';
@@ -142,9 +144,25 @@ const FlexRequests = () => {
      * @returns A function that takes a demand object and returns a string.
      */
     const getTooltipForDemand = (demand: Flex_Demand) => {
-        let start = new Date(demand.start_time);
-        let end = new Date(demand.end_time);
-        return start.toTimeString().split(' ')[0] + " - " + end.toTimeString().split(' ')[0];
+        let operator = demand.start_time.substring(19, 20);
+        let start_hour = parseInt(demand.start_time.substring(11,13));
+        let end_hour = parseInt(demand.end_time.substring(11,13));
+        let minute = parseInt(demand.start_time.substring(14,16));
+        let hh = parseInt(demand.start_time.substring(21,23));
+        let mm = parseInt(demand.start_time.substring(24,26));
+
+        let start;
+        let end;
+
+        if (operator === '+') {
+            start = String(start_hour + hh) + ':' + String(minute + mm) + '0:00';
+            end = String(end_hour + hh) + ':' + String(minute + mm) + '0:00';
+        } else {
+            start = String(start_hour - hh) + ':' + String(minute - mm) + '0:00';
+            end = String(end_hour - hh) + ':' + String(minute - mm) + '0:00';
+        }
+        
+        return start + ' - ' + end;
     }
 
     /**
@@ -173,9 +191,25 @@ const FlexRequests = () => {
      * @returns A function that takes an offer and returns a string.
      */
     const getTooltipForOffer = (offer: Flex_Offer) => {
-        let start = new Date(offer.start_time);
-        let end = new Date(offer.end_time);
-        return start.toTimeString().split(' ')[0] + " - " + end.toTimeString().split(' ')[0];
+        let operator = offer.start_time.substring(19, 20);
+        let start_hour = parseInt(offer.start_time.substring(11,13));
+        let end_hour = parseInt(offer.end_time.substring(11,13));
+        let minute = parseInt(offer.start_time.substring(14,16));
+        let hh = parseInt(offer.start_time.substring(21,23));
+        let mm = parseInt(offer.start_time.substring(24,26));
+
+        let start;
+        let end;
+
+        if (operator === '+') {
+            start = String(start_hour + hh) + ':' + String(minute + mm) + '0:00';
+            end = String(end_hour + hh) + ':' + String(minute + mm) + '0:00';
+        } else {
+            start = String(start_hour - hh) + ':' + String(minute - mm) + '0:00';
+            end = String(end_hour - hh) + ':' + String(minute - mm) + '0:00';
+        }
+            
+        return start + ' - ' + end;
     }
 
     /**
@@ -337,6 +371,9 @@ const FlexRequests = () => {
                                     renderBarChartSeriesItem(filteredFlexDemandData)
                                 }
                             </ChartSeries>
+                            <ChartValueAxis>
+                                <ChartValueAxisItem min={0} max={250} />
+                            </ChartValueAxis>
                         </Chart>
                     }
                     <RowContainer>
@@ -375,6 +412,9 @@ const FlexRequests = () => {
                                         renderBarChartSeriesItem(filteredFlexOfferData, "green", showKWH)
                                     }
                             </ChartSeries>
+                            <ChartValueAxis>
+                                <ChartValueAxisItem min={0} max={250} />
+                            </ChartValueAxis>
                         </Chart>
                     }
                     <CustomContainer>
