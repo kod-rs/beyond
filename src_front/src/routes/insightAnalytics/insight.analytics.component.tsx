@@ -20,6 +20,7 @@ import { CustomContainer, GraphContainer, PieGraphContainer, RowContainer, Title
 export type Building_Area_Chart_Data = {
     building_name: string;
     series: Building_Chart_Series[];
+    color: string;
 }
 
 export type Building_Chart_Series = {
@@ -124,7 +125,7 @@ const InsightAnalytics = () => {
                             flexibility: Math.round(info.flexibility * 100) / 100,
                             id: info.building_id
                         } as Building_Chart_Series;
-                        let _building_name = buildings.find((building) => building.building_id == info.building_id)?.building_name;
+                        let _building_name = buildings.find((building) => building.building_id === info.building_id)?.building_name;
                         let _area_Chart_Data = chartAreaData.find((_data) => _data.building_name === _building_name);
                         if (_area_Chart_Data) {
                             _area_Chart_Data.series.push(_serie_data);
@@ -132,6 +133,7 @@ const InsightAnalytics = () => {
                             chartAreaData.push({
                                 building_name: _building_name,
                                 series: [_serie_data] as Building_Chart_Series[]
+                                color: getColorFromBuildingID(info.building_id)
                             } as Building_Area_Chart_Data);
                         }
                     });
@@ -155,6 +157,15 @@ const InsightAnalytics = () => {
         setPieCategories(categories);
     }
 
+    /* A function that returns color for specified building_id */
+    const getColorFromBuildingID = (building_id: string) => {
+        if (buildings) {
+            var color = buildings.find(building => building.building_id === building_id)?.color;
+            return color;
+        }
+        return '#89CFF0';
+    }
+
     /* A React Hook. It is a function that lets you “hook into” React features. For example, useState
     is a Hook that lets you add React state to function components. We call it inside a function
     component to add some local state to it. React will preserve this state between re-renders. */
@@ -170,7 +181,7 @@ const InsightAnalytics = () => {
      * It takes an object with a category property and returns that property
      * @param {any} e - The event object.
      */
-    const labelContent = (e:any) => e.category;
+    const labelContent = (e: any) => e.category;
 
     /* Rendering a pie chart. */
     const renderPieChartSeriesItem = (items: Building_Chart_Series[]) => {
@@ -178,10 +189,14 @@ const InsightAnalytics = () => {
                     key={'pie'}
                     type="donut"
                     tooltip={{ visible: true, format: "{0} Wh" }}
-                    data={items}
+                    data={items.map((item) => { 
+                        return {
+                            ...item, color: getColorFromBuildingID(item.id)
+                        }
+                    })}
                     field={'flexibility'}
                     categoryField={'categoryField'}
-                    //name={'name'} 
+                    colorField="color"
                 >
                 </ChartSeriesItem>
     }
@@ -192,13 +207,18 @@ const InsightAnalytics = () => {
                     key={'coll'}
                     type="column"
                     tooltip={{ visible: true, format: "{0} Wh" }}
-                    data={items}
+                    data={items.map((item) => { 
+                        return {
+                            ...item, color: getColorFromBuildingID(item.id)
+                        }
+                    })}
                     field={'flexibility'}
-                    categoryField={'categoryField'} />
+                    categoryField={'categoryField'}
+                    colorField="color" />
     }
 
     /* A function that returns a ChartSeriesItem component. */
-    const renderAreaChartSeriesItem = (item: Building_Area_Chart_Data,index:number) => {
+    const renderAreaChartSeriesItem = (item: Building_Area_Chart_Data, index:number) => {
         return <ChartSeriesItem
                     key={index}
                     type="area"
@@ -207,6 +227,7 @@ const InsightAnalytics = () => {
                     field={'flexibility'}
                     categoryField={'categoryField'}
                     name={item.building_name}
+                    color={item.color}
                 />
     }
 
@@ -237,33 +258,33 @@ const InsightAnalytics = () => {
                     
                 </PieGraphContainer>
                 <GraphContainer>
-                    {
-                        areaData &&
-                        <Chart style={{ height: 300, width: '95%' }}>
-                            <ChartTitle text="" />
-                            <ChartLegend position="bottom" orientation="horizontal" />
-                            <ChartCategoryAxis>
+                    <CustomContainer>
+                        {
+                            areaData &&
+                            <Chart style={{ height: 300, width: '95%' }}>
+                                <ChartTitle text="Flexibility usage during the day" />
+                                <ChartLegend position="bottom" orientation="horizontal" />
+                                <ChartCategoryAxis>
                                     <ChartCategoryAxisItem
                                         categories={DayCategories}
-                                        startAngle={45}
                                         labels={{ format: "d", rotation: "auto" }}
                                     />
-                            </ChartCategoryAxis>
-                            <ChartSeries>
-                                {
-                                    areaData && areaData.map((item, idx) => (
-                                        renderAreaChartSeriesItem(item, idx)
-                                    ))
-
-                                }
-                            </ChartSeries>
-                        </Chart>
-                    }
+                                </ChartCategoryAxis>
+                                <ChartSeries>
+                                    {
+                                        areaData && areaData.map((item, idx) => (
+                                            renderAreaChartSeriesItem(item, idx)
+                                        ))
+                                    }
+                                </ChartSeries>
+                            </Chart>
+                        }
+                    </CustomContainer>
                     <CustomContainer>
                         {
                             pieData &&
                             <Chart style={{ height: 300, width: '50%' }}>
-                                <ChartTitle text="Flexibility usage" />
+                                <ChartTitle text="Overall flexibility usage" />
                                 <ChartLegend position="top" orientation="horizontal" />
                                 <ChartCategoryAxis>
                                         <ChartCategoryAxisItem
