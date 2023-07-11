@@ -16,6 +16,7 @@ export enum BUILDINGS_ACTION_TYPES {
  * @property {string} building_name - string;
  * @property {number} latitude - number;
  * @property {number} longitude - number;
+ * @property {string} color - string;
  */
 export type Building = {
     selected: boolean;
@@ -23,6 +24,7 @@ export type Building = {
     building_name: string;
     latitude: number;
     longitude: number;
+    color: string;
 };
 
 
