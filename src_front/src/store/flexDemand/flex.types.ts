@@ -16,7 +16,7 @@ export enum FLEX_DEMAND_ACTION_TYPES {
 export type Flex_Demand = {
     start_time: string,
     end_time: string,
-    flexibility:number,
+    flexibility: number,
 }
 
 /**
