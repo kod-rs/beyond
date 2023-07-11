@@ -288,6 +288,8 @@ const HistoricData = () => {
                 <DatePickerContainer>
                     <DatePicker defaultValue={today} format={"dd.MM.yyyy"} onChange={onChangeSelectedDate} />
                 </DatePickerContainer>
+            </RowContainer>
+            <RowContainer>
                 <GraphContainer>
                     <Chart style={{ height: 350, width:'90%' }}>
                         <ChartTitle text="Buildings consumption historical data" />
@@ -311,19 +313,21 @@ const HistoricData = () => {
                     </ButtonsContainer>
                 </GraphContainer>
             </RowContainer>
-            
-            <FloatingActionButton
-                align={{ vertical: "bottom", horizontal: "end" } as FloatingActionButtonAlign}
-                text={'Activate VPP configuration'}
-                onClick={toFlexRequests}
-                disabled={isLoading}
-            />
-            <FloatingActionButton
-                align={{ vertical: "bottom", horizontal: "start" } as FloatingActionButtonAlign}
-                text={'Return to previous step'}
-                onClick={toBuildings}
-                themeColor="inverse"
-            />
+
+            <RowContainer>
+                <FloatingActionButton
+                    align={{ vertical: "bottom", horizontal: "end" } as FloatingActionButtonAlign}
+                    text={'Activate VPP configuration'}
+                    onClick={toFlexRequests}
+                    disabled={isLoading}
+                />
+                <FloatingActionButton
+                    align={{ vertical: "bottom", horizontal: "start" } as FloatingActionButtonAlign}
+                    text={'Return to previous step'}
+                    onClick={toBuildings}
+                    themeColor="inverse"
+                />
+            </RowContainer>
             <Outlet />
         </>
     );
