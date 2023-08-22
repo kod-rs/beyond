@@ -132,7 +132,7 @@ const InsightAnalytics = () => {
                         } else {
                             chartAreaData.push({
                                 building_name: _building_name,
-                                series: [_serie_data] as Building_Chart_Series[]
+                                series: [_serie_data] as Building_Chart_Series[],
                                 color: getColorFromBuildingID(info.building_id)
                             } as Building_Area_Chart_Data);
                         }
