@@ -239,7 +239,7 @@ const InsightAnalytics = () => {
                     {
                         pieData &&
                         <Chart style={{ height: '80%', width: '80%' }}>
-                            <ChartTitle text="Buildings flexibility" />
+                            <ChartTitle text="Asstets flexibility" />
                             <ChartLegend position="bottom" orientation="horizontal" />
                             <ChartCategoryAxis>
                                     <ChartCategoryAxisItem

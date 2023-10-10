@@ -292,7 +292,7 @@ const HistoricData = () => {
             <RowContainer>
                 <GraphContainer>
                     <Chart style={{ height: 350, width:'90%' }}>
-                        <ChartTitle text="Buildings consumption historical data" />
+                        <ChartTitle text="Assets consumption historical data" />
                         <ChartLegend position="top" orientation="horizontal" />
                         <ChartCategoryAxis>
                             <ChartCategoryAxisItem categories={categories ? categories : []} startAngle={45} />

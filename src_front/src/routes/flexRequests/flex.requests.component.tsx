@@ -441,7 +441,7 @@ const FlexRequests = () => {
                 onClick={toInsightAnalytics} />
             <FloatingActionButton
                 align={{ vertical: "bottom", horizontal: "start" } as FloatingActionButtonAlign}
-                text={'Go back to the building portfolio'}
+                text={'Go back to the assets portfolio'}
                 onClick={toBuildings}
                 themeColor="inverse" />
             <FloatingActionButton
