@@ -90,7 +90,7 @@ export const getBuildingHistoryData = async (buildings: Building[]) => {
     const bodyObj = {
         "type": "building_info_request",
         "building_ids": buildings.map((building) => building.building_id),
-        "resolution": "day" // TODO add logic to fetch resolution
+        // "resolution": "day"  TODO add logic to fetch resolution
     };
 
     let data = await call_Fetch_Post(REQUEST_TYPES.BUILDINGS_REQUEST, bodyObj);

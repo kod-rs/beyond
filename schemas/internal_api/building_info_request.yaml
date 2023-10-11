@@ -5,11 +5,11 @@ title: Buildings info request
 description: Buildings info configuration schema
 type: object
 additionalProperties: false
+# TODO add resolution field, typeof string
 required:
   - type
   - building_ids
   - access_token
-  - resolution
 properties:
   type:
     const: building_info_request
@@ -18,7 +18,5 @@ properties:
     items:
       type: string
   access_token:
-    type: string
-  resolution:
     type: string
 ...
