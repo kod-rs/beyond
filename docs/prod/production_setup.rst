@@ -47,12 +47,13 @@ connection. Start by creating and opening a systemd socket file for gunicorn.
 Inside copy and paste following code.
 
 ::
+
     [Unit]
     Description=gunicorn socket
-
+    
     [Socket]
     ListenStream=/run/gunicorn.sock
-
+    
     [Install]
     WantedBy=sockets.target
 
@@ -60,21 +61,22 @@ Afterwards, create and open a systemd service file for Gunicorn and paste
 following code which you'll need to tailor for your needs.
 
 ::
+
     [Unit]
     Description=gunicorn daemon
     Requires=gunicorn.socket
     After=network.target
-
+    
     [Service]
     User=byte # Replace with proper User
     Group=www-data
     WorkingDirectory=/home/user/Desktop/beyond # Also replace user with appropriate User
     ExecStart=/path/to/.venv/bin/gunicorn \
-	 --access-logfile - \
-	 --workers 3 \
-	 --bind unix:/run/gunicorn.sock \
-	 src_django.wsgi:application
-
+	       --access-logfile - \
+	       --workers 3 \
+	       --bind unix:/run/gunicorn.sock \
+	       src_django.wsgi:application
+    
     [Install]
     WantedBy=multi-user.target
 
@@ -83,7 +85,7 @@ Now it is time to enable and start the Gunicorn socket. This will create the
 socket file at ``/run/gunicorn.sock*`` now and at boot.
 
 ::
-   
+
     $ sudo systemctl start gunicorn.socket
 
     $ sudo systemctl enable gunicorn.socket
