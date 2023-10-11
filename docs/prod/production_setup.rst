@@ -29,6 +29,68 @@ It is also worth noting that for production purposes it is recommended to have a
 secret key in separate file. In our case it is named ``secret_key.txt`` and 
 should be placed in home directory.
 
+
+Gunicorn
+========
+
+Gunicorn is a Python WSGI HTTP server fo UNIX which is light on resources and fairly
+speedy. Setting up Gunicorn backend revolves around **systemd** Socket and Service files.
+
+The Gunicorn socket will be created at boot and and will listen for connections. When a 
+connection occurs, systemd will autmatically start the Gunicorn process to handle the 
+connection. Start by creating and opening a systemd socket file for gunicorn.
+
+::
+
+    $ sudo nano /etc/systemd/system/gunicorn.socket
+
+Inside copy and paste following code.
+
+::
+    [Unit]
+    Description=gunicorn socket
+
+    [Socket]
+    ListenStream=/run/gunicorn.sock
+
+    [Install]
+    WantedBy=sockets.target
+
+Afterwards, create and open a systemd service file for Gunicorn and paste 
+following code which you'll need to tailor for your needs.
+
+::
+    [Unit]
+    Description=gunicorn daemon
+    Requires=gunicorn.socket
+    After=network.target
+
+    [Service]
+    User=byte # Replace with proper User
+    Group=www-data
+    WorkingDirectory=/home/user/Desktop/beyond # Also replace user with appropriate User
+    ExecStart=/path/to/.venv/bin/gunicorn \
+	 --access-logfile - \
+	 --workers 3 \
+	 --bind unix:/run/gunicorn.sock \
+	 src_django.wsgi:application
+
+    [Install]
+    WantedBy=multi-user.target
+
+
+Now it is time to enable and start the Gunicorn socket. This will create the 
+socket file at ``/run/gunicorn.sock*`` now and at boot.
+
+::
+   
+    $ sudo systemctl start gunicorn.socket
+
+    $ sudo systemctl enable gunicorn.socket
+    
+You can confirm that the operation was successful by checking for the socket file.
+
+
 Nginx
 ======
 
@@ -69,14 +131,14 @@ file under *server* directive (set it to any number greater than 64M).
   $ client_max_body_size 128M;
 
 Afterwards, we will set server to proxy any *POST* and *GET* requests
-to Django backend which will be running on localhost on port 8000. This step
+to Django backend which will be running on Gunicorn backend on port 8000. This step
 is performed by adding *proxy_pass* variable to *location* field several times
 for each site loaction (e.g. /login).
 
 ::
 
   location /login {
-	  proxy_pass http://127.0.0.1:8000;
+	  proxy_pass http://unix:/run/gunicorn.sock;
   }
 
 Every time someone makes changes to server configuraton file it is required
