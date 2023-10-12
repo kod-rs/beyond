@@ -9,6 +9,7 @@ import {
     ChartSeriesLabels,
     ChartTitle
 }    from '@progress/kendo-react-charts';
+import { downloadIcon } from '@progress/kendo-svg-icons';
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Outlet, useNavigate } from 'react-router-dom';
@@ -42,6 +43,20 @@ const InsightAnalytics = () => {
 
     const toFlex = () => {
         navigate("/flex");
+    }
+
+    const downloadJSON =() => {
+        console.log(flexOffers);
+
+        const data = JSON.stringify(flexOffers);
+        const blob = new Blob([data], { type: 'application/json' });
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'flexOffers.json'; // Specify the desired filename here
+        document.body.appendChild(a);
+        a.click();
+        window.URL.revokeObjectURL(url);
     }
 
     /**
@@ -308,6 +323,14 @@ const InsightAnalytics = () => {
                 align={{ vertical: "bottom", horizontal: "start" } as FloatingActionButtonAlign}
                 text={'Return to previous page'}
                 onClick={toFlex}
+                themeColor="inverse" />
+            <Outlet />
+
+            <FloatingActionButton
+                align={{ vertical: "bottom", horizontal: "end" } as FloatingActionButtonAlign}
+                text={'Download .JSON'}
+                onClick={downloadJSON}
+                svgIcon={downloadIcon}
                 themeColor="inverse" />
             <Outlet />
         </>
