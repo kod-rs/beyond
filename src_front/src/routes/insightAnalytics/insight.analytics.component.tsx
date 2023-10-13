@@ -46,9 +46,14 @@ const InsightAnalytics = () => {
     }
 
     const downloadJSON =() => {
-        console.log(flexOffers);
+        if (flexOffers !== undefined) {
+            // Sort asset offered flexibility descending
+            flexOffers.sort((asset1, asset2) => {
+                return asset2.offered_flexibility - asset1.offered_flexibility;
+            });
+        }
 
-        const data = JSON.stringify(flexOffers);
+        const data = JSON.stringify(flexOffers, null, "\t");
         const blob = new Blob([data], { type: 'application/json' });
         const url = window.URL.createObjectURL(blob);
         const a = document.createElement('a');
