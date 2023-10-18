@@ -66,7 +66,7 @@ const InsightAnalytics = () => {
                 }[];
             }
 
-            const janje = flexOffers.map(({ building_info, ...rest }) => ({
+            const flexOffersProcessed = flexOffers.map(({ building_info, ...rest }) => ({
                 assets_info: building_info.map(asset => {
                     const { building_id, ...newAsset } = asset;
                     return {
@@ -77,7 +77,7 @@ const InsightAnalytics = () => {
                 ...rest,
             }));
 
-            const data = JSON.stringify(janje, null, "\t");
+            const data = JSON.stringify(flexOffersProcessed, null, "\t");
             const blob = new Blob([data], { type: 'application/json' });
             const url = window.URL.createObjectURL(blob);
             const a = document.createElement('a');
