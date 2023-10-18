@@ -167,10 +167,12 @@ def append_year(data):
 def mock_get_flexibility_demand(date):
     date = common.datetime_from_rfc_string(date)
     demands = []
-    for i in range(3):
+    hours = sorted(random.sample(range(7, 21), 3)) # Linear time complexity
+
+    for hour in hours: 
         demands.append({
-            'start_time': date.replace(hour=13 + i, minute=00, second=00, microsecond=0).isoformat(),
-            'end_time': date.replace(hour=13 + 1 + i, minute=00, second=00, microsecond=0).isoformat(),
+            'start_time': date.replace(hour=hour, minute=00, second=00, microsecond=0).isoformat(),
+            'end_time': date.replace(hour=hour + 1, minute=00, second=00, microsecond=0).isoformat(),
             'flexibility': random.uniform(100, 200)})
     return {'type': 'flexibility_demand_response',
             'demands': demands}
