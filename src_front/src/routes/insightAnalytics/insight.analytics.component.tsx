@@ -52,31 +52,37 @@ const InsightAnalytics = () => {
                 return asset2.offered_flexibility - asset1.offered_flexibility;
             });
 
-            interface Building_Energy_Info {
-                offered_flexibility: number;
-                requested_flexibility: number;
-                start_time: string;
-                end_time: string;
-                assets_info: {
-                    building_id: string;
-                    asset_id: string; // New property
-                    flexibility: number;
-                    start_time: string;
-                    end_time: string;
-                }[];
-            }
+	    interface Building_Energy_Info {
+	      offered_flexibility: number;
+	      requested_flexibility: number;
+	      start_time: string;
+	      end_time: string;
+	      assets_info: {
+		asset_id: string; // New property
+		priority: number; // New property
+		flexibility: number;
+		start_time: string;
+		end_time: string;
+	      }[];
+	    }
 
-            const flexOffersProcessed = flexOffers.map(({ building_info, ...rest }) => ({
-                assets_info: building_info.map(asset => {
-                    const { building_id, ...newAsset } = asset;
-                    return {
-                        ...newAsset,
-                        asset_id: asset.building_id,
-                    };
-                }),
-                ...rest,
-            }));
+	    const flexOffersProcessed = flexOffers.map(({ building_info, ...rest }) => {
+	      // Create an array of assets with priority assigned based on their position
+	      const assetsWithPriority = building_info.map((asset, index) => {
+		const { building_id, ...assetWithoutBuildingId } = asset;
+		return {
+		  ...assetWithoutBuildingId,
+		  asset_id: asset.building_id,
+		  priority: index + 1, // Assigning priority based on position (1-based)
+		};
+	      });
 
+	      return {
+		assets_info: assetsWithPriority,
+		...rest,
+	      };
+	    });
+		    
             const data = JSON.stringify(flexOffersProcessed, null, "\t");
             const blob = new Blob([data], { type: 'application/json' });
             const url = window.URL.createObjectURL(blob);
@@ -360,7 +366,7 @@ const InsightAnalytics = () => {
                 align={{ vertical: "bottom", horizontal: "end" } as FloatingActionButtonAlign}
                 text={'Download .JSON'}
                 onClick={downloadJSON}
-                svgIcon={downloadIcon}
+		 svgIcon={downloadIcon}
                 themeColor="inverse" />
             <Outlet />
         </>
