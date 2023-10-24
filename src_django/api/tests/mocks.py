@@ -1,10 +1,11 @@
+import csv
+from curses import raw
 import datetime
 import random
 from pathlib import Path
 
 import keycloak
 import pandas as pd
-import numpy as np
 
 from src_django.api import common
 from src_django.api import cryptography_wrapper
@@ -94,53 +95,47 @@ def mock_req_building_info(building_ids):
 def mock_building_energy_list(building_ids=cro_ids):
     def mock_cro_buildings():
         koncar_df = pd.read_csv(Path(__file__).parent.resolve() / 
-                    "active im en.csv", memory_map=True)
+                "BEYOND_MIRKOFLEKS_PROCESSED.csv", memory_map=True)
         data = koncar_df.to_dict()
         del data['Unnamed: 0']
-        first = next(iter(data))
-        timestamps = data[first]  # Keys are indexes and values are timestamps
-        building_energy_list = []
 
-        for k in timestamps.keys():
-            ts = datetime.datetime.strptime(timestamps[k][:-4], "%Y-%m-%d %H:%M:%S")
-            ts = ts.replace(tzinfo=datetime.timezone.utc).isoformat()
-            timestamps[k] = ts
-
+        timestamps = data[next(iter(data))]
         del data['Timestamp']
 
-        for k in data.keys():
-            timeseries = []
-            for i in timestamps.keys():
-                timeseries.append({'timestamp': timestamps[i],
-                                    'value': np.float64(data[k][i])})
-            building_energy_list.append({'building_id': k,
-                                            'energy_info': timeseries})
+        building_energy_list = []
+
+        for building_idx in data.keys():
+            energy_info = []
+            for index in timestamps.keys():
+                energy_info.append({'timestamp': timestamps[index],
+                                    'value': float(data[building_idx][index])})
+            
+            building_energy_list.append({'building_id': building_idx,
+                                            'energy_info': energy_info})
+        
         building_energy_list = append_year(building_energy_list)
         return building_energy_list
 
     def mock_esp_buildings():
-        urbener_df = pd.read_csv(Path(__file__).parent.resolve() / 
-                    "BEYOND DATA URBENER.csv", memory_map=True)
-        data = urbener_df.to_dict()
+        koncar_df = pd.read_csv(Path(__file__).parent.resolve() / 
+                "BEYOND_URBENER_PROCESSED.csv", memory_map=True)
+        data = koncar_df.to_dict()
         del data['Unnamed: 0']
-        first = next(iter(data))
-        timestamps = data[first]  # Keys are indexes and values are timestamps
-        building_energy_list = []
 
-        for k in timestamps.keys():
-            ts = datetime.datetime.strptime(timestamps[k][:-5], "%Y-%m-%dT%H:%M:%S")
-            ts = ts.replace(tzinfo=datetime.timezone.utc).isoformat()
-            timestamps[k] = ts
-
+        timestamps = data[next(iter(data))]
         del data['Timestamp']
 
-        for k in data.keys():
-            timeseries = []
-            for i in timestamps.keys():
-                timeseries.append({'timestamp': timestamps[i],
-                                    'value': np.float64(data[k][i] * 1000.0)})
-            building_energy_list.append({'building_id': k,
-                                            'energy_info': timeseries})
+        building_energy_list = []
+
+        for building_idx in data.keys():
+            energy_info = []
+            for index in timestamps.keys():
+                energy_info.append({'timestamp': timestamps[index],
+                                    'value': float(data[building_idx][index] * 1000.0)})
+            
+            building_energy_list.append({'building_id': building_idx,
+                                            'energy_info': energy_info})
+
         return building_energy_list
 
     if any(elem in cro_ids for elem in building_ids):
@@ -167,13 +162,28 @@ def append_year(data):
 def mock_get_flexibility_demand(date):
     date = common.datetime_from_rfc_string(date)
     demands = []
-    hours = sorted(random.sample(range(7, 21), 3)) # Linear time complexity
+    demands_dict = {}  # Declare as dict to abuse constant lookup time
+    hours = sorted(random.sample(range(7, 21), 3)) # Constant time complexity, O(1)
 
-    for hour in hours: 
+    with open(Path(__file__).parent.resolve() / "DEMAND_VOLUME_PROCESSED.csv", "r") as f:
+        raw_data = csv.reader(f)
+        next(raw_data, None)  # Remove header
+
+        for timestamp, value in raw_data:
+            demands_dict[timestamp] = value
+
+    for hour in hours:
+        start = date.replace(hour=hour, minute=00, second=00, microsecond=0).isoformat()
+        flexibility = random.uniform(100, 200)
+        try:
+            flexibility = demands_dict[start]
+        except KeyError:
+            pass
+
         demands.append({
-            'start_time': date.replace(hour=hour, minute=00, second=00, microsecond=0).isoformat(),
+            'start_time': start,
             'end_time': date.replace(hour=hour + 1, minute=00, second=00, microsecond=0).isoformat(),
-            'flexibility': random.uniform(100, 200)})
+            'flexibility': flexibility})
     return {'type': 'flexibility_demand_response',
             'demands': demands}
 
