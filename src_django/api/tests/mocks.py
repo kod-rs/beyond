@@ -144,53 +144,80 @@ def mock_building_energy_list(building_ids=cro_ids):
 
 
 def append_year(data):
-    new_data = []
-    _today = datetime.datetime.now()
+    new_building_energy_list = []
+    today = datetime.datetime.now()
+
     for building_info in data:
-        new_energy = [{'timestamp': e['timestamp'].replace('2021', '2022'),
-                       'value': e['value']}
-                      for e in building_info['energy_info']
-                      if (int(e['timestamp'][5:7]) <= _today.month
-                          and int(e['timestamp'][8:10]) < _today.day)]
-        new_data.append(
-            {'building_id': building_info['building_id'],
-             'energy_info': building_info['energy_info'] + new_energy})
-    return new_data
+        new_energy_info = []
+
+        for energy_info in building_info['energy_info']:
+            timestamp = energy_info['timestamp']
+            year = timestamp[:4]
+            month = int(timestamp[5:7])
+            day = int(timestamp[8:10])
+
+            if year == '2021' and (month < today.month or (month == today.month and day < today.day)):
+                new_energy_info.append({
+                    'timestamp': timestamp.replace('2021', '2022'),
+                    'value': energy_info['value']
+                })
+
+        new_building_energy_list.append({
+            'building_id': building_info['building_id'],
+            'energy_info': building_info['energy_info'] + new_energy_info
+        })
+
+    return new_building_energy_list
 
 
 def mock_get_flexibility_demand(date):
-    date = common.datetime_from_rfc_string(date)
-    last_year = datetime.datetime.now()
-    last_year = last_year - datetime.timedelta(days=364)
-    demands = []
-    demands_dict = {}  # Declare as dict to abuse constant lookup time
-    hours = sorted(random.sample(range(7, 21), 3))  # Constant time complexity, O(1)
+    # Convert the input date to a datetime object
+    input_date = common.datetime_from_rfc_string(date)
+    last_year = datetime.datetime.now() - datetime.timedelta(days=364)
 
-    with open(Path(__file__).parent.resolve() /
-              "DEMAND_VOLUME_PROCESSED.csv", "r") as f:
+    # Generate a list of 3 random hours between 7 and 20, O(1) time complexity
+    hours = sorted(random.sample(range(7, 21), 3))
+
+    demands = []
+    demands_dict = {}
+
+    # Read demand data from a CSV file
+    filepath = Path(__file__).parent.resolve() / "DEMAND_VOLUME_PROCESSED.csv"
+
+    with open(filepath, "r") as f:
         raw_data = csv.reader(f)
-        next(raw_data, None)  # Remove header
+        next(raw_data, None)  # Skip the header row
 
         for timestamp, value in raw_data:
             demands_dict[timestamp] = float(value)
 
+    # Generate flexibility demands for the selected hours
     for hour in hours:
-        start = last_year.replace(hour=hour, minute=00,
-                                  second=00, microsecond=0).isoformat()
+        start_time = last_year.replace(
+            hour=hour, minute=0, second=0, microsecond=0).isoformat()
 
-        if start not in demands_dict:
+        if start_time not in demands_dict:
             flexibility = random.uniform(100, 200)
         else:
-            flexibility = demands_dict[start]
+            flexibility = demands_dict[start_time]
+
+        start_time = input_date.replace(
+            hour=hour, minute=0, second=0, microsecond=0).isoformat()
+        end_time = input_date.replace(
+            hour=hour + 1, minute=0, second=0, microsecond=0).isoformat()
 
         demands.append({
-            'start_time': date.replace(hour=hour, minute=00,
-                                       second=00, microsecond=0).isoformat(),
-            'end_time': date.replace(hour=hour + 1, minute=00,
-                                     second=00, microsecond=0).isoformat(),
-            'flexibility': flexibility})
-    return {'type': 'flexibility_demand_response',
-            'demands': demands}
+            'start_time': start_time,
+            'end_time': end_time,
+            'flexibility': flexibility
+        })
+
+    response = {
+        'type': 'flexibility_demand_response',
+        'demands': demands
+    }
+
+    return response
 
 
 BEYOND_PRIVATE_PATH = Path(__file__).resolve().parent / 'priv.key'
