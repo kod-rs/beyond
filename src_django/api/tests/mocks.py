@@ -93,11 +93,10 @@ def mock_req_building_info(building_ids):
 
 
 def mock_building_energy_list(building_ids=cro_ids):
-    def mock_cro_buildings():
+    def read_data_dict(filename):
         columns = []
 
-        with open(Path(__file__).parent.resolve() / 
-                  "BEYOND_MIRKOFLEKS_PROCESSED.csv", "r") as f:
+        with open(Path(__file__).parent.resolve() / filename, "r") as f:
             reader = csv.reader(f)
             for row in reader:
                 row.pop(0)
@@ -109,12 +108,17 @@ def mock_building_energy_list(building_ids=cro_ids):
                     columns = [[value] for value in row]
         # you now have a column-major 2D array of your file.
         data_as_dict = {c[0] : c[1:] for c in columns}
+        return data_as_dict
+
+
+    if any(elem in cro_ids for elem in building_ids):
+        cro_buildings = read_data_dict("BEYOND_MIRKOFLEKS_PROCESSED.csv")
 
         building_energy_list = []
-        for building in list(data_as_dict.keys())[1:]: # Remove timestamp mark
+        for building in list(cro_buildings.keys())[1:]: # Remove timestamp mark
             energy_info = []
-            for timestamp, value in zip(data_as_dict['Timestamp'],
-                                        data_as_dict[building]):
+            for timestamp, value in zip(cro_buildings['Timestamp'],
+                                        cro_buildings[building]):
                 energy_info.append({'timestamp': timestamp,
                                     'value': float(value)})
             building_energy_list.append({'building_id': building,
@@ -123,39 +127,20 @@ def mock_building_energy_list(building_ids=cro_ids):
         building_energy_list = append_year(building_energy_list)
         return building_energy_list
 
-    def mock_esp_buildings():
-        columns = []
-
-        with open(Path(__file__).parent.resolve() /
-                  "BEYOND_URBENER_PROCESSED.csv", "r") as f:
-            reader = csv.reader(f)
-            for row in reader:
-                row.pop(0)
-                if columns:
-                    for i, value in enumerate(row):
-                        columns[i].append(value)
-                else:
-                    # first row
-                    columns = [[value] for value in row]
-        # you now have a column-major 2D array of your file.
-        data_as_dict = {c[0] : c[1:] for c in columns}
+    if any(elem in esp_ids for elem in building_ids):
+        esp_buildings = read_data_dict("BEYOND_URBENER_PROCESSED.csv")
 
         building_energy_list = []
-        for building in list(data_as_dict.keys())[1:]: # Remove timestamp mark
+        for building in list(esp_buildings.keys())[1:]: # Remove timestamp mark
             energy_info = []
-            for timestamp, value in zip(data_as_dict['Timestamp'],
-                                        data_as_dict[building]):
+            for timestamp, value in zip(esp_buildings['Timestamp'],
+                                        esp_buildings[building]):
                 energy_info.append({'timestamp': timestamp,
                                     'value': float(value) * 1000.0})
             building_energy_list.append({'building_id': building,
                                         'energy_info': energy_info})
         
         return building_energy_list
-
-    if any(elem in cro_ids for elem in building_ids):
-        return mock_cro_buildings()
-    if any(elem in esp_ids for elem in building_ids):
-        return mock_esp_buildings()
 
 
 def append_year(data):
