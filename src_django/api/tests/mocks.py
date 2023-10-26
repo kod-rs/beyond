@@ -1,22 +1,20 @@
 import csv
-from curses import raw
 import datetime
 import random
 from pathlib import Path
 
 import keycloak
-import pandas as pd
 
 from src_django.api import common
 from src_django.api import cryptography_wrapper
 from src_django.api.controller import tmp_usr_model
 
 cro_ids = ('ZIV0034902130', 'ZIV0034902131', 'ZIV0034704030',
-       'ZIV0034703915', 'ZIV0034704013',
-       'ZIV0034703953', 'ZIV0034703954')
+           'ZIV0034703915', 'ZIV0034704013',
+           'ZIV0034703953', 'ZIV0034703954')
 
 esp_ids = ('CORRIDOR', 'MEETINGROOM', 'OFFICE1', 'OFFICE2',
-        'OFFICE3', 'OFFICE4', 'OFFICE5')
+           'OFFICE3', 'OFFICE4', 'OFFICE5')
 
 
 def mock_token(username, password):
@@ -107,39 +105,41 @@ def mock_building_energy_list(building_ids=cro_ids):
                     # first row
                     columns = [[value] for value in row]
         # you now have a column-major 2D array of your file.
-        data_as_dict = {c[0] : c[1:] for c in columns}
+        data_as_dict = {c[0]: c[1:] for c in columns}
         return data_as_dict
-
 
     if any(elem in cro_ids for elem in building_ids):
         cro_buildings = read_data_dict("BEYOND_MIRKOFLEKS_PROCESSED.csv")
-
         building_energy_list = []
-        for building in list(cro_buildings.keys())[1:]: # Remove timestamp mark
+        buildings = list(cro_buildings.keys())[1:]
+        buildings = [b for b in buildings if b in building_ids]
+        for building in buildings:  # Remove timestamp mark
             energy_info = []
             for timestamp, value in zip(cro_buildings['Timestamp'],
                                         cro_buildings[building]):
                 energy_info.append({'timestamp': timestamp,
                                     'value': float(value)})
             building_energy_list.append({'building_id': building,
-                                        'energy_info': energy_info})
-        
+                                         'energy_info': energy_info})
+
         building_energy_list = append_year(building_energy_list)
         return building_energy_list
 
     if any(elem in esp_ids for elem in building_ids):
         esp_buildings = read_data_dict("BEYOND_URBENER_PROCESSED.csv")
 
+        buildings = list(esp_buildings.keys())[1:]
+        buildings = [b for b in buildings if b in building_ids]
         building_energy_list = []
-        for building in list(esp_buildings.keys())[1:]: # Remove timestamp mark
+        for building in buildings:  # Remove timestamp mark
             energy_info = []
             for timestamp, value in zip(esp_buildings['Timestamp'],
                                         esp_buildings[building]):
                 energy_info.append({'timestamp': timestamp,
                                     'value': float(value) * 1000.0})
             building_energy_list.append({'building_id': building,
-                                        'energy_info': energy_info})
-        
+                                         'energy_info': energy_info})
+
         return building_energy_list
 
 
@@ -151,7 +151,7 @@ def append_year(data):
                        'value': e['value']}
                       for e in building_info['energy_info']
                       if (int(e['timestamp'][5:7]) <= _today.month
-                      and int(e['timestamp'][8:10]) < _today.day)]
+                          and int(e['timestamp'][8:10]) < _today.day)]
         new_data.append(
             {'building_id': building_info['building_id'],
              'energy_info': building_info['energy_info'] + new_energy})
@@ -160,9 +160,11 @@ def append_year(data):
 
 def mock_get_flexibility_demand(date):
     date = common.datetime_from_rfc_string(date)
+    last_year = datetime.datetime.now()
+    last_year = last_year - datetime.timedelta(days=364)
     demands = []
     demands_dict = {}  # Declare as dict to abuse constant lookup time
-    hours = sorted(random.sample(range(7, 21), 3)) # Constant time complexity, O(1)
+    hours = sorted(random.sample(range(7, 21), 3))  # Constant time complexity, O(1)
 
     with open(Path(__file__).parent.resolve() /
               "DEMAND_VOLUME_PROCESSED.csv", "r") as f:
@@ -170,19 +172,20 @@ def mock_get_flexibility_demand(date):
         next(raw_data, None)  # Remove header
 
         for timestamp, value in raw_data:
-            demands_dict[timestamp] = value
+            demands_dict[timestamp] = float(value)
 
     for hour in hours:
-        start = date.replace(hour=hour, minute=00,
-                             second=00, microsecond=0).isoformat()
-        flexibility = random.uniform(100, 200)
-        try:
+        start = last_year.replace(hour=hour, minute=00,
+                                  second=00, microsecond=0).isoformat()
+
+        if start not in demands_dict:
+            flexibility = random.uniform(100, 200)
+        else:
             flexibility = demands_dict[start]
-        except KeyError:
-            pass
 
         demands.append({
-            'start_time': start,
+            'start_time': date.replace(hour=hour, minute=00,
+                                       second=00, microsecond=0).isoformat(),
             'end_time': date.replace(hour=hour + 1, minute=00,
                                      second=00, microsecond=0).isoformat(),
             'flexibility': flexibility})
