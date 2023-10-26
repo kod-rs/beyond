@@ -94,48 +94,62 @@ def mock_req_building_info(building_ids):
 
 def mock_building_energy_list(building_ids=cro_ids):
     def mock_cro_buildings():
-        koncar_df = pd.read_csv(Path(__file__).parent.resolve() / 
-                "BEYOND_MIRKOFLEKS_PROCESSED.csv", memory_map=True)
-        data = koncar_df.to_dict()
-        del data['Unnamed: 0']
+        columns = []
 
-        timestamps = data[next(iter(data))]
-        del data['Timestamp']
+        with open(Path(__file__).parent.resolve() / 
+                  "BEYOND_MIRKOFLEKS_PROCESSED.csv", "r") as f:
+            reader = csv.reader(f)
+            for row in reader:
+                row.pop(0)
+                if columns:
+                    for i, value in enumerate(row):
+                        columns[i].append(value)
+                else:
+                    # first row
+                    columns = [[value] for value in row]
+        # you now have a column-major 2D array of your file.
+        data_as_dict = {c[0] : c[1:] for c in columns}
 
         building_energy_list = []
-
-        for building_idx in data.keys():
+        for building in list(data_as_dict.keys())[1:]: # Remove timestamp mark
             energy_info = []
-            for index in timestamps.keys():
-                energy_info.append({'timestamp': timestamps[index],
-                                    'value': float(data[building_idx][index])})
-            
-            building_energy_list.append({'building_id': building_idx,
-                                            'energy_info': energy_info})
+            for timestamp, value in zip(data_as_dict['Timestamp'],
+                                        data_as_dict[building]):
+                energy_info.append({'timestamp': timestamp,
+                                    'value': float(value)})
+            building_energy_list.append({'building_id': building,
+                                        'energy_info': energy_info})
         
         building_energy_list = append_year(building_energy_list)
         return building_energy_list
 
     def mock_esp_buildings():
-        koncar_df = pd.read_csv(Path(__file__).parent.resolve() / 
-                "BEYOND_URBENER_PROCESSED.csv", memory_map=True)
-        data = koncar_df.to_dict()
-        del data['Unnamed: 0']
+        columns = []
 
-        timestamps = data[next(iter(data))]
-        del data['Timestamp']
+        with open(Path(__file__).parent.resolve() /
+                  "BEYOND_URBENER_PROCESSED.csv", "r") as f:
+            reader = csv.reader(f)
+            for row in reader:
+                row.pop(0)
+                if columns:
+                    for i, value in enumerate(row):
+                        columns[i].append(value)
+                else:
+                    # first row
+                    columns = [[value] for value in row]
+        # you now have a column-major 2D array of your file.
+        data_as_dict = {c[0] : c[1:] for c in columns}
 
         building_energy_list = []
-
-        for building_idx in data.keys():
+        for building in list(data_as_dict.keys())[1:]: # Remove timestamp mark
             energy_info = []
-            for index in timestamps.keys():
-                energy_info.append({'timestamp': timestamps[index],
-                                    'value': float(data[building_idx][index] * 1000.0)})
-            
-            building_energy_list.append({'building_id': building_idx,
-                                            'energy_info': energy_info})
-
+            for timestamp, value in zip(data_as_dict['Timestamp'],
+                                        data_as_dict[building]):
+                energy_info.append({'timestamp': timestamp,
+                                    'value': float(value) * 1000.0})
+            building_energy_list.append({'building_id': building,
+                                        'energy_info': energy_info})
+        
         return building_energy_list
 
     if any(elem in cro_ids for elem in building_ids):
@@ -165,7 +179,8 @@ def mock_get_flexibility_demand(date):
     demands_dict = {}  # Declare as dict to abuse constant lookup time
     hours = sorted(random.sample(range(7, 21), 3)) # Constant time complexity, O(1)
 
-    with open(Path(__file__).parent.resolve() / "DEMAND_VOLUME_PROCESSED.csv", "r") as f:
+    with open(Path(__file__).parent.resolve() /
+              "DEMAND_VOLUME_PROCESSED.csv", "r") as f:
         raw_data = csv.reader(f)
         next(raw_data, None)  # Remove header
 
@@ -173,7 +188,8 @@ def mock_get_flexibility_demand(date):
             demands_dict[timestamp] = value
 
     for hour in hours:
-        start = date.replace(hour=hour, minute=00, second=00, microsecond=0).isoformat()
+        start = date.replace(hour=hour, minute=00,
+                             second=00, microsecond=0).isoformat()
         flexibility = random.uniform(100, 200)
         try:
             flexibility = demands_dict[start]
@@ -182,7 +198,8 @@ def mock_get_flexibility_demand(date):
 
         demands.append({
             'start_time': start,
-            'end_time': date.replace(hour=hour + 1, minute=00, second=00, microsecond=0).isoformat(),
+            'end_time': date.replace(hour=hour + 1, minute=00,
+                                     second=00, microsecond=0).isoformat(),
             'flexibility': flexibility})
     return {'type': 'flexibility_demand_response',
             'demands': demands}
