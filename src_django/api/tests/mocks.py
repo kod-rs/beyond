@@ -97,54 +97,51 @@ def mock_building_energy_list(building_ids=cro_ids):
         with open(Path(__file__).parent.resolve() / filename, "r") as f:
             reader = csv.reader(f)
             for row in reader:
-                row.pop(0)
+                row.pop(0)  # Remove unnecesarry first column
                 if columns:
                     for i, value in enumerate(row):
                         columns[i].append(value)
-                else:
-                    # first row
+                else:  # Handle the first row by initializing columns
                     columns = [[value] for value in row]
-        # you now have a column-major 2D array of your file.
+        # Convert the data into a column-major 2D array
         data_as_dict = {c[0]: c[1:] for c in columns}
         return data_as_dict
 
-    if any(elem in cro_ids for elem in building_ids):
-        cro_buildings = read_data_dict("BEYOND_MIRKOFLEKS_PROCESSED.csv")
+    def process_building_data(data, building_ids, conversion_factor=1.0):
         building_energy_list = []
-        buildings = list(cro_buildings.keys())[1:]
-        buildings = [b for b in buildings if b in building_ids]
-        for building in buildings:  # Remove timestamp mark
-            energy_info = []
-            for timestamp, value in zip(cro_buildings['Timestamp'],
-                                        cro_buildings[building]):
-                energy_info.append({'timestamp': timestamp,
-                                    'value': float(value)})
-            building_energy_list.append({'building_id': building,
-                                         'energy_info': energy_info})
+        # Extract building names from the keys
+        buildings = list(data.keys())[1:]
+        valid_buildings = [b for b in buildings if b in building_ids]
 
-        building_energy_list = append_year(building_energy_list)
+        for building in valid_buildings:
+            energy_info = []
+            for i, value in enumerate(data[building]):
+                energy_info.append({'timestamp': data['Timestamp'][i],
+                                    'value': float(value) * conversion_factor})
+            building_energy_list.append(
+                {'building_id': building, 'energy_info': energy_info})
+
         return building_energy_list
 
+    if any(elem in cro_ids for elem in building_ids):
+        # Read and process data for 'cro_ids' buildings
+        cro_buildings = read_data_dict("BEYOND_MIRKOFLEKS_PROCESSED.csv")
+        building_energy_list = process_building_data(
+            cro_buildings, building_ids)
+        return append_year(building_energy_list)
+
     if any(elem in esp_ids for elem in building_ids):
+        # Read and process data for 'esp_ids' buildings with a
+        # conversion factor of 1000.0
         esp_buildings = read_data_dict("BEYOND_URBENER_PROCESSED.csv")
-
-        buildings = list(esp_buildings.keys())[1:]
-        buildings = [b for b in buildings if b in building_ids]
-        building_energy_list = []
-        for building in buildings:  # Remove timestamp mark
-            energy_info = []
-            for timestamp, value in zip(esp_buildings['Timestamp'],
-                                        esp_buildings[building]):
-                energy_info.append({'timestamp': timestamp,
-                                    'value': float(value) * 1000.0})
-            building_energy_list.append({'building_id': building,
-                                         'energy_info': energy_info})
-
+        building_energy_list = process_building_data(
+            esp_buildings, building_ids, conversion_factor=1000.0)
         return building_energy_list
 
 
 def append_year(data):
     new_building_energy_list = []
+    # Get the current date and time
     today = datetime.datetime.now()
 
     for building_info in data:
@@ -152,10 +149,11 @@ def append_year(data):
 
         for energy_info in building_info['energy_info']:
             timestamp = energy_info['timestamp']
-            year = timestamp[:4]
-            month = int(timestamp[5:7])
-            day = int(timestamp[8:10])
+            year = timestamp[:4]  # Extract the year from the timestamp
+            month = int(timestamp[5:7])  # Extract the month from the timestamp
+            day = int(timestamp[8:10])  # Extract the day from the timestamp
 
+            # Check if the timestamp is from the year 2021 and earlier than the current date
             if year == '2021' and (month < today.month or (month == today.month and day < today.day)):
                 new_energy_info.append({
                     'timestamp': timestamp.replace('2021', '2022'),
