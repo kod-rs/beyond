@@ -372,7 +372,7 @@ const FlexRequests = () => {
                                 }
                             </ChartSeries>
                             <ChartValueAxis>
-                                <ChartValueAxisItem min={0} max={250} />
+                                <ChartValueAxisItem min={0} max={500} />
                             </ChartValueAxis>
                         </Chart>
                     }
@@ -413,7 +413,7 @@ const FlexRequests = () => {
                                     }
                             </ChartSeries>
                             <ChartValueAxis>
-                                <ChartValueAxisItem min={0} max={250} />
+                                <ChartValueAxisItem min={0} max={500} />
                             </ChartValueAxis>
                         </Chart>
                     }
