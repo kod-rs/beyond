@@ -174,7 +174,12 @@ def mock_get_flexibility_demand(date):
     last_year = datetime.datetime.now() - datetime.timedelta(days=364)
 
     # Generate a list of 3 random hours between 7 and 20, O(1) time complexity
-    hours = sorted(random.sample(range(7, 21), 3))
+    hours = []
+    start = 7
+    for _ in range(4):
+        hour = random.choice(range(start, start + 4))
+        start += 4
+        hours.append(hour)
 
     demands = []
     demands_dict = {}
@@ -192,7 +197,8 @@ def mock_get_flexibility_demand(date):
     # Generate flexibility demands for the selected hours
     for hour in hours:
         start_time = last_year.replace(
-            hour=hour, minute=0, second=0, microsecond=0).isoformat()
+            hour=hour, minute=0, second=0,
+            microsecond=0, tzinfo=datetime.timezone.utc).isoformat()
 
         if start_time not in demands_dict:
             flexibility = random.uniform(100, 200)
