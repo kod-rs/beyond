@@ -173,7 +173,8 @@ def mock_get_flexibility_demand(date):
     input_date = common.datetime_from_rfc_string(date)
     last_year = datetime.datetime.now() - datetime.timedelta(days=364)
 
-    # Generate a list of 3 random hours between 7 and 20, O(1) time complexity
+    # Generate a list of 4 random hours in intervals 
+    # [7,11>, [11,15>, [15,19>, [19,22>
     hours = []
     start = 7
     for _ in range(4):
