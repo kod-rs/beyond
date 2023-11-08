@@ -16,6 +16,11 @@ cro_ids = ('ZIV0034902130', 'ZIV0034902131', 'ZIV0034704030',
 esp_ids = ('CORRIDOR', 'MEETINGROOM', 'OFFICE1', 'OFFICE2',
            'OFFICE3', 'OFFICE4', 'OFFICE5')
 
+grc_ids = ('Air flow system', 'Cooling system' ,'Ventilation/VRV 1A',
+           'External lights 2A' ,'Electronic windows', 'Cooling system 2A',
+           'Power plug 1A', 'Power plug 2A' ,'Power plug Γ.00X.00 2A',
+           'lights 1A', 'lights 2A')
+
 
 def mock_token(username, password):
     if username == password == 'mirkofleks':
@@ -77,12 +82,28 @@ def mock_req_building_by_usr_id(user_id):
                 'longitude': (-0.883138 + random.uniform(0.01, 0.04))})
         return {'type': 'buildings_by_user_id_response',
                 'buildings': buildings}
+    
+    def mock_req_building_grc():
+        buildings = []
+
+        for i, b_id in enumerate(grc_ids):
+            buildings.append({
+                'building_id': b_id,
+                'building_name': b_id,
+                'address': f'Calle del Coso 34, Zaragoza',
+                'latitude': (41.653421 + random.uniform(0.01, 0.04)),
+                'longitude': (-0.883138 + random.uniform(0.01, 0.04))})
+
+        return {'type': 'buildings_by_user_id_response',
+                'buildings': buildings}
 
     username = tmp_usr_model.get_by_user_id(user_id=user_id)
     if username == 'mirkofleks':  # User id for mirkofleks
         return mock_req_building_cro()
-    if username == 'urbener_acc' or username == 'mytilineos':  # User id for urbener_acc
+    if username == 'urbener_acc':  # User id for urbener_acc
         return mock_req_building_esp()
+    if username == 'mytilineos':  # User id fot mytilineos
+        return mock_req_building_grc()
 
 
 def mock_req_building_info(building_ids):
@@ -110,7 +131,7 @@ def mock_building_energy_list(building_ids=cro_ids):
     def process_building_data(data, building_ids, conversion_factor=1.0):
         building_energy_list = []
         # Extract building names from the keys
-        buildings = list(data.keys())[1:]
+        buildings = [x for x in data.keys() if x != "Timestamp"]
         valid_buildings = [b for b in buildings if b in building_ids]
 
         for building in valid_buildings:
@@ -136,6 +157,13 @@ def mock_building_energy_list(building_ids=cro_ids):
         esp_buildings = read_data_dict("BEYOND_URBENER_PROCESSED.csv")
         building_energy_list = process_building_data(
             esp_buildings, building_ids, conversion_factor=1000.0)
+        return building_energy_list
+    
+    if any(elem in grc_ids for elem in building_ids):
+        # Read and process data for 'grc_ids' buildings
+        grc_buildings = read_data_dict("MYTILINEOS_DATA_PROCESSED.csv")
+        building_energy_list = process_building_data(
+            grc_buildings, building_ids)
         return building_energy_list
 
 
