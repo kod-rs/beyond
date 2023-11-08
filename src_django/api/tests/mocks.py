@@ -16,9 +16,9 @@ cro_ids = ('ZIV0034902130', 'ZIV0034902131', 'ZIV0034704030',
 esp_ids = ('CORRIDOR', 'MEETINGROOM', 'OFFICE1', 'OFFICE2',
            'OFFICE3', 'OFFICE4', 'OFFICE5')
 
-grc_ids = ('Air flow system', 'Cooling system' ,'Ventilation/VRV 1A',
-           'External lights 2A' ,'Electronic windows', 'Cooling system 2A',
-           'Power plug 1A', 'Power plug 2A' ,'Power plug Γ.00X.00 2A',
+grc_ids = ('Air flow system', 'Cooling system', 'Ventilation/VRV 1A',
+           'External lights 2A', 'Electronic windows', 'Cooling system 2A',
+           'Power plug 1A', 'Power plug 2A', 'Power plug Γ.00X.00 2A',
            'lights 1A', 'lights 2A')
 
 
@@ -59,51 +59,37 @@ def mock_userinfo(access_token):
 
 
 def mock_req_building_by_usr_id(user_id):
-    def mock_req_building_cro():
+    def mock_req_buildings(building_ids, address, latitude, longitude):
         buildings = []
-        for i, b_id in enumerate(cro_ids):
+        for i, b_id in enumerate(building_ids):
             buildings.append({
                 'building_id': b_id,
                 'building_name': b_id,
-                'address': f'Rade Koncara {i}',
-                'latitude': (45.815399 + random.uniform(0.1, 0.9)),
-                'longitude': (15.966568 + random.uniform(0.1, 0.9))})
-        return {'type': 'buildings_by_user_id_response',
-                'buildings': buildings}
-
-    def mock_req_building_esp():
-        buildings = []
-        for i, b_id in enumerate(esp_ids):
-            buildings.append({
-                'building_id': b_id,
-                'building_name': b_id,
-                'address': f'Calle del Coso 34, Zaragoza',
-                'latitude': (41.653421 + random.uniform(0.01, 0.04)),
-                'longitude': (-0.883138 + random.uniform(0.01, 0.04))})
-        return {'type': 'buildings_by_user_id_response',
-                'buildings': buildings}
-    
-    def mock_req_building_grc():
-        buildings = []
-
-        for i, b_id in enumerate(grc_ids):
-            buildings.append({
-                'building_id': b_id,
-                'building_name': b_id,
-                'address': f'Calle del Coso 34, Zaragoza',
-                'latitude': (41.653421 + random.uniform(0.01, 0.04)),
-                'longitude': (-0.883138 + random.uniform(0.01, 0.04))})
-
+                'address': f'{address} ({i})',
+                'latitude': latitude + random.uniform(0.01, 0.04),
+                'longitude': longitude + random.uniform(0.01, 0.04)})
         return {'type': 'buildings_by_user_id_response',
                 'buildings': buildings}
 
     username = tmp_usr_model.get_by_user_id(user_id=user_id)
+
     if username == 'mirkofleks':  # User id for mirkofleks
-        return mock_req_building_cro()
+        address = "Rade Končara"
+        lat, long = 45.815399, 15.966568
+
+        return mock_req_buildings(cro_ids, address, lat, long)
+
     if username == 'urbener_acc':  # User id for urbener_acc
-        return mock_req_building_esp()
-    if username == 'mytilineos':  # User id fot mytilineos
-        return mock_req_building_grc()
+        address = "Calle del Coso 34"
+        lat, long = 41.653421, -0.883138
+
+        return mock_req_buildings(esp_ids, address, lat, long)
+
+    if username == 'mytilineos':  # User id for mytilineos
+        address = "Amarousio, Athens"
+        lat, long = 37.983810, 23.727539
+
+        return mock_req_buildings(grc_ids, address, lat, long)
 
 
 def mock_req_building_info(building_ids):
@@ -158,7 +144,7 @@ def mock_building_energy_list(building_ids=cro_ids):
         building_energy_list = process_building_data(
             esp_buildings, building_ids, conversion_factor=1000.0)
         return building_energy_list
-    
+
     if any(elem in grc_ids for elem in building_ids):
         # Read and process data for 'grc_ids' buildings
         grc_buildings = read_data_dict("MYTILINEOS_DATA_PROCESSED.csv")
@@ -181,8 +167,10 @@ def append_year(data):
             month = int(timestamp[5:7])  # Extract the month from the timestamp
             day = int(timestamp[8:10])  # Extract the day from the timestamp
 
-            # Check if the timestamp is from the year 2021 and earlier than the current date
-            if year == '2021' and (month < today.month or (month == today.month and day < today.day)):
+            # Check if the timestamp is from the year 2021 and
+            # earlier than the current date
+            if year == '2021' and (month < today.month or
+                                   (month == today.month and day < today.day)):
                 new_energy_info.append({
                     'timestamp': timestamp.replace('2021', '2022'),
                     'value': energy_info['value']
@@ -201,7 +189,7 @@ def mock_get_flexibility_demand(date):
     input_date = common.datetime_from_rfc_string(date)
     last_year = datetime.datetime.now() - datetime.timedelta(days=364)
 
-    # Generate a list of 4 random hours in intervals 
+    # Generate a list of 4 random hours in intervals
     # [7,11>, [11,15>, [15,19>, [19,22>
     hours = []
     start = 7
