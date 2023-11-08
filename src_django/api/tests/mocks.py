@@ -17,9 +17,9 @@ esp_ids = ('CORRIDOR', 'MEETINGROOM', 'OFFICE1', 'OFFICE2',
            'OFFICE3', 'OFFICE4', 'OFFICE5')
 
 grc_ids = ('Air flow system', 'Cooling system', 'Ventilation/VRV 1A',
-           'External lights 2A', 'Electronic windows', 'Cooling system 2A',
-           'Power plug 1A', 'Power plug 2A', 'Power plug Γ.00X.00 2A',
-           'lights 1A', 'lights 2A')
+           'External lights 2Α', 'Electronic windows', 'Cooling system 2Α',
+           'Power plug 1Α', 'Power plug 2Α', 'Power plug Γ.00Χ.00 2Α',
+           'lights 1Α', 'lights 2Α')
 
 
 def mock_token(username, password):
