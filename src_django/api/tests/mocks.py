@@ -16,10 +16,7 @@ cro_ids = ('ZIV0034902130', 'ZIV0034902131', 'ZIV0034704030',
 esp_ids = ('CORRIDOR', 'MEETINGROOM', 'OFFICE1', 'OFFICE2',
            'OFFICE3', 'OFFICE4', 'OFFICE5')
 
-grc_ids = ('Air flow system', 'Cooling system', 'Ventilation/VRV 1A',
-           'External lights 2Α', 'Electronic windows', 'Cooling system 2Α',
-           'Power plug 1Α', 'Power plug 2Α', 'Power plug Γ.00Χ.00 2Α',
-           'lights 1Α', 'lights 2Α')
+grc_ids = ('Air_flow_system', 'Cooling_system', 'Power_plug', 'Ventilation/VRV')
 
 
 def mock_token(username, password):
@@ -104,7 +101,6 @@ def mock_building_energy_list(building_ids=cro_ids):
         with open(Path(__file__).parent.resolve() / filename, "r") as f:
             reader = csv.reader(f)
             for row in reader:
-                row.pop(0)  # Remove unnecesarry first column
                 if columns:
                     for i, value in enumerate(row):
                         columns[i].append(value)
@@ -142,7 +138,7 @@ def mock_building_energy_list(building_ids=cro_ids):
         # conversion factor of 1000.0
         esp_buildings = read_data_dict("BEYOND_URBENER_PROCESSED.csv")
         building_energy_list = process_building_data(
-            esp_buildings, building_ids, conversion_factor=1000.0)
+            esp_buildings, building_ids)
         return building_energy_list
 
     if any(elem in grc_ids for elem in building_ids):

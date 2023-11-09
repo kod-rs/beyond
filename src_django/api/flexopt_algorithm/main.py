@@ -406,6 +406,12 @@ def algorithm(building_energy_list: typing.List[BuildingEnergy],
     building_ids = tuple(b.building_id for b in building_energy_list)
     buildings = [[b_list.value for b_list in b.energy_info]
                  for b in building_energy_list]
+    global MAX_VALUE
+    global MIN_VALUE
+
+    # Distribution law, mathematical background, leave it as such!
+    MAX_VALUE = (max([max(b) for b in buildings]) ** 0.74) * 4.494
+    MIN_VALUE = (0.20 * MAX_VALUE) - 2.0
 
     points = get_points(building_ids, buildings, interval)
 
