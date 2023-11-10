@@ -183,7 +183,7 @@ def append_year(data):
 def mock_get_flexibility_demand(date):
     # Convert the input date to a datetime object
     input_date = common.datetime_from_rfc_string(date)
-    last_year = datetime.datetime.now() - datetime.timedelta(days=364)
+    current_date = datetime.datetime.now()
 
     # Generate a list of 4 random hours in intervals
     # [7,11>, [11,15>, [15,19>, [19,22>
@@ -209,8 +209,8 @@ def mock_get_flexibility_demand(date):
 
     # Generate flexibility demands for the selected hours
     for hour in hours:
-        start_time = last_year.replace(
-            hour=hour, minute=0, second=0,
+        start_time = current_date.replace(
+            year=2022, hour=hour, minute=0, second=0,
             microsecond=0, tzinfo=datetime.timezone.utc).isoformat()
 
         if start_time not in demands_dict:
