@@ -349,9 +349,14 @@ const FlexRequests = () => {
     }
 
     const calculateMaxValue = (data: Filtered_Flex_Data[]) => {
-        let flexMax = Math.max(...data.map(item => item.flexibility));
-        flexMax = Math.ceil(flexMax / 50) * 50
-        return flexMax;
+        console.log(data)
+        if (data.length > 0) {
+            let flexMax = Math.max(...data.map(item => item.flexibility));
+            flexMax = Math.ceil(flexMax / 50) * 50
+            return flexMax;
+        } else {
+            return 50;
+        }
     }
     
     return (

@@ -239,7 +239,7 @@ const InsightAnalytics = () => {
         return <ChartSeriesItem
                     key={'pie'}
                     type="donut"
-                    tooltip={{ visible: true, format: "{0} kW" }}
+                    tooltip={{ visible: true, format: "{0:n2} kW" }}
                     data={items.map((item) => { 
                         return {
                             ...item, color: getColorFromBuildingID(item.id)
@@ -257,7 +257,7 @@ const InsightAnalytics = () => {
         return <ChartSeriesItem
                     key={'coll'}
                     type="column"
-                    tooltip={{ visible: true, format: "{0} kW" }}
+                    tooltip={{ visible: true, format: "{0:n2} kW" }}
                     data={items.map((item) => { 
                         return {
                             ...item, color: getColorFromBuildingID(item.id)
@@ -273,7 +273,7 @@ const InsightAnalytics = () => {
         return <ChartSeriesItem
                     key={index}
                     type="area"
-                    tooltip={{ visible: true, format: "{0} kWh" }}
+                    tooltip={{ visible: true, format: "{0:n2} kWh" }}
                     data={item.series}
                     field={'flexibility'}
                     categoryField={'categoryField'}
