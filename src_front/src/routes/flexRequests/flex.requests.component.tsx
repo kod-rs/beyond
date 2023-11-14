@@ -347,6 +347,12 @@ const FlexRequests = () => {
     const onButtonReloadClick = () => {
         getAlgorithmData();
     }
+
+    const calculateMaxValue = (data: Filtered_Flex_Data[]) => {
+        let flexMax = Math.max(...data.map(item => item.flexibility));
+        flexMax = Math.ceil(flexMax / 50) * 50
+        return flexMax;
+    }
     
     return (
         <>
@@ -372,7 +378,7 @@ const FlexRequests = () => {
                                 }
                             </ChartSeries>
                             <ChartValueAxis>
-                                <ChartValueAxisItem min={0} max={500} />
+                                <ChartValueAxisItem min={0} max={calculateMaxValue(filteredFlexDemandData)} />
                             </ChartValueAxis>
                         </Chart>
                     }
@@ -413,7 +419,7 @@ const FlexRequests = () => {
                                     }
                             </ChartSeries>
                             <ChartValueAxis>
-                                <ChartValueAxisItem min={0} max={500} />
+                                <ChartValueAxisItem min={0} max={calculateMaxValue(filteredFlexOfferData)} />
                             </ChartValueAxis>
                         </Chart>
                     }
