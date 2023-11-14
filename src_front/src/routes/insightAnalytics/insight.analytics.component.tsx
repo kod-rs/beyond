@@ -173,7 +173,7 @@ const InsightAnalytics = () => {
                     offer.building_info.forEach((info) => {
                         let _serie_data: Building_Chart_Series = {
                             categoryField: new Date(info.start_time).getUTCHours().toString(),
-                            flexibility: Math.round(info.flexibility * 100) / 100,
+                            flexibility: info.flexibility,
                             id: info.building_id
                         } as Building_Chart_Series;
                         let _building_name = buildings.find((building) => building.building_id === info.building_id)?.building_name;
