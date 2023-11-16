@@ -79,29 +79,27 @@ def mock_req_building_by_usr_id(user_id):
 
     username = tmp_usr_model.get_by_user_id(user_id=user_id)
 
-    if username == 'mirkofleks':  # User id for mirkofleks
-        address = "Rade Končara"
-        lat, long = 45.815399, 15.966568
+    users_info = {'mirkofleks': {'address': 'Rade Končara',
+                                 'latitude': 45.815399,
+                                 'longitude': 15.966568,
+                                 'building_ids': cro_ids},
+                  'urbener_acc': {'address': 'Calle del Coso 34',
+                                 'latitude': 41.653421,
+                                 'longitude': -0.883138,
+                                 'building_ids': esp_ids},
+                  'mytilineos': {'address': 'Amarousio, Athens',
+                                 'latitude': 37.983810,
+                                 'longitude': 23.727539,
+                                 'building_ids': grc_ids},
+                  'cuerva': {'address': 'Parque Metropolitano Industrial y Tecnologico',
+                                 'latitude': 37.113524,
+                                 'longitude': -3.670449,
+                                 'building_ids': cro_ids}}
 
-        return mock_req_buildings(cro_ids, address, lat, long)
-
-    if username == 'urbener_acc':  # User id for urbener_acc
-        address = "Calle del Coso 34"
-        lat, long = 41.653421, -0.883138
-
-        return mock_req_buildings(esp_ids, address, lat, long)
-
-    if username == 'mytilineos':  # User id for mytilineos
-        address = "Amarousio, Athens"
-        lat, long = 37.983810, 23.727539
-
-        return mock_req_buildings(grc_ids, address, lat, long)
-    
-    if username == 'cuerva':  # User id for cuerva
-        address = 'Parque Metropolitano Industrial y Tecnologico'
-        lat, long = 37.113524, -3.670449
-
-        return mock_req_buildings(cro_ids, address, lat, long)
+    return mock_req_buildings(users_info[username]['building_ids'],
+                              users_info[username]['address'],
+                              users_info[username]['latitude'],
+                              users_info[username]['longitude'])
 
 
 def mock_req_building_info(building_ids):
@@ -125,7 +123,7 @@ def mock_building_energy_list(building_ids=cro_ids):
         data_as_dict = {c[0]: c[1:] for c in columns}
         return data_as_dict
 
-    def process_building_data(data, building_ids, conversion_factor=1.0):
+    def process_building_data(data, building_ids):
         building_energy_list = []
         # Extract building names from the keys
         buildings = [x for x in data.keys() if x != "Timestamp"]
@@ -135,7 +133,7 @@ def mock_building_energy_list(building_ids=cro_ids):
             energy_info = []
             for i, value in enumerate(data[building]):
                 energy_info.append({'timestamp': data['Timestamp'][i],
-                                    'value': float(value) * conversion_factor})
+                                    'value': float(value)})
             building_energy_list.append(
                 {'building_id': building, 'energy_info': energy_info})
 
@@ -146,11 +144,10 @@ def mock_building_energy_list(building_ids=cro_ids):
         cro_buildings = read_data_dict("BEYOND_MIRKOFLEKS_PROCESSED.csv")
         building_energy_list = process_building_data(
             cro_buildings, building_ids)
-        return append_year(building_energy_list)
+        return add_energy_info(building_energy_list)
 
     if any(elem in esp_ids for elem in building_ids):
-        # Read and process data for 'esp_ids' buildings with a
-        # conversion factor of 1000.0
+        # Read and process data for 'esp_ids' buildings
         esp_buildings = read_data_dict("BEYOND_URBENER_PROCESSED.csv")
         building_energy_list = process_building_data(
             esp_buildings, building_ids)
@@ -164,9 +161,22 @@ def mock_building_energy_list(building_ids=cro_ids):
         return building_energy_list
 
 
-def append_year(data):
+def add_energy_info(data):
+    """
+    Add new energy information for the year 2022 based on certain conditions.
+
+    This function processes energy data for a list of buildings and appends new entries
+    for the year 2022 until today's date, considering the month and day of each timestamp.
+
+    Parameters:
+    - data (list): A list of dictionaries, where each dictionary represents information
+                   about a building, including energy information with timestamps.
+
+    Returns:
+    list: A list of dictionaries, where each dictionary represents a building with modified
+          energy information including new entries for the year 2022.
+    """
     new_building_energy_list = []
-    # Get the current date and time
     today = datetime.datetime.now()
 
     for building_info in data:
@@ -212,7 +222,6 @@ def mock_get_flexibility_demand(date):
     demands = []
     demands_dict = {}
 
-    # Read demand data from a CSV file
     filepath = Path(__file__).parent.resolve() / "DEMAND_VOLUME_PROCESSED.csv"
 
     with open(filepath, "r") as f:
