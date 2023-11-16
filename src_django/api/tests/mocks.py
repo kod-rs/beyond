@@ -35,6 +35,11 @@ def mock_token(username, password):
                 'access_token': '15to_ac3ssdrug1',
                 'expires_in': 300,
                 'refresh_expires_in': 1800}
+    if username == 'cuerva' and password == 'cuerva987':
+        return {'refresh_token': 'm4l0j4nj3',
+                'access_token': 'v3l1k0j4nj3',
+                'expires_in': 300,
+                'refresh_expires_in': 1800}
     else:
         raise keycloak.exceptions.KeycloakAuthenticationError(
             response_code=401)
@@ -53,6 +58,10 @@ def mock_userinfo(access_token):
         return {'sub': 'random3r0j',
                 'realm_access': {'roles': ['AGGREGATOR']},
                 'preferred_username': 'mytilineos'}
+    if access_token == 'v3l1k0j4nj3':  # Access token for cuerva
+        return {'sub': 'q579hf5312gj',
+                'realm_access': {'roles': ['AGGREGATOR']},
+                'preferred_username': 'cuerva'}
 
 
 def mock_req_building_by_usr_id(user_id):
@@ -87,6 +96,12 @@ def mock_req_building_by_usr_id(user_id):
         lat, long = 37.983810, 23.727539
 
         return mock_req_buildings(grc_ids, address, lat, long)
+    
+    if username == 'cuerva':  # User id for cuerva
+        address = 'Parque Metropolitano Industrial y Tecnologico'
+        lat, long = 37.113524, -3.670449
+
+        return mock_req_buildings(cro_ids, address, lat, long)
 
 
 def mock_req_building_info(building_ids):
