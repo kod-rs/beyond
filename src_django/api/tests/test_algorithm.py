@@ -33,6 +33,6 @@ class AlgorithmTestCase(TestCase):
 
         assert total_flex == flex_amount
         assert len(building_info) == 3
-        assert building_info[0].flex == 130.0
+        assert building_info[0].flex == 172.5
 
 

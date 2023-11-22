@@ -266,12 +266,11 @@ def get_max_diff(building_ids: tuple, points: List[List[point_coordinates]]
     no_flex = [[i, 0] for i in range(MAX_H_IN_DAY)]
     for index, building_id in enumerate(building_ids):
         points_by_building = points[index]
-        if len(points_by_building) > 40:
-            points_by_building = np.array(points_by_building)
-            diff = difference_calculation(points_by_building)
-            max_diff.append([building_id, diff])
-        else:
-            max_diff.append([building_id, no_flex])
+
+        points_by_building = np.array(points_by_building)
+        diff = difference_calculation(points_by_building)
+        max_diff.append([building_id, diff])
+
     return max_diff
 
 
@@ -411,9 +410,18 @@ def algorithm(building_energy_list: typing.List[BuildingEnergy],
 
     # Distribution law, mathematical background, leave it as such!
     MAX_VALUE = (max([max(b) for b in buildings]) ** 0.74) * 4.494
-    MIN_VALUE = (0.20 * MAX_VALUE) - 2.0
-
+    MIN_VALUE = (min([min(b) for b in buildings]) ** 0.74) * 4.494 - 0.2
     points = get_points(building_ids, buildings, interval)
+
+    building_ids_new = list()
+    points_new = list()
+    for b, p in zip(building_ids, points):
+        if p:
+            building_ids_new.append(b)
+            points_new.append(p)
+
+    building_ids = tuple(building_ids_new)
+    points = points_new
 
     max_diff = get_max_diff(building_ids, points)
 

@@ -61,7 +61,7 @@ class WorkflowTestCase(TestCase):
 
         # get flexibility demands for a selected data from Beyond
         buildings_info = response['buildings_info']
-        date = datetime.datetime(year=2022, month=4, day=10, hour=0)
+        date = datetime.datetime(year=2023, month=3, day=10, hour=0)
         date = date.replace(tzinfo=datetime.timezone.utc).isoformat()
         data = {'type': 'flexibility_demand_request',
                 'date': date,

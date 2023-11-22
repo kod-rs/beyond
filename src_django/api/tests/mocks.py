@@ -13,8 +13,10 @@ cro_ids = ('ZIV0034902130', 'ZIV0034902131', 'ZIV0034704030',
            'ZIV0034703915', 'ZIV0034704013',
            'ZIV0034703953', 'ZIV0034703954')
 
-esp_ids = ('CORRIDOR', 'MEETINGROOM', 'OFFICE1', 'OFFICE2',
+esp_ids1 = ('CORRIDOR', 'MEETINGROOM', 'OFFICE1', 'OFFICE2',
            'OFFICE3', 'OFFICE4', 'OFFICE5')
+
+esp_ids2 = ('HVAC0', 'HVAC1')
 
 grc_ids = ('Air_flow_system', 'Cooling_system', 'Power_plug', 'Ventilation/VRV')
 
@@ -40,6 +42,11 @@ def mock_token(username, password):
                 'access_token': 'v3l1k0j4nj3',
                 'expires_in': 300,
                 'refresh_expires_in': 1800}
+    if username == password == 'urbener2':
+        return {'refresh_token': '4jm3m3ni',
+                'access_token': 'i570_5m3c3',
+                'expires_in': 300,
+                'refresh_expires_in': 1800}
     else:
         raise keycloak.exceptions.KeycloakAuthenticationError(
             response_code=401)
@@ -59,6 +66,10 @@ def mock_userinfo(access_token):
                 'realm_access': {'roles': ['AGGREGATOR']},
                 'preferred_username': 'mytilineos'}
     if access_token == 'v3l1k0j4nj3':  # Access token for cuerva
+        return {'sub': 'q579hf5312gj',
+                'realm_access': {'roles': ['AGGREGATOR']},
+                'preferred_username': 'cuerva'}
+    if access_token == 'i570_5m3c3':  # Access token for second urbener
         return {'sub': 'q579hf5312gj',
                 'realm_access': {'roles': ['AGGREGATOR']},
                 'preferred_username': 'cuerva'}
@@ -86,7 +97,7 @@ def mock_req_building_by_usr_id(user_id):
                   'urbener_acc': {'address': 'Calle del Coso 34',
                                  'latitude': 41.653421,
                                  'longitude': -0.883138,
-                                 'building_ids': esp_ids},
+                                 'building_ids': esp_ids1},
                   'mytilineos': {'address': 'Amarousio, Athens',
                                  'latitude': 37.983810,
                                  'longitude': 23.727539,
@@ -94,7 +105,11 @@ def mock_req_building_by_usr_id(user_id):
                   'cuerva': {'address': 'Parque Metropolitano Industrial y Tecnologico',
                                  'latitude': 37.113524,
                                  'longitude': -3.670449,
-                                 'building_ids': cro_ids}}
+                                 'building_ids': cro_ids},
+                  'urbener2': {'address': 'Calle del Coso 34',
+                                 'latitude': 41.653421,
+                                 'longitude': -0.883138,
+                                 'building_ids': esp_ids2},}
 
     return mock_req_buildings(users_info[username]['building_ids'],
                               users_info[username]['address'],
@@ -146,9 +161,16 @@ def mock_building_energy_list(building_ids=cro_ids):
             cro_buildings, building_ids)
         return add_energy_info(building_energy_list)
 
-    if any(elem in esp_ids for elem in building_ids):
-        # Read and process data for 'esp_ids' buildings
+    if any(elem in esp_ids1 for elem in building_ids):
+        # Read and process data for 'esp_ids1' buildings
         esp_buildings = read_data_dict("BEYOND_URBENER_PROCESSED.csv")
+        building_energy_list = process_building_data(
+            esp_buildings, building_ids)
+        return building_energy_list
+
+    if any(elem in esp_ids2 for elem in building_ids):
+        # Read and process data for 'esp_ids2' buildings
+        esp_buildings = read_data_dict("BEYOND_URBENER2_PROCESSED.csv")
         building_energy_list = process_building_data(
             esp_buildings, building_ids)
         return building_energy_list
